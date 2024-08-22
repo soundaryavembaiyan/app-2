@@ -1,0 +1,34 @@
+// component css goes here
+// component css goes here
+.watermark,.watermark-left{
+    margin: 40px;
+}
+
+.watermark{
+    //border: 1px solid #eee;
+    min-height: 500px; 
+}  
+.btn-browse{
+    width: 150px;
+    background: #004D87
+}
+.docView{
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: #004D87;
+    // margin-top: 50px;
+    // margin-left: 45px;
+    margin: -1px;
+}
+.disabled {
+    background: #a0bbd0;
+    color: #fff;
+}
+.alertbtnno, .alertbtnyes{
+    width: 20%;
+    height: auto;
+}
+
+.alertbtnyes{
+    margin-left: 22px;
+}

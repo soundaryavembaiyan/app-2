@@ -1,0 +1,131 @@
+<!-- Header here-->
+<div [ngClass]="{'blur': successModel}">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="row main headertop" [ngStyle]="{'display':isDisplay?'block':'none'}">
+                <div class="col-sm-12 compswitch ">
+                    <div class="switch  cswitch cswitchtwo">
+                        <a href="javascript:void(0);" class="optionone compone"
+                            [ngClass]="{'active': selectedValue === 'create'}" (click)="isActive('create')">Create</a>
+                        <a href="javascript:void(0);" class="optiontwo comptwo"
+                            [ngClass]="{ 'active' : selectedValue === 'view' }" (click)="isActive('view')">View</a>
+                    </div>
+                </div>
+            </div>
+            <div class="arrowitem" (click)="hideAndShow()">
+                <i *ngIf="isDisplay" class="fa fa-light fa-chevron-up"></i>
+                <i *ngIf="!isDisplay" class=" fa fa-light fa-chevron-down"></i>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Header ends here-->
+
+<!--Heading Label-->
+
+<div class="row main width-alignment">
+    <div class="col-6">
+      <div class="custusername tab-margin fontweight">
+        List of Created Documents
+      </div>
+    </div>
+    <!--Search-->
+    <div class="col-6">
+      <div class="form-group name-set float-right">
+        <div class="input-group group-custom-align court" id="search">
+          <input type="text" class="form-control textbox" [(ngModel)]="searchText" (input)="restricttextSpace($event)" (keydown)="onKeydown($event)" placeholder="Search Document">
+          <img src="assets/img/search.svg" class="calimg calitem input-group-append searchimg" (click)="onKeydown($event)">
+        </div>
+      </div>
+    </div>
+    <!--Search-->
+  
+</div>
+  <!--Heading Label-->
+  
+  
+  <!--Table View for Created doc views-->
+  <div class="row main width-alignment">
+    <div class="col-sm-12 gridtable ">
+      <table class="table table-borderless tblgrid">
+        <thead>
+          <tr class="theader">
+            <th>
+              <p class="thheadname"> Document Name </p>
+              <img src="assets/img/SORT.PNG" class="sortico" (click)="sortingFile('documentname')">
+            </th>
+            <th>
+              <p class="thheadname"> Created Date</p>
+              <img src="assets/img/SORT.PNG" class="sortico" (click)="sortingDateFile('updatedon?.$date')">
+            </th>
+            <th>
+              <p class="thheadname"> Created By</p>
+              <img src="assets/img/SORT.PNG" class="sortico">
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="rone veiw-items" *ngFor="let i of documents | filter:searchText">
+              
+            <td class="tabclass">{{ i.documentname }}</td>
+            <td class="tabclass">{{ i.updatedon?.$date | date:'MMM dd, yyyy' }}</td> 
+            <td class="tabclass"> {{this.createdBy}} </td>
+            <td class="tabclass">
+              <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle actionbtn" data-bs-toggle="dropdown" aria-expanded="false"> Action </button>
+                <ul class="dropdown-menu custom-dropdown">
+                  <li>
+                    <a class="dropdown-item" (click)="viewDocument(i);openModal('view-doc-1')">View</a>
+                  </li>
+                   <!-- <li>
+                    <a class="dropdown-item" (click)="saveasDialog(i)">Save As</a>
+                  </li>  -->
+                  <li>
+                    <a class="dropdown-item" (click)="openModal('custom-modal-2');editDocInfo(i)">Delete</a>
+                  </li>
+                </ul>
+              </div>
+              <!-- <button (click)="deleteDocument(i)">Delete</button>  -->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  
+  <div *ngIf="documents && documents?.length === 0 && errorMsg" class="custom-alert padded"> 
+    List of Documents not available!!
+  </div>
+  
+  <!-- Modal for View the Document-->
+  <jw-modal id="view-doc-1" class=" view-doc-1 doc-view-scs ">
+    <div class="iconclose" (click)="closeModal('view-doc-1');">X</div>
+    <iframe *ngIf="pdfSrc" height="100%" width="100%" [src]="pdfSrc"></iframe>
+  </jw-modal>
+
+  <!-- Modal for Delete the Document-->
+    <!--- Delete DIALOG BOX -->
+    <jw-modal id="custom-modal-2" class="doc-view-scs">
+      <div class="doc-view-scs-body" *ngIf="editDoc">
+        <div class="container">
+          <div class="row">
+            <div class="">
+              <div class="iconclose" (click)="closeModal('custom-modal-2');"><b>X</b></div>
+              <div class="alertpara">
+                <p class="alertparatxt"><b>Confirmation</b></p>
+              </div>
+              <div class="alertext">
+                Are you sure you want to delete<br><b>{{editDoc?.documentname}}</b> document?
+              </div>
+            </div>
+            <div class="alertbutton">
+              <button class="btn btn-default  alertbtn alertbtnno" (click)="closeModal('custom-modal-2');">No</button>
+              <button class="btn btn-default alertbtn alertbtnyes"
+                (click)="closeModal('custom-modal-2');deleteDocument(editDoc)">Yes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </jw-modal>

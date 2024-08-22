@@ -1,0 +1,29 @@
+<!-- Save DIALOG BOX for View -->
+<div class="overviewDialog">
+    <form [formGroup]="mydForm">
+    <div class="closeDialog">
+        <i class="fa fa-times xClose" (click)="closeDialog()" aria-hidden="true"></i>
+    </div>
+
+    <div class="openDialog">
+        <div class="form-group">
+         <label for="title" class="lableTitle overedText">Save File</label>
+            <input formControlName="documentname" placeholder="Enter document name" type="text" class="text-size form-control createDoc" name="title">
+            <div *ngIf="mydForm.get('documentname').errors && submitted" class="errorStyle">
+                <div *ngIf="mydForm.get('documentname').errors.required">Filename is required</div>
+            </div> 
+        </div>
+
+        <div class="overviewSave">
+        <button type="reset" class="btn btn-default btncancel" (click)="closeDialog()">Cancel</button>
+        <button type="submit" class="btn btn-default btnsave" (click)="downloadDoc()">Save</button> 
+      </div>
+
+    </div>
+    </form>
+</div>
+
+
+
+
+

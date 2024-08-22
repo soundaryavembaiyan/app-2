@@ -1,0 +1,101 @@
+<!-- LATEX FORM CONTROLS -->
+<!-- <form [formGroup]="latexForm"> -->
+    <form [formGroup]="overviewForm">
+    <div id="tool-abstract" *ngIf="closeDiv && content === 'OVERVIEW'" class="form-group">         
+        <label for="title" class="lableTitle" style="padding-right:5px">Overview</label> 
+        <!-- <input formControlName="overviewTitle" [(ngModel)]="overviewTitle" class="overviewTitle" type="text" readonly/> -->
+        <i class="fa fa-times close secclose" aria-hidden="true" (click)="removeOverview()"></i>
+        <textarea formControlName="overview" [(ngModel)]="overview" placeholder="Enter your content" class="text-size form-control textareaDoc" rows="3" cols="50"></textarea>
+    </div>
+    </form>
+
+    <form [formGroup]="sectionForm">
+    <div id="tool-section" *ngIf="closeDiv && content === 'SECTION'" class="form-group">         
+        <label for="title" class="lableTitle" style="padding-right:5px">Section</label> 
+        <input formControlName="sectionTitle" [(ngModel)]="sectionTitle" class="overviewTitle" type="text" readonly/>
+        <img (click)="opensectionDialog()" class="expand" src="assets/img/expand.svg"/>
+        <i class="fa fa-times close secclose" aria-hidden="true" (click)="removeSection()"></i>
+        <textarea formControlName="section" [(ngModel)]="section" placeholder="Enter your content" class="text-size form-control textareaDoc" rows="3" cols="50"></textarea>
+    </div>
+    </form>
+
+    <form [formGroup]="subsectionForm">
+    <div id="tool-subsection" *ngIf="closeDiv && content === 'SUB SECTION'" class="form-group">         
+        <label for="title" class="lableTitle" style="padding-right:5px">Sub Section</label> 
+        <input formControlName="subsectionTitle" [(ngModel)]="subsectionTitle" class="overviewTitle" type="text" readonly/>
+        <img (click)="opensubsectionDialog()" class="expand" src="assets/img/expand.svg"/>
+        <i class="fa fa-times close secclose" aria-hidden="true" (click)="removesubSection()"></i>
+        <textarea formControlName="subsection" [(ngModel)]="subsection" placeholder="Enter your content" class="text-size form-control textareaDoc" rows="3" cols="50"></textarea>
+    </div>
+    </form>
+
+    <form [formGroup]="subsubsectionForm">
+    <div id="tool-subsubsection" *ngIf="closeDiv && content === 'SUB SUB SECTION'" class="form-group">         
+        <label for="title" class="lableTitle" style="padding-right:5px">Sub Sub Section</label> 
+        <input formControlName="subsubsectionTitle" [(ngModel)]="subsubsectionTitle" class="overviewTitle" type="text" readonly/>
+        <img (click)="opensubsubsectionDialog()" class="expand" src="assets/img/expand.svg"/>
+        <i class="fa fa-times close secclose" aria-hidden="true" (click)="removesubsubSection()"></i>
+        <textarea formControlName="subsubsection" [(ngModel)]="subsubsection" placeholder="Enter your content" class="text-size form-control textareaDoc" rows="3" cols="50"></textarea>
+    </div>
+    </form>
+
+    <form [formGroup]="paragraphForm">
+    <div id="tool-paragraph" *ngIf="closeDiv && content === 'PARAGRAPH'" class="form-group">         
+        <label for="title" class="lableTitle" style="padding-right:5px">Paragraph</label> 
+        <input formControlName="paragraphTitle" [(ngModel)]="paragraphTitle" class="overviewTitle" type="text" readonly/>
+        <img (click)="openparagraphDialog()" class="expand" src="assets/img/expand.svg"/>
+        <i class="fa fa-times close secclose" aria-hidden="true" (click)="removeParagraph()"></i>
+        <textarea formControlName="paragraph" [(ngModel)]="paragraph" placeholder="Enter your content" class="text-size form-control textareaDoc" rows="3" cols="50"></textarea>
+    </div>
+    </form>
+
+    <!-- /Ordered List -->
+    <form [formGroup]="orderedlistForm">
+    <div id="tool-ol" *ngIf="!isOrderlist && content === 'ORDERED LIST'" class="form-group">
+        <label for="title" class="lableTitle" style="padding-right:5px">Ordered Lists</label>
+        <!-- <img class="addBtn" (click)="addorderList()" src="assets/img/addnotes.svg"/> -->
+        <mat-icon class="closePlus iOd" aria-hidden="true" [class.disabled]="isorderItemsInvalid()" (click)="addorderList()">add_circle_outline</mat-icon>
+        <i class="fa fa-times close secclose" aria-hidden="true" (click)="isOrderlist = !isOrderlist; orderlist = ''; orderlistTitle =''"></i>
+        
+        <div formArrayName="orderListItems">
+            <div class="oderAlign" *ngFor="let item of orderListItems.controls; let i = index;" [formGroupName]="i">
+                <input formControlName="orderlist" type="text" class="text-size form-control createDoc"/> 
+                <i class="fa-solid fa-trash delIcon" (click)="removeorderList(i)"></i> 
+            </div>
+        </div>
+    </div>
+    </form>
+    <!-- Ordered List/ -->
+
+    <!-- /UnOrdered List -->
+    <form [formGroup]="unorderedlistForm">
+    <div id="tool-ul" *ngIf="!isunOrderlist && content === 'UNORDERED LIST'" class="form-group">
+        <label for="title" class="lableTitle" style="padding-right:5px">Unordered Lists</label>
+        <!-- <img class="addBtn" (click)="addunorderList()" src="assets/img/addnotes.svg"/> -->
+        <mat-icon class="closePlus iOd" aria-hidden="true" [class.disabled]="isunorderItemsInvalid()" (click)="addunorderList()">add_circle_outline</mat-icon>
+        <i class="fa fa-times close secclose" aria-hidden="true" (click)="isunOrderlist = !isunOrderlist; unorderlist = '';"></i>
+        
+        <div formArrayName="unorderListItems">
+            <div class="oderAlign" *ngFor="let item of unorderListItems.controls; let i = index;" [formGroupName]="i">
+                <input formControlName="unorderlist" type="text" class="text-size form-control createDoc"/> 
+                <i class="fa-solid fa-trash delIcon" (click)="removeunorderList(i)"></i> 
+            </div>
+        </div>
+    </div>
+    </form>
+    <!-- UnOrdered List/ -->
+<!-- </form>  -->
+<!-- latexFormData: {{latexForm?.value|json}} -->
+
+
+<!---
+    <form [formGroup]="paragraphForm">
+    <div id="tool-paragraph" class="form-group">         
+        <label for="title" class="lableTitle" style="padding-right:5px">Paragraph</label> 
+        <input formControlName="paragraphTitle" [(ngModel)]="paragraphTitle" class="overviewTitle" type="text" readonly/>
+        <img (click)="openparagraphDialog()" class="expand" src="assets/img/expand.svg"/>
+        <i class="fa fa-times close secclose" aria-hidden="true" (click)="removeParagraph()"></i>
+        <textarea formControlName="paragraph" [(ngModel)]="paragraph" placeholder="Enter your content" class="text-size form-control textareaDoc" rows="3" cols="50"></textarea>
+    </div>
+    </form>
+-->

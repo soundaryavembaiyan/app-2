@@ -1,0 +1,242 @@
+// component css goes here
+// component css goes here
+.msg-padding .msgiconlist {
+    //padding: unset !important;
+    padding: 5px !important;
+}
+
+.msgcontainer {
+    height: 65px;
+}
+
+.profile {
+    margin-top: 5px;
+}
+
+// component css goes here
+i.fa.fa-paper-plane {
+    font-size: 40px;
+    margin-top: 15px;
+    margin-left: 15px;
+    color: #004d87;
+}
+
+.row.meetingcontainer.legalboxleft.container.msgcontainerchat {
+    height: 70px;
+}
+
+div#toast-container,
+.toast-container {
+    position: absolute !important;
+    bottom: 0%;
+}
+
+input.form-control.textbox {
+    margin-bottom: 8px;
+}
+
+.circlemsg {
+    text-align: right;
+    margin-top: 17px;
+}
+
+.fa-plus-circle:before,
+.fa-minus-circle::before {
+    font-size: 30px;
+}
+
+.coffer-time-me {
+    font-size: 15px;
+}
+
+.col-sm-10.mobcolumntwo {
+    width: 70%;
+}
+
+.textareatwo .profile {
+    margin-left: 26px;
+}
+
+.userprofile {
+    margin-right: 10px;
+}
+
+.coffer-you .mobcolumntwo .chatpara {
+    background: #ced4da;
+}
+
+.disabled {
+    //display: none;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.msgcontainerchat .mobilepadding .userprofile {
+    background: #56009e;
+}
+
+.coffer-you,
+.messagecontainer {
+    .userprofile {
+        background: #56009e;
+    }
+}
+
+.msgcontainer.active,
+.msgcontainer.focus {
+    color: #fff !important;
+    background: #00b3a7 !important;
+}
+
+// .chatusertitle.active,
+// .chatusertitle.focus {
+//     color: #fff !important;
+//     background: #578ad6 !important;
+// }
+
+
+.disable {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.msglabel {
+    color: #004d87;
+}
+
+.msgscroll {
+    height: 577px;
+    overflow: scroll;
+}
+
+.chatpro {
+    margin-top: 6px;
+}
+
+.chatinpro {
+    margin-top: 10px;
+    padding-top: 5px;
+}
+
+.grppro {
+    height: 50px;
+    width: 50px;
+    padding-top: 10px;
+    margin-top: 6px;
+}
+
+//Textarea styles!!
+// .chatinput {
+//     color: black;
+//     font-size: 16px;
+//     font-weight: 900;
+//     height: 45px;
+//     padding-top: 13px;
+//     border-radius: 20px;
+// }
+
+// textarea::placeholder {
+//     color: #aaaaaa;
+//     font-size: 14px;
+// }
+
+.chatinput {
+    color: black;
+    font-size: 16px;
+    font-weight: 900;
+}
+
+/* For better browser compatibility, add vendor prefixes */
+input::-webkit-input-placeholder {
+    color: #aaaaaa;
+    font-size: 14px;
+}
+
+input:-ms-input-placeholder {
+    color: #aaaaaa;
+    font-size: 14px;
+}
+
+input::-ms-input-placeholder {
+    color: #aaaaaa;
+    font-size: 14px;
+}
+
+input::placeholder {
+    color: #aaaaaa;
+    font-size: 14px;
+}
+
+.chatusernameCls {
+    font-weight: 900;
+    //margin: 20px;
+    margin-left: 5px;
+    margin-top: 23px;
+    font-size: 19px;
+    width: 200px;
+}
+
+.leftpara {
+    margin-left: 80px;
+}
+
+.rytpara {
+    margin-left: -58px;
+}
+
+.rytwid {
+    width: 68%;
+}
+.arrowlg{
+    font-size: 30px;
+}
+.teamtwo{
+     border-top-right-radius: 0px; 
+     border-bottom-right-radius: 0px;
+}
+.scroller {
+    overflow: auto;
+    height: 450px;
+    display: flex;
+    flex-direction: column-reverse;
+    overflow-anchor: auto !important;
+}
+
+.scroller .scroller-content .item {
+    height: 20px;
+    transform: translateZ(0); /* fixes a bug in Safari iOS where the scroller doesn't update */
+}
+.videocall{
+    width: 50px;
+    margin-top: 6px;
+}
+.audiocall{
+    width: 27px;
+    margin-left: 10px;
+}
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+    .videocall{
+        width: 33px;
+    }
+    .rytpara {
+        margin-left: -5px;
+    }
+}
+.chatusertito {
+    font-weight: 900;
+    padding-top: 15px;
+    word-break: break-all;
+    font-size: 19px;
+    //color: #fff !important;
+  }
+.adminTeam{
+    height: 42px;
+    font-size: 1.2rem;
+    font-weight: 800;
+    padding-top: 8px;
+    width: 100px;
+}
+.mlname {
+    margin-left:-10px;
+    width: 280px;
+}

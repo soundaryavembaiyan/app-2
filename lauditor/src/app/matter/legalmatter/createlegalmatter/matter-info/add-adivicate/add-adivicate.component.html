@@ -1,0 +1,61 @@
+<!--component html goes here -->
+<div class="form-group addfile">
+    <div class="input-group court" id="judge">
+      <input type="file" name="file" id="file" class="file">
+      <input type="text" name="file-name" placeholder="Opponent Advocate(s)" id="file-name" class="textbox form-control"
+        readonly="readonly">
+      <input type="button" class="btnfile savecls" value="ADD" (click)="addAdvicate()">
+    </div>
+  </div>
+
+<div *ngIf="enableAdvicate">
+  <form [formGroup]="memberDetail" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="title" class="fontbold">Name 
+      </label>
+      <input type="text" class="form-control textbox" (input)="restricttextSpace($event)" id="name" name="name" placeholder="Name"
+        formControlName="name" [(ngModel)]="name" [ngClass]="{'is-invalid':submitted && f.name.errors}">
+      <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+        <div *ngIf="f.name.errors.required">Name is required</div>
+        <div  *ngIf="f.name.errors?.alreadyExist">Name already exists</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="title" class="fontbold">Email Address
+      </label>
+      <input type="email" (input)="restricttextSpace($event)" class="form-control textbox" id="email" [(ngModel)]="email"  name="email" placeholder="Email Address"
+        formControlName="email" [ngClass]="{'is-invalid':submitted && f.email.errors}" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
+      <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+        <div *ngIf="f.email.errors.required">Email is required</div>
+        <div *ngIf="!f.email.errors.required && !f.email.errors.alreadyExist">Email is invalid</div>
+        <div  *ngIf="f.email.errors.alreadyExist">Email already exists</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="title" class="fontbold">Phone Number
+      </label>
+      <input type="tel" (input)="restricttextSpace($event)" (input)="restrictToNumbers($event)" class="form-control textbox" id="phone" [(ngModel)]="phone" name="phone" placeholder="Phone Number"
+        formControlName="phone" minlength="10" maxlength="10" [ngClass]="{'is-invalid':submitted && f.phone.errors}">
+      <div *ngIf="submitted && f.phone.errors" class="invalid-feedback">
+        <div *ngIf="f.phone.errors.required">Phone number is required</div>
+        <div *ngIf="!f.phone.errors.required && !f.phone.errors.alreadyExist">Phone number is invalid</div>
+        <div  *ngIf="f.phone.errors.alreadyExist">Phone number already exists</div>
+      </div>
+    </div>
+    
+    <div class="btnbox">
+      <button type="submit" class="btn btn-default btnsave float-right savecls">Save</button>
+    </div>
+
+  </form>
+</div>
+<div class="flex-container" *ngIf="advicate && advicate.length>0">
+<div class="flexo" *ngFor="let item of advicate;let i=index">
+<div class="opponent" [ngClass]="{'active':i==currentIndex}"> {{item.name}} 
+  <span>  
+        <i class="fa fa-edit" (click)="editOpponente(item,i)"></i>
+        <i class="fa fa-regular fa-circle-xmark calimg input-group-append xgrp" (click)="removeOpponente(item)"></i>
+  </span>
+</div>
+</div>
+</div>

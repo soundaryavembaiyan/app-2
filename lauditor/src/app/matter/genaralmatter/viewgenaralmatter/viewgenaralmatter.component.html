@@ -1,0 +1,138 @@
+
+<div class="row main width-alignment">
+  <div class="col-6">
+    <div class="custusername tab-margin fontweight">
+      List of General Matters
+    </div>
+  </div>
+
+  <div class="col-6">
+    <div class="form-group name-set float-right">
+      <!--Search box-->
+      <div class="input-group group-custom-align court padded" id="search">
+        <input type="text" class="form-control textbox" placeholder="Search Matter" [(ngModel)]="searchText" oninput="this.value = this.value.replace(/[^A-Za-z0-9 ]|^ /g,'')"/>
+        <img src="assets/img/search.svg" class="calimg calitem input-group-append searchimg">
+      </div>
+      <!-- Dropdown - Internal/External -->
+      <div *ngIf="product == 'corporate'">
+        <select class="form-select calendorselect" (change)="onOptionSelect($event)">
+          <option [selected]="i.value == selectedOption" *ngFor="let i of options ">{{i.name}}</option>
+        </select>
+      </div>
+      <!--Matter counts-->
+      <!-- <div class="mattercount">
+        <p *ngIf="selectedOption == 'Internal Matters'"><b>Number of Legal Matters:</b> {{matterCount}} </p>
+        <p *ngIf="selectedOption == 'External Matters'"><b>Number of External Matters:</b> {{matterCount}} </p>
+      </div> -->
+
+    </div>
+  </div>
+
+</div>
+
+<div class="row main width-alignment table-wrapper">
+  <div class="col-sm-12 gridtable table-scroll">
+    <table class="table table-borderless tblgrid">
+      
+      <thead>
+        <tr class="theader">
+          <th>
+            <p class="thheadname"> Name</p>
+            <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('title')">
+          </th>
+          <th>
+            <p class="thheadname"> Type</p>
+            <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('matterType')">
+          </th>
+          <th>
+            <p class="thheadname"> Created On</p>
+            <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('startdate')">
+          </th>
+          <th>
+            <p class="thheadname"> Status</p>
+            <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('status')">
+          </th>
+          <th *ngIf="this.selectedOption != 'External Matters'">
+            <p class="thheadname" *ngIf = "product !='corporate'"> Groups</p>
+            <p class="thheadname" *ngIf = "product =='corporate' && this.selectedOption != 'External Matters'"> Departments</p>
+            <img src="assets/img/SORT.PNG" *ngIf = "this.selectedOption != 'External Matters'" class="sortico" (click)="sort('groups')">
+          </th>
+          <th *ngIf="this.selectedOption == 'External Matters'">
+            <p class="thheadname"> External Counsels</p>
+            <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('owner')">
+          </th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="rone veiw-items" *ngFor="let generalMatter of generalMatters |filter:searchText">
+          <td>{{generalMatter.title}}</td>
+          <td>{{generalMatter.matterType}}</td>
+          <td>{{generalMatter.created_on}}</td>
+          <td>{{generalMatter.status}}</td>
+          <td *ngIf="this.selectedOption == 'External Matters'">{{generalMatter.owner?.firm_name}}</td>
+          <!--no dept for external-->
+          <td *ngIf = "this.selectedOption != 'External Matters'" (mouseover)="onMouseOver(generalMatter?.groups)" [matTooltip]="hoveredGroups">
+            {{generalMatter?.groups[0]?.name}} <br/> {{generalMatter?.groups[1]?.name}}
+          </td>
+          <!-- <td *ngIf = "this.selectedOption == 'External Matters'"></td> -->
+          <!--need to get back once we get group info-->
+          <td *ngIf="this.selectedOption == 'External Matters'">
+            <div class="dropdown" >
+              <button class="btn btn-primary actionbtn" aria-expanded="false" 
+                [ngClass]="{'disabled': generalMatter.isdisabled}"
+                (click)="loadViewDetails(generalMatter,'external')"> More Details </button>
+            </div>
+          </td>
+
+          <td *ngIf="this.selectedOption != 'External Matters'">
+            <div class="dropdown"><!--class="dropdown"-->
+              <!-- <button type="button" class="btn btn-primary dropdown-toggle actionbtn" 
+              data-bs-toggle="dropdown" aria-expanded="false"  
+              [ngClass]="{'disabled': generalMatter.isdisabled || !generalMatter.is_editable}" >Action </button>
+              <ul class="dropdown-menu custom-dropdown">
+                <li>
+                  <a class="dropdown-item" (click)="loadViewDetails(generalMatter,'internal')">View Details</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" (click)="loadEditMatterInfo(generalMatter)">Edit Matter Info</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" *ngIf = "product !='corporate'" (click)="updateGroups(generalMatter)">Update Group(s)</a>
+                  <a class="dropdown-item" *ngIf = "product =='corporate'" (click)="updateGroups(generalMatter)">Update Department(s)</a>
+                </li>
+                <li *ngIf="generalMatter.status.toLowerCase() == 'active'">
+                  <a class="dropdown-item" (click)="updateMatterStatus(generalMatter,'Closed')">Close Matter</a>
+                </li>
+                <li *ngIf="generalMatter.status.toLowerCase()  == 'closed'">
+                  <a class="dropdown-item" (click)="updateMatterStatus(generalMatter,'Active')">Reopen Matter</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" (click)="delete(generalMatter)">Delete</a>
+                </li>              
+              </ul> -->
+
+              <button mat-button [matMenuTriggerFor]="menu" class="btn btn-primary dropdown-toggle actionbtn matBtn"
+                data-bs-toggle="dropdown" aria-expanded="false" [ngClass]="{'disabled': generalMatter.isdisabled || !generalMatter.is_editable}">Action</button>
+              
+              <mat-menu class="dropdown-menu custom-dropdown" #menu="matMenu">
+                <button mat-menu-item (click)="loadViewDetails(generalMatter,'internal')">View Details</button>
+                <button mat-menu-item (click)="loadEditMatterInfo(generalMatter)">Edit Matter Info</button>
+              
+                <button mat-menu-item *ngIf="product !='corporate' && role == 'SU'" (click)="updateGroups(generalMatter)">Update Group(s)</button>
+                <button mat-menu-item *ngIf="product =='corporate'" (click)="updateGroups(generalMatter)">Update Department(s)</button>
+              
+                <button mat-menu-item *ngIf="generalMatter.status.toLowerCase() == 'active' || generalMatter.status.toLowerCase() == 'pending'" (click)="updateMatterStatus(generalMatter,'Closed')">Close Matter</button>
+                <button mat-menu-item *ngIf="generalMatter.status.toLowerCase()  == 'closed'" (click)="updateMatterStatus(generalMatter,'Active')">Reopen Matter</button>
+              
+                <!-- <button mat-menu-item (click)="delete(generalMatter)">Delete</button> -->
+              </mat-menu>
+
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <ngx-spinner  size="medium" type="ball-clip-rotate"></ngx-spinner>
+</div>

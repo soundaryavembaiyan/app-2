@@ -1,0 +1,173 @@
+.lable-size {
+    font-size: 19px;
+    font-weight: bold;
+    color: #437CA7;
+  }
+  .createGroup{
+    input,textarea{
+        background: #EEEEEE;
+        border: none;
+    }
+  }
+  .nameSet{
+    width:90%;
+  }
+
+
+.width-alignment {
+    max-width: 90%;
+    margin: 0 auto;
+}
+
+tr.veiw-items {
+    li{
+        height: 30px;
+        line-height: 30px;
+        a{
+            height: 30px;
+            line-height: 20px;
+            
+        }
+    }
+    .custom-dropdown{
+        inset: 0px auto auto -119px !important;
+        //background: #F0F0F0;
+        padding: unset;
+    }
+}
+
+ tr.veiw-items:hover {
+    background:#003A5C;
+    color:#fff;
+    .actionbtn {
+        background: #fff !important;
+        color:#111 !important;
+        border: none;
+
+    }
+
+}
+.dropdown-select.filter {
+    width: 40%;
+    float: right;
+}
+.dropdown-select.filter {
+    width: 40%;
+    float: right;
+}
+
+.dropdown-select {
+    select {
+        width: 100%;
+        height: 40px;
+        background: #eeeeee;
+        border: none;
+        padding-left: 10px;
+        border-radius: 5px;
+    }
+}
+.padded{
+    padding-bottom: 20px;
+}
+.calendorselect {
+    height: 39px;
+    background-color: #EEEEEE;
+    border: 1px solid #E2E2E2;
+    border-radius: 5px;
+    font-weight: 600;
+    background-size: 20px 18px !important;
+    cursor: pointer;
+    margin-top: 10px;
+	margin-left: 0;
+	width: 100%;
+}
+
+
+
+// only for safari browser!!!
+@media not all and (min-resolution: 0.001dpcm) {
+    .dropdown {
+           //display: block;
+           position: static;
+       }
+   }
+   
+   a.dropdown-item {
+       text-align: end;
+       cursor: pointer;
+   
+       &:hover {
+           background: #00498e !important;
+       }
+   }
+   
+   ul.dropdown-menu.custom-dropdown.show {
+       padding: unset;
+   }
+   
+   button.btn.btn-secondary.dropdown-toggle {
+       width: 50%;
+       text-align: left;
+       background: #eee !important;
+       color: #111;
+       border: none;
+       margin-top: 100px;
+       float: right;
+   }
+   .dropdown-select.filter {
+       width: 40%;
+       float: right;
+   }
+   
+   .dropdown-select {
+       select {
+           width: 100%;
+           height: 40px;
+           background: #eeeeee;
+           border: none;
+           padding-left: 10px;
+           border-radius: 5px;
+       }
+   }
+
+   .dropdown-list .textbox {
+       width: 100%;
+       border: none;
+   }
+
+   .matBtn {
+       background-color: #004d87 !important;
+       color: white !important;
+    //font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        //font-size: 17px;
+    }
+    
+    .matBtn:hover {
+        background-color: white !important;
+        color: #004d87 !important;
+    }
+    
+    .table-scroll {
+        height: 450px;
+        overflow: auto;
+        margin-top: 20px;
+    }
+    
+    .table-wrapper table {
+        width: 100%;
+    }
+    
+    .table-wrapper table thead th .text {
+        position: absolute;
+        top: -20px;
+        z-index: 2;
+        height: 20px;
+        width: 35%;
+    }
+    .mattercount{
+        float: right;
+        font-size:18px;
+        font-weight:900;
+        margin-top:0px;
+        color:#004d87;
+    }

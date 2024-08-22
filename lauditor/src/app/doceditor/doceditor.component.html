@@ -1,0 +1,266 @@
+<!-- Header here-->
+<div [ngClass]="{'blur': successModel}">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="row main headertop" [ngStyle]="{'display':isDisplay?'block':'none'}">
+                <div class="col-sm-12 compswitch ">
+                    <div class="switch  cswitch cswitchtwo">
+                        <a href="javascript:void(0);" class="optionone compone"
+                            [ngClass]="{'active': selectedValue === 'create'}" (click)="isActive('create')">Create</a>
+                        <a href="javascript:void(0);" class="optiontwo comptwo"
+                            [ngClass]="{ 'active' : selectedValue === 'view' }" (click)="isActive('view')">View</a>
+                    </div>
+                </div>
+            </div>
+            <div class="arrowitem" (click)="hideAndShow()">
+                <i *ngIf="isDisplay" class="fa fa-light fa-chevron-up"></i>
+                <i *ngIf="!isDisplay" class=" fa fa-light fa-chevron-down"></i>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Header ends here-->
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-6 overRoll" #pdfContent>           
+        <!-- <div class="lableTitle layout">Layout: {{documentname}}</div> -->
+        <div class="lableTitle layout" *ngIf="!docSaved">Untitled Document</div>
+        <div class="lableTitle layout" *ngIf="docSaved">{{documentname}}</div>
+        <form [formGroup]="myForm">
+        <div class="col-xs-6"> 
+            <!-- FILE -->
+            <button class="menuBtn1" mat-button #menuTrigger1="matMenuTrigger" (keydown)="onKeyDown($event)" [matMenuTriggerFor]="menu1">File<i class="fa fa-angle-down" aria-hidden="true"></i></button>
+            <mat-menu class="matFile" #menu1="matMenu">
+                <button mat-menu-item (click)="newDoc()"><img class="fileImg" src="assets/img/new.svg"/>&nbsp;New</button>
+                <button mat-menu-item (click)="openDocumentDialog()"><img class="fileImg" src="assets/img/open.svg"/>&nbsp;Open</button>
+                <button mat-menu-item id="btnSave" (click)="saveDocument()"><img class="fileImg" src="assets/img/save.svg"/>&nbsp;Save</button>
+                <button mat-menu-item (click)="downloadDialog()"><img class="saveasImg" src="assets/img/saveas.svg"/>&nbsp;Save As</button> 
+                <button mat-menu-item (click)="deleteDocument()"><img class="fileImg" src="assets/img/trasho.svg"/>&nbsp;Delete</button> 
+            </mat-menu>
+           <!-- INSERT -->
+            <button class="menuBtn2" mat-button #menuTrigger2="matMenuTrigger" (keydown)="onKeyDown($event)" [matMenuTriggerFor]="menu2">Insert<i class="fa fa-angle-down" aria-hidden="true"></i></button>
+            <mat-menu class="matInsert" #menu2="matMenu" xPosition="before">
+                <button mat-menu-item (click)="addBlock('Overview')"><img class="imgoverView" src="assets/img/overview.svg"/>Overview</button>
+                <button mat-menu-item (click)="addBlock('Section')"><img class="imgsecView" src="assets/img/section.svg"/>&nbsp;&nbsp;Section</button>
+                <button mat-menu-item (click)="addBlock('Sub Section')"><img class="imgsubView" src="assets/img/subsection.svg"/>&nbsp;Sub Section</button>
+                <button mat-menu-item (click)="addBlock('Sub Sub Section')"><img class="imgsubsubView" src="assets/img/subsubsection.svg"/>&nbsp;Sub Sub Section</button>
+                <button mat-menu-item (click)="addBlock('Paragraph')"><img class="imgView" src="assets/img/paragraph.svg"/>&nbsp;Paragraph</button>
+                <button mat-menu-item (click)="addBlock('Numbered List')"><img class="imgView" src="assets/img/order.svg"/>&nbsp;Numbered List</button>
+                <button mat-menu-item (click)="addBlock('Bulleted List')"><img class="imgView" src="assets/img/unord.svg"/>&nbsp;Bulleted List</button>
+                <button mat-menu-item (click)="addBlock('Page Break');insertPageBreak()"><img class="imgPort" src="assets/img/pagebreak.svg"/>Page Break</button>
+            </mat-menu>
+        </div> 
+
+        <div class="form-group">
+            <label for="title" class="lableTitle">Title</label>
+            <input formControlName="title" class="text-size form-control createDoc" name="title" 
+            [(ngModel)]="title" value="" type="hidden"  maxlength="255" placeholder="Enter the Title" type="text" 
+            (keydown)="onKeyDown1($event)" (input)="restrictNoFirst($event);restrictSpaces($event)" pattern="[^\s]*" oninput="this.value = this.value.replace(/[^A-Za-z0-9-,_!@$%^*;'&/.()\|# ]|^ /g,'')">
+            <!-- <div *ngIf="myForm.get('title').errors && submitted" class="errorStyle">
+                <div *ngIf="myForm.get('title').errors.required">This field is required</div>
+            </div> -->
+        </div>
+        <div class="form-group">
+            <label for="title" class="lableTitle">Author</label>
+            <input formControlName="author" maxlength="255" class="text-size form-control createDoc" name="title" 
+            [(ngModel)]="author" value="" type="hidden" placeholder="Enter the Author" type="text" 
+            (keydown)="onKeyDown1($event)" (input)="restrictNoFirst($event);restrictSpaces($event)" pattern="[^\s]*" oninput="this.value = this.value.replace(/[^A-Za-z0-9-,_!@$%^*;'&/.\|()# ]|^ /g,'')">
+            <!-- <div *ngIf="myForm.get('author').errors && submitted" class="errorStyle">
+                <div *ngIf="myForm.get('author').errors.required">This field is required</div>
+            </div> -->
+        </div>
+        <!--<div class="form-group padDown">
+            <label for="title" class="lableTitle">Created</label>
+            <input formControlName="date" value="" type="hidden" [(ngModel)]="date" class="text-size form-control createDoc" readonly>
+        </div>-->
+
+        <div id="tool-content" class="form-group" *ngIf="isOpen">
+            <ng-container formArrayName="contentListItems">
+            <div class="oderAlign" *ngFor="let item of myForm.get('contentListItems').controls; let i = index" [formGroupName]="i">
+            
+                <!--Overview -->
+                <div *ngIf="item.value.content === 'Overview'"> 
+                    <label for="title" class="lableTitle" style="padding-right:5px">{{item.value.content}}</label>
+                    <img (click)="openoverviewDialog(item,i)" class="expand" src="assets/img/expand.svg"/> 
+                    <i class="fa fa-times close secclose" (click)="removeItem(i)" aria-hidden="true"></i>
+                    <textarea name="type" formControlName="contentData" maxlength="5000" placeholder="Enter your content" class="text-size form-control textareaDoc" (input)="restrictSplCharacteratFirst($event)" (keypress)="onKeyPress($event)" rows="3" cols="50"></textarea><!--restricttextSpace($event);-->
+                </div>
+
+                  <!-- <div *ngIf="item.value.content === 'Overview'"> 
+                    <label for="title" class="lableTitle" style="padding-right:5px">{{item.value.content}}</label>
+                    <img (click)="openoverviewDialog(item,i)" class="expand" src="assets/img/expand.svg"/> 
+                    <i class="fa fa-times close secclose" (click)="removeItem(i)" aria-hidden="true"></i>
+                    
+                    <div *ngIf="!item.AddDesc">
+                        <textarea name="type" formControlName="contentData" maxlength="5000" placeholder="Enter your content" class="text-size form-control textareaDoc" (input)="restricttextSpace($event)" (keypress)="onKeyPress($event)" (keydown)="onKeyDown($event)" rows="3" cols="50"></textarea>
+                        <div class="pushBtn">
+                        <!-- <button class="btn btn-default btncancel" (click)="addItem(item)">Cancel</button> --
+                        <button type="submit" (click)="item.AddDesc=false;addItem(item)" class="btn btn-default btnsave">Save</button>
+                        </div>
+                    </div>
+
+                    <div class="row container colab" (click)="toggleMore(item)" *ngIf="item.AddDesc">
+                        <p class="lgalsubitem pad2 textNotes" [ngClass]="!item.isNotesElipses ? 'noteselipses' : ''">{{truncateString(item?.value.contentData)}}
+                            <a *ngIf="item?.value.contentData.length > 250" class="readmore" (click)="toggleMore(item)"><u>Read More</u></a>
+                        </p>
+                    </div>
+                   </div> -->
+
+                   <!--Sections.., Paragraph-->
+                  <div *ngIf="item.value.content === 'Section' || item.value.content === 'Sub Section' || item.value.content === 'Sub Sub Section' || item.value.content === 'Paragraph'">
+                    <label for="title" class="lableTitle" style="padding-right:5px">{{item.value.content}}<a class="hypendot" *ngIf="item.value.contentTitle.length > 0">&nbsp;-&nbsp;</a>
+                      <textarea class="overviewTitle" formControlName="contentTitle" type="text" (keypress)="onKeyPress($event)" readonly></textarea>                      
+                      <a class="hypendot" *ngIf="item.value.contentTitle.length > 38 && !isFirefox">...</a>
+                    </label>
+
+                    <img (click)="opencontentDialog(item,i)" class="expand" src="assets/img/expand.svg"/> 
+                    <i class="fa fa-times close secclose" (click)="removeItem(i)" aria-hidden="true"></i>
+                    <textarea name="type" formControlName="contentData" maxlength="5000" placeholder="Enter your content" class="text-size form-control textareaDoc" (input)="restrictSplCharacteratFirst($event)" (keypress)="onKeyPress($event)" rows="3" cols="50"></textarea>
+                 </div>
+
+                <!--Order & Unorder lists-->
+                  <div *ngIf="item.value.content === 'Bulleted List'" class="form-group">
+                    <label for="title" class="lableTitle" style="padding-right:5px">{{item.value.content}}</label>
+                    <!-- <mat-icon class="closePlus iOd" aria-hidden="true" (click)="addNestedContentItem(i)">add_circle_outline</mat-icon> -->
+                    <i class="fa fa-times close secclose" aria-hidden="true" (click)="removeItem(i)"></i>
+                    <div [ngClass]="{'list-container': item.get('orderListItems').length > 3}" formArrayName="orderListItems"><!--class="listScroll"-->
+                    <div class="oderAlign1" *ngFor="let orderitem of item.get('orderListItems').controls; let j = index;" [formGroupName]="j"> 
+                        <input formControlName="contentData" maxlength="5000" placeholder="Enter list items" type="text" (input)="restrictSplCharacteratFirst($event)" (keypress)="onKeyPress($event); onEnterPress($event)" class="text-size form-control createDoc unorderMain"/> 
+                        <i class="fa-solid fa-trash delIcon" *ngIf="j != 0" (click)="removeList(i,j)"></i> 
+                    </div> 
+                    </div>
+                    <!-- <div class="pluslist" (click)="addNestedContentItem(i)"><mat-icon class="closePlus" aria-hidden="true">add_circle_outline</mat-icon>Add More</div> -->
+                    <button class="pluslist addBtn" (click)="addNestedContentItem(i)"><mat-icon class="closePlus" aria-hidden="true">add_circle_outline</mat-icon>&nbsp;Add More</button>
+                  </div>
+
+                  <div *ngIf="item.value.content === 'Numbered List'" class="form-group">
+                    <label for="title" class="lableTitle" style="padding-right:5px">{{item.value.content}}</label>
+                    <i class="fa fa-times close secclose" aria-hidden="true" (click)="removeItem(i)"></i>
+                    <div [ngClass]="{'list-container': item.get('orderListItems').length > 3}" formArrayName="orderListItems">
+                    <div class="oderAlign2" *ngFor="let orderitem of item.get('orderListItems').controls; let j = index;" [formGroupName]="j"> 
+                        <input formControlName="contentData" maxlength="5000" placeholder="Enter list items" type="text" (input)="restrictSplCharacteratFirst($event)" (keypress)="onKeyPress($event); onEnterPress($event)" class="text-size form-control createDoc orderMain"/> 
+                        <i class="fa-solid fa-trash delIcon" *ngIf="j != 0" (click)="removeList(i,j)"></i> 
+                    </div> 
+                    </div>
+                    <button class="pluslist addBtn" (click)="addNestedContentItem2(i)"><mat-icon class="closePlus" aria-hidden="true">add_circle_outline</mat-icon>&nbsp;Add More</button>
+                  </div>
+                <!--Order & Unorder lists-->
+
+                <!-- Page Break -->
+                <div class="pbDiv" *ngIf="item.value.content === 'Page Break'"> 
+                    <i class="fa fa-times close secclose" (click)="removeItem(i)" aria-hidden="true"></i>
+                    <div class="form-group" id="narrow" *ngIf="isPageBreak(item.value.content)">
+                        <div class="page-break content" #contento></div>
+                    </div>
+                </div>
+            </div>
+            </ng-container>
+        </div>
+
+        <!-- /Contents -->
+        <!-- <div class="form-group" id="narrow">
+         <app-latexblock (formDataEvent)="handleFormData($event)" 
+          *ngFor="let block of blocks" [content]="block.content" [onSave]="onSave"></app-latexblock>
+        </div>  -->
+        <!-- Contents/ -->
+
+        </form>
+    </div>
+
+<!--- Right Preview -->
+    <div class="col-xs-12 col-sm-12 col-md-6">
+        <div class="container">
+            <p class="preview">Preview</p>
+            <p><img (click)="getPreview()" class="eyeco" src="assets/img/eyesico.svg"></p>
+        </div>
+
+        <div class="row containerbox">
+            <div class="col-sm-12">
+                <div class="container">
+                    <div class="row inforowaling">
+                        <div class="col-sm-1 arrowcolumn">
+                            <div class="infocontainerleft">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="iframeStyle">
+            <iframe height="100%" width="100%" class="responsive-iframe" [hidden]="!showPreviewDoc" [src]='pdfSrc' frameborder="0"><!--[hidden]="!showPreviewDoc"-->
+                <div class="form-group"></div>
+            </iframe>
+        </div>
+
+    </div>
+
+    <!--- Open the SAVE DIALOG BOX -->
+    <jw-modal id="custom-modal-1" class="doc-del-success doc-box">
+        <div class="doc-iframe-scs-body">
+          <div class="container">
+            <div class="row">
+              <div class="">
+                <form [formGroup]="saveForm">
+                    <div class="closeDialog">
+                        <i class="fa fa-times xClose" (click)="closeDialog()" style="margin-top: 10px; margin-right: 10px" aria-hidden="true"></i>
+                    </div>
+                
+                    <div class="openDialog">
+                        <div class="form-group">
+                         <label for="title" class="lableTitle overedText">File name</label>
+                         <input maxlength="25" formControlName="documentname" (input)="restrictFirstPosition($event);restrictSpaces($event);restrictFirstCharacter($event)" placeholder="Enter document name" type="text" 
+                         pattern="[^\s]*" (keydown)="onKeyDown($event)" class="text-size form-control createDoc" oninput="this.value = this.value.replace(/[^A-Za-z0-9-_ ]|^ /g,'')" name="title">
+                         <div *ngIf="saveForm.get('documentname').errors && submitted" class="errorStyle">
+                             <div *ngIf="saveForm.get('documentname').errors.required">Filename is required</div>
+                             <!-- <div *ngIf="saveForm.get('documentname').errors.pattern">Accepts only places</div>  -->
+                         </div>  
+                        </div>
+                
+                        <div class="overviewSave savefilenameBtn">
+                        <!-- <button type="reset" class="btn btn-default btncancel" (click)="closeDialog()">Cancel</button> -->
+                        <button type="submit" class="btn btn-default btnsave savefile pull-right" (click)="saveDoc()">Save</button> 
+                        </div>
+                    </div>
+                </form>
+            </div>
+          </div>
+        </div></div>
+    </jw-modal>
+
+    <!--- Delete DIALOG BOX -->
+    <jw-modal id="custom-modal-2" class="doc-view-scs">
+        <div class="doc-view-scs-body">
+          <div class="container">
+            <div class="row">
+              <div class="">
+                <div class="iconclose" (click)="closeModal('custom-modal-2');"><b>X</b></div>
+                <div class="alertpara">
+                  <p class="alertparatxt"><b>Confirmation</b></p>
+                </div>
+                <div class="alertext">
+                  Are you sure you want to delete<br><b>{{documentname}}</b> document?
+                </div>
+              </div>
+              <div class="alertbutton">
+                <button class="btn btn-default  alertbtn alertbtnno" (click)="closeModal('custom-modal-2');">No</button>
+                <button class="btn btn-default alertbtn alertbtnyes"
+                  (click)="closeModal('custom-modal-2');deleteDoc()">Yes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </jw-modal>
+
+    <ngx-spinner size="medium" type="ball-clip-rotate"></ngx-spinner>
+</div> 
+
+<router-outlet></router-outlet>
+
+
+
+
+
+
+

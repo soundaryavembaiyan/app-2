@@ -1,0 +1,151 @@
+// component css goes here
+.optionhigh {
+    border-radius: 0;
+    border: none;
+}
+
+.alignleft {
+    display: flex;
+}
+
+.grpFont {
+    font-size: 20px;
+    font-weight: 900;
+    font-variant: normal;
+    color: #004d87;
+    display: inline-block;
+    text-align: left;
+    float: left;
+}
+
+.calendorselect {
+    height: 39px;
+    background-color: #EEEEEE;
+    border: 1px solid #E2E2E2;
+    border-radius: 5px;
+    font-weight: 600;
+    background-size: 20px 18px !important;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-left: 0;
+    width: 100%;
+}
+
+.Clientz {
+    display: flex;
+}
+
+.matClient {
+    padding-right: 10px;
+    width: 50%;
+}
+
+.matCorp {
+    padding-left: 10px;
+    width: 100%;
+}
+
+.addToBtn {
+    position: absolute;
+    position: relative;
+    top: 20px;
+}
+
+.actionbtn {
+    float: right;
+}
+
+.addCC {
+    color: #004d87;
+}
+
+.space {
+    padding-top: 20px;
+}
+
+.warn {
+    color: red;
+    font-weight: 900;
+}
+
+.addTemp {
+    width: auto;
+}
+
+.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.casetito {
+    cursor: pointer;
+    height: auto;
+    width: 230px;
+}
+
+.selectto {
+    margin-left: 20px;
+}
+
+.textAl {
+    text-align: start;
+    margin-top: 3px;
+}
+
+.selAl {
+    text-align: start;
+    margin-top: 3px;
+    margin-right: 60px;
+}
+
+.dataText {
+    font-size: 17px;
+    font-weight: 800;
+    margin-top: -12px;
+}
+
+.iconclose {
+    text-align: right;
+    padding-top: 10px;
+    padding-right: 5px;
+    cursor: pointer;
+    margin-right: 15px;
+}
+
+.alertbutton {
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.alertext {
+    width: 222px;
+    height: auto;
+    margin: auto;
+    text-align: center;
+    margin-top: 30px;
+}
+.selOn{
+    margin-left: -55px;
+    text-align: end;
+}
+.checkAll{
+    font-size: 1rem;
+    font-weight: 900;
+}
+.searchtextcr::placeholder{
+    color: #000 !important;
+    font-weight: 900;
+}
+.btnsave {
+  background: #004d87 0% 0% no-repeat padding-box;
+  border-radius: 5px;
+  color: #fff;
+  border: none !important;
+}
+.btnsave:disabled,
+.btnsave[disabled] {
+  background: #004d87 0% 0% no-repeat padding-box;
+  border-radius: 5px;
+  color: #fff;
+  border: none !important;
+}

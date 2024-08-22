@@ -1,0 +1,80 @@
+// component css goes here
+.grpFont{
+    font-size: 20px;
+    font-weight: 900;
+    font-variant: normal;
+    color: #004d87;
+    display: inline-block;
+}
+.optionhigh2{
+    border-radius: 5px 5px 5px 5px;
+ }
+ .casetito {
+    cursor: pointer;
+    height: auto;
+    width: 230px;
+}
+
+.textAl {
+    text-align: start;
+    margin-top: 3px;
+}
+
+.selAl {
+    text-align: start;
+    margin-top: 3px;
+    margin-right: 60px;
+}
+
+.flex-container {
+    display: flex;
+    flex-flow: wrap;
+    width: 750px;
+    align-items: stretch;
+    margin-bottom: 10px;
+}
+
+.flex-container > div {
+    width: auto;
+    //cursor: pointer;
+    //margin: 10px;
+    margin-left: 10px;
+    text-align: start;
+}
+.selectpriorGrp {
+    height: 39px;
+    background: #eeeeee 0% 0% no-repeat padding-box;
+    padding: 8px 20px 10px 20px;
+    color: #000;
+    font-size: 16px;
+    display: inline-block;
+    margin-top: 10px;
+    //cursor: default;
+}
+.selOn{
+    margin-left: -55px;
+    text-align: end;
+}
+.checkAll{
+    font-size: 1rem;
+    font-weight: 900;
+}
+.searchtextcr::placeholder{
+    color: #000 !important;
+    font-weight: 900;
+}
+.view-more-less {
+    cursor: pointer;
+    color: blue;
+    margin-top: 10px !important;
+    text-decoration: underline;
+}
+.selGroup {
+    font-size: 19px;
+    font-weight: 900;
+    margin-top: 8px;
+    margin-left: 8px;
+}
+.divShow{
+    margin-top: 10px;
+}
