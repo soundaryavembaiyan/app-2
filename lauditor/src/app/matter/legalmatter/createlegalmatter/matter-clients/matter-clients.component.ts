@@ -449,10 +449,12 @@ export class MatterClientsComponent implements OnInit {
     }
 
     saveClients() {
-        const individualForm = this.tempClient.value.name || this.tempClient.value.lastName || this.tempClient.value.email || this.tempClient.value.country;
-        const entityForm = this.entityClient.value.fullname || this.entityClient.value.contact_person || this.entityClient.value.email || this.entityClient.value.country;
+        // const individualForm = this.tempClient.value.name || this.tempClient.value.lastName || this.tempClient.value.email || this.tempClient.value.country;
+        // const entityForm = this.entityClient.value.fullname || this.entityClient.value.contact_person || this.entityClient.value.email || this.entityClient.value.country;
+        const tempVal = this.tempClient.value.name.length > 1 || this.tempClient.value.lastName.length > 1 || this.tempClient.value.email.length > 1 || this.tempClient.value.country.length > 1;
+        const entityVal = this.entityClient.value.fullname.length > 1 || this.entityClient.value.contact_person.length > 1 || this.entityClient.value.email.length > 1 || this.entityClient.value.country.length > 1;
 
-        if (individualForm || entityForm) {
+        if (tempVal || entityVal) {
             this.toastr.error('Please save your changes to proceed');
             return;
         }

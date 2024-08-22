@@ -37,16 +37,20 @@
       <thead>
         <tr class="theader">
           <th>
-            <p class="thheadname"> Name</p>
+            <p class="thheadname"> Title</p>
             <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('title')">
+          </th>
+          <th>
+            <p class="thheadname"> Number</p>
+            <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('matterNumber')">
           </th>
           <th>
             <p class="thheadname"> Type</p>
             <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('matterType')">
           </th>
           <th>
-            <p class="thheadname"> Created On</p>
-            <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('startdate')">
+            <p class="thheadname"> Date of Filing</p>
+            <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('created_on')">
           </th>
           <th>
             <p class="thheadname"> Status</p>
@@ -67,6 +71,7 @@
       <tbody>
         <tr class="rone veiw-items" *ngFor="let generalMatter of generalMatters |filter:searchText">
           <td>{{generalMatter.title}}</td>
+          <td>{{generalMatter.matterNumber}}</td>
           <td>{{generalMatter.matterType}}</td>
           <td>{{generalMatter.created_on}}</td>
           <td>{{generalMatter.status}}</td>
