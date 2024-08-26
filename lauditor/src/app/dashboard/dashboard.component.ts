@@ -23,7 +23,7 @@ export class DashboardComponent implements OnInit, OnChanges {
     {
       name: 'Firm Profile',
       roles: ['AAM'],
-      id: 'profile', link: '/profile', image: 'assets/img/Firmprofile.svg', class: ''
+      id: 'firm profile', link: '/profile', image: 'assets/img/Firmprofile.svg', class: ''
       //id: 'firm Profile'
     },
     {
@@ -37,9 +37,9 @@ export class DashboardComponent implements OnInit, OnChanges {
       id: 'documents', link: '/documents', image: 'assets/img/Document.svg', class: ''
     },
     {
-      name: 'Doc-Editor',
+      name: 'Doc Editor',
       roles: ['TM', 'GH', 'SU'],
-      id: 'Doc-Editor', link: '/doceditor', image: 'assets/img/docedi.svg', class: ''
+      id: 'doc editor', link: '/doceditor', image: 'assets/img/docedi.svg', class: ''
     },
     {
       name: 'Relationships',
@@ -78,9 +78,9 @@ export class DashboardComponent implements OnInit, OnChanges {
       id: 'notifications', link: '/notifications', image: 'assets/img/notification.svg', class: ''
     },
     {
-      name: 'Audit',
+      name: 'Audit Trails',
       roles: ['GH', 'SU', 'AAM'],
-      id: 'audits', link: '/audit', image: 'assets/img/audits.svg', class: ''
+      id: 'audit trails', link: '/audit', image: 'assets/img/audits.svg', class: ''
     },
     {
       name: 'Groups',
@@ -103,7 +103,7 @@ export class DashboardComponent implements OnInit, OnChanges {
     {
       name: 'Firm Profile',
       roles: ['AAM'],
-      id: 'profile', link: '/profile', image: 'assets/img/Firmprofile.svg', class: ''
+      id: 'firm profile', link: '/profile', image: 'assets/img/Firmprofile.svg', class: ''
     },
     {
       name: 'Matters',
@@ -116,9 +116,9 @@ export class DashboardComponent implements OnInit, OnChanges {
       id: 'documents', link: '/documents/upload/firm', image: 'assets/img/Document.svg', class: ''
     },
     {
-      name: 'Doc-Editor',
+      name: 'Doc Editor',
       roles: ['TM', 'GH', 'SU'],
-      id: 'Doc-Editor', link: '/doceditor', image: 'assets/img/docedi.svg', class: ''
+      id: 'doc editor', link: '/doceditor', image: 'assets/img/docedi.svg', class: ''
     },
     {
       name: 'Relationships',
@@ -153,9 +153,9 @@ export class DashboardComponent implements OnInit, OnChanges {
       id: 'notifications', link: '/notifications', image: 'assets/img/notification.svg', class: ''
     },
     {
-      name: 'Audit',
+      name: 'Audit Trails',
       roles: ['GH', 'SU', 'AAM'],
-      id: 'audits', link: '/audit', image: 'assets/img/audits.svg', class: ''
+      id: 'audit trails', link: '/audit', image: 'assets/img/audits.svg', class: ''
     },
     {
       name: 'Departments',
@@ -168,7 +168,7 @@ export class DashboardComponent implements OnInit, OnChanges {
     {
       name: 'Firm Profile',
       roles: ['AAM'],
-      id: 'profile', link: '/profile', image: 'assets/img/Firmprofile.svg', class: ''
+      id: 'firm profile', link: '/profile', image: 'assets/img/Firmprofile.svg', class: ''
     },
     {
       name: 'Documents',
@@ -176,9 +176,9 @@ export class DashboardComponent implements OnInit, OnChanges {
       id: 'documents', link: '/documents', image: 'assets/img/Document.svg', class: ''
     },
     {
-      name: 'Doc-Editor',
+      name: 'Doc Editor',
       roles: ['TM', 'GH', 'SU'],
-      id: 'Doc-Editor', link: '/doceditor', image: 'assets/img/docedi.svg', class: ''
+      id: 'doc editor', link: '/doceditor', image: 'assets/img/docedi.svg', class: ''
     },
     {
       name: 'Relationships',
@@ -206,9 +206,9 @@ export class DashboardComponent implements OnInit, OnChanges {
       id: 'notifications', link: '/notifications', image: 'assets/img/notification.svg', class: ''
     },
     {
-      name: 'Audit',
+      name: 'Audit Trails',
       roles: ['GH', 'SU', 'AAM'],
-      id: 'audits', link: '/audit', image: 'assets/img/audits.svg', class: ''
+      id: 'audit trails', link: '/audit', image: 'assets/img/audits.svg', class: ''
     },
     {
       name: 'Groups',
@@ -257,7 +257,7 @@ export class DashboardComponent implements OnInit, OnChanges {
     {
       name: 'Firm Profile',
       roles: ['AAM'],
-      id: 'profile', link: '/profile', image: 'assets/img/Firmprofile.svg', class: ''
+      id: 'firm profile', link: '/profile', image: 'assets/img/Firmprofile.svg', class: ''
     },
     {
       name: 'Documents',
@@ -291,9 +291,9 @@ export class DashboardComponent implements OnInit, OnChanges {
       id: 'notifications', link: '/notifications', image: 'assets/img/notification.svg', class: ''
     },
     {
-      name: 'Audit',
+      name: 'Audit Trails',
       roles: ['GH', 'SU', 'AAM'],
-      id: 'audits', link: '/audit', image: 'assets/img/audits.svg', class: ''
+      id: 'audit trails', link: '/audit', image: 'assets/img/audits.svg', class: ''
     },
     {
       name: 'Groups',
@@ -332,13 +332,15 @@ export class DashboardComponent implements OnInit, OnChanges {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         const activeItem = this.navItem.find(item => this.router.url.includes(item.link));
+        // console.log('activeItem',activeItem)
         if (activeItem) {
           this.categoryName = activeItem.name;
           localStorage.setItem('categoryName', this.categoryName);
           localStorage.setItem('activeNavItem', activeItem.id);
-        } else {
-          this.categoryName = 'Dashboard';
-        }
+        } 
+        // else {
+        //   this.categoryName = 'Dashboard';
+        // }
       }
     });
 

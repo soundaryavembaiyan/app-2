@@ -9,6 +9,7 @@ import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'
 export class AddAdivicateComponent implements OnInit {
     @Output() childButtonEvent = new EventEmitter();
     @Input() editAdvocatesList: any;
+    @Input() isAddDisable:boolean = false;
     advicate: any = [];
     memberDetail: any = FormGroup;
     submitted = false;
@@ -78,6 +79,8 @@ export class AddAdivicateComponent implements OnInit {
     removeOpponente(item: any) {
         let index = this.advicate.findIndex((d: any) => d.email === item.email); //find index in your array
         this.advicate.splice(index, 1);
+        // Emit the saveBtn
+        this.childButtonEvent.emit(this.advicate);
     }
 
     editOpponente(item: any, i: number) {

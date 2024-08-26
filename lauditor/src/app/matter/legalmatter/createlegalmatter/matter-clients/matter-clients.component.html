@@ -335,7 +335,7 @@
                   <button type="reset" class="btn btn-default btncancel
                     btnrightitem" (click)="OnFormCancel()">Cancel</button>
                   <button type="submit" class="btn btn-primary btnsave savecls addTemp"
-                   >Add as Temporary</button>
+                  >Add as Temporary</button>
                   <!-- <button type="submit" class="btn btn-primary btnsave savecls" (click)="inputsubmit='invite'">Send Invite</button> -->
                 </div>
               </form>
@@ -423,7 +423,8 @@
       <div class="btnbox">
         <button type="reset" class="btn btn-default btncancel btnrightitem" (click)="OnCancel()">Cancel</button>
         <button *ngIf="product != 'corporate'" type="submit" class="btn btnsave savecls" 
-          [disabled]="!(selectedClients?.length > 0 || tempClients?.length > 0)"
+          [disabled]="!((selectedClients.length > 0 && isSaveEnable) || (tempClients?.length > 0 && isSaveEnable))"
+          [ngClass]="{'disabled': !((selectedClients.length > 0 && isSaveEnable) || (tempClients?.length > 0 && isSaveEnable))}"
           (click)="saveClients()">Next</button>
         <button *ngIf="product == 'corporate'" type="submit" class="btn btn-primary btnsave savecls"
           (click)="saveClients()">Next</button>

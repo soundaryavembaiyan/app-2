@@ -352,10 +352,10 @@ export class MatterGroupsComponent implements OnInit {
 
   removeGroup(group: any) {
     this.memData = group;
-    // console.log('group', group);
-    // console.log('isCreate', this.isCreate);
+    //console.log('group', group);
+    //console.log('isCreate', this.isCreate);
 
-    if (this.product != 'corporate' && this.groupsList.length === 0 && window.location.pathname.indexOf("updateGroups") > -1) {
+    if (this.product != 'corporate' && this.groupsList.length === 0 && window.location.pathname.indexOf("updateGroups") > -1 && group.canDelete === false) {
       this.openDialog();
       return;
     }

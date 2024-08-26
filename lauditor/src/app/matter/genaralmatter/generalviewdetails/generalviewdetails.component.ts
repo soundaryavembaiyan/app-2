@@ -99,6 +99,7 @@ export class GeneralViewDetailsComponent implements OnInit {
   visibleClients: any[] = [];
   showAllClients: boolean = false;
   sortAscending = true; 
+  description:any;
   
   //Initializing docUpload Variables
   // reactiveForm: any;
@@ -1077,11 +1078,13 @@ export class GeneralViewDetailsComponent implements OnInit {
           const uploadPromises = [];
           for (var i = 0; i < this.uploadedDocs.length; i++) {
             let fdata = new FormData();
+            this.description = this.uploadedDocs[i].description?.trim() || this.uploadedDocs[i].name;
             const ids = this.data.groups.map((obj: any) => obj.id);
             const groupAcls = this.data.groupAcls;
 
             fdata.append('name', this.uploadedDocs[i].name);
-            fdata.append('description', this.uploadedDocs[i].description);
+            //fdata.append('description', this.uploadedDocs[i].description);
+            fdata.append('description', this.description);
             fdata.append('filename', this.uploadedDocs[i].name)
             fdata.append('content_type', this.uploadedDocs[i].type)
             fdata.append('category', "client")
@@ -1140,7 +1143,7 @@ export class GeneralViewDetailsComponent implements OnInit {
               "doctype": 'general',
               "user_id": localStorage.getItem('user_id'),
               "name":data.name,
-              "description":data.description,
+              "description":this.description,
               "added_encryption":false,
               "created": currentDateTime,
               "addedBy":localStorage.getItem('name')

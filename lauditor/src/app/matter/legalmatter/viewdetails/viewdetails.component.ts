@@ -1145,8 +1145,8 @@ export class ViewDetailsComponent implements OnInit {
             .then((results) => {
               // Process the results if needed
               this.getDocuments();
-              this.AddExistingSelected = true;
-              this.UploadDocSelected = false;
+              // this.AddExistingSelected = true;
+              // this.UploadDocSelected = false;
               //this.showAlert('Files uploaded successfully!', false);
               //this.toast.success('Files uploaded successfully!')
             },
@@ -1206,6 +1206,8 @@ export class ViewDetailsComponent implements OnInit {
             this.toast.error(res.msg)
             //reject(res.msg);
           }
+          this.AddExistingSelected = true;
+          this.UploadDocSelected = false;
         }, 
         // (err: any) => {
         //   reject(err.msg);

@@ -221,11 +221,24 @@ export class MatterInfoComponent implements OnInit {
     //console.log("Date --->" + this.events);
   }
   OnCancel() {
+    let caseReg = this.caseRegister.value
+    const hasValidInput =
+      (this.caseRegister.get('title').touched && caseReg.title.trim().length > 0) ||
+      (this.caseRegister.get('case_number').touched && caseReg.case_number.trim().length > 0) ||
+      (this.caseRegister.get('case_type').touched && caseReg.case_type.trim().length > 0) ||
+      (this.caseRegister.get('court_name').touched && caseReg.court_name.trim().length > 0) ||
+      (this.caseRegister.get('date_of_filling').touched && caseReg.date_of_filling.trim().length > 0) ||
+      (this.caseRegister.get('description').touched && caseReg.description.trim().length > 0) ||
+      (this.caseRegister.get('judges').touched && caseReg.judges.trim().length > 0) ||
+      (this.caseRegister.get('priority').touched && caseReg.priority.trim().length > 0) ||
+      (this.caseRegister.get('status').touched && caseReg.status.trim().length > 0) ||
+      (this.caseRegister.get('tags').touched && caseReg.tags.trim().length > 0);
+
     if (this.isEdit) {
       this.router.navigate(['/matter/legalmatter/view']);
     }
     else {
-      if (this.caseRegister.dirty || this.caseRegister.touched) {
+      if (hasValidInput || this.data) {
         this.dialog.open(LeavepageComponent, {
           width: '350px',  // Set the width here
           height: '180px',
@@ -234,9 +247,6 @@ export class MatterInfoComponent implements OnInit {
           disableClose: true
         });
         return;
-        // else{
-        //   this.toast.error('Please provide a value.')
-        // }
       }
     }
     //else {

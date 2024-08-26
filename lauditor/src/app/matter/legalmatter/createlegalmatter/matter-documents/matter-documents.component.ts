@@ -45,6 +45,7 @@ export class MatterDocumentsComponent {
     filteredData:any;
     isSelectAllVisible = true;
     groupName:any;
+    showAllItems = false;
 
     constructor(private httpservice: HttpService,
         private fb: FormBuilder,private dialog: MatDialog, private router: Router,
@@ -344,4 +345,10 @@ export class MatterDocumentsComponent {
         }
         return text;
     }  
+        
+    // Function to toggle the view state
+    toggleView() {
+        this.showAllItems = !this.showAllItems;
+    }
+
 }

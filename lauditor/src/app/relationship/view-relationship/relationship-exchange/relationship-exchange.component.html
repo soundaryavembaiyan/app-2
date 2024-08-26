@@ -506,8 +506,7 @@
     </div>
     <div class="btnbox" *ngIf="currentTab!='profile' && currentInnerTab!='sharedwithus' && !isConformation">
         <button type="reset" class="btn btn-default btncancel" (click)="cancel()">Cancel</button>
-        <button type="submit"
-                [disabled]="!(sharedandUnsharedData.add.length>0||sharedandUnsharedData.remove.length>0)"
+        <button type="submit" [disabled]="!(sharedandUnsharedData.add.length>0||sharedandUnsharedData.remove.length>0)"
             class="btn btn-default btnsave savecls" (click)="shareClick()">Share</button>
 
     </div>

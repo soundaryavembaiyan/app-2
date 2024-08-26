@@ -449,10 +449,15 @@ export class MatterClientsComponent implements OnInit {
     }
 
     saveClients() {
-        // const individualForm = this.tempClient.value.name || this.tempClient.value.lastName || this.tempClient.value.email || this.tempClient.value.country;
-        // const entityForm = this.entityClient.value.fullname || this.entityClient.value.contact_person || this.entityClient.value.email || this.entityClient.value.country;
-        const tempVal = this.tempClient.value.name.length > 1 || this.tempClient.value.lastName.length > 1 || this.tempClient.value.email.length > 1 || this.tempClient.value.country.length > 1;
-        const entityVal = this.entityClient.value.fullname.length > 1 || this.entityClient.value.contact_person.length > 1 || this.entityClient.value.email.length > 1 || this.entityClient.value.country.length > 1;
+        const tempVal = (this.tempClient.value.name?.length > 1 || 
+            this.tempClient.value.lastName?.length > 1 || 
+            this.tempClient.value.email?.length > 1 || 
+            this.tempClient.value.country?.length > 1);
+
+        const entityVal = (this.entityClient.value.fullname?.length > 1 || 
+              this.entityClient.value.contact_person?.length > 1 || 
+              this.entityClient.value.email?.length > 1 || 
+              this.entityClient.value.country?.length > 1);
 
         if (tempVal || entityVal) {
             this.toastr.error('Please save your changes to proceed');
@@ -591,13 +596,6 @@ export class MatterClientsComponent implements OnInit {
         if (checkbox) {
             checkbox.checked = false;
         }
-
-        // Dialog opening logic
-        // if (this.isFormIncomplete()) {
-        //     this.searchInput.nativeElement.blur();
-        //     this.keyModel = true;
-        //     return;
-        // }
     }
 
     //if form is incomplete
@@ -615,8 +613,8 @@ export class MatterClientsComponent implements OnInit {
         // console.log('entityClient',this.entityClient.value)
         // || this.tempClient.dirty ||  this.tempClient.touched || this.entityClient.dirty ||  this.entityClient.touched 
 
-        const tempVal = this.tempClient.value.name.length > 1 || this.tempClient.value.lastName.length > 1 || this.tempClient.value.email.length > 1 || this.tempClient.value.country.length > 1;
-        const entityVal = this.entityClient.value.fullname.length > 1 || this.entityClient.value.contact_person.length > 1 || this.entityClient.value.email.length > 1 || this.entityClient.value.country.length > 1;
+        const tempVal = (this.tempClient.value.name.length > 1 || this.tempClient.value.lastName.length > 1 || this.tempClient.value.email.length > 1 || this.tempClient.value.country.length > 1);
+        const entityVal = (this.entityClient.value.fullname.length > 1 || this.entityClient.value.contact_person.length > 1 || this.entityClient.value.email.length > 1 || this.entityClient.value.country.length > 1);
 
         if (tempVal) {
             this.successModel = true;
@@ -626,12 +624,13 @@ export class MatterClientsComponent implements OnInit {
             this.successModel = true;
             return;
         }
-        else{}
+        else{
         this.selectedType = type;
         this.successModel = false;
         this.ClientType = e.target.name;
         this.CorpType
         this.tempClient.controls.type.patchValue(type);
+        }
     }
 
     // getType(e: any, type: any) {
@@ -697,6 +696,7 @@ export class MatterClientsComponent implements OnInit {
 
     oneEntitySubmit(submitType: string) {
         this.inputsubmit = submitType; 
+        this.isSaveEnable = true;
         this.entitysubmitted = true;
         // if (this.entityClient.invalid) {
         //     return;
@@ -736,7 +736,7 @@ export class MatterClientsComponent implements OnInit {
                     } else if (error.status === 400) {
                         if (error.error.errors) {
                             error.error.errors.forEach((err: { field: string; msg: string }) => {
-                                this.toastr.error(`${err.msg}`);
+                                //this.toastr.error(`${err.msg}`);
                             });
                         } else {
                             this.toastr.error('Bad Request');
@@ -752,7 +752,7 @@ export class MatterClientsComponent implements OnInit {
     }
     onindividualSubmit(submitType: string) {
         this.inputsubmit = submitType; 
-        
+        this.isSaveEnable = true;
         this.submitted = true;
         // if (this.tempClient.invalid) {
         //     return;
@@ -794,7 +794,7 @@ export class MatterClientsComponent implements OnInit {
                     } else if (error.status === 400) {
                         if (error.error.errors) {
                             error.error.errors.forEach((err: { field: string; msg: string }) => {
-                                this.toastr.error(`${err.msg}`);
+                                //this.toastr.error(`${err.msg}`);
                             });
                         } else {
                             this.toastr.error('Bad Request');
@@ -878,23 +878,21 @@ export class MatterClientsComponent implements OnInit {
     // }
     onReset() {
         this.submitted = false;
-        this.tempClient.controls['name'].setValue(' ');
-        this.tempClient.controls['lastName'].setValue(' ');
-        this.tempClient.controls['email'].setValue(' ');
-        this.tempClient.controls['confirmemail'].setValue(' ');
-        this.tempClient.controls['country'].setValue(' ');
-        this.tempClient.controls['phonenumber'].setValue(' ');
-
+        this.tempClient.controls['name'].setValue('');
+        this.tempClient.controls['lastName'].setValue('');
+        this.tempClient.controls['email'].setValue('');
+        this.tempClient.controls['confirmemail'].setValue('');
+        this.tempClient.controls['country'].setValue('');
+        this.tempClient.controls['phonenumber'].setValue('');
     }
     onResetentity() {
         this.entitysubmitted = false;
-        this.entityClient.controls['fullname'].setValue(' ');
-        this.entityClient.controls['contact_person'].setValue(' ');
-        this.entityClient.controls['email'].setValue(' ');
-        this.entityClient.controls['confirmemail'].setValue(' ');
-        this.entityClient.controls['country'].setValue(' ');
-        this.entityClient.controls['phonenumber'].setValue(' ');
-
+        this.entityClient.controls['fullname'].setValue('');
+        this.entityClient.controls['contact_person'].setValue('');
+        this.entityClient.controls['email'].setValue('');
+        this.entityClient.controls['confirmemail'].setValue('');
+        this.entityClient.controls['country'].setValue('');
+        this.entityClient.controls['phonenumber'].setValue('');
     }
 
     removeTempClient(val: any) {

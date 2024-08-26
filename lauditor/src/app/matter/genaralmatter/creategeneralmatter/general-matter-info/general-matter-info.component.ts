@@ -191,11 +191,22 @@ export class GeneralMatterInfoComponent implements OnInit {
     //console.log(event.value);
   }
   OnCancel() {
+    let caseReg = this.generalForm.value
+    const hasValidInput =
+      (this.generalForm.get('title').touched && caseReg.title.trim().length > 0) ||
+      (this.generalForm.get('description').touched && caseReg.case_number.trim().length > 0) ||
+      (this.generalForm.get('startdate').touched && caseReg.case_type.trim().length > 0) ||
+      (this.generalForm.get('closedate').touched && caseReg.court_name.trim().length > 0) ||
+      (this.generalForm.get('matterNumber').touched && caseReg.date_of_filling.trim().length > 0) ||
+      (this.generalForm.get('matterType').touched && caseReg.description.trim().length > 0) ||
+      (this.generalForm.get('priority').touched && caseReg.priority.trim().length > 0) ||
+      (this.generalForm.get('status').touched && caseReg.status.trim().length > 0);
+
     if (this.isEdit) {
       this.router.navigate(['/matter/generalmatter/view']);
-    } 
+    }
     else {
-      if (this.generalForm.dirty || this.generalForm.touched) {
+      if (hasValidInput || this.data) {
         this.dialog.open(GeneralleavepageComponent, {
           width: '350px',  // Set the width here
           height: '180px',
@@ -204,9 +215,6 @@ export class GeneralMatterInfoComponent implements OnInit {
           disableClose: true
         });
         return;
-        // else{
-        //   this.toast.error('Please provide a value.')
-        // }
       }
     }
     // else {
