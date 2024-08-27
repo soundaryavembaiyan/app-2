@@ -54,3 +54,7 @@ input[type=number] {
     margin: 10px;
     text-align: start;
 }
+.disabled-icon {
+    pointer-events: none;
+    opacity: 0.5;
+}

@@ -9,7 +9,7 @@ import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'
 export class AddAdivicateComponent implements OnInit {
     @Output() childButtonEvent = new EventEmitter();
     @Input() editAdvocatesList: any;
-    @Input() isAddDisable:boolean = false;
+    @Input() isAddDisable: boolean = false;
     advicate: any = [];
     memberDetail: any = FormGroup;
     submitted = false;
@@ -18,6 +18,8 @@ export class AddAdivicateComponent implements OnInit {
     email: any;
     phone: any;
     currentIndex: any;
+    isEditing: boolean = false;
+
     constructor(private fb: FormBuilder) {
     }
     get f() {
@@ -70,10 +72,20 @@ export class AddAdivicateComponent implements OnInit {
     //     this.onReset();
     // }
 
+    startEditing() {
+        this.isEditing = true;
+    }
+
+    stopEditing() {
+        this.isEditing = false;
+    }
+
     addAdvicate() {
+        if (this.isEditing) return;
         this.enableAdvicate = true;
         this.childButtonEvent.emit(null);
         this.onReset();
+        this.startEditing();
     }
 
     removeOpponente(item: any) {
@@ -91,20 +103,59 @@ export class AddAdivicateComponent implements OnInit {
         this.phone = item.phone;
     }
 
+    // valueExist(currentIndex: number | null): boolean {
+    //     const { name, email, phone } = this.memberDetail.value;
+    //     // Check for duplicates excluding the current index
+    //     const index = this.advicate.findIndex((d: any, idx: number) =>
+    //         (d.email === email || d.name === name || d.phone === phone) && idx !== currentIndex
+    //     );
+    //     if (index !== -1) {
+    //         this.memberDetail.controls['name'].setErrors(index !== currentIndex ? { alreadyExist: true } : null);
+    //         this.memberDetail.controls['email'].setErrors(index !== currentIndex ? { alreadyExist: true } : null);
+    //         this.memberDetail.controls['phone'].setErrors(index !== currentIndex ? { alreadyExist: true } : null);
+    //         return true;
+    //     }
+    //     return false;
+    // }
+
     valueExist(currentIndex: number | null): boolean {
         const { name, email, phone } = this.memberDetail.value;
-        // Check for duplicates excluding the current index
-        const index = this.advicate.findIndex((d: any, idx: number) =>
-            (d.email === email || d.name === name || d.phone === phone) && idx !== currentIndex
+        let duplicateFound = false;
+        // Check for duplicate name
+        const nameIndex = this.advicate.findIndex((d: any, idx: number) =>
+            d.name === name && idx !== currentIndex
         );
-        if (index !== -1) {
-            this.memberDetail.controls['name'].setErrors(index !== currentIndex ? { alreadyExist: true } : null);
-            this.memberDetail.controls['email'].setErrors(index !== currentIndex ? { alreadyExist: true } : null);
-            this.memberDetail.controls['phone'].setErrors(index !== currentIndex ? { alreadyExist: true } : null);
-            return true;
+        if (nameIndex !== -1) {
+            this.memberDetail.controls['name'].setErrors({ alreadyExist: true });
+            duplicateFound = true;
+        } else {
+            this.memberDetail.controls['name'].setErrors(null);
         }
-        return false;
+        // Check for duplicate email
+        const emailIndex = this.advicate.findIndex((d: any, idx: number) =>
+            d.email === email && idx !== currentIndex
+        );
+        if (emailIndex !== -1) {
+            this.memberDetail.controls['email'].setErrors({ alreadyExist: true });
+            duplicateFound = true;
+        } else {
+            this.memberDetail.controls['email'].setErrors(null);
+        }
+        // Check for duplicate phone
+        const phoneIndex = this.advicate.findIndex((d: any, idx: number) =>
+            d.phone === phone && idx !== currentIndex
+        );
+        if (phoneIndex !== -1) {
+            this.memberDetail.controls['phone'].setErrors({ alreadyExist: true });
+            duplicateFound = true;
+        } else {
+            this.memberDetail.controls['phone'].setErrors(null);
+        }
+
+        return duplicateFound;
     }
+
+
     onSubmit() {
         this.submitted = true;
         if (this.memberDetail.invalid || this.valueExist(this.currentIndex)) {
@@ -115,10 +166,10 @@ export class AddAdivicateComponent implements OnInit {
         } else {
             this.advicate.push(this.memberDetail.value);
         }
-
         // Emit the updated list of advocates
         this.childButtonEvent.emit(this.advicate);
         this.enableAdvicate = false;
+        this.stopEditing();
         this.onReset();
     }
 
