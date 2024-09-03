@@ -181,7 +181,7 @@
             
                 <div class="form-group" id="selectbx">
                   <div class="input-group group-custom-align court matterpadding" id="search"
-                    *ngFor="let group of groupList |filter:searchText">
+                    *ngFor="let group of filteredData |filter:searchText">
                     <div class="multicheck form-control textbox">
                       <div class="callselect" [innerHtml]="group.name"></div>
                       <input class="form-check-inpu calimg calitem input-group-app end checkboxitem" 
