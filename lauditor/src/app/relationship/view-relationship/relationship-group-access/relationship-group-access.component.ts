@@ -40,10 +40,14 @@ export class RelationshipGroupAccessComponent implements OnInit {
   selectedtoupdateGroups: any = [];
   removegrpId: any;
   memData: any;
-  assignGrp:any;
+  assignGrp: any;
   initialSelectedGroups: any[] = [];
-  delId:any
-  doCounts:any;
+  delId: any
+  selId: any;
+  doCounts: any;
+  deletedId: any;
+  canDelete:any;
+  canAssign:any;
 
   constructor(private formBuilder: FormBuilder, private toast: ToastrService, private cdr: ChangeDetectorRef,
     private httpService: HttpService, private fb: FormBuilder, private confirmationDialogService: ConfirmationDialogService) {
@@ -51,7 +55,8 @@ export class RelationshipGroupAccessComponent implements OnInit {
 
   ngOnInit() {
     this.selectedIds = this.reldata.groups.map((obj: any) => { return obj.id })
-    this.selectedGroups = this.reldata.groups.map((obj: any) => { return obj })
+    //this.selectedGroups = this.reldata.groups.map((obj: any) => { return obj })
+    this.selectedGroups = this.reldata.groups.filter((group: any) => group.name !== 'AAM' && group.name !== 'SuperUser');
     this.selectedDel = this.reldata.groups.map((obj: any) => { return obj.can_delete })
     this.loadGroups();
     this.relname = this.reldata.name
@@ -175,7 +180,9 @@ export class RelationshipGroupAccessComponent implements OnInit {
   // }
 
   selectGrp(group: any, checked: boolean, value?: any) {
+    this.selId = group.id;
     this.isSaveEnable = true;
+    //console.log('selId',this.selId)
 
     if (checked) {
       this.selectedGroups.push(group);
@@ -211,7 +218,7 @@ export class RelationshipGroupAccessComponent implements OnInit {
     }
   }
 
-  onKeydown(e:any){
+  onKeydown(e: any) {
 
   }
 
@@ -281,16 +288,21 @@ export class RelationshipGroupAccessComponent implements OnInit {
   removeGroup(group: any) {
     this.memData = group;
     // console.log('group',group)
-    // console.log('..doCounts',this.doCounts)
-   
-    if ((group.can_delete === true && group.can_assign_docs === true && this.product !== 'corporate')) {
+    this.delId = group.id;
+    // console.log('selId',this.selId)
+    // console.log('delId',this.delId)
+    // console.log('Rem-deletedId',this.deletedId)
+    this.canDelete = group?.can_delete;
+    this.canAssign = group?.can_assign_docs;
+    // console.log('canDelete',this.canDelete)
+    // console.log('canAssign',this.canAssign)
+
+    if (this.product !== 'corporate' && group.can_delete === true && group.can_assign_docs === true) {
       this.editDoc = JSON.parse(JSON.stringify(group));
       this.selectedtoupdateGroups = [];
       this.httpService.sendGetRequest(URLUtils.updateRelationshipAccess(this.reldata.client_id, group.id)).subscribe((res: any) => {
         this.removegrpId = res.counts;
-        // this.doCounts = res.counts.documents;
       })
-
       setTimeout(() => {
         // Trigger the modal
         let modalElement = document.getElementById('editInfoModal1') as HTMLElement;
@@ -300,51 +312,49 @@ export class RelationshipGroupAccessComponent implements OnInit {
         }
       }, 0);
       return;
-    } 
-    // else if (group.isdisabled === false && this.product !== 'corporate') {
-    //   this.toast.error('doc-2')
-    //   this.editDoc = JSON.parse(JSON.stringify(group));
-    //   this.selectedtoupdateGroups = [];
-    //   this.httpService.sendGetRequest(URLUtils.updateRelationshipAccess(this.reldata.client_id, group.id)).subscribe((res: any) => {
-    //     this.removegrpId = res.counts;
-    //     this.doCounts = res.counts.documents;
-    //     console.log('removegrpId-2',this.doCounts)
-    //   })
-
-    //   setTimeout(() => {
-    //     // Trigger the modal
-    //     let modalElement = document.getElementById('editInfoModal1') as HTMLElement;
-    //     if (modalElement) {
-    //       const modalInstance = new bootstrap.Modal(modalElement);
-    //       modalInstance.show();
-    //     }
-    //   }, 0);
-    //   return;
-    //   // this.assignGrp = this.groupList.push(group); //removed grp on AG
-    // } 
-    else if(this.product !== 'corporate' &&
-      (group.can_delete === false ||
-      (group.can_assign_docs === false || group.can_assign_docs === true) && 
-      (group.can_delete == false && group.can_assign_docs == false) &&
-      this.selectedIds.includes(group.id) && 
-      this.selectedDel.includes(group.can_assign_docs || group.can_delete))
-      ){
-        this.confirmationDialogService.confirm('Alert', 'Matters are associated with this Group. So you cannot delete this group', false, 'OK', 'Cancel', true)
+    }
+    else if (this.product !== 'corporate' && (group.can_delete === false && (group.can_assign_docs === false || group.can_assign_docs === true))) {
+      this.confirmationDialogService.confirm('Alert', 'Matters are associated with this Group. So you cannot delete this group', false, 'OK', 'Cancel', true)
+    }
+    else if (this.product !== 'corporate' && group.isdisabled == false || (group.can_delete === true && group.can_assign_docs === false) || (this.delId !== this.deletedId)) {
+      this.isSaveEnable = true;
+      let index = this.selectedGroups.findIndex((d: any) => d.id === group.id); //find index in your array
+      if (index > -1) {
+        this.selectedGroups.splice(index, 1);
+        this.filteredData.push(group);
+      }
+      if (this.selectedGroups.length == 0 || this.filteredData.length == 1) {
+        let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
+        if (checkbox != null) checkbox.checked = false;
+      }
+      this.isSaveDisabled = this.selectedIds.length === 0;
+    }
+    else if (this.product === 'corporate'){
+      this.isSaveEnable = true;
+      let index = this.selectedGroups.findIndex((d: any) => d.id === group.id); //find index in your array
+      if (index > -1) {
+        this.selectedGroups.splice(index, 1);
+        this.filteredData.push(group);
+      }
+      if (this.selectedGroups.length == 0 || this.filteredData.length == 1) {
+        let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
+        if (checkbox != null) checkbox.checked = false;
+      }
+      this.isSaveDisabled = this.selectedIds.length === 0;
     }
     else {
-      this.handleGroupRemoval(group);
+      //this.toast.error('cant remove!')
     }
   }
 
   handleGroupRemoval(group: any) {
-    if ((this.isEdit && (group.canDelete == undefined || group.canDelete == true)) || (!this.isEdit)) {
+    //if ((this.isEdit && (group.isdisabled == undefined || group.isdisabled == true)) || (!this.isEdit)) {
+    if (group.isdisabled == false || this.selId === this.delId && group.isdisabled == false) {
       this.isSaveEnable = true;
-      if (group.canDelete == undefined || group.canDelete == true) {
-        let index = this.selectedGroups.findIndex((d: any) => d.id === group.id); //find index in your array
-        if (index > -1) {
-          this.selectedGroups.splice(index, 1);
-          this.filteredData.push(group);
-        }
+      let index = this.selectedGroups.findIndex((d: any) => d.id === group.id); //find index in your array
+      if (index > -1) {
+        this.selectedGroups.splice(index, 1);
+        this.filteredData.push(group);
       }
       if (this.selectedGroups.length == 0 || this.filteredData.length == 1) {
         let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
@@ -356,11 +366,15 @@ export class RelationshipGroupAccessComponent implements OnInit {
 
   //Remove grps from the dialog
   removeDialogGroup(group: any) {
-    if ((this.isEdit && (group.canDelete == undefined || group.canDelete == true)) || (!this.isEdit)) {
+    // console.log('diaRem', group)
+    if ((this.isEdit && (group.isdisabled == undefined || group.isdisabled == true)) || (!this.isEdit)) {
       this.isSaveEnable = true;
       let index = this.selectedtoupdateGroups.findIndex((d: any) => d.id === group.id); //find index in your array
+      this.selectedtoupdateGroups[index].can_delete = true; // update while removed
+      this.selectedtoupdateGroups[index].can_assign_docs = false;
       this.selectedtoupdateGroups.splice(index, 1);
-      this.groupList.push(group);
+      this.filteredData.push(group);
+
       if (this.selectedtoupdateGroups.length == 0 || this.groupList.length == 1) {
         let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
         if (checkbox != null)
@@ -373,15 +387,15 @@ export class RelationshipGroupAccessComponent implements OnInit {
   deleteGroup() {
     this.delId = this.selectedtoupdateGroups.map((group: any) => group.id);
     const payload = { "new_groups": this.delId };
+    this.deletedId = this.delId;
+    //console.log('delDelId',this.delId)
+    // console.log('payload',payload)
 
     this.httpService.sendPatchRequest(URLUtils.updateRelationshipAccess(this.reldata.client_id, this.memData.id), payload)
       .subscribe((res: any) => {
         if (this.product !== 'corporate') {
           this.toast.success("Successfully reassigned to another active Groups")
         }
-        // else if (this.product === 'corporate') {
-        //   this.toast.success("Successfully reassigned to another active Department")
-        // }
         else {
           this.toast.success(res.msg)
         }
@@ -389,6 +403,9 @@ export class RelationshipGroupAccessComponent implements OnInit {
         // Remove the selected group from selectedGroups array
         const indexToRemove = this.selectedGroups.findIndex((g: any) => g.id === this.memData.id);
         if (indexToRemove !== -1) {
+          //console.log('selG',this.selectedGroups[indexToRemove])
+          this.selectedGroups[indexToRemove].can_delete = true;
+          this.selectedGroups[indexToRemove].can_assign_docs = false;
           this.selectedGroups.splice(indexToRemove, 1);
         }
         // Update selectedGroups based on API response
@@ -400,24 +417,42 @@ export class RelationshipGroupAccessComponent implements OnInit {
         });
 
         this.selectedtoupdateGroups = [];
-        this.groupList.push(this.memData); //removed grp on AG
+        this.filteredData.push(this.memData); //removed grp on AG
+
+        // After reassignment, update the selected groups with canDelete and canAssign values
+        //   this.selectedGroups.forEach((group: any) => {
+        //     group.can_delete = this.canDelete;
+        //     group.can_assign_docs = this.canAssign;
+        //   });
+
+        //Patch call updating after Delete call
+        let data = { "acls": this.selectedGroups.map((obj: any) => obj.id) };
+        this.httpService.sendPutRequest(URLUtils.relationshipGroupAcls(this.reldata),data).subscribe((res: any) => {
+            // this.toast.success('Patch updated')
+            // console.log('res',res)
+        })
       },
-      (error: HttpErrorResponse) => {
-        if (error.status === 400 || error.status === 401 || error.status === 403 || error.status === 500) {
-          const errorMessage = error.error.msg || 'Unauthorized';
-          this.toast.error(errorMessage);
+        (error: HttpErrorResponse) => {
+          if (error.status === 400 || error.status === 401 || error.status === 403 || error.status === 500) {
+            const errorMessage = error.error.msg || 'Unauthorized';
+            this.toast.error(errorMessage);
+          }
         }
-      }
       );
     this.isSaveDisabled = this.selectedIds.length === 0;
   }
 
   selecttoUpdateGroup(group: any, value?: any) {
     this.isSaveEnable = true;
+
+    // Use canDelete and canAssign from the previously stored values
+    group.can_delete = this.canDelete;
+    group.can_assign_docs = this.canAssign;
+
     this.selectedtoupdateGroups.push(group);
-    let index = this.groupList.findIndex((d: any) => d.id === group.id); //find index in your array
-    this.groupList.splice(index, 1);
-    if (this.groupList.length == 0) {
+    let index = this.filteredData.findIndex((d: any) => d.id === group.id); //find index in your array
+    this.filteredData.splice(index, 1);
+    if (this.filteredData.length == 0) {
       let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
       if (checkbox != null)
         checkbox.checked = true;
@@ -428,12 +463,15 @@ export class RelationshipGroupAccessComponent implements OnInit {
   remGroups() {
     this.initialSelectedGroups = [...this.selectedGroups];
     // Assuming selected-Groups to groupList individually
-    this.selectedtoupdateGroups.forEach((group:any) => {
-      this.groupList.push(group);
+    this.selectedtoupdateGroups.forEach((group: any) => {
+      group.can_delete = true;
+      group.can_assign_docs = false;
+      this.filteredData.push(group);
     });
+
     this.selectedtoupdateGroups = [];
   }
-  
+
 
 }
 
