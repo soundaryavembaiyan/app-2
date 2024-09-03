@@ -13,6 +13,7 @@ import { Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 declare var bootstrap: any;
 import { LeavepageComponent } from '../leavepage/leavepage.component';
+import { GeneralleavepageComponent } from 'src/app/matter/genaralmatter/creategeneralmatter/generalleavepage/generalleavepage.component';
 
 
 @Component({
@@ -61,12 +62,17 @@ export class MatterGroupsComponent implements OnInit {
   delDoc = false;
   isSelectAllVisible = true;
   isCreate = false;
-  mattername:any;
+  mattername: any;
+  cdRef: any;
+  deletedId: any;
+  delId: any;
+  selId: any;
+  canDelete:any;
 
   constructor(private httpservice: HttpService,
     private matterService: MatterService,
-    private router: Router, private toast: ToastrService,private modalService: ModalService,
-    private confirmationDialogService: ConfirmationDialogService,private dialog: MatDialog) { }
+    private router: Router, private toast: ToastrService, private modalService: ModalService,
+    private confirmationDialogService: ConfirmationDialogService, private dialog: MatDialog) { }
 
   ngOnInit() {
     this.pathName = window.location.pathname.includes("legalmatter") ? "legalmatter" : "generalmatter";
@@ -99,8 +105,8 @@ export class MatterGroupsComponent implements OnInit {
                   this.filterGroupsList();
                 }
               );
-            } 
-            else if(clientIds && corpIds){
+            }
+            else if (clientIds && corpIds) {
               this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, { "attachment_type": "groups", "clients": corpIds }).subscribe(
                 (res: any) => {
                   //this.groupsList = res?.groups?.map((client: any) => client);
@@ -116,7 +122,7 @@ export class MatterGroupsComponent implements OnInit {
                 }
               );
             }
-            else{}   
+            else { }
 
             this.editMatter = result;
             this.editGroupIds = result.groups;
@@ -132,7 +138,7 @@ export class MatterGroupsComponent implements OnInit {
           const corpIds = result.corporate.map((client: any) => client);
           this.mattername = result
           //console.log('res',this.mattername)
-      
+
           if (result) {
             this.selectedGroups = result?.groups?.map((g: any) => g);
             if (result.clients.length > 0) {
@@ -151,8 +157,8 @@ export class MatterGroupsComponent implements OnInit {
                   this.filterGroupsList();
                 }
               );
-            } 
-            else if(clientIds && corpIds){
+            }
+            else if (clientIds && corpIds) {
               this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, { "attachment_type": "groups", "clients": corpIds }).subscribe(
                 (res: any) => {
                   //this.groupsList = res?.groups?.map((client: any) => client);
@@ -168,8 +174,8 @@ export class MatterGroupsComponent implements OnInit {
                 }
               );
             }
-            else{}        
-      
+            else { }
+
             this.editMatter = result;
             this.editGroupIds = result.groups;
             this.isEdit = true;
@@ -200,13 +206,13 @@ export class MatterGroupsComponent implements OnInit {
     // }
 
     //this.getGrouplists();
-    if(this.product == 'corporate'){
+    if (this.product == 'corporate') {
       this.getGroups();
     }
-    else{
+    else {
       this.getGrouplists();
     }
-    
+
   }
 
   filterGroupsList() {
@@ -217,7 +223,7 @@ export class MatterGroupsComponent implements OnInit {
         });
       });
     }
-  
+
     if (this.selectedGroups.length === 0) {
       let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
       if (checkbox != null) {
@@ -263,14 +269,15 @@ export class MatterGroupsComponent implements OnInit {
     }
   }
 
-  remGroups(){
+  remGroups() {
     this.initialSelectedGroups = [...this.selectedGroups];
-      this.selectedtoupdateGroups.forEach((group:any) => {
-        this.groupsList.push(group);
-      });
-      this.selectedtoupdateGroups = [];
-  }  
- getGroups() {
+    this.selectedtoupdateGroups.forEach((group: any) => {
+      group.canDelete = true;
+      this.groupsList.push(group);
+    });
+    this.selectedtoupdateGroups = [];
+  }
+  getGroups() {
     this.httpservice.sendGetRequest(URLUtils.getGroups).subscribe((res: any) => {
       if (res && res['data'] && res['data']?.length > 0)
         this.groupsList = res['data'];
@@ -327,6 +334,8 @@ export class MatterGroupsComponent implements OnInit {
   }
   selectGroup(group: any, value?: any) {
     this.isSaveEnable = true;
+    this.selId = group.id;
+    //console.log('selid', this.selId)
     this.selectedGroups.push(group);
     let index = this.groupsList.findIndex((d: any) => d.id === group.id); //find index in your array
     this.groupsList.splice(index, 1);
@@ -339,6 +348,8 @@ export class MatterGroupsComponent implements OnInit {
   }
   selecttoUpdateGroup(group: any, value?: any) {
     this.isSaveEnable = true;
+    
+    //group.canDelete = this.canDelete; //Assign conditions
     this.selectedtoupdateGroups.push(group);
     let index = this.groupsList.findIndex((d: any) => d.id === group.id); //find index in your array
     this.groupsList.splice(index, 1);
@@ -353,18 +364,17 @@ export class MatterGroupsComponent implements OnInit {
   removeGroup(group: any) {
     this.memData = group;
     //console.log('group', group);
-    //console.log('isCreate', this.isCreate);
+    // console.log('isCretae', this.isCreate);
+    this.delId = group.id;
+    this.canDelete = group?.canDelete;
+    const path = window.location.pathname.indexOf("updateGroups") > -1; //&& group.canDelete === false
 
-    if (this.product != 'corporate' && this.groupsList.length === 0 && window.location.pathname.indexOf("updateGroups") > -1 && group.canDelete === false) {
-      this.openDialog();
-      return;
+    // Only for Corporate prod. condition
+    if (this.product == 'corporate' && group.canDelete == false) {
+      this.confirmationDialogService.confirm('Alert', 'External Counsels are associated with this Department. So you cannot delete this department', false, 'OK', 'Cancel', true)
     }
-
-    if (this.product == 'corporate'&& group.canDelete == false) {
-        this.confirmationDialogService.confirm('Alert', 'External Counsels are associated with this Department. So you cannot delete this department', false, 'OK', 'Cancel', true)
-    }
-
-    if (this.product != 'corporate' && group.canDelete === false) {
+    // Resource dialog condition
+    if ((this.product != 'corporate' && group.canDelete === false && this.groupsList.length > 0)) {
       this.editDoc = JSON.parse(JSON.stringify(group));
       this.selectedtoupdateGroups = [];
       this.httpservice.sendGetRequest(URLUtils.updateMatterAccess(this.editMatter.id, group.id)).subscribe((res: any) => {
@@ -380,30 +390,20 @@ export class MatterGroupsComponent implements OnInit {
       }, 0);
       return;
     }
-    //  if ((group.canDelete === undefined && this.isCreate === true && window.location.pathname.indexOf("updateGroups") > -1) && this.removegrpId) {
-    //   this.editDoc = JSON.parse(JSON.stringify(group));
-    //   this.selectedtoupdateGroups = [];
-    //   this.httpservice.sendGetRequest(URLUtils.updateMatterAccess(this.editMatter.id, group.id)).subscribe((res: any) => {
-    //     this.removegrpId = res.counts;
-    //   });
-    //   setTimeout(() => {
-    //     // Trigger the modal
-    //     let modalElement = document.getElementById('editInfoModal1') as HTMLElement;
-    //     if (modalElement) {
-    //       const modalInstance = new bootstrap.Modal(modalElement);
-    //       modalInstance.show();
-    //     }
-    //   }, 0);
-    //   return;
-    // }
-     if ((group.canDelete === true && this.isCreate === true) || (group.canDelete === undefined && this.isCreate === true) ) {
+    // Alert for no Groups condition
+       if ((this.product != 'corporate' && this.groupsList.length === 0 && group.canDelete === false && path && this.isCreate === true)){
+        this.openDialog();
+        return;
+      }
+    //}
+    // Remove the Groups condition
+    if ((group.canDelete === undefined && (this.isCreate === false || this.isCreate === true)) || (group.canDelete === true && this.isCreate === true)) {
       this.isSaveEnable = true;
       let index = this.selectedGroups.findIndex((d: any) => d.id === group.id); // find index in your array
       // Check if the group is found in the selectedGroups array
       if (index !== -1) {
         this.selectedGroups.splice(index, 1);
         this.groupsList.push(group);
-
         if (this.selectedGroups.length === 0 || this.groupsList.length === 1) {
           let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
           if (checkbox != null) {
@@ -413,53 +413,41 @@ export class MatterGroupsComponent implements OnInit {
       }
       return;
     }
-     if ((group.canDelete === undefined && this.isCreate === false)) {
-        this.isSaveEnable = true;
-        let index = this.selectedGroups.findIndex((d: any) => d.id === group.id); // find index in your array
-        // Check if the group is found in the selectedGroups array
-        if (index !== -1) {
-          this.selectedGroups.splice(index, 1);
-          this.groupsList.push(group);
-  
-          if (this.selectedGroups.length === 0 || this.groupsList.length === 1) {
-            let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
-            if (checkbox != null) {
-              checkbox.checked = false;
-            }
-          }
-        }
-        return;
-      }
   }
 
   openDialog() {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      data: { delDoc: this.delDoc,  product: environment.product  },
+      data: { delDoc: this.delDoc, product: environment.product },
       width: '500px',
       height: '290px',
       hasBackdrop: true,
       panelClass: 'hello',
       disableClose: true
     });
-}
+  }
 
   //Remove grps from the dialog
   removeDialogGroup(group: any) {
     //console.log('up-group', group);
-      this.isSaveEnable = true;
-      let index = this.selectedtoupdateGroups.findIndex((d: any) => d.id === group.id); //find index in your array
-      this.selectedtoupdateGroups.splice(index, 1);
-      this.groupsList.push(group); 
-      if (this.selectedtoupdateGroups.length == 0 || this.groupsList.length == 1) {
-        let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
-        if (checkbox != null)
-          checkbox.checked = false;
-      }
+    this.isSaveEnable = true;
+    let index = this.selectedtoupdateGroups.findIndex((d: any) => d.id === group.id); //find index in your array
+    this.selectedtoupdateGroups[index].canDelete = true;
+    this.selectedtoupdateGroups.splice(index, 1);
+    this.groupsList.push(group);
+    if (this.selectedtoupdateGroups.length == 0 || this.groupsList.length == 1) {
+      let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
+      if (checkbox != null)
+        checkbox.checked = false;
+    }
   }
 
   deleteGroup() {
-    const idsArray = this.selectedtoupdateGroups.map((group: any) => group.id);
-    const payload = { "new_groups": idsArray };
+    // const idsArray = this.selectedtoupdateGroups.map((group: any) => group.id);
+    // const payload = { "new_groups": idsArray };
+    this.delId = this.selectedtoupdateGroups.map((group: any) => group.id);
+    const payload = { "new_groups": this.delId };
+    this.deletedId = this.delId;
+    //console.log('--del-delId',this.delId)
 
     this.httpservice.sendPatchRequest(URLUtils.updateMatterAccess(this.editMatter.id, this.memData.id), payload)
       .subscribe((res: any) => {
@@ -472,10 +460,11 @@ export class MatterGroupsComponent implements OnInit {
         else {
           this.toast.success(res.msg)
         }
-
         // Remove the selected group from selectedGroups array
         const indexToRemove = this.selectedGroups.findIndex((g: any) => g.id === this.memData.id);
         if (indexToRemove !== -1) {
+          //console.log('selG',this.selectedGroups[indexToRemove])
+          this.selectedGroups[indexToRemove].canDelete = true;
           this.selectedGroups.splice(indexToRemove, 1);
         }
         // Update selectedGroups based on API response
@@ -488,6 +477,18 @@ export class MatterGroupsComponent implements OnInit {
 
         this.groupsList.push(this.memData); // Update groupsList based on API response, if needed
         this.selectedtoupdateGroups = [];
+
+        // After reassignment, update the selected groups with canDelete value
+        // this.selectedGroups.forEach((group: any) => {
+        //   group.canDelete = this.canDelete;
+        // });
+
+        //Patch call updating after Delete call
+        let url = this.pathName == 'legalmatter' ? URLUtils.updateLegalAcls(this.editMatter.id) : URLUtils.updateGeneralAcls(this.editMatter.id);
+        let data = { "group_acls": this.selectedGroups.map((obj: any) => obj.id) };
+        this.httpservice.sendPutRequest(url, data).subscribe((res: any) => {
+          //this.toast.success('Patch updated')
+        })
       });
   }
 
@@ -551,27 +552,49 @@ export class MatterGroupsComponent implements OnInit {
       this.selectedGroupsEvent.emit(this.selectedGroups);
     }
   }
+
   OnCancel() {
     if (this.isEdit) {
+      //console.log('ifDelId',this.deletedId) //If deletedId
+      // if (this.deletedId) {
+      //   //this.toast.error('Please save the selected groups to proceed.')
+      //   let index = this.selectedGroups.findIndex((d: any) => d.id === this.memData.id); // find index in your array
+      //   this.selectedGroups.splice(index, 1);
+      //   this.selectedGroups.push(this.memData);
+      // }
       this.router.navigate(['/matter/' + this.pathName + '/view']);
     }
     else {
       // this.groupsList = this.groupsList.concat(this.selectedGroups);
       // this.selectedGroups = [];
+      this.pathName = window.location.pathname.includes("legalmatter") ? "legalmatter" : "generalmatter";
       if (this.selectedGroups.length > 0) {
-        this.dialog.open(LeavepageComponent, {
+        if (this.pathName === "legalmatter") {
+          this.dialog.open(LeavepageComponent, {
             width: '350px',  // Set the width here
             height: '180px',
             hasBackdrop: true,
             panelClass: 'hello',
             disableClose: true
-        });
-        return;
-    }
+          });
+          return;
+        }
+        else if (this.pathName === "generalmatter") {
+          this.dialog.open(GeneralleavepageComponent, {
+            width: '350px',  // Set the width here
+            height: '180px',
+            hasBackdrop: true,
+            panelClass: 'hello',
+            disableClose: true
+          });
+          return;
+        }
+        else { }
+      }
     }
     const checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
     if (checkbox) {
-        checkbox.checked = false;
+      checkbox.checked = false;
     }
   }
   // keyup() {
@@ -586,7 +609,7 @@ export class MatterGroupsComponent implements OnInit {
 
   keyup() {
     if (this.searchText == ' ') {
-      this.isEdit = false; 
+      this.isEdit = false;
       this.searchText = this.searchText.replace(/\s/g, '');
     }
     this.filteredData = this.groupsList.filter((item: any) => item.name.toLocaleLowerCase().includes(this.searchText));
@@ -605,13 +628,13 @@ export class MatterGroupsComponent implements OnInit {
   }
   closeModal(id: any) {
     this.modalService.close(id);
-}
-truncateString(text: string): string {
-  if (text.length > 25) {
-    return text.slice(0, 25) + '...';
   }
-  return text;
-}  
+  truncateString(text: string): string {
+    if (text.length > 25) {
+      return text.slice(0, 25) + '...';
+    }
+    return text;
+  }
 }
 
 @Component({
@@ -643,7 +666,7 @@ export class ConfirmationDialogComponent {
   ) { }
 
   ngOnInit() {
-  
+
   }
 
   continue() {
@@ -651,6 +674,6 @@ export class ConfirmationDialogComponent {
   }
   closeDialog() {
     this.dialogRef.close()
-  }  
+  }
 }
 
