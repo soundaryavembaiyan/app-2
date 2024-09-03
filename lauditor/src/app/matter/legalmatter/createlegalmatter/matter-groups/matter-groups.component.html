@@ -34,10 +34,14 @@
         </div>-->
         <h5 class="float-left grpFont" *ngIf ="product !='corporate'">Assign to Group(s)<span class="mandate">*</span></h5> 
         <h5 class="float-left grpFont" *ngIf ="product =='corporate'">Assign to Department(s)<span class="mandate">*</span></h5> 
-        <div class="selOn" *ngIf="!isEdit">
+        <h5 class="float-right lop" *ngIf="!isEdit">
           <label class="callselect checkAll">Select All</label>&nbsp;
           <input type="checkbox" value="" id="selectAll" (change)="selectAll($event)">
-        </div>
+        </h5>
+        <!-- <div class="selOn" *ngIf="!isEdit">
+          <label class="callselect checkAll">Select All</label>&nbsp;
+          <input type="checkbox" value="" id="selectAll" (change)="selectAll($event)">
+        </div> -->
         <!-- <div class="col-3" *ngIf="!isEdit">
           <div class="form-group" id="selectbx">
             <div class="input-group court" id="search">
@@ -75,12 +79,11 @@
     </div>
     <div class="btnbox">
       <button type="reset" class="btn btn-default btncancel btnrightitem" (click)="OnCancel()">Cancel</button>
-      <button *ngIf="!isCreate" type="submit" class="btn btn-primary btnsave savecls "
-        [disabled]="!(selectedGroups.length > 0 && isSaveEnable)" 
-        [ngClass]="{'disabled': !(selectedGroups.length > 0 && isSaveEnable)}"
+      <button *ngIf="!isCreate" type="submit" class="btn btn-primary btnsave savecls grpBtn"
+        [disabled]="!(selectedGroups.length > 0)" 
         (click)="saveGroups()">Next</button>
         <!-- for Update Groups-->
-        <button *ngIf="isCreate" type="submit" class="btn btn-primary btnsave savecls "
+        <button *ngIf="isCreate" type="submit" class="btn btn-primary btnsave savecls grpBtn"
         [disabled]="!(selectedGroups.length > 0 && isSaveEnable)" 
         [ngClass]="{'disabled': !(selectedGroups.length > 0 && isSaveEnable)}"
         (click)="saveGroups()">Save</button>
