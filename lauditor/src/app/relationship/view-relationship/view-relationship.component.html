@@ -159,8 +159,18 @@
             </td>
 
             <td>
-                <ul>
+                <ul *ngIf="activeTab !== 'temporary' && activeTab !== 'individuals'">
                   <li *ngFor='let g of rel.groups'>{{g.name}}</li>
+                </ul>
+                <ul *ngIf="activeTab === 'temporary'">
+                  <li *ngFor='let g of rel.filteredGroups'>
+                    {{g.name}}
+                  </li>
+                </ul>
+                <ul *ngIf="activeTab === 'individuals'">
+                  <li *ngFor='let g of rel.filteredGroups'>
+                    {{g.name}}
+                  </li>
                 </ul>
             </td>
             <td >
@@ -267,7 +277,7 @@
   <div class="modal-dialog">
       <div class="modal-content">
               <button type="button"
-                      class="btn-close"
+                      class="btn-close closebtn"
                       data-bs-dismiss="modal"(click)="showConfirm = false;" aria-label="Close"></button>
           <div class="modal-body">
               <div class="alertpara">

@@ -14,7 +14,7 @@
     <div class="case_title" *ngIf="product != 'corporate' && isCreate">{{this.mattername?.title}} - Update Group(s)</div>
     <div class="case_title" *ngIf="product == 'corporate' && isCreate">{{this.mattername?.title}} - Update Department(s)</div>
     
-    <div class="row">
+    <div class="row" *ngIf="product !=='corporate' || (product ==='corporate' && !isCreate)">
       <div class="col-6 matterpadding">
         <h5 class="float-left grpFont" *ngIf ="product !='corporate'">Selected Group(s)</h5>
         <h5 class="float-left grpFont" *ngIf ="product =='corporate'">Selected Department(s)</h5>
@@ -34,10 +34,14 @@
         </div>-->
         <h5 class="float-left grpFont" *ngIf ="product !='corporate'">Assign to Group(s)<span class="mandate">*</span></h5> 
         <h5 class="float-left grpFont" *ngIf ="product =='corporate'">Assign to Department(s)<span class="mandate">*</span></h5> 
-        <div class="selOn" *ngIf="!isEdit">
+        <h5 class="float-right lop" *ngIf="!isEdit">
           <label class="callselect checkAll">Select All</label>&nbsp;
           <input type="checkbox" value="" id="selectAll" (change)="selectAll($event)">
-        </div>
+        </h5>
+        <!-- <div class="selOn" *ngIf="!isEdit">
+          <label class="callselect checkAll">Select All</label>&nbsp;
+          <input type="checkbox" value="" id="selectAll" (change)="selectAll($event)">
+        </div> -->
         <!-- <div class="col-3" *ngIf="!isEdit">
           <div class="form-group" id="selectbx">
             <div class="input-group court" id="search">
@@ -73,14 +77,34 @@
         </div>
       </div>
     </div>
+    
+    <!--Corporate product-->
+    <div class="row" *ngIf="product ==='corporate' && isCreate">
+    <div class="col-3 matterpadding"></div>
+    <div class="col-6 matterpadding">
+      <div class="form-group" id="selectbx">
+        <div class="input-group group-custom-align court" *ngFor="let grp of groupsList" style="margin-bottom:3px;">
+          <div class="multicheck form-control textbox">
+            <div class="callselect" [innerHtml]="grp.name"></div>
+              <input class="form-check-inpu calimg calitem input-group-app end checkboxitem" #inputEl
+              [ngClass]="{'active': selectedIds.includes(grp.id)}" 
+              [checked]="selectedIds.includes(grp.id)" type="checkbox"
+              (change)="selectCorporateGrp(grp, inputEl.checked)"> 
+            </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-3 matterpadding"></div>
+    </div>
+    <!--Corporate product-->
+
     <div class="btnbox">
       <button type="reset" class="btn btn-default btncancel btnrightitem" (click)="OnCancel()">Cancel</button>
-      <button *ngIf="!isCreate" type="submit" class="btn btn-primary btnsave savecls "
-        [disabled]="!(selectedGroups.length > 0 && isSaveEnable)" 
-        [ngClass]="{'disabled': !(selectedGroups.length > 0 && isSaveEnable)}"
+      <button *ngIf="!isCreate" type="submit" class="btn btn-primary btnsave savecls grpBtn"
+        [disabled]="!(selectedGroups.length > 0)" 
         (click)="saveGroups()">Next</button>
         <!-- for Update Groups-->
-        <button *ngIf="isCreate" type="submit" class="btn btn-primary btnsave savecls "
+        <button *ngIf="isCreate" type="submit" class="btn btn-primary btnsave savecls grpBtn"
         [disabled]="!(selectedGroups.length > 0 && isSaveEnable)" 
         [ngClass]="{'disabled': !(selectedGroups.length > 0 && isSaveEnable)}"
         (click)="saveGroups()">Save</button>

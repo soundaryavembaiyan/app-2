@@ -22,10 +22,8 @@
           <div class="col-sm-2 col-xs-3" *ngIf="product != 'corporate'">
             <div class="steprow">
               <a (click)="selectedTabItem ='matter-clients'" class="stepone stepideal"
-                [ngClass]="{'yallow' : selectedTabItem=='matter-clients','green':clients?.length>0 || tempClients?.length>0 || selectedClients,
-                'disabled': clients?.length == 0 && !selectedClients,
-                'enable': clients?.length > 0 || selectedClients}"
-                [attr.disabled]="clients.length == 0 && !selectedClients ? true : null"><!--selectedClients?.length>0-->
+                [ngClass]="{'yallow' : selectedTabItem=='matter-clients','green':clients?.length>0 || tempClients?.length>0 || selectedClients}"
+                [class.disabled]="!matterInfo">
                 <img src="assets/img/clients.svg" class="stepimg">
               </a>
             </div>
@@ -59,10 +57,8 @@
           <div class="col-sm-2 col-xs-3" *ngIf="product == 'corporate'">
             <div class="steprow">
               <a (click)="selectedTabItem ='matter-groups'" class="stepone stepideal"
-                [ngClass]="{'yallow' :selectedTabItem == 'matter-groups','green':groups.length>0,
-                'disabled': groups?.length == 0 && !selectedGroups,
-                'enable': groups?.length > 0 || selectedGroups}"
-                [attr.disabled]="groups.length == 0 && !selectedGroups ? true : null">
+                [ngClass]="{'yallow' :selectedTabItem == 'matter-groups','green':groups.length>0}"
+                [class.disabled]="!matterInfo">
                 <img src="assets/img/groups.svg" class="stepimg">
               </a>
             </div>
@@ -85,7 +81,6 @@
             </div>
           </div>
           <!-- Clients - Corporate -->
-
 
           <div class="col-sm-2 col-xs-3">
             <div class="steprow">

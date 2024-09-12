@@ -38,18 +38,18 @@ export class CreatelegalmatterComponent implements OnInit {
   product = environment.product;
   tmGrp: any = [];
   info:any;
+  @Output() caseRegister:any;
 
   constructor(private httpService: HttpService, private toast: ToastrService,
     private router: Router, private confirmationDialogService: ConfirmationDialogService) { }
 
   ngOnInit() {
-
+  //console.log('info',this.matterInfo)
   }
 
   receiveMatterIngo(mInfo: any) {
     this.info = mInfo
-    console.log('minfo',mInfo)
-    console.log('this.matterInfo',this.matterInfo)
+    //console.log('minfo',mInfo)
     if (mInfo) {
       this.InfotoOtherTabs = {
         "Title": mInfo.title,

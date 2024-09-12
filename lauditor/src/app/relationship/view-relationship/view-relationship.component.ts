@@ -41,6 +41,7 @@ export class ViewRelationshipComponent implements OnInit, OnDestroy {
     response: any;
     payload: any;
     role:any;
+    filteredGroups:any;
 
     constructor(private httpservice: HttpService,
                 private router: Router,
@@ -69,8 +70,6 @@ export class ViewRelationshipComponent implements OnInit, OnDestroy {
         this.relationshipData = {};
         this.relationshipList = [];
         this.loadData()
-
-        //console.log('dddddddddd ',this.relationshipList);
     }
     
     loadData(){
@@ -80,7 +79,13 @@ export class ViewRelationshipComponent implements OnInit, OnDestroy {
             this.relationshipSubscribe = this.httpservice.getFeaturesdata(url).subscribe(
                 (res: any) => {
                     //this.relationshipList = res?.data?.relationships;
-                    this.relationshipList = res?.data;
+                    //this.relationshipList = res?.data;
+                    this.relationshipList = res.data.map((rel: any) => {
+                        return {
+                          ...rel, // Spread the original properties of `rel`
+                          filteredGroups: rel.groups.filter((group: any) => group.name !== 'AAM' && group.name !== 'SuperUser')
+                        };
+                      });
                 })
         }
         else if(this.activeTab=='corporate'){
@@ -95,7 +100,13 @@ export class ViewRelationshipComponent implements OnInit, OnDestroy {
         url  = URLUtils.getRelationshipFiltered(this.activeTab)
         this.relationshipSubscribe = this.httpservice.getFeaturesdata(url).subscribe(
             (res: any) => {
-                this.relationshipList = res?.data?.relationships;
+                //this.relationshipList = res?.data?.relationships;
+                this.relationshipList = res.data.relationships.map((rel: any) => {
+                    return {
+                      ...rel, // Spread the original properties of `rel`
+                      filteredGroups: rel.groups.filter((group: any) => group.name !== 'AAM' && group.name !== 'SuperUser')
+                    };
+                  });
                 //console.log('Business-rel:',this.relationshipList)
             })}
     }
