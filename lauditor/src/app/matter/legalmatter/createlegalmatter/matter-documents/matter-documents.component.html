@@ -9,8 +9,10 @@
         <div class="flex-container">
           <!-- <div class="selectpriorGrp optionhigh2 flexo" *ngFor="let item of groupName"> {{item}} </div>  -->
           <b class="selGroup">Selected Groups:</b>
-          <div class="divShow" *ngFor="let item of (showAllItems ? groupName : groupName.slice(0, 2))">
-            {{ item }},
+          <div class="divShow" *ngFor="let item of (showAllItems ? groupName : groupName.slice(0, 2)); let i = index">
+            {{ item }}
+            <span *ngIf="groupName.length == 1"> </span>
+            <span *ngIf="groupName.length > 1 && i < (showAllItems ? groupName.length : 2) - 1">, </span>
           </div>
           <div *ngIf="groupName.length > 2" class="view-more-less" (click)="toggleView()">
             <a href="javascript:void(0)">{{ showAllItems ? 'View Less' : 'View More' }}</a>
@@ -36,6 +38,10 @@
       </div>
       <div class="col-6 matterpadding">
         <h5 class="float-left grpFont">Attach Document(s)</h5>
+        <h5 class="float-right lop" *ngIf="isSelectAllVisible">
+          <label class="callselect checkAll">Select All</label>&nbsp;
+          <input type="checkbox" value="" id="selectAll" (change)="selectAll($event)" #selectAllCheckbox>
+        </h5>
         
         <div class="switch relationship-tabs cswitch float-left">
           <span class="relSubTab individuals" (click)="currentTab='existingdoc';">
@@ -52,10 +58,10 @@
           <!--<div class="col-3">
             <h5>Attach Document(s)</h5>
           </div>-->
-          <div class="selOn" *ngIf="isSelectAllVisible">
+          <!-- <div class="selOn" *ngIf="isSelectAllVisible">
             <label class="callselect checkAll">Select All</label>&nbsp;
             <input type="checkbox" value="" id="selectAll" (change)="selectAll($event)" #selectAllCheckbox>
-          </div>
+          </div> -->
           <!-- <div class="col-3">
             <div class="form-group" id="selectbx">
               <div class="input-group court" id="search">

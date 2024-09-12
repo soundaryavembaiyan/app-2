@@ -8,6 +8,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ValidatorFn } from '@angular/forms';
 import { LeavepageComponent } from '../leavepage/leavepage.component';
+import { GeneralleavepageComponent } from 'src/app/matter/genaralmatter/creategeneralmatter/generalleavepage/generalleavepage.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
@@ -68,6 +69,7 @@ export class MatterClientsComponent implements OnInit {
     formType: any;
     keyModel: boolean = false;
     isSaveEnable: boolean = false;
+    pathName: string = "legalmatter";
 
     constructor(private httpservice: HttpService, private fb: FormBuilder,
         private confirmationDialogService: ConfirmationDialogService,
@@ -321,6 +323,7 @@ export class MatterClientsComponent implements OnInit {
     }
 
     selectAll(event: any) {
+        this.isSaveEnable = true;
         if (event?.target?.checked) {
             this.tempList = !this.tempList;
             // if (this.clientsList?.length > 0) {
@@ -418,6 +421,7 @@ export class MatterClientsComponent implements OnInit {
     }
 
     selectCorporate(group: any, value?: any) {
+        this.isSaveEnable = true;
         this.selectedClients.push(group);
         let index = this.corporateList.findIndex((d: any) => d.id === group.id); //find index in your array
         this.corporateList.splice(index, 1);
@@ -433,13 +437,21 @@ export class MatterClientsComponent implements OnInit {
         // let index = this.selectedClients.findIndex((d: any) => d.id === group.id); //find index in your array
         // this.selectedClients.splice(index, 1);
         // this.clientsList.push(group);
+        this.isSaveEnable = true;
+        //console.log('grp',group)
         let index = this.selectedClients.findIndex((d: any) => d.id === group.id);
         if (index > -1) {
             this.selectedClients.splice(index, 1);
         }
-        // If the group is not 'corporate', push back to clientsList
+        // If the type is corp/notcorporate, push back to its respective List
         if (group.type !== 'corporate') {
             this.clientsList.push(group);
+        }
+        if (group.type === 'corporate') {
+            this.corporateList.push(group);
+            this.httpservice.getFeaturesdata(URLUtils.getCalenderExternal).subscribe((res: any) => {
+                this.corporateList = res?.relationships.map((obj: any) => ({ "id": obj.id, "type": "corporate", "name": obj.name }));
+            });
         }
         if (this.selectedClients.length == 0 || this.clientsList.length == 1) {
             let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
@@ -483,6 +495,7 @@ export class MatterClientsComponent implements OnInit {
     }
 
     onClickCorp() {
+        this.isSaveEnable = true;
         let flag = false;
         for (let i = 0; i < this.selectedClients.length; i++) {
             //console.log("Corp selected clients",this.selectedClients)
@@ -500,7 +513,9 @@ export class MatterClientsComponent implements OnInit {
     OnCancel() {
         // this.clientsList = this.clientsList.concat(this.selectedClients);
         // this.selectedClients = [];
+        this.pathName = window.location.pathname.includes("legalmatter") ? "legalmatter" : "generalmatter";
         if (this.selectedClients.length > 0) {
+            if(this.pathName === "legalmatter"){
             this.dialog.open(LeavepageComponent, {
                 width: '350px',  // Set the width here
                 height: '180px',
@@ -509,6 +524,18 @@ export class MatterClientsComponent implements OnInit {
                 disableClose: true
             });
             return;
+            }
+            else if(this.pathName === "generalmatter"){
+                this.dialog.open(GeneralleavepageComponent, {
+                    width: '350px',  // Set the width here
+                    height: '180px',
+                    hasBackdrop: true,
+                    panelClass: 'hello',
+                    disableClose: true
+                });
+                return; 
+            }
+            else{}
         }
         const checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
         if (checkbox) {
@@ -516,6 +543,18 @@ export class MatterClientsComponent implements OnInit {
         }
     }
     OnFormCancel() {
+        const tempVal = this.tempClient.value.name.length > 1 || this.tempClient.value.lastName.length > 1 || this.tempClient.value.email.length > 1 || this.tempClient.value.country.length > 1;
+        const entityVal = this.entityClient.value.fullname.length > 1 || this.entityClient.value.contact_person.length > 1 || this.entityClient.value.email.length > 1 || this.entityClient.value.country.length > 1;
+
+        if (tempVal) {
+            this.keyModel = true;
+            return;
+        }
+        else if (entityVal) {
+            this.keyModel = true;
+            return;
+        }
+        else{        
         this.tempList = false;
         this.isSelectAllVisible = true;
         this.showTempForm = false;
@@ -531,7 +570,8 @@ export class MatterClientsComponent implements OnInit {
         this.childButtonEvent.emit(this.clients);
         this.searchText = '';
         // this.clientsList = this.clientsList.concat(this.selectedClients);
-        // this.selectedClients =[];
+        // this.selectedClients =[];}
+        }
     }
 
     // keyup() {
@@ -648,7 +688,7 @@ export class MatterClientsComponent implements OnInit {
     //         this.tempClient.controls.type.patchValue(type);
     // }
 
-
+    //For Firm tab dialog
     successResp(action: string) {
         if (action == 'yes') {
             this.successModel = false;
@@ -669,9 +709,9 @@ export class MatterClientsComponent implements OnInit {
         }
     }
 
+    //For cancel button dialog
     keyResp(action: string) {
         if (action == 'yes') {
-            //this.OnFormCancel();
             this.keyModel = false;
             this.searchText = '';
             this.tempList = false;
@@ -701,6 +741,10 @@ export class MatterClientsComponent implements OnInit {
         // if (this.entityClient.invalid) {
         //     return;
         // }
+        // Check if email and confirmemail do not match
+        if (this.entityClient.value.confirmemail !== this.entityClient.value.email) {
+            return;
+        }
         if (this.inputsubmit == 'entity') {
             let object = {
                 "fullname": this.entityClient.value.fullname,
@@ -736,7 +780,9 @@ export class MatterClientsComponent implements OnInit {
                     } else if (error.status === 400) {
                         if (error.error.errors) {
                             error.error.errors.forEach((err: { field: string; msg: string }) => {
-                                //this.toastr.error(`${err.msg}`);
+                                if(this.entityClient.value.email.length > 1 && (err.msg === "Account already exists with this email" || err.msg === "Account already exists with this Firm Name")){
+                                    this.toastr.error(`${err.msg}`);
+                                }
                             });
                         } else {
                             this.toastr.error('Bad Request');
@@ -751,12 +797,18 @@ export class MatterClientsComponent implements OnInit {
         //this.onResetentity();
     }
     onindividualSubmit(submitType: string) {
+        console.log('confirmemail',this.tempClient.value)
         this.inputsubmit = submitType; 
         this.isSaveEnable = true;
         this.submitted = true;
         // if (this.tempClient.invalid) {
         //     return;
         // }
+        // Check if email and confirmemail do not match
+        if (this.tempClient.value.confirmemail !== this.tempClient.value.email) {
+            return;
+        }
+
         if (this.inputsubmit == 'temp') {
             let obj = {
                 "first_name": this.tempClient.value.name,
@@ -794,7 +846,9 @@ export class MatterClientsComponent implements OnInit {
                     } else if (error.status === 400) {
                         if (error.error.errors) {
                             error.error.errors.forEach((err: { field: string; msg: string }) => {
-                                //this.toastr.error(`${err.msg}`);
+                                if(this.tempClient.value.email.length > 1 && err.msg === "Account already exists with this email"){
+                                this.toastr.error(`${err.msg}`);
+                                }
                             });
                         } else {
                             this.toastr.error('Bad Request');
@@ -896,6 +950,7 @@ export class MatterClientsComponent implements OnInit {
     }
 
     removeTempClient(val: any) {
+        this.isSaveEnable = true;
         let index = this.tempClients.findIndex((d: any) => d.id === val.id); //find index in your array
         this.tempClients.splice(index, 1);
         localStorage.setItem('tempClients', JSON.stringify(this.tempClients));

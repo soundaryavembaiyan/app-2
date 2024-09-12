@@ -12,7 +12,7 @@
   <div class="row">
     <div class="col-3"></div>
     <div class="col-6">
-      <ul class="nav nav-pills mb-3 btnaction float-left " id="pills-tab"
+      <!-- <ul class="nav nav-pills mb-3 btnaction float-left " id="pills-tab"
         role="tablist">
         <li class="nav-item" *ngIf="groups && groups.length>0">
           <button id="High" name="priority" class="selectprior optionhigh"
@@ -29,11 +29,10 @@
               data-bs-target="#pills-home" type="button" role="tab"
               aria-controls="pills-home" aria-selected="true"
               [matTooltip]="tooltipgroupslist">{{groups[1].name}}</button>
-            <!-- <span *ngIf="displayMouseOver">{{tooltipgroupslist}}</span> -->
+            <!-- <span *ngIf="displayMouseOver">{{tooltipgroupslist}}</span> --
           </span>
         </li>
-
-      </ul>
+      </ul> -->
     </div>
     <!--<div class="col-3"></div>-->
   </div>
@@ -73,7 +72,15 @@
       <div class="col-6 matterpadding">
         <!--<div class="col-3">-->
           <h5 class="float-left grpFont" *ngIf="product != 'corporate'">Add Client(s)<span class="mandate">*</span></h5> 
-          <h5 class="float-left grpFont" *ngIf="product == 'corporate'">Add External Counsels</h5> 
+          <h5 class="float-left grpFont" *ngIf="product == 'corporate'">Add External Counsels</h5>
+          
+          <h5 class="float-right lop">
+            <div class="" *ngIf="!corporateData" id="selectbx">
+            <div class="selOn" *ngIf="isSelectAllVisible">
+            <label class="callselect checkAll">Select All</label>&nbsp;
+            <input type="checkbox" value="" [checked]="filteredData?.length > 0 && selectedClients.length === filteredData.length" id="selectAll" (change)="selectAll($event)">
+            </div></div>
+          </h5>
         <!--</div>-->
 
 
@@ -126,7 +133,7 @@
               </div>
               
               <div class="space">
-              <button class="btn btn-primary actionbtn pull-right" [disabled]="selectedOption.length == 0" (click)="onClickCorp()">Add to Selected Clients</button>
+              <button class="btn btn-primary actionbtn pull-right corpBtn" [disabled]="selectedOption.length == 0" (click)="onClickCorp()">Add to Selected Clients</button>
               </div>
           </div>
         
@@ -145,7 +152,7 @@
           </div>
         </div> -->
 
-        <div class="" *ngIf="!corporateData" id="selectbx">
+        <!-- <div class="" *ngIf="!corporateData" id="selectbx">
           <div id="search">
             <div class="selOn" *ngIf="isSelectAllVisible">
               <label class="callselect checkAll">Select All</label>&nbsp;
@@ -154,7 +161,7 @@
                 (change)="selectAll($event)">
             </div>
           </div>
-        </div>
+        </div> -->
 
         <!-- Corp lists-->
         <!-- <div class="col-3" *ngIf="product == 'corporate' && !corporateData">
@@ -332,7 +339,7 @@
                 </div>
 
                 <div class="btnbox">
-                  <button type="reset" class="btn btn-default btncancel
+                  <button type="button" class="btn btn-default btncancel
                     btnrightitem" (click)="OnFormCancel()">Cancel</button>
                   <button type="submit" class="btn btn-primary btnsave savecls addTemp"
                   >Add as Temporary</button>
@@ -407,7 +414,7 @@
                 </div>
 
                 <div class="btnbox">
-                  <button type="reset" class="btn btn-default btncancel
+                  <button type="button" class="btn btn-default btncancel
                     btnrightitem" (click)="OnFormCancel()">Cancel</button>
                   <button type="submit" class="btn btn-primary btnsave savecls addTemp" 
                   >Add as Temporary</button>
@@ -423,12 +430,15 @@
       <div class="btnbox">
         <button type="reset" class="btn btn-default btncancel btnrightitem" (click)="OnCancel()">Cancel</button>
         <button *ngIf="product != 'corporate'" type="submit" class="btn btnsave savecls" 
-          [disabled]="!((selectedClients.length > 0 && isSaveEnable) || (tempClients?.length > 0 && isSaveEnable))"
-          [ngClass]="{'disabled': !((selectedClients.length > 0 && isSaveEnable) || (tempClients?.length > 0 && isSaveEnable))}"
+          [disabled]="!((selectedClients.length > 0) || (tempClients?.length > 0))"
           (click)="saveClients()">Next</button>
         <button *ngIf="product == 'corporate'" type="submit" class="btn btn-primary btnsave savecls"
           (click)="saveClients()">Next</button>
       </div>
+      <!--
+          [disabled]="!((selectedClients.length > 0 && isSaveEnable) || (tempClients?.length > 0 && isSaveEnable))"
+          [ngClass]="{'disabled': !((selectedClients.length > 0 && isSaveEnable) || (tempClients?.length > 0 && isSaveEnable))}"
+      -->
     </div>
   </div>
 

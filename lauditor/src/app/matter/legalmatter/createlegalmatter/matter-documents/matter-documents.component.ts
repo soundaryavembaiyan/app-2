@@ -4,6 +4,7 @@ import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@
 import { HttpService } from 'src/app/services/http.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LeavepageComponent } from '../leavepage/leavepage.component';
+import { GeneralleavepageComponent } from 'src/app/matter/genaralmatter/creategeneralmatter/generalleavepage/generalleavepage.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
@@ -46,6 +47,7 @@ export class MatterDocumentsComponent {
     isSelectAllVisible = true;
     groupName:any;
     showAllItems = false;
+    pathName: string = "legalmatter";
 
     constructor(private httpservice: HttpService,
         private fb: FormBuilder,private dialog: MatDialog, private router: Router,
@@ -303,15 +305,29 @@ export class MatterDocumentsComponent {
     OnCancel() {
         // this.documentsList = this.documentsList.concat(this.selectedDocuments);
         // this.selectedDocuments = [];
+        this.pathName = window.location.pathname.includes("legalmatter") ? "legalmatter" : "generalmatter";
         if (this.selectedDocuments.length > 0) {
-            this.dialog.open(LeavepageComponent, {
-                width: '350px',  // Set the width here
-                height: '180px',
-                hasBackdrop: true,
-                panelClass: 'hello',
-                disableClose: true
-            });
-            return;
+            if(this.pathName === "legalmatter"){
+                this.dialog.open(LeavepageComponent, {
+                    width: '350px',  // Set the width here
+                    height: '180px',
+                    hasBackdrop: true,
+                    panelClass: 'hello',
+                    disableClose: true
+                });
+                return;
+                }
+                else if(this.pathName === "generalmatter"){
+                    this.dialog.open(GeneralleavepageComponent, {
+                        width: '350px',  // Set the width here
+                        height: '180px',
+                        hasBackdrop: true,
+                        panelClass: 'hello',
+                        disableClose: true
+                    });
+                    return; 
+                }
+                else{}
         }
         const checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
         if (checkbox) {
