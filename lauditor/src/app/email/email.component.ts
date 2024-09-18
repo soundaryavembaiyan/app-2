@@ -603,7 +603,7 @@ export class EmailComponent implements OnInit, AfterViewInit {
 
    <h1 mat-dialog-title class="mailoption">Choose a Mail account provider…</h1>
       <mat-radio-group aria-label="Select an option">
-        <mat-radio-button value="1"><img class="gImg" src="assets/img/outlook.svg"/></mat-radio-button>
+        <!-- <mat-radio-button value="1"><img class="gImg" src="assets/img/outlook.svg"/></mat-radio-button> -->
         <mat-radio-button value="2"><img class="oImg" src="assets/img/google.svg"/></mat-radio-button>
       </mat-radio-group>
       <div mat-dialog-actions class="overviewSave savefilenameBtn">
