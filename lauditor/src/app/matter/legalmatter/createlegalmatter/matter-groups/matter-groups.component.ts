@@ -37,6 +37,7 @@ export class MatterGroupsComponent implements OnInit {
   selectedGroups: any = [];
   selectedtoupdateGroups: any = [];
   selectedIds: any[] = [];
+  selectedDel: any[] = [];
   searchText: any = '';
   editGroupIds: any = [];
   isEdit: boolean = false;
@@ -241,7 +242,9 @@ export class MatterGroupsComponent implements OnInit {
       this.getGrouplists();
     }
     this.selectedIds = this.editMatter.groups.map((obj: any) => { return obj.id })
-    //console.log('editMatter of selectedId', this.selectedIds)
+    this.selectedDel = this.editMatter.groups.map((obj: any) => { return obj.canDelete })
+    // console.log('editMatter of selectedId', this.selectedIds)
+    // console.log('this.editMatter', this.editMatter);
   }
 
   filterGroupsList() {
@@ -297,15 +300,47 @@ export class MatterGroupsComponent implements OnInit {
       //console.error('this.clients is not an array', this.clients);
     }
   }
-  selectCorporateGrp(grp: any, checked: boolean){
+  // selectCorporateGrp(grp: any, checked: boolean){
+  //   this.isSaveEnable = true;
+  //    if(checked){
+  //     this.selectedIds.push(grp.id);
+  //   }
+  //   else{
+  //     this.selectedIds.splice(this.selectedIds.indexOf(grp.id), 1)
+  //   }
+  // }
+
+  selectCorporateGrp(grp: any, checked: boolean, inputEl: HTMLInputElement) {
     this.isSaveEnable = true;
-    if(checked){
+    // console.log('grp', grp);
+    // console.log('editMatter', this.editMatter);
+
+    const groupInEditMatter = this.editMatter.groups.find((g: any) => g.id === grp.id);
+    // Check if the group exists and if canDelete is false
+    if (groupInEditMatter && !groupInEditMatter.canDelete) {
+      this.confirmationDialogService.confirm(
+        'Alert', 'External Counsels are associated with this Department. So you cannot delete this department', false, 'OK', 'Cancel', true
+      ).then((result: any) => {
+        if (result === 'OK') {
+          this.selectedIds.splice(this.selectedIds.indexOf(grp.id), 1); // Allow the uncheck action
+        } else {
+          inputEl.checked = true; // Prevent the uncheck
+        }
+      }).catch(() => {
+        inputEl.checked = true;
+      });
+    }
+    // If canDelete is true or the group is not found
+    if (checked) {
       this.selectedIds.push(grp.id);
-    } 
-    else {
-      this.selectedIds.splice(this.selectedIds.indexOf(grp.id), 1)
+    } else {
+      const index = this.selectedIds.indexOf(grp.id);
+      if (index > -1) {
+        this.selectedIds.splice(index, 1);
+      }
     }
   }
+
   remGroups() {
     this.initialSelectedGroups = [...this.selectedGroups];
     this.selectedtoupdateGroups.forEach((group: any) => {
@@ -445,7 +480,7 @@ export class MatterGroupsComponent implements OnInit {
     const path = window.location.pathname.indexOf("updateGroups") > -1; //&& group.canDelete === false
 
     // Only for Corporate prod. condition
-    if (this.product == 'corporate' && group.canDelete == false) {
+    if (this.product === 'corporate' && group.canDelete === false) {
       this.confirmationDialogService.confirm('Alert', 'External Counsels are associated with this Department. So you cannot delete this department', false, 'OK', 'Cancel', true)
     }
     // Resource dialog condition
