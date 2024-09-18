@@ -68,9 +68,6 @@ export class DoceditorComponent {
   selectedValue: string = "create";
   isDisplay: boolean = true;
   selectedOption: any;
-
-  //  currentDate = new Date();
-  //  date = this.currentDate;
   date: any;
 
   isOpen: boolean = false;
@@ -140,9 +137,18 @@ export class DoceditorComponent {
   isNotesElipses: boolean = false;
   itemContent: any;
   isFirefox: boolean = false;
+
+  files: File[] = [];
+  uploadedDocs: any = [];
+  imageIndex:any;
+  imageAddCount:number = 0;
+  maxImages = 2; 
+  getImage:any;
+  supportedImageTypes: string[] = ['image/jpeg', 'image/png', 'image/gif'];
   
   @ViewChild('menuTrigger1') menuTrigger1!: MatMenuTrigger;
   @ViewChild('menuTrigger2') menuTrigger2!: MatMenuTrigger;
+  @ViewChild('fileInput') fileInput!: ElementRef;
 
   // Listen to mouse leave event on the document
   @HostListener('document:mouseleave', ['$event'])
@@ -192,6 +198,48 @@ export class DoceditorComponent {
     this.isFirefox = this.detectFirefox(); //...firefox style
   }
 
+  handleFileInput(event: Event, index: number): void {
+    const input = event.target as HTMLInputElement;
+
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+
+      // Check if file size exceeds the limit (2MB)
+      if (file.size > 2 * 1024 * 1024) { 
+        this.toast.error('File size exceeds 2 MB.');
+        return;
+      }
+      // Check if the file type is supported
+      if (!this.supportedImageTypes.includes(file.type)) {
+        this.toast.error('Please upload jpg, png or gif image.');
+        return;
+      }
+      // FormData to send the file in the API
+      const formData = new FormData();
+      formData.append('file', file);
+
+      // Ipload API call for the image and get the filename from the response
+      this.httpservice.sendPostLatexRequest(URLUtils.addImage, formData).subscribe(
+        (res: any) => {
+          this.spinnerService.hide();
+          this.toast.success('Image uploaded successfully');
+
+          const control = this.myForm.get('contentListItems') as FormArray; // Update the form with the API filename
+          control.at(index).get('contentData')?.setValue(res.fileName);  // Use the filename from the response
+          input.value = ''; // Clear the file input to allow re-selection
+        },
+        (error: HttpErrorResponse) => {
+          this.spinnerService.hide();
+          if (error.status === 400 || error.status === 401 || error.status === 403) {
+            const errorMessage = error.error.message || 'Image upload failed';
+            this.toast.error(errorMessage)
+            //this.toast.error('Image upload failed');
+          }
+        },
+      );
+    }
+  }
+  
   // addContent(type: any, value?: any, valueTitle?: any) {
   //   const randomId = this.idGenerator.generateId(10);
   //   console.log('contVal', value)
@@ -312,6 +360,7 @@ export class DoceditorComponent {
     // if(value === null){
     //   this.toast.error('I null')
     // }
+    //console.log('val',value)
     const randomId = this.idGenerator.generateId(10);
     const group = this.fb.group({
       randomId: [randomId],
@@ -467,6 +516,16 @@ export class DoceditorComponent {
     }
     // ***Page Break Condition*** //
 
+    // ***Image Condition*** //
+    if (type === 'Image' && this.imageAddCount >= 2) {
+      this.toast.error('You can only add upto 2 images.');
+      return;
+    }
+    if (type === 'Image') {
+      this.imageAddCount++;  // Increment the image counter when an image is added
+    }
+    // ***Image Condition*** //
+
     //when Extraction function called(Edit)
     if (editBlock === true) {
       if (type === 'Overview') {
@@ -488,6 +547,9 @@ export class DoceditorComponent {
       if (type === 'Page Break') {
         contentListItems.push(this.addContent(type, value));
         this.insertPageBreak()
+      }
+      if (type === 'Image') {
+        contentListItems.push(this.addContent(type, value));
       }
     }
     else {
@@ -560,6 +622,10 @@ export class DoceditorComponent {
 
   removeItem(i: number) {
     const contentListItems = this.myForm.get('contentListItems') as FormArray;
+    const removedItem = contentListItems.at(i).value;//for Img
+    if (removedItem.content === 'Image') {
+      this.imageAddCount--;  // Decrement the image count --
+    }
     contentListItems.removeAt(i);
   }  
   
@@ -934,6 +1000,12 @@ export class DoceditorComponent {
             return;
           }
         }
+        if (getContent == 'Image') {
+          if (data === '' || data === undefined || data === " " || data === null) {
+            this.toast.error(`${getContent} is mandatory. Please add the image.`);
+            return;
+          }
+        }
 
         const orderListItems = item.get('orderListItems') as FormArray; // orderListItems within each item
         // console.log('orrrr',orderListItems)
@@ -1150,7 +1222,10 @@ export class DoceditorComponent {
 
   // Get Block Contents
   getBlockContent(contentType: string) {
-    //console.log('contenType',contentType)
+    // console.log('contenType',contentType)
+    // console.log('contentTitleControl',this.contentTitleControl)
+    // console.log('contentDataControl',this.contentDataControl)
+
     switch (contentType) {
       case 'Overview':
         return `\\abstract ${this.contentDataControl.value}`;
@@ -1162,59 +1237,14 @@ export class DoceditorComponent {
         return `\\subsubsection{${this.contentTitleControl.value || ''}}${this.contentDataControl.value || ''}`;
       case 'Paragraph':
         return `\\paragraph{${this.contentTitleControl.value || ''}}${this.contentDataControl.value || ''}`;
-      case 'Ordered List':
-        return `\\begin{enumerate}${this.listData}\\end{enumerate}`;
-      case 'Unordered List':
-        return `\\begin{itemize}${this.listData}\\end{itemize}`;
-      case 'Page Break':
-        return `\\newpage`;
-      default:
-        return ''; // Default case, handle appropriately
-    }
-  }
-
-  getBlockContento(contentType: string) {
-    const contentData = this.contentDataControl.value ? this.contentDataControl.value.trim() : '';
-    const contentTitle = this.contentTitleControl.value ? this.contentTitleControl.value.trim() : '';
-  
-    switch (contentType) {
-      case 'Overview':
-        if (contentTitle === '' && contentData === '') {
-          return ''; // Skip if there empty content data and title.
-        }
-        return `\\abstract ${contentData}`;
-      case 'Section':
-        if (contentTitle === '' && contentData === '') {
-          return ''; // Skip if there empty content data and title.
-        }
-        return `\\section{${contentTitle}}${contentData}`;
-      case 'Sub Section':
-        if (contentTitle === '' && contentData === '') {
-          return ''; // Skip if there empty content data and title.
-        }
-        return `\\subsection{${contentTitle}}${contentData}`;
-      case 'Sub Sub Section':
-        if (contentTitle === '' && contentData === '') {
-          return ''; // Skip if there empty content data and title.
-        }
-        return `\\subsubsection{${contentTitle}}${contentData}`;
-      case 'Paragraph':
-        if (contentTitle === '' && contentData === '') {
-          return ''; // Skip if there empty content data and title.
-        }
-        return `\\paragraph{${contentTitle}}${contentData}`;
       case 'Numbered List':
-        if (contentTitle === '' && contentData === '') {
-          return ''; // Skip if there empty content data and title.
-        }
         return `\\begin{enumerate}${this.listData}\\end{enumerate}`;
       case 'Bulleted List':
-        if (contentTitle === '' && contentData === '') {
-          return ''; // Skip if there empty content data and title.
-        }
         return `\\begin{itemize}${this.listData}\\end{itemize}`;
       case 'Page Break':
         return `\\newpage`;
+      case 'Image':
+        return `\\begin{figure}[h] \\includegraphics[width=1.0\\textwidth]{${this.contentDataControl.value}}\\end{figure}`;
       default:
         return ''; // Default case, handle appropriately
     }
@@ -1485,7 +1515,15 @@ export class DoceditorComponent {
           regex: /\\begin{itemize}([^]*?)\\end{itemize}/g,
           blockType: 'Bulleted List',
           handler: (args: string[]) => ({ type: 'Bulleted List', content: args[0] || '', position: lateX.indexOf(args[0] || '') })
-        },
+        }, 
+        {
+          regex: /\\begin{figure}[^]*?\\includegraphics\[.*?\]\{([^}]+)\}[^]*?\\end{figure}/g,
+          blockType: 'Image',
+          handler: (args: string[]) => {
+            const imagePath = args[1];
+            return { type: 'Image', content: imagePath || '', position: lateX.indexOf(args[0] || '') };
+          }
+        } 
       ];
 
       const extractedBlocks: any[] = [];
@@ -1536,6 +1574,9 @@ export class DoceditorComponent {
             break;
           case 'Page Break':
             this.addBlock('Page Break', true, content);
+            break;
+          case 'Image':
+            this.addBlock('Image', true, content);
             break;
           // Add cases for other types of blocks
         }

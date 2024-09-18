@@ -52,6 +52,8 @@ export class URLUtils {
     //LATEX 
     static getDocument = '/v1/documents'
     static savedoc = '/v1/document'
+    static addImage = '/v1/upload'
+    static getImgae = '/v1/files'
     //static savedocofid = '/v1/document/page/'
     
     static savedocID(args: any) {

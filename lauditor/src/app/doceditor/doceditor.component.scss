@@ -169,7 +169,12 @@
     height: 36px;
     margin-left: -5px;
 }
-
+.imgImg{
+    width: 30px;
+    height: 30px;
+    margin-left: 2px;
+    margin-top: -2px;
+}
 .imgoverView {
     width: 35px;
     height: 28px;
@@ -1078,3 +1083,99 @@ hr {
         margin-left: 30px;
     }
 }
+.brwsebutton{
+    background: #00498e;
+    color: white;
+    font-weight: 900;
+    width: 150px;
+    height: 40px;
+    // margin-top: 20px;
+    // margin-left: 105px;
+    border: 2px solid #ffffff08;
+    border-radius: 5px;
+}
+.calitem{
+    position: absolute;
+    cursor: pointer;
+    right:10px;
+}
+//
+
+
+//New design for Upload Img
+.upload-container {
+    width: 90%;
+    margin-left: 15px;
+    border: 1px solid #e0e0e0;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 16px;
+  }
+  
+  .upload-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    border: 2px dashed #e0e0e0;
+    border-radius: 8px;
+    //cursor: pointer;
+  }
+  
+  .upload-content {
+    text-align: center;
+  }
+  
+  .upload-content i.material-icons {
+    font-size: 30px;
+    color: #888;
+  }
+  
+  .upload-content p {
+    font-size: 14px;
+    //color: #888;
+    color: #000000d1;
+    padding-top: 10px;
+    margin: 0;
+  }
+  
+  .max-file-size-info {
+    font-size: 14px;
+    color: #999;
+  }
+  
+  .uploaded-files {
+    margin-top: 16px;
+  }
+  
+  .uploaded-file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+  
+  .file-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .file-info i.material-icons {
+    margin-right: 8px;
+  }
+  
+  .file-actions button {
+    margin-left: 8px;
+  }
+  
+  button.mat-button {
+    margin-top: 16px;
+  }
+  .pwdinfo {
+      width: 20px;
+      height: 20px;
+      margin-top: -3px;
+  }
