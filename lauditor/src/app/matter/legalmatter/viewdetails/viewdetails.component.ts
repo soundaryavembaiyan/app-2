@@ -102,6 +102,7 @@ export class ViewDetailsComponent implements OnInit {
   visibleClients: any[] = [];
   showAllClients: boolean = false;
   sortAscending = true; 
+  description:any;
 
   //Initializing docUpload Variables
   // reactiveForm: any;
@@ -319,10 +320,10 @@ export class ViewDetailsComponent implements OnInit {
     if (this.form.valid && this.notes.length != 0) {
       let req = { "notes": this.notes }
       //console.log(item)
-      //console.log('Bef-ITEM', item.notes_list.length + 1);
+      //console.log('Bef-ITEM', item.notes_list.length);
 
       if (item.notes_list.length + 1 > 5) {
-        this.toast.info("Corporate Notes only allow 5 Notes.");
+        this.toast.error("Corporate Notes only allow 5 Notes.");
         return
       }
 
@@ -758,6 +759,7 @@ export class ViewDetailsComponent implements OnInit {
     });
   };
   viewDocument(item: any) {
+    //console.log(item)
     if(item.added_encryption){
         var body = new FormData();
         body.append('docid', item.docid)
@@ -791,6 +793,7 @@ export class ViewDetailsComponent implements OnInit {
     } 
     if(item.added_encryption==false)  {
       let id = {'id':item.docid}
+
         this.httpservice.sendGetRequest(URLUtils.viewDocuments(id)).subscribe((res: any) => {
             if(this.allowedFileTypes.includes(item.contentType)){
                 this.spinnerService.show()
@@ -906,8 +909,20 @@ export class ViewDetailsComponent implements OnInit {
   saveDocuments() {
     this.httpservice.sendPutRequest(URLUtils.legalHistoryDocumentsUpdate(this.data.id), { "documents": this.selectedDocuments }).subscribe(
       (res: any) => {
-        //console.log(res);
         this.isNewDocument = false;
+
+        this.httpservice.sendGetRequest(URLUtils.legalHistoryDocuments(this.data.id)).subscribe(
+          (res: any) => {
+            if (res) {
+              this.selectedDocuments = res.documents;
+              this.createdBy = localStorage.getItem('name');
+              if (this.isMergeEnable)
+                this.getMergeDocuments();
+              else
+                this.getDocuments();
+            }
+          });
+
       },
       (error: HttpErrorResponse) => {
         if (error.status === 401 || error.status === 403) {
@@ -1118,10 +1133,12 @@ export class ViewDetailsComponent implements OnInit {
           const uploadPromises = [];
           for (var i = 0; i < this.uploadedDocs.length; i++) {
             let fdata = new FormData();
+            this.description = this.uploadedDocs[i].description?.trim() || this.uploadedDocs[i].name;
             const ids = this.data.groups.map((obj: any) => obj.id);
             const groupAcls = this.data.groupAcls;
             fdata.append('name', this.uploadedDocs[i].name);
-            fdata.append('description', this.uploadedDocs[i].description);
+            fdata.append('description', this.description);
+            //fdata.append('description', this.uploadedDocs[i].description);
             fdata.append('filename', this.uploadedDocs[i].name)
             fdata.append('content_type', this.uploadedDocs[i].type)
             fdata.append('category', "client")
@@ -1188,7 +1205,7 @@ export class ViewDetailsComponent implements OnInit {
               "doctype": 'general',
               "user_id": localStorage.getItem('user_id'),
               "name":data.name,
-              "description":data.description,
+              "description":this.description,
               "added_encryption":false,
               "created": currentDateTime,
               "addedBy":localStorage.getItem('name')
