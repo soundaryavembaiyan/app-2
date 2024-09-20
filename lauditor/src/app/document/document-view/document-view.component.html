@@ -421,10 +421,10 @@
             <div class="row width-alignment">
               <div class="col-6">
                 <div class="form-group nameSet">
-                  <label for="title" class="lable-size">Document Named <span class="mandate">*</span></label>
+                  <label for="title" class="lable-size">Document Name <span class="mandate">*</span></label>
                   <input type="text" formControlName="name" class="text-size form-control group-name-text"
                     [ngClass]="{ 'is-invalid': submitted && f.name.errors }" id="caseTitle" name="name"
-                    (input)="restrictSpaces($event)" oninput="this.value = this.value.replace(/[^A-Za-z0-9-_ ]|^ /g,'')" 
+                    (input)="restrictSpaces($event)" oninput="this.value = this.value.replace(/[^A-Za-z0-9-()._ ]|^ /g,'')" 
                     maxlength="50" [(ngModel)]="editDoc.name" autocomplete="off">
                   <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
                     <div *ngIf="f.name.errors.required">Document Name is required</div>
@@ -439,7 +439,7 @@
                   <label for="comment" class="lable-size">Description <span class="mandate">*</span></label>
                   <textarea formControlName="description" class="form-control text-size text-area-height"
                     [ngClass]="{ 'is-invalid': submitted && f.description.errors }" name="description"
-                    (input)="restrictSpaces($event)" oninput="this.value = this.value.replace(/[^A-Za-z0-9-_ ]|^ /g,'')" 
+                    (input)="restrictSpaces($event)" oninput="this.value = this.value.replace(/[^A-Za-z0-9().-_ ]|^ /g,'')" 
                     maxlength="300" [(ngModel)]="editDoc.description"></textarea>
                   <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
                     <div *ngIf="f.description?.errors?.required">Description is required</div>

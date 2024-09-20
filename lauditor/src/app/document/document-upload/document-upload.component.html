@@ -39,7 +39,7 @@
             </div>
 
             <!--Groups added on Client doc-->
-            <div class="form-group" id="selectbx" *ngIf="clientId.length>0">
+            <div class="form-group" id="selectbx" *ngIf="clientId.length>0 && (product !== 'content' && product !== 'connect')">
               <div class="input-group court" id="search">
                 <p class="grpCls" *ngIf="product != 'corporate'">...</p>
                 <div class="multicheck form-control textbox" style="border-radius: 5px;">
@@ -297,7 +297,7 @@
                       <input type="text" class="form-control textbox fontbold"
                       [(ngModel)]="editMeta.name" id="documentName" 
                       name="name" formControlName="name" [maxLength]="50" (input)="restrictSpaces($event)" 
-                      oninput="this.value = this.value.replace(/[^A-Za-z0-9-_ ]|^ /g,'')"
+                      oninput="this.value = this.value.replace(/[^A-Za-z0-9-()._ ]|^ /g,'')"
                        [ngClass]="{'is-invalid':submitted && f.name.errors}" autocomplete="off">
 
                     <div *ngIf="submitted && f.name.errors"
@@ -329,7 +329,7 @@
                     <label for="filling date" class="fontbold">Description<span
                         class="mandate">*</span></label>
                     <textarea rows="4" [(ngModel)]="editMeta.description" 
-                    (input)="restricttextSpace($event)"
+                    (input)="restricttextSpace($event)" oninput="this.value = this.value.replace(/[^A-Za-z0-9().-_ ]|^ /g,'')"
                       cols="50" class="form-control textbox fontbold"
                       formControlName="description" name="description"
                       [ngClass]="{'is-invalid':submitted &&

@@ -655,7 +655,7 @@
           <!-- ends here -->
                  <!-- right row card 19 layout -->
           <div class="row rightcontainerbox rightcontainerboxapprox point"
-                *ngIf="kpiCards.includes('submittedTs')" (click)="categoryRoute('/timesheets/submitted')">
+                *ngIf="kpiCards.includes('submittedTs') && product !== 'corporate'" (click)="categoryRoute('/timesheets/submitted')">
             <div class="col-sm-12">
               <div class="row meetingcontainer legalbox">
                 <div class="col-sm-7">
@@ -681,7 +681,7 @@
           <!-- ends here -->
           <!-- right row card 20 layout -->
           <div class="row rightcontainerbox rightcontainerboxapprox point"
-                *ngIf="kpiCards.includes('pendingTs')" (click)="categoryRoute('/timesheets/non-submitted')">
+                *ngIf="kpiCards.includes('pendingTs') && product !== 'corporate'" (click)="categoryRoute('/timesheets/non-submitted')">
             <div class="col-sm-12">
               <div class="row meetingcontainer legalbox">
                 <div class="col-sm-7">

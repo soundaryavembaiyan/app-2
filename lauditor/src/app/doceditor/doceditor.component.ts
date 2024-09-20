@@ -141,7 +141,7 @@ export class DoceditorComponent {
   files: File[] = [];
   uploadedDocs: any = [];
   imageIndex:any;
-  imageAddCount:number = 0;
+  imageAddCount:number = 1;
   maxImages = 2; 
   getImage:any;
   supportedImageTypes: string[] = ['image/jpeg', 'image/png', 'image/gif'];
@@ -211,12 +211,32 @@ export class DoceditorComponent {
       }
       // Check if the file type is supported
       if (!this.supportedImageTypes.includes(file.type)) {
-        this.toast.error('Please upload jpg, png or gif image.');
+        this.toast.error('Please upload jpg or png image.');
         return;
       }
+      // Check if the file name contains only allowed symbols (&()-_.)
+      // const allowedSymbols = /^[a-zA-Z0-9&()\ -_.]+$/;
+      // const fileNameWithoutExtension = file.name.substring(0, file.name.lastIndexOf('.'));
+      // if (!allowedSymbols.test(fileNameWithoutExtension)) {
+      //   this.toast.error('File name contains invalid characters.');
+      //   return;
+      // }
+
       // FormData to send the file in the API
       const formData = new FormData();
-      formData.append('file', file);
+      let name = file.name.replace(/\s/g, ''); // remove whitespaces
+      
+      const nameArr = name.split('.'); // split the name by dots(.)
+      // Check if there are more than two dots in the file name
+      if (nameArr.length > 1) {
+        name = nameArr.slice(0, -1).join('') + '.' + nameArr.slice(-1);
+      }
+      // console.log('file',file)
+      // console.log('uploaded fileName:', name);
+
+      const newFile = new File([file], name, { type: file.type });
+      formData.append('file', newFile);
+      // console.log('newfile',newFile)
 
       // Ipload API call for the image and get the filename from the response
       this.httpservice.sendPostLatexRequest(URLUtils.addImage, formData).subscribe(
@@ -517,7 +537,7 @@ export class DoceditorComponent {
     // ***Page Break Condition*** //
 
     // ***Image Condition*** //
-    if (type === 'Image' && this.imageAddCount >= 2) {
+    if (type === 'Image' && this.imageAddCount > 2  && !editBlock === true) {
       this.toast.error('You can only add upto 2 images.');
       return;
     }
@@ -1065,9 +1085,10 @@ export class DoceditorComponent {
       return
     }
 
-    let latexDocument = `\\documentclass{article}\\usepackage{hyperref}
-    \\usepackage{geometry}\\geometry{a4paper,total={170mm,257mm},left=20mm,top=20mm,}<ltk>\\title
-    {${this.title}}<ltk>\\author{${this.author}}<ltk>\\date{}<ltk>\\begin{document}<ltk>\\maketitle`;
+    // let latexDocument = `\\documentclass{article}\\usepackage{hyperref}
+    // \\usepackage{geometry}\\geometry{a4paper,total={170mm,257mm},left=20mm,top=20mm,}<ltk>\\title
+    // {${this.title}}<ltk>\\author{${this.author}}<ltk>\\date{}<ltk>\\begin{document}<ltk>\\maketitle`;
+    let latexDocument = `\\documentclass{article}\\usepackage{graphicx}\\usepackage{tabularx}\\usepackage{hyperref}\\usepackage{geometry}\\geometry{a4paper,total={170mm,257mm},left=20mm,top=20mm,}<ltk>\\title{${this.title}}<ltk>\\author{${this.author}}<ltk>\\date{}<ltk>\\begin{document}<ltk>\\maketitle`;
 
     // Check if the document needs to be saved
     if (!this.documentId) { // if the docId is empty  || contentListItems.length === 0
@@ -1225,6 +1246,8 @@ export class DoceditorComponent {
     // console.log('contenType',contentType)
     // console.log('contentTitleControl',this.contentTitleControl)
     // console.log('contentDataControl',this.contentDataControl)
+    let imagesFolder = "/home/ubuntu/latekapi/uploads";
+    let userid = localStorage.getItem('user_id');
 
     switch (contentType) {
       case 'Overview':
@@ -1244,7 +1267,7 @@ export class DoceditorComponent {
       case 'Page Break':
         return `\\newpage`;
       case 'Image':
-        return `\\begin{figure}[h] \\includegraphics[width=1.0\\textwidth]{${this.contentDataControl.value}}\\end{figure}`;
+        return `\\begin{figure}[h]\\includegraphics[width=1.0\\textwidth]{${imagesFolder}/${userid}/${this.contentDataControl.value}}\\end{figure}`;
       default:
         return ''; // Default case, handle appropriately
     }
@@ -1515,15 +1538,16 @@ export class DoceditorComponent {
           regex: /\\begin{itemize}([^]*?)\\end{itemize}/g,
           blockType: 'Bulleted List',
           handler: (args: string[]) => ({ type: 'Bulleted List', content: args[0] || '', position: lateX.indexOf(args[0] || '') })
-        }, 
+        },
         {
           regex: /\\begin{figure}[^]*?\\includegraphics\[.*?\]\{([^}]+)\}[^]*?\\end{figure}/g,
           blockType: 'Image',
           handler: (args: string[]) => {
             const imagePath = args[1];
-            return { type: 'Image', content: imagePath || '', position: lateX.indexOf(args[0] || '') };
+            const fileName = imagePath.substring(imagePath.lastIndexOf('/') + 1); // Extract only the filename
+            return { type: 'Image', content: fileName || '', position: lateX.indexOf(args[0] || '') };
           }
-        } 
+        }        
       ];
 
       const extractedBlocks: any[] = [];
@@ -1653,6 +1677,8 @@ export class DoceditorComponent {
     this.showPreviewDoc = true;
     let url = this.latexdoc + URLUtils.getPreview(this.documentId);
     this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    // console.log('url',url)
+    // console.log('pdfSrc',this.pdfSrc)
   }
 
   // deleteDoc() {

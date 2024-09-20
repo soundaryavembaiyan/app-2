@@ -42,6 +42,7 @@ export class MatterInfoComponent implements OnInit {
     private httpService: HttpService, private dialog: MatDialog, private router: Router, private confirmationDialogService: ConfirmationDialogService) { }
 
   ngOnInit() {
+    console.log('data',this.data)
     this.caseRegister = this.fb.group({
       title: ['',[Validators.required,Validators.pattern(this.NoWhitespaceRegExp)]],
       case_number: ['',[ Validators.required,Validators.pattern(this.NoWhitespaceRegExp)]],
@@ -177,9 +178,10 @@ export class MatterInfoComponent implements OnInit {
         "affidavit_isfiled": "na",
         "affidavit_filing_date": "",
         "opponent_advocates": this.advicates?.length > 0 ? this.advicates : this.editeMatterInfo.opponentAdvocates,
-        "clients": this.editeMatterInfo.clients.map((obj: any) => ({ "id": obj.id, "type": obj.type })),
+        "clients": this.editeMatterInfo?.clients.map((obj: any) => ({ "id": obj.id, "type": obj.type })),
         "group_acls": this.editeMatterInfo.groupAcls,
-        "members": this.editeMatterInfo.members.map((obj: any) => ({ "id": obj.id })),
+        //"members": this.editeMatterInfo?.members.map((obj: any) => ({ "id": obj.id })),
+        "members": this.editeMatterInfo?.members.map((obj: any) => ({ "id": obj.id })).filter((member: any, index: any, self: any[]) => index === self.findIndex((m) => m.id === member.id)),
         "documents": this.Documents.map((obj: any) => ({
           "docid": obj.docid,
           "doctype": obj.doctype,

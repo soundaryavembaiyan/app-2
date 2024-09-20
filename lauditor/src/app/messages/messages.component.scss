@@ -12,6 +12,34 @@
 .profile {
     margin-top: 5px;
 }
+.fab-container {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    right: 20px; /* Placing the button at the top-right corner */
+    z-index: 1000; /* Ensure the button appears above other elements */
+}
+
+.fab-video-button {
+    border: none;
+    background-color: #00b3a7; /* Custom color for FAB */
+    color: white; /* Ensures icon or text stands out */
+    width: 56px; /* Standard FAB size */
+    height: 56px; /* Standard FAB size */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%; /* Ensures the button is perfectly round */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Adds subtle shadow for depth */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Adds smooth hover transition */
+}
+
+.fab-video-button:hover {
+    background-color: #008f85; /* Darker shade on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); /* Slightly larger shadow on hover */
+}
+
 
 // component css goes here
 i.fa.fa-paper-plane {

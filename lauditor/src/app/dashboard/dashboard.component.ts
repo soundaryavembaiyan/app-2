@@ -18,6 +18,7 @@ export class DashboardComponent implements OnInit, OnChanges {
   roleId: string = "TM";
   product = environment.product;
   key:any;
+  activeItemId: string | null = null;
 
   navItem = [
     {
@@ -126,11 +127,11 @@ export class DashboardComponent implements OnInit, OnChanges {
       id: 'relationships',
       link: '/relationship/view/corporate', image: 'assets/img/relationship.svg', class: ''
     },
-    {
-      name: 'Timesheets',
-      roles: ['TM', 'GH', 'SU', 'AAM'],
-      id: 'timesheets', link: '/timesheets', image: 'assets/img/timesheet.svg', class: ''
-    },
+    // {
+    //   name: 'Timesheets',
+    //   roles: ['TM', 'GH', 'SU', 'AAM'],
+    //   id: 'timesheets', link: '/timesheets', image: 'assets/img/timesheet.svg', class: ''
+    // },
     {
       name: 'Meetings',
       roles: ['TM', 'GH', 'SU', 'AAM'],
@@ -337,7 +338,7 @@ export class DashboardComponent implements OnInit, OnChanges {
           this.categoryName = activeItem.name;
           localStorage.setItem('categoryName', this.categoryName);
           localStorage.setItem('activeNavItem', activeItem.id);
-        } 
+        }
         // else {
         //   this.categoryName = 'Dashboard';
         // }
@@ -351,6 +352,10 @@ export class DashboardComponent implements OnInit, OnChanges {
     }
 
     this.initalize_roles()
+    // Clear the active item on initialization
+    this.activeItemId = null;
+    localStorage.removeItem('activeNavItem');
+    //window.location.pathname == '/grid'
   }
 
   initalize_roles(){
@@ -382,6 +387,7 @@ export class DashboardComponent implements OnInit, OnChanges {
 
   isActive(itemId: string): boolean {
     return localStorage.getItem('activeNavItem') === itemId;
+    // return this.activeItemId === itemId;
   }
 
   setActiveNavItem(category: string) {

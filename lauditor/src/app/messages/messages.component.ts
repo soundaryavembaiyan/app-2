@@ -104,6 +104,8 @@ export class MessagesComponent implements OnInit {
   //   }
   // }
   isActivediv:boolean = false;
+  val:any;
+  currentExpandedIndex: number | null = null; 
 
   constructor(
     private httpservice: HttpService,
@@ -133,13 +135,30 @@ export class MessagesComponent implements OnInit {
   }
 
   toggle(index: any, val: any) {
+    // console.log('val:', val);
     this.messegeInput = '';
     this.term = '';
+    this.val = val;
     // toggle based on index
     this.userIndex = index;
-    //this.spinnerService.show()
+    
+    // Close the currently expanded list if it's not the one being toggled
+    if (this.currentExpandedIndex !== null && this.currentExpandedIndex !== index) {
+      this.hideRuleContent[this.currentExpandedIndex] = false;
+    }
+
+    // Toggle the current list
     this.hideRuleContent[index] = !this.hideRuleContent[index];
-    //console.log('hideRuleContent[index]',this.hideRuleContent[index])
+    val.isExpand = this.hideRuleContent[index];
+
+    // Update the currently expanded index
+    this.currentExpandedIndex = this.hideRuleContent[index] ? index : null;
+
+    //this.spinnerService.show()
+    // this.hideRuleContent[index] = !this.hideRuleContent[index];
+    // val.isExpand = this.hideRuleContent[index];
+    // console.log('hideRuleContent[index]',this.hideRuleContent[index])
+    // console.log('val.isExpand:', val.isExpand);
     this.usersList.forEach((item: any) => {
       if (item.id == val.id) item.isExpand = true;
       else  item.isExpand = false;
@@ -215,7 +234,8 @@ export class MessagesComponent implements OnInit {
   }
   StartVideo(){
     let token = localStorage.getItem('TOKEN')
-    const link =  `${environment.AVChat}?logintype=pro&token=${token}&jid=${URLUtils.get_jid()}&name=${this.chatUserName}`;
+    let name = localStorage.getItem('name')
+    const link =  `${environment.AVChat}?logintype=pro&token=${token}&jid=${URLUtils.get_jid()}&name=${name}`;
     window.location.href = link;
   }
   stanzaHandler(msg: any) {
@@ -577,9 +597,10 @@ export class MessagesComponent implements OnInit {
   //   )
   // }
   selectChatUser(val: any) {
-    //console.log('val',val)
+    //console.log('user val',val)
     this.messegeInput = '';
     this.term = '';
+
     // Set focus on the inputfield
     setTimeout(() => {
       const textareas = document.querySelectorAll('.form-control.textbox.chatinput');
@@ -603,17 +624,26 @@ export class MessagesComponent implements OnInit {
     //console.log('user' + JSON.stringify(val));
     this.toJID = val.guid;
     if (val.clientType == 'Entity') {
-      this.spinnerService.show()
+      this.spinnerService.show();
       this.httpservice
         .sendGetRequest(URLUtils.getNotify(val))
         .subscribe((res: any) => {
           this.spinnerService.hide()
-          //console.log('notify ' + JSON.stringify(res));
-          this.entityClients = res?.data?.users;
-          //console.log("temp clients "+JSON.stringify(this.entityClients));
+          //console.log('res',res);
+          this.entityClients = res?.data?.users || [];
+          // Check if there are no users
+          if (this.entityClients.length === 0) {
+            //this.toastr.error("Members are not available in this Firm.");
+            this.hideRuleContent[this.userIndex] = !this.hideRuleContent[this.userIndex];
+            val.isExpand = this.hideRuleContent[this.userIndex];
+            // console.log('..hideRuleContent[index]', this.hideRuleContent[this.userIndex])
+            // console.log('..val.isExpand:', val.isExpand);
+            return;
+          }
+          // console.log("temp clients "+JSON.stringify(this.entityClients));
           // console.log('notify ' + JSON.stringify(res));
           // console.log('entityClients ',this.entityClients);
-          
+
           this.restoreMessages();
           this.resetmsgcount();
         });
@@ -622,8 +652,7 @@ export class MessagesComponent implements OnInit {
     this.restoreMessages();
     this.resetmsgcount();
   }
-
-
+    
   selectUser(jid: any, name: any, groupName: any) {
     // (<HTMLInputElement>document.getElementById("btn_send")).disabled = false;
     // this.toJID = jid

@@ -13,6 +13,8 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { SearchPipe } from '../shared/filter.pipe';
 import { SharedModule } from '../shared/shared.module';
 import { NgxSpinnerModule} from 'ngx-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
     imports: [
@@ -24,7 +26,9 @@ import { NgxSpinnerModule} from 'ngx-spinner';
         MessagesRoutingModule,
         ToastrModule.forRoot(),
         Ng2SearchPipeModule,
-        SharedModule
+        SharedModule,
+        MatIconModule,
+        MatTooltipModule
     ],
     declarations: [
         MessagesComponent,

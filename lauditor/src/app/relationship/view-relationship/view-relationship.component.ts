@@ -86,13 +86,20 @@ export class ViewRelationshipComponent implements OnInit, OnDestroy {
                           filteredGroups: rel.groups.filter((group: any) => group.name !== 'AAM' && group.name !== 'SuperUser')
                         };
                       });
+                    //console.log('Temp-rel:',this.relationshipList)
                 })
         }
         else if(this.activeTab=='corporate'){
             url  = URLUtils.getcorporateRelationship;
             this.relationshipSubscribe = this.httpservice.getFeaturesdata(url).subscribe(
                 (res: any) => {
-                    this.relationshipList = res?.relationships;
+                    //this.relationshipList = res?.relationships;
+                    this.relationshipList = res.relationships.map((rel: any) => {
+                        return {
+                          ...rel, // Spread the original properties of `rel`
+                          filteredGroups: rel.groups.filter((group: any) => group.name !== 'AAM' && group.name !== 'SuperUser')
+                        };
+                      });
                     //console.log('Corp-rel:', this.relationshipList)
                 })
         }
@@ -270,6 +277,10 @@ export class ViewRelationshipComponent implements OnInit, OnDestroy {
         if(msg == 'exchange-close'){
             this.showExchange = false
         }
+    }
+    onCloseEvent(){
+            this.showModifyForm = false;
+            this.loadData();
     }
     sortingFile(val: any) {
         this.isReverse = !this.isReverse;

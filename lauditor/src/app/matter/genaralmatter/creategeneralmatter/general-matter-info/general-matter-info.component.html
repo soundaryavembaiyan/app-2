@@ -133,7 +133,7 @@
                       aria-selected="true">Active</button>
                   </li>
                   <li class="nav-item" (click)="getStatus('Pending')">
-                    <button class="selectprior optionaling" [ngClass]="{'active': selectedStatus === 'Pending'}" id="pills-profile-tab" data-bs-toggle="pill"
+                    <button class="selectprior optionaling pend" [ngClass]="{'active': selectedStatus === 'Pending'}" id="pills-profile-tab" data-bs-toggle="pill"
                       data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile"
                       aria-selected="false">Pending</button>
                   </li>
@@ -151,7 +151,7 @@
     </div>
     <div class="btnbox">
       <button type="button" class="btn btn-default btncancel btnrightitem" (click)="OnCancel()">Cancel</button>
-      <button type="submit" class="btn btn-primary btnsave savecls" [ngClass]="{'disabled': isAddDisable === false }">
+      <button type="submit" class="btn btn-primary btnsave savecls infoBtn" [disabled]="generalForm.invalid">
         <span *ngIf="!isEdit">Next</span>
         <span *ngIf="isEdit">Save</span>
       </button>

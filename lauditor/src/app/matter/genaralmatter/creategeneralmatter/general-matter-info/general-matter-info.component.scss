@@ -27,3 +27,15 @@ textarea {
     background: #a0bbd0;
     color: #fff;
 }
+/* styling for disabled buttons */
+button.infoBtn:disabled {
+    background-color: #d3d3d3; 
+    background: #004d87 0% 0% no-repeat padding-box;
+    color: #fff;
+    opacity: 0.5; 
+    pointer-events: none; 
+    cursor: not-allowed;
+}
+.pend{
+    border-radius: 0px 5px 5px 0px;
+}

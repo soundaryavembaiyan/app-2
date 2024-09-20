@@ -71,12 +71,19 @@
       </div>
       <div class="col-6 matterpadding">
         <!--<div class="col-3">-->
-          <h5 class="float-left grpFont" *ngIf="product != 'corporate'">Add Client(s)<span class="mandate">*</span></h5> 
-          <h5 class="float-left grpFont" *ngIf="product == 'corporate'">Add External Counsels</h5>
-          
-          <h5 class="float-right lop">
+          <h5 class="float-left grpFont" *ngIf="product !== 'corporate'">Add Client(s)<span class="mandate">*</span></h5> 
+          <h5 *ngIf="product !== 'corporate'" class="float-right clientSel">
             <div class="" *ngIf="!corporateData" id="selectbx">
             <div class="selOn" *ngIf="isSelectAllVisible">
+            <label class="callselect checkAll">Select All</label>&nbsp;
+            <input type="checkbox" value="" [checked]="filteredData?.length > 0 && selectedClients.length === filteredData.length" id="selectAll" (change)="selectAll($event)">
+            </div></div>
+          </h5>
+
+          <h5 class="float-left grpFont" *ngIf="product === 'corporate'">Add External Counsels</h5>
+          <h5 *ngIf="product === 'corporate'" class="float-right externalSel">
+            <div class="" id="selectbx">
+            <div class="selOn exter" *ngIf="isSelectAllVisible">
             <label class="callselect checkAll">Select All</label>&nbsp;
             <input type="checkbox" value="" [checked]="filteredData?.length > 0 && selectedClients.length === filteredData.length" id="selectAll" (change)="selectAll($event)">
             </div></div>

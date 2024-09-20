@@ -49,7 +49,8 @@
                 <button mat-menu-item (click)="addBlock('Numbered List')"><img class="imgView" src="assets/img/order.svg"/>&nbsp;Numbered List</button>
                 <button mat-menu-item (click)="addBlock('Bulleted List')"><img class="imgView" src="assets/img/unord.svg"/>&nbsp;Bulleted List</button>
                 <button mat-menu-item (click)="addBlock('Page Break');insertPageBreak()"><img class="imgPort" src="assets/img/pagebreak.svg"/>Page Break</button>
-                <button mat-menu-item (click)="addBlock('Image')"><img class="imgImg" src="assets/img/Image.svg"/>&nbsp;Image</button>
+                <button mat-menu-item (click)="addBlock('Image')"><img class="imgImg" src="assets/img/image.svg"/>&nbsp;Image</button>
+                <!-- <button mat-menu-item (click)="addBlock('Table')"><img class="imgTable" src="assets/img/table.svg"/>Table</button> -->
             </mat-menu>
         </div> 
 
@@ -161,31 +162,39 @@
                   <label for="title" class="lableTitle">{{item.value.content}}</label>
                   <i class="fa fa-times close secclose" (click)="removeItem(i)" aria-hidden="true"></i>
                 
-                  <div class="upload-container text-size form-control textareaDoc">
-                    <div class="upload-box">
-                      <div class="upload-content">
+                  <div class="row upload-container text-size form-control textareaDoc">
+                  
+                      <div class="col-6 upload-content">
+                        <div class="upBrowse">
                         <button class="brwsebutton" type="button" (click)="fileInput.click()">Browse</button>
                         <p class="max-file-size-info">
                           <img src="assets/img/pwdinfo.svg" class="pwdinfo" alt="info">
                           Max file size: 2 MB
                         </p>
+                        </div>
                       </div>
-                    </div>
-                
+                      <div class="col-6">
+                      <span *ngIf="item.get('contentData').value">
+                        <i class="material-icons attach">attachment</i>
+                        {{ item.get('contentData').value }}
+                      </span>
+                      </div>
+              
                     <input #fileInput type="file" accept="image/*" (change)="handleFileInput($event, i)" style="display: none" />
                 
                     <!-- Show the uploaded file name -->
-                    <div class="uploaded-files" *ngIf="item.get('contentData').value">
+                    <!-- <div class="uploaded-files" *ngIf="item.get('contentData').value">
                       <div class="uploaded-file-item">
                         <div class="file-info">
                           <i class="material-icons">attachment</i>
                           <span>{{ item.get('contentData').value }}</span>
                         </div>
                       </div>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
                 <!--Image-->
+
             </div>
             </ng-container>
         </div>

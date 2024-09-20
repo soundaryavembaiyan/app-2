@@ -92,7 +92,7 @@
                   <img *ngIf="i==0" src="assets/img/tree.svg" class="notfiy_tree">
                   <label class="notify_mdg"> {{member.name}}</label>
                  <span style="float: right;">
-                   <!-- <img src="assets/img/mailnotif.svg" class="msgnotify1 mailicocls " > -->
+                   <img src="assets/img/mailnotif.svg" class="msgnotify1 mailicocls" (click)="onMailClick()"> &nbsp;
                   <img src="assets/img/msgico.svg" class="msgnotify1 msgicocls" (click)="onMessageClickTM()">
                   <img src="assets/img/delete.svg" *ngIf="i != 0" (click)="removeTeammember(member)" class="msgnotify1 delicocls">
                 </span>
@@ -147,9 +147,9 @@
                 <p class="form-control textbox msgitemcls">
                   <label class="notify_mdg"> {{member.name}}</label>
                   <span style="float: right;">
-                  <!-- <img src="assets/img/mailnotif.svg" class="msgnotify1 mailicocls " > -->
+                  <img src="assets/img/mailnotif.svg" class="msgnotify1 mailicocls" (click)="onMailClick()">
                   <img src="assets/img/msgico.svg" class="msgnotify1 msgicocls" (click)="onMessageClick()">
-                  <!-- <img src="assets/img/delete.svg" class="msgnotify1 delicocls" *ngIf="selectedClients.length != 1" (click)="removeClient(member)"> -->
+                  <img src="assets/img/delete.svg" *ngIf="i != 0" class="msgnotify1 delicocls" (click)="removeClient(member)">
                 </span>
                 </p>
               </div>
@@ -500,48 +500,36 @@
       <div class="compswitch" *ngIf="isNewDocument && AddExistingSelected">
         <div class="row">
           <div class="col-5">
-            <h6 style="color: #0B5A9A;font-weight: bold;">Selected Document(s)</h6>
-            <div><!-- *ngIf="selectedDocuments?.length>0" -->
-              <table class="table table-borderless tblgrid">
-                <thead>
-                  <tr class="theader">
-                    <th>
-                      <p class="thheadname" style="color: #0B5A9A;">Name</p>
-                    </th>
-                    <th>
-                      <p class="thheadname" style="color: #0B5A9A;">Description</p>
-                    </th>
-                    <th>
-                      <p class="thheadname" style="color: #0B5A9A;">Tags</p>
-                    </th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr class="rone" *ngFor="let document of selectedDocuments">
-                    <td>{{document.name}}</td>
-                    <td>{{document.description}}</td>
-                    <td *ngIf="document?.tags && document.tags.length>0" [innerHTML]="document?.tags[0]"></td>
-                    <td *ngIf="!(document?.tags?.length>0)"></td>
-                    <td ><i class="fa fa-regular fa-circle-xmark calimg input-group-append sgroup" aria-hidden="true"
-                      (click)="removeDocument(document)"></i></td>
-                  </tr>
-                </tbody>
-              </table>
+            <h6 class="cname" style="float: left;">Selected Document(s)</h6>
+            <div>
+              <div class="row" *ngFor="let document of selectedDocuments">
+                <div class="col-6 docname">{{document.name}}</div>
+                <div class="col-6 docremove"><i class="fa fa-regular fa-circle-xmark calimg input-group-append sgroup" aria-hidden="true"
+                  (click)="removeDocument(document)"></i></div>
+              </div>
             </div>
           </div>
           <div class="col-1"></div>
   
-          <div class="col-6">
-            <div class="col-3">
-              <h6 style="color: #0B5A9A;font-weight: bold;">Uploaded Document(s)</h6>
+          <div class="col-6" style="margin-top: -90px;">
+
+            <div class="form-group float-right">
+              <div class="input-group court grpo" id="search">
+                <input type="text" class="form-control textbox" placeholder="Search" [(ngModel)]="searchText" (keyup)="keyup('doc')" />
+                <img src="assets/img/search.svg" class="calimg calitemo input-group-append searchimg">
+              </div>
             </div>
+
+            <div class="col-3 uplo">
+              <h6 class="cname">Uploaded Document(s)</h6>
+            </div>
+
             <div class="col-3" style="float: right">
               <div class="form-group" id="selectbx">
-                <div class="input-group court" id="search" style="margin-left: -53px;margin-top: -48px;">
-                  <div class="multicheck form-control textbox" style="border: none;background: white;">
-                    <label class="callselect">SelectAll</label>
-                    <input class="form-check-inpu calimg calitem input-group-append checkboxitem" type="checkbox" value=""
+                <div class="input-group court" id="search" style="margin-top: -48px;margin-left: 45px;">
+                  <div class="">
+                    <label class="callselect selAll">Select All</label>&nbsp;
+                    <input class="form-check-inpu calimg input-group-append checkboxitem" type="checkbox" value=""
                       id="selectAll" (change)="selectAll($event)">
                   </div>
                 </div>
@@ -564,12 +552,11 @@
               </thead>
               <tbody>
                 <tr class="rone" *ngFor="let document of documentsList |filter:searchText">
-                  <td>{{document.name}}</td>
-                  <td>{{document.description}}</td>
-                  <td *ngIf="document?.tags && document.tags.length>0" [innerHTML]="document?.tags[0]"></td>
-                  <td *ngIf="!(document?.tags?.length>0)"></td>
-                  <td ><input class="" type="checkbox" id="flexCheckDefault"
-  (change)="selectDocument(document)"></td>
+                  <td class="tabcl">{{document.name}}</td>
+                  <td class="tabcl">{{document.description}}</td>
+                  <td class="tabcl" *ngIf="document?.tags && document.tags.length>0" [innerHTML]="document?.tags[0]"></td>
+                  <td class="tabcl" *ngIf="!(document?.tags?.length>0)"></td>
+                  <td class="tabcl"><input class="" type="checkbox" id="flexCheckDefault" (change)="selectDocument(document)"></td>
                 </tr>
               </tbody>
             </table>
@@ -577,8 +564,8 @@
           <div class="btnbox">
             <button type="reset" class="btn btn-default btncancel btnrightitem"
               (click)="cancelDocuments()">Cancel</button>
-            <button type="submit" class="btn btn-primary btnsave savecls" (click)="saveDocuments()">Submit</button>
-  
+            <button type="submit" class="btn btn-primary btnsave savecls" 
+              (click)="saveDocuments()">Submit</button>
           </div>
         </div>
       </div>
@@ -769,45 +756,53 @@
         <table class="table table-borderless tblgrid">
           <thead>
             <tr class="theader">
-              <th></th>
               <th>
                 <p class="thheadname">Document Name</p>
                 <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('name',selectedDocuments)">
+              </th>
+              <th>
+                <p class="thheadname">Description</p>
+                <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('description',selectedDocuments)">
+              </th>
+              <th>
+                <p class="thheadname">Added On</p>
+                <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('created',selectedDocuments)">
               </th>
               <th>
                 <p class="thheadname">Added By</p>
                 <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('addedBy',selectedDocuments)">
               </th>
               <th>
-                <p class="thheadname">Description</p>
-                <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('description',selectedDocuments)">
+                <p class="thheadname textport">View</p>
               </th>
-              <!-- <th>
-                <p class="thheadname">Tags</p>
-                <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('tags',selectedDocuments)">
-              </th> -->
-              <th></th>
-              <th></th>
+              <th>
+                <p class="thheadname textport">Remove</p>
+              </th>
             </tr>
           </thead>
           <tbody>
             <tr class="rone veiw-items" *ngFor="let doc of selectedDocuments |filter:searchText">
-              <td *ngIf="isMergeEnable">
+              <!-- <td *ngIf="isMergeEnable">
                 <input type="checkbox" [(ngModel)]="doc.checked" #inputE4 class="larger" name="checkBox2"
                   (change)="selectMergeDocument(inputE4.checked,doc)">
               </td>
-              <td *ngIf="!isMergeEnable"></td>
-              <td>{{doc.name}}</td>
-              <td *ngIf="doc.addedBy">{{doc.addedBy}}</td>
-              <!-- <td *ngIf="doc.uploaded_by">{{doc.uploaded_by}}</td> -->
+              <td *ngIf="!isMergeEnable"></td> -->
+              <td class="tabclass doco">{{doc.name}}</td>
+              <td class="tabclass doco">{{doc.description}}</td>
+              <td class="tabclass">{{doc.created | date: 'MMMM dd, yyyy'}}</td>
+              <td class="tabclass">{{doc.addedBy}}</td>
+              <td class="tabclass"><img (click)="viewDocument(doc)" src="assets/img/eyesico.svg"/></td>
+              <td class="tabclass"><i (click)="documentDelete(doc)" *ngIf="data?.type == 'internal'" class="fa fa-regular fa-circle-xmark calimg calitem input-group-append sgroup removeddoc" aria-hidden="true"></i></td>
+              <!-- <td *ngIf="doc.addedBy">{{doc.addedBy}}</td>
+              <td *ngIf="doc.uploaded_by">{{doc.uploaded_by}}</td> 
               <td *ngIf="!(doc.addedBy || doc.uploaded_by)"></td>
               <td>{{doc.description}}</td>
               <td *ngIf="doc?.tags && doc.tags.length>0" [innerHTML]="doc?.tags[0]"></td>
-              <td *ngIf="!(doc?.tags)"></td>
-              <td><button (click)="viewDocument(doc)"><img src="assets/img/eyesico.svg"  /></button></td>&nbsp;
+              <td *ngIf="!(doc?.tags)"></td> -->
+              <!-- <td><button (click)="viewDocument(doc)"><img src="assets/img/eyesico.svg"  /></button></td>&nbsp;
               <td (click)="documentDelete(doc)" *ngIf="data?.type == 'internal'">
                 <i class="fa fa-regular fa-circle-xmark calimg calitem input-group-append sgroup removedoc" aria-hidden="true"></i>
-              </td>
+              </td> -->
             </tr>
           </tbody>
   

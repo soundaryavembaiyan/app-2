@@ -312,32 +312,11 @@ export class MatterGroupsComponent implements OnInit {
 
   selectCorporateGrp(grp: any, checked: boolean, inputEl: HTMLInputElement) {
     this.isSaveEnable = true;
-    // console.log('grp', grp);
-    // console.log('editMatter', this.editMatter);
-
-    const groupInEditMatter = this.editMatter.groups.find((g: any) => g.id === grp.id);
-    // Check if the group exists and if canDelete is false
-    if (groupInEditMatter && !groupInEditMatter.canDelete) {
-      this.confirmationDialogService.confirm(
-        'Alert', 'External Counsels are associated with this Department. So you cannot delete this department', false, 'OK', 'Cancel', true
-      ).then((result: any) => {
-        if (result === 'OK') {
-          this.selectedIds.splice(this.selectedIds.indexOf(grp.id), 1); // Allow the uncheck action
-        } else {
-          inputEl.checked = true; // Prevent the uncheck
-        }
-      }).catch(() => {
-        inputEl.checked = true;
-      });
-    }
-    // If canDelete is true or the group is not found
-    if (checked) {
+    if(checked){
       this.selectedIds.push(grp.id);
-    } else {
-      const index = this.selectedIds.indexOf(grp.id);
-      if (index > -1) {
-        this.selectedIds.splice(index, 1);
-      }
+    } 
+    else {
+      this.selectedIds.splice(this.selectedIds.indexOf(grp.id), 1)
     }
   }
 

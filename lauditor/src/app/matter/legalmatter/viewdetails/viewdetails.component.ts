@@ -252,6 +252,52 @@ export class ViewDetailsComponent implements OnInit {
   onAdd() {
    // this.AddDesc = true;
    this.isButtonClicked = true;
+       
+   // Set focus on the last added textarea
+    setTimeout(() => {
+      const textareas = document.querySelectorAll('.row.container.tex');
+      const lastTextarea = textareas[textareas.length - 1] as HTMLTextAreaElement;
+      if (lastTextarea) {
+        lastTextarea.focus();
+      }
+    });
+  }
+
+  onAddCN(item: any) {
+    this.isButtonClicked = true;
+    //console.log('item', item);
+        
+    // Set focus on the last added textarea
+    setTimeout(() => {
+      const textareas = document.querySelectorAll('.row.container.tex');
+      const lastTextarea = textareas[textareas.length - 1] as HTMLTextAreaElement;
+      if (lastTextarea) {
+        lastTextarea.focus();
+      }
+    });
+
+    this.matterService.editLegalMatterObservable.subscribe((result: any) => {
+      let args = {
+        id: result.id,
+        offset: new Date().getTimezoneOffset()
+      };
+      this.httpservice.sendGetRequest(URLUtils.getLegalMatterviewDetail(args)).subscribe((res: any) => {
+        const matchedItem = res?.history?.find((historyItem: any) => historyItem.id === item.id);
+        if (matchedItem) {
+          const notesList = matchedItem?.notes_list;
+          if (notesList && notesList.length > 0) {
+            const lastNote = notesList[notesList.length - 1]?.notes;
+            if (lastNote === "5") {
+              this.toast.error("Corporate Notes only allow 5 Notes.");
+              this.gethistoryData();
+              item.notes_list.AddDesc = true; // Prevent further additions
+              this.isButtonClicked = false; // Reset the button state
+              return;
+            }
+          }
+        }
+      });
+    }); 
   }
 
   eventCheck(event: any) {
@@ -284,7 +330,6 @@ export class ViewDetailsComponent implements OnInit {
   }
 
   addNotes(item: any) {
-
     this.submitted = true;
     item.AddDesc=true
     item.EditDesc=true
@@ -308,12 +353,9 @@ export class ViewDetailsComponent implements OnInit {
         item.AddDesc=false
         item.EditDesc=false
     }
-    
-    //
   }
   
   addCorpNotes(item: any, notes: any) {
-
     this.submitted = true;
     item.notes_list.AddDesc = true
 
@@ -604,7 +646,7 @@ export class ViewDetailsComponent implements OnInit {
         if (checkbox != null)
             checkbox.checked = true;
     }
-    console.log("Corp selected clients "+JSON.stringify(this.selectedClients));
+    //console.log("Corp selected clients "+JSON.stringify(this.selectedClients));
 }
   selectAllMembers(event: any) {
     this.isSaveEnableTM = false;

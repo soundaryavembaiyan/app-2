@@ -339,7 +339,11 @@ export class GeneralinternalviewdetailsComponent implements OnInit {
           (res: any) => {
             if (res) {
               this.selectedMembers = res.members;
-              this.selectedMembers.unshift(this.data.owner);
+              //this.selectedMembers.unshift(this.data.owner);
+              const ownerIndex = this.selectedMembers.findIndex((member: { id: any; }) => member.id === this.data.owner.id); //removed the ownerName from selectedMembers
+              if (ownerIndex === -1) {
+                this.selectedMembers.unshift(this.data.owner);
+              }
               this.membersLength = res.members.length;
               this.selectedClients = res.clients;
               this.selectedCorp = res.corporate;
@@ -1021,5 +1025,9 @@ export class GeneralinternalviewdetailsComponent implements OnInit {
     }
     onMessageClickTM() {
       this.router.navigate(['/messages/teams'])
+    }
+    onMailClick() {
+      const link =  `/emails`;
+      window.location.href = link;
     }
   }

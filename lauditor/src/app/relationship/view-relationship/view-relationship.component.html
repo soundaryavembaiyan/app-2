@@ -159,29 +159,30 @@
             </td>
 
             <td>
-                <ul *ngIf="activeTab !== 'temporary' && activeTab !== 'individuals'">
+                <ul>
+                  <li *ngFor='let g of rel.filteredGroups'>{{g.name}}</li>
+                </ul>
+                <!-- <ul>
                   <li *ngFor='let g of rel.groups'>{{g.name}}</li>
-                </ul>
-                <ul *ngIf="activeTab === 'temporary'">
-                  <li *ngFor='let g of rel.filteredGroups'>
-                    {{g.name}}
-                  </li>
-                </ul>
-                <ul *ngIf="activeTab === 'individuals'">
-                  <li *ngFor='let g of rel.filteredGroups'>
-                    {{g.name}}
-                  </li>
-                </ul>
+                </ul> -->
             </td>
             <td >
               <div class="dropdown">
-                <button type="button" *ngIf="role === 'SU' && activeTab !== 'temporary'"
+                <!-- Product based conditions for ActionBtn-->
+                <button type="button" *ngIf="role === 'SU' && activeTab !== 'temporary' && (product === 'lauditor' || product === 'corporate')"
                 class="btn btn-primary dropdown-toggle actionbtn" data-bs-toggle="dropdown"
                 [ngClass]="{'disabled': rel.isDisabled || rel.isdisabled}"> Action </button>
 
-                <button type="button" *ngIf="(role === 'TM' || role === 'GH') && rel.isAccepted"
+                <button type="button" *ngIf="(role === 'TM' || role === 'GH') && rel.isAccepted && (product === 'lauditor')"
                 class="btn btn-primary dropdown-toggle actionbtn" data-bs-toggle="dropdown"
                 [ngClass]="{'disabled': rel.isDisabled || rel.isdisabled}"> Action </button>
+                <button type="button" *ngIf="product === 'content' || product === 'connect'"
+                class="btn btn-primary dropdown-toggle actionbtn" data-bs-toggle="dropdown"
+                [ngClass]="{'disabled': rel.isDisabled || rel.isdisabled}"> Action </button>
+                <button type="button" *ngIf="(role === 'TM' || role === 'GH') && product === 'corporate'"
+                class="btn btn-primary dropdown-toggle actionbtn" data-bs-toggle="dropdown"
+                [ngClass]="{'disabled': rel.isDisabled || rel.isdisabled}"> Action </button>
+                 <!-- Product based conditions for ActionBtn-->
                 
                <button type="button" *ngIf="activeTab === 'temporary'"
                 class="btn btn-primary dropdown-toggle actionbtn" data-bs-toggle="dropdown"
@@ -216,8 +217,8 @@
 
 
   <app-relationship-group-access *ngIf='showModifyForm' [activeTab]="activeTab"
-                                 [reldata]='relationshipData'
-                                 (event)='onChildEvent($event)'></app-relationship-group-access>
+                                 [reldata]='relationshipData' [showModifyForm]="showModifyForm"
+                                 (event)='onChildEvent($event);onCloseEvent()'></app-relationship-group-access>
   <app-relationship-exchange *ngIf='showExchange' [activeTab]="activeTab"
                              [reldata]='relationshipData'
                              (event)='onChildEvent($event)'></app-relationship-exchange>

@@ -342,7 +342,11 @@ export class ExternalviewdetailsComponent implements OnInit {
           (res: any) => {
             if (res) {
               this.selectedMembers = res.members;
-              this.selectedMembers.unshift(this.data.owner)
+              //this.selectedMembers.unshift(this.data.owner)
+              const ownerIndex = this.selectedMembers.findIndex((member: { id: any; }) => member.id === this.data.owner.id); //removed the ownerName from selectedMembers
+              if (ownerIndex === -1) {
+                this.selectedMembers.unshift(this.data.owner);
+              }
               this.membersLength = res.members.length;
               this.selectedClients = res.clients;
               this.selectedCorp = res.corporate;
@@ -366,6 +370,7 @@ export class ExternalviewdetailsComponent implements OnInit {
           });
       }
     }
+    
     onClick(val: string) {
       this.selectedVal = val;
       this.selectedNotes = val;
@@ -522,6 +527,7 @@ export class ExternalviewdetailsComponent implements OnInit {
       } else {
         this.clientsList = this.selectedClients.concat(this.clientsList);
         this.selectedClients = [];
+        this.onFeatureClick('T&C');
       }
     }
   
@@ -574,7 +580,7 @@ export class ExternalviewdetailsComponent implements OnInit {
         'clients': this.selectedClients,
         'members': this.selectedMembers
       }
-      console.log('data',data)
+      //console.log('data',data)
       this.httpservice.sendPutRequest(URLUtils.updateLegalHistoryMembers(this.data.id), data).subscribe(
         (res: any) => {
           this.onFeatureClick('T&C');
@@ -1051,5 +1057,9 @@ export class ExternalviewdetailsComponent implements OnInit {
     }
     onMessageClickTM() {
       this.router.navigate(['/messages/teams'])
+    }
+    onMailClick() {
+      const link =  `/emails`;
+      window.location.href = link;
     }
   }

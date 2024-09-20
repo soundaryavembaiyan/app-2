@@ -16,14 +16,12 @@
                                 <sup>*</sup>Subject/Task is required
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" *ngIf="product !== 'corporate'">
                             <input class="checkbox" type="checkbox"
                                 id="addtimesheet" name="fav_language"
                                 value="addtimesheet"
                                 formControlName="addtimesheet">
-                            <label for="addtimesheet" class="fontbold">Add to
-                                Timesheet
-                            </label>
+                            <label for="addtimesheet" class="fontbold">Add to Timesheet</label>
                         </div>
 
                         <div class="form-group">

@@ -147,7 +147,8 @@ export class GeneralMatterInfoComponent implements OnInit {
         "affidavit_filing_date": "",
         "clients": this.editeMatterInfo?.clients.map((obj: any) => ({ "id": obj.id, "type": obj.type })),
         "group_acls": this.editeMatterInfo.groupAcls,
-        "members": this.editeMatterInfo?.members.map((obj: any) => ({ "id": obj.id })),
+        //"members": this.editeMatterInfo?.members.map((obj: any) => ({ "id": obj.id })),
+        "members": this.editeMatterInfo?.members.map((obj: any) => ({ "id": obj.id })).filter((member: any, index: any, self: any[]) => index === self.findIndex((m) => m.id === member.id)),
         "documents": this.Documents?.map((obj: any) => ({
           "docid": obj.docid,
           "doctype": obj.doctype,

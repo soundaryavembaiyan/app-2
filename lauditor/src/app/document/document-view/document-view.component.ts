@@ -148,7 +148,9 @@ export class DocumentViewComponent implements OnInit {
         }
         // this.getAllDocuments();
         this.httpservice.sendGetRequest(URLUtils.getGroups).subscribe((res: any) => {
-            this.groupViewItems = res?.data;
+            //this.groupViewItems = res?.data;
+            this.groupViewItems = res?.data.filter((group: any) => group.name !== 'AAM' && group.name !== 'SuperUser');
+            //console.log('gv',this.groupViewItems)
             this.groupViewItems.forEach((item: any) => {
                 item.isChecked = false;
             })
@@ -618,7 +620,7 @@ export class DocumentViewComponent implements OnInit {
                     this.editDoc = doc;
                     this.modalService.open('doc-download-success');
                     //console.log("url " + JSON.stringify(res));
-                    //window.open(res?.data?.url, "_blank");
+                    window.open(res?.data?.url, "_blank");
                     this.spinnerService.hide()
                 }
             });

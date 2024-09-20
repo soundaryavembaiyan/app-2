@@ -3,7 +3,7 @@ import { ViewlegalmatterComponent } from './legalmatter/viewlegalmatter/viewlega
 import { MatterComponent } from './matter.component';
 import { ExternalmatterComponent } from './legalmatter/externalmatter/externalmatter.component';
 import { InternalmatterComponent } from './legalmatter/internalmatter/internalmatter.component';
-
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -177,6 +177,9 @@ import { GeneralleavepageComponent } from './genaralmatter/creategeneralmatter/g
     MatRadioModule,
     ToastrModule.forRoot()
   ],
-  providers: []
+  providers: [],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA,
+  ],
 })
 export class MatterModule { }

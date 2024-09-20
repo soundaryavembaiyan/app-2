@@ -24,6 +24,7 @@
         <a href="javascript:void(0);" class="optiontwo comptwo" [ngClass]="{ 'active' : selectedValue === 'teams' }"
             (click)="isActive('teams')">Teams</a>
     </div>
+    
 </div>
 
 <div class="row width-alignment center" *ngIf="product != 'corporate' && product != 'content' && userRole === 'AAM'">
@@ -51,6 +52,11 @@
     </div>
 </div>
 
+<div class="fab-container">
+    <button mat-fab class="fab-video-button" aria-label="Video" matTooltip="Video Call" (click)="StartVideo()">
+        <mat-icon>videocam</mat-icon>
+    </button>
+ </div>
 
 <!-- <router-outlet></router-outlet> -->
 <div class="row main width-alignment  stepitem">
@@ -121,13 +127,13 @@
                         <!-- !Corporate - chatPopup -->
                         <div *ngIf="client.clientType == 'Entity' && product != 'corporate'" class="circlemsg">
                             <i class="fa " (click)="toggle(i,client);selectChatUser(client)"
-                                [ngClass]="hideRuleContent[i] && client.isExpand ? 'fa-minus-circle' : 'fa-plus-circle'"
+                                [ngClass]="(hideRuleContent[i] && client.isExpand) ? 'fa-minus-circle' : 'fa-plus-circle'"
                                 aria-hidden="true"></i>
                         </div>
                         <!-- Corporate - chatPopup -->
                         <div *ngIf="client.clientType == 'Entity' && product == 'corporate'" class="circlemsg">
                             <i class="fa " (click)="toggle(i,client);selectChatUser(client)"
-                                [ngClass]="hideRuleContent[i] && client.isExpand ? 'fa-minus-circle' : 'fa-plus-circle'"
+                                [ngClass]="(hideRuleContent[i] && client.isExpand) ? 'fa-minus-circle' : 'fa-plus-circle'"
                                 aria-hidden="true"></i>
                         </div>
                     </div>
@@ -136,7 +142,7 @@
 
                 <!-- !Corporate - chatPopup -->
                 <div *ngIf="client.clientType == 'Entity' && product != 'corporate'">
-                    <div class="expandCollapseContent" *ngIf="hideRuleContent[i] || client.isExpand">
+                    <div class="expandCollapseContent" *ngIf="hideRuleContent[i] && client.isExpand">
                         <div *ngFor="let i of entityClients;let j = index">
                             <div class="col-sm-12 ">
                                 <div class="row meetingcontainer legalboxleft container msgcontainer" (click)="selectChatUser(i)">
@@ -198,6 +204,7 @@
         </div>
         <!-- ends here -->
     </div>
+    <!-- Teams -->
     <div *ngIf="!isClient" class="col-xs-12 col-sm-12 col-md-6">
         <div class="containerbox containerboxone messagecontainer ">
             <div class="col-sm-12">
@@ -357,10 +364,10 @@
                     </div>
                     <div class="col-sm-5" *ngIf="orgUser?.clientType !== 'Entity'">
                         <div class="msgtime" *ngIf="chatUserName">
-                            <div (click)="StartVideo()">
+                            <!-- <div (click)="StartVideo()">
                                 <img src="assets/img/videocall.svg" class="msgvideo msgvideomob videocall"> 
-                                <!-- <img src="assets/img/audiocall.svg" class="msgcall msgcallmobile audiocall"> -->
-                            </div>
+                               
+                            </div> -->
                         </div>
                     </div>
                 </div>

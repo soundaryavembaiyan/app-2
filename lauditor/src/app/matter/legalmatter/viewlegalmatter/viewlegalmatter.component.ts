@@ -10,6 +10,7 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { ModalService } from 'src/app/model/model.service';
 
 @Component({
   selector: 'app-viewlegalmatter',
@@ -40,7 +41,7 @@ export class ViewlegalmatterComponent implements OnInit {
   
 
   constructor(private httpservice: HttpService, private http: HttpClient, private matterService: MatterService, 
-    private router: Router, private toast: ToastrService,
+    private router: Router, private toast: ToastrService,private modalService: ModalService,
     private confirmationDialogService: ConfirmationDialogService,private spinnerService: NgxSpinnerService) { }
 
   ngOnInit() {
@@ -58,7 +59,16 @@ export class ViewlegalmatterComponent implements OnInit {
   getLegalMatters() {
     this.spinnerService.show()
     this.httpservice.sendGetRequest(URLUtils.getLegalMatter).subscribe((res: any) => {
-      this.legalMatters = res && res["matters"];
+      //this.legalMatters = res && res["matters"];
+      if (res && res["matters"]) {
+        this.legalMatters = res["matters"].map((matter: any) => {
+          matter.groups = matter.groups.filter((group: any) => 
+            group.name !== 'AAM' && group.name !== 'SuperUser'
+          );
+          return matter;
+        });
+        //console.log('Filtered generalMatters:', this.legalMatters);
+      }
       //this.matterCount = this.legalMatters.length;
       //console.log('this.legalMatters',this.legalMatters.length)
       this.spinnerService.hide()

@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { ModalService } from 'src/app/model/model.service';
 import { HttpService } from 'src/app/services/http.service';
@@ -123,7 +123,6 @@ export class DocumentUploadComponent implements OnInit {
         this.httpservice.sendGetRequest(URLUtils.getGroups).subscribe((res: any) => {
             //this.groupViewItems = res?.data;
             this.groupViewItems = res?.data.filter((group: any) => group.name !== 'AAM' && group.name !== 'SuperUser');
-            console.log('gv',this.groupViewItems)
             this.groupViewItems.forEach((item: any) => {
                 item.isChecked = false;
             })
@@ -136,6 +135,13 @@ export class DocumentUploadComponent implements OnInit {
         // this.docEnable("disable");
 
         //console.log('values of ng', this.values)
+          // Listen to navigation events
+        this.router.events.subscribe(event => {
+            if (event instanceof NavigationStart) {
+            // Reset editDoc on navigation
+            this.editDoc = false;
+            }
+        });
     }
 
     get f() {
@@ -350,6 +356,7 @@ export class DocumentUploadComponent implements OnInit {
       this.uploadDocs.forEach((item: any, i: any) => {
         item.id = i;
       });
+      this.downloadDisabled = false;
     }
     
 
@@ -469,11 +476,14 @@ export class DocumentUploadComponent implements OnInit {
         this.allCheck = checkList;
     }
     docEnable(item: any) {
-        this.downloadDisabled = item == "enable" ? true : false;
+        this.downloadDisabled = item == "enable" ? false : true;
         this.uploadDocs.forEach((item: any) => {
-            item.downloadDisabled = this.downloadDisabled;
+            item.downloadDisabled = !this.downloadDisabled;
         });
-
+        // this.downloadDisabled = item == "enable" ? true : false;
+        // this.uploadDocs.forEach((item: any) => {
+        //     item.downloadDisabled = this.downloadDisabled;
+        // });
     }
     encryptEnable(item: any) {
         this.encryptDisabled = item == "enable" ? true : false;

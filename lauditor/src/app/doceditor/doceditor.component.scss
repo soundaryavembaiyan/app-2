@@ -144,20 +144,24 @@
     width: 26px;
     height: 25px;
 }
+
 .saveasImg{
     width: 29px;
     height: 32px;
     margin-left: -1px;
 }
+
 .imgView {
     width: 30px;
     height: 26px;
 }
+
 .imgsubView {
     width: 35px;
     height: 35px;
     margin-left: -4px;
 }
+
 .imgsubsubView {
     width: 40px;
     height: 40px;
@@ -169,12 +173,21 @@
     height: 36px;
     margin-left: -5px;
 }
-.imgImg{
+
+.imgImg {
     width: 30px;
     height: 30px;
     margin-left: 2px;
     margin-top: -2px;
 }
+
+.imgTable {
+    width: 40px;
+    height: 40px;
+    margin-left: -3px;
+    margin-top: -2px;
+}
+
 .imgoverView {
     width: 35px;
     height: 28px;
@@ -1083,7 +1096,8 @@ hr {
         margin-left: 30px;
     }
 }
-.brwsebutton{
+
+.brwsebutton {
     background: #00498e;
     color: white;
     font-weight: 900;
@@ -1094,13 +1108,12 @@ hr {
     border: 2px solid #ffffff08;
     border-radius: 5px;
 }
-.calitem{
+
+.calitem {
     position: absolute;
     cursor: pointer;
-    right:10px;
+    right: 10px;
 }
-//
-
 
 //New design for Upload Img
 .upload-container {
@@ -1109,10 +1122,21 @@ hr {
     border: 1px solid #e0e0e0;
     background-color: #fff;
     border-radius: 8px;
-    padding: 16px;
-  }
-  
-  .upload-box {
+    //padding: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.upBrowse {
+    //margin-left: 50px;
+    margin-top: 10px;
+}
+
+.attach {
+    vertical-align: middle;
+}
+
+.upload-box {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1120,35 +1144,35 @@ hr {
     border: 2px dashed #e0e0e0;
     border-radius: 8px;
     //cursor: pointer;
-  }
-  
-  .upload-content {
+}
+
+.upload-content {
     text-align: center;
-  }
-  
-  .upload-content i.material-icons {
+}
+
+.upload-content i.material-icons {
     font-size: 30px;
     color: #888;
-  }
-  
-  .upload-content p {
+}
+
+.upload-content p {
     font-size: 14px;
     //color: #888;
     color: #000000d1;
     padding-top: 10px;
     margin: 0;
-  }
-  
-  .max-file-size-info {
+}
+
+.max-file-size-info {
     font-size: 14px;
     color: #999;
-  }
-  
-  .uploaded-files {
+}
+
+.uploaded-files {
     margin-top: 16px;
-  }
-  
-  .uploaded-file-item {
+}
+
+.uploaded-file-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1156,26 +1180,27 @@ hr {
     border: 1px solid #e0e0e0;
     border-radius: 4px;
     margin-bottom: 8px;
-  }
-  
-  .file-info {
+}
+
+.file-info {
     display: flex;
     align-items: center;
-  }
-  
-  .file-info i.material-icons {
+}
+
+.file-info i.material-icons {
     margin-right: 8px;
-  }
-  
-  .file-actions button {
+}
+
+.file-actions button {
     margin-left: 8px;
-  }
-  
-  button.mat-button {
+}
+
+button.mat-button {
     margin-top: 16px;
-  }
-  .pwdinfo {
-      width: 20px;
-      height: 20px;
-      margin-top: -3px;
-  }
+}
+
+.pwdinfo {
+    width: 20px;
+    height: 20px;
+    margin-top: -3px;
+}

@@ -53,7 +53,16 @@ export class ViewGeneralmatterComponent implements OnInit {
   getLegalMatters() {
     this.spinnerService.show()
     this.httpservice.sendGetRequest(URLUtils.getGeneralMatter).subscribe((res: any) => {
-      this.generalMatters = res && res["matters"];
+      //this.generalMatters = res && res["matters"];
+      if (res && res["matters"]) {
+        this.generalMatters = res["matters"].map((matter: any) => {
+          matter.groups = matter.groups.filter((group: any) => 
+            group.name !== 'AAM' && group.name !== 'SuperUser'
+          );
+          return matter;
+        });
+        //console.log('Filtered generalMatters:', this.generalMatters);
+      }
       //this.matterCount = this.generalMatters.length;
       //console.log('this.generalMatters',this.generalMatters.length)
       this.spinnerService.hide()

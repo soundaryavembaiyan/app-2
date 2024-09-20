@@ -90,7 +90,9 @@ export class MergePdfComponent implements OnInit {
 
         });
         this.httpservice.sendGetRequest(URLUtils.getGroups).subscribe((res: any) => {
-            this.groupViewItems = res?.data;
+            //this.groupViewItems = res?.data;
+            this.groupViewItems = res?.data.filter((group: any) => group.name !== 'AAM' && group.name !== 'SuperUser');
+            //console.log('gv',this.groupViewItems)
             this.groupViewItems?.forEach((item: any) => {
                 item.isChecked = false;
             })

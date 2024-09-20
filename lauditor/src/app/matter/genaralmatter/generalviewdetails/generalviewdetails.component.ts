@@ -205,7 +205,53 @@ export class GeneralViewDetailsComponent implements OnInit {
   onAdd() {
     // this.AddDesc = true;
     this.isButtonClicked = true;
+       
+    // Set focus on the last added textarea
+    setTimeout(() => {
+      const textareas = document.querySelectorAll('.row.container.tex');
+      const lastTextarea = textareas[textareas.length - 1] as HTMLTextAreaElement;
+      if (lastTextarea) {
+        lastTextarea.focus();
+      }
+    });
    }
+
+   onAddCN(item: any) {
+    this.isButtonClicked = true;
+    //console.log('item', item);
+        
+    // Set focus on the last added textarea
+    setTimeout(() => {
+      const textareas = document.querySelectorAll('.row.container.tex');
+      const lastTextarea = textareas[textareas.length - 1] as HTMLTextAreaElement;
+      if (lastTextarea) {
+        lastTextarea.focus();
+      }
+    });
+
+    this.matterService.editLegalMatterObservable.subscribe((result: any) => {
+      let args = {
+        id: result.id,
+        offset: new Date().getTimezoneOffset()
+      };
+      this.httpservice.sendGetRequest(URLUtils.getLegalMatterviewDetail(args)).subscribe((res: any) => {
+        const matchedItem = res?.history?.find((historyItem: any) => historyItem.id === item.id);
+        if (matchedItem) {
+          const notesList = matchedItem?.notes_list;
+          if (notesList && notesList.length > 0) {
+            const lastNote = notesList[notesList.length - 1]?.notes;
+            if (lastNote === "5") {
+              this.toast.error("Corporate Notes only allow 5 Notes.");
+              this.gethistoryData();
+              item.notes_list.AddDesc = true; // Prevent further additions
+              this.isButtonClicked = false; // Reset the button state
+              return;
+            }
+          }
+        }
+      });
+    }); 
+  }
    
    sortMembers() {
     const fixedMember = this.selectedMembers[0]; // Extract the first fixed member
@@ -881,6 +927,17 @@ export class GeneralViewDetailsComponent implements OnInit {
       (res: any) => {
         //console.log(res);
         this.isNewDocument = false;
+        this.httpservice.sendGetRequest(URLUtils.generalHistoryDocuments(this.data.id)).subscribe(
+          (res: any) => {
+            if (res) {
+              this.selectedDocuments = res.documents;
+              this.createdBy = localStorage.getItem('name');
+              if(this.isMergeEnable)
+              this.getMergeDocuments();
+              else
+              this.getDocuments();
+            }
+          });
       },
       (error: HttpErrorResponse) => {
         if (error.status === 401 || error.status === 403) {
@@ -1108,8 +1165,8 @@ export class GeneralViewDetailsComponent implements OnInit {
             .then((results) => {
               // Process the results if needed
               this.getDocuments();
-              this.AddExistingSelected = true;
-              this.UploadDocSelected = false;
+              // this.AddExistingSelected = true;
+              // this.UploadDocSelected = false;
               //this.showAlert('Files uploaded successfully!', false);
               //this.toast.success('Files uploaded successfully!')
             })
@@ -1161,6 +1218,8 @@ export class GeneralViewDetailsComponent implements OnInit {
             this.toast.error(res.msg)
             //reject(res.msg);
           }
+          this.AddExistingSelected = true;
+          this.UploadDocSelected = false;
         }, 
         // (err: any) => {
         //   reject(err.msg);
