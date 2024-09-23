@@ -5,6 +5,7 @@ import { LeavepageComponent } from '../leavepage/leavepage.component';
 import { GeneralleavepageComponent } from 'src/app/matter/genaralmatter/creategeneralmatter/generalleavepage/generalleavepage.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Component({
 
@@ -17,7 +18,7 @@ export class MatterTeamMembersComponent {
     @Output() selectedTmsEvent: EventEmitter<any> = new EventEmitter();
     @Input() data: any = {};
     @Input() teammembers: any = {};
-    @Input() groups: any[] = []
+    @Input() groups: any[] = [];
     @Input() clients: any = {};
     // @Input() tmGrp:any ={}
     groupName:any;
@@ -31,6 +32,7 @@ export class MatterTeamMembersComponent {
     isSelectAllVisible = true;
     showAllItems = false;
     pathName: string = "legalmatter";
+    product = environment.product;
     
     constructor(private httpservice: HttpService,private dialog: MatDialog, private router: Router,) { }
 
@@ -39,7 +41,7 @@ export class MatterTeamMembersComponent {
         this.getTeammembers();
     }
     getTeammembers() {
-        this.groupName = this.groups.map((obj: any) => obj.name);;
+        this.groupName = this.groups.map((obj: any) => obj.name);
         //console.log('grp',this.groupName)
 
         let grps = this.groups.map((obj: any) => obj.id);

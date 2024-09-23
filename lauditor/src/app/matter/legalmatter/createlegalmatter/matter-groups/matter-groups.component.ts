@@ -233,10 +233,12 @@ export class MatterGroupsComponent implements OnInit {
     //     }
     //   })
     // }
-
     //this.getGrouplists();
-    if (this.product === 'corporate') {
-      this.getGroups();
+    if (this.product === 'corporate' && !this.isCreate) {
+      this.getGroupsCC();
+    }
+    else if (this.product === 'corporate' && this.isCreate) {
+      this.getGroupsCU();
     }
     else {
       this.getGrouplists();
@@ -264,6 +266,7 @@ export class MatterGroupsComponent implements OnInit {
     }
   }
 
+  // != corporate
   getGrouplists() {
     if (Array.isArray(this.clients)) {
       this.client = this.clients.map((client: any) => ({ id: client.id, type: client.type }));
@@ -312,11 +315,38 @@ export class MatterGroupsComponent implements OnInit {
 
   selectCorporateGrp(grp: any, checked: boolean, inputEl: HTMLInputElement) {
     this.isSaveEnable = true;
-    if(checked){
-      this.selectedIds.push(grp.id);
-    } 
-    else {
-      this.selectedIds.splice(this.selectedIds.indexOf(grp.id), 1)
+    // console.log('grp', grp);
+    // console.log('editMatter', this.editMatter);
+
+    const groupInEditMatter = this.editMatter.groups.find((g: any) => g.id === grp.id);
+    // Check if the group exists and if canDelete is false
+    if (groupInEditMatter && !groupInEditMatter.canDelete) {
+      this.confirmationDialogService.confirm(
+        'Alert', 'External Counsels are associated with this Department. So you cannot delete this department', false, 'OK', 'Cancel', true
+      ).then((result: any) => {
+        if (result === 'OK') {
+          //this.selectedIds.splice(this.selectedIds.indexOf(grp.id), 1); // Allow the uncheck action
+          inputEl.checked = true;
+        } else {
+          inputEl.checked = true; // Prevent the uncheck
+        }
+      })
+      .catch(() => {
+        inputEl.checked = true;
+      });
+      return; 
+    }
+    // If canDelete is true or the group is not found
+    if (checked) {
+      //this.selectedIds.push(grp.id);
+      if (!this.selectedIds.includes(grp.id)) {
+        this.selectedIds.push(grp.id);
+      }
+    } else {
+      const index = this.selectedIds.indexOf(grp.id);
+      if (index > -1) {
+        this.selectedIds.splice(index, 1);
+      }
     }
   }
 
@@ -328,10 +358,13 @@ export class MatterGroupsComponent implements OnInit {
     });
     this.selectedtoupdateGroups = [];
   }
-  getGroupsOld() {
+    
+  // == corporate getGroups - Create lists
+  getGroupsCC() {
     this.httpservice.sendGetRequest(URLUtils.getGroups).subscribe((res: any) => {
       if (res && res['data'] && res['data']?.length > 0)
-        this.groupsList = res['data'];
+        //this.groupsList = res['data'];
+        this.groupsList = res['data'].filter((group: any) => group.name !== 'AAM' && group.name !== 'SuperUser');
       if (this.editGroupIds && this.editGroupIds.length > 0) {
         this.groups = this.editGroupIds;
         // this.groups = this.groupsList.filter((item: any) => this.editGroupIds.indexOf(item.id) > -1);
@@ -354,7 +387,8 @@ export class MatterGroupsComponent implements OnInit {
       }
     })
   }
-  getGroups() {
+  // == corporate getGroups - Update lists
+  getGroupsCU() {
     this.httpservice.sendGetRequest(URLUtils.getGroups).subscribe((res: any) => {
       if (res && res['data'] && res['data']?.length > 0) {
         //this.groupsList = res['data'];
@@ -421,6 +455,7 @@ export class MatterGroupsComponent implements OnInit {
     }
     this.searchText = '';
   }
+
   selectGroup(group: any, value?: any) {
     this.isSaveEnable = true;
     this.selId = group.id;
@@ -435,6 +470,7 @@ export class MatterGroupsComponent implements OnInit {
     }
     //this.searchText = '';
   }
+
   selecttoUpdateGroup(group: any, value?: any) {
     this.isSaveEnable = true;
     
@@ -717,9 +753,11 @@ export class MatterGroupsComponent implements OnInit {
     //console.log('form', this.editDocform)
     this.editDoc = JSON.parse(JSON.stringify(doc));
   }
+
   closeModal(id: any) {
     this.modalService.close(id);
   }
+  
   truncateString(text: string): string {
     if (text.length > 25) {
       return text.slice(0, 25) + '...';

@@ -3,10 +3,27 @@
   <div class="row">
     <div class="col-sm-3 col-xs-1"></div>
     <div class="col-sm-2 col-xs-3 round-icon">
+      <!-- <div>
+        <p class="selectprior optionhigh2 casetito" [matTooltip]="data.Title" matTooltipPosition="after"> {{truncateString(data.Title)}} </p> 
+        <!-- <p class="">{{data.Type}}</p> --
+      </div> -->
+
       <div>
         <p class="selectprior optionhigh2 casetito" [matTooltip]="data.Title" matTooltipPosition="after"> {{truncateString(data.Title)}} </p> 
-        <!-- <p class="">{{data.Type}}</p> -->
+        <div class="flex-container">
+          <!-- <div class="selectpriorGrp optionhigh2 flexo" *ngFor="let item of groupName"> {{item}} </div>  -->
+          <b class="selGroup" *ngIf="product === 'corporate'">Selected Departments:</b>
+          <div class="divShow" *ngFor="let item of (showAllItems ? groupName : groupName.slice(0, 2)); let i = index">
+            {{ item }}
+            <span *ngIf="groupName.length == 1"> </span>
+            <span *ngIf="groupName.length > 1 && i < (showAllItems ? groupName.length : 2) - 1">, </span>
+          </div>
+          <div *ngIf="groupName.length > 2" class="view-more-less" (click)="toggleView()">
+            <a href="javascript:void(0)">{{ showAllItems ? 'View Less' : 'View More' }}</a>
+          </div>
+        </div>
       </div>
+
     </div>
   </div>
   <div class="row">

@@ -70,6 +70,8 @@ export class MatterClientsComponent implements OnInit {
     keyModel: boolean = false;
     isSaveEnable: boolean = false;
     pathName: string = "legalmatter";
+    groupName:any;
+    showAllItems = false;
 
     constructor(private httpservice: HttpService, private fb: FormBuilder,
         private confirmationDialogService: ConfirmationDialogService,
@@ -232,7 +234,13 @@ export class MatterClientsComponent implements OnInit {
 
     getClients() {
         let grps = this.groups.map((obj: any) => obj.id);
+
         let newGroups = [...this.groups];
+        console.log('newGroups',newGroups)
+
+        this.groupName = this.groups.map((obj: any) => obj.name);
+        console.log('grp',this.groupName)
+
         if (newGroups && newGroups.length > 2) {
             let tooltipGroupsArray = newGroups.splice(2, this.groups.length);
             // if (tooltipGroupsArray && tooltipGroupsArray.length > 0) {
@@ -977,5 +985,8 @@ export class MatterClientsComponent implements OnInit {
             return text.slice(0, 25) + '...';
         }
         return text;
+    }
+    toggleView() {
+        this.showAllItems = !this.showAllItems;
     }
 }
