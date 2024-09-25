@@ -732,9 +732,17 @@ export class GeneralViewDetailsComponent implements OnInit {
         //this.confirmationDialogService.confirm('Success', res.msg,false, '', '', false,'sm', false);
         if(val === 'members'){
           this.confirmationDialogService.confirm('Success', 'Team Members list updated successfully.', false, '', '', false, 'sm', false);
+          let checkbox = document.getElementById('selectAllMembers') as HTMLInputElement | null;
+          if (checkbox != null){
+            checkbox.checked = false;
+          }
         }
         else if(val === 'clients'){
           this.confirmationDialogService.confirm('Success', 'Clients list updated successfully.', false, '', '', false, 'sm', false);
+          let checkbox = document.getElementById('selectAllClients') as HTMLInputElement | null;
+          if (checkbox != null){
+            checkbox.checked = false;
+          }
         }
         else{}
       },
@@ -749,6 +757,10 @@ export class GeneralViewDetailsComponent implements OnInit {
   }
   cancelItems() {
     this.onFeatureClick('T&C');
+    let checkbox = (document.getElementById('selectAllMembers') as HTMLInputElement | null || document.getElementById('selectAllClients') as HTMLInputElement | null);
+    if (checkbox != null){
+      checkbox.checked = false;
+    }
   }
   sort(property: any, docsShared: any) {
     let docs = docsShared;

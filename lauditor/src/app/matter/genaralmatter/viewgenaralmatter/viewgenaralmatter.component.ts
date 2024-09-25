@@ -146,7 +146,8 @@ export class ViewGeneralmatterComponent implements OnInit {
   updateMatterStatus(legalMatter: any, status: string) {
     let Documents = this.getDocuments(legalMatter.id);
     let s = status == 'Closed' ? 'close' : 'reopen';
-    let test = s + ' ' + legalMatter.title + ' matter ?';
+    //let test = s + ' ' + legalMatter.title + ' matter ?';
+    let test = s + ' this matter?';
     this.confirmationDialogService.confirm('Confirmation', 'Are you sure you want to ' + test, true, 'Yes', 'No')
       .then((confirmed) => {
         if (confirmed) {
@@ -175,7 +176,8 @@ export class ViewGeneralmatterComponent implements OnInit {
           this.httpservice.sendUpdateRequest(URLUtils.updateGeneralMatter(legalMatter.id), obj).subscribe((res: any) => {
             if (!res.error) {
               let s = status == 'Closed' ? 'closed' : 'reopened';
-              let test = s + ' the ' + legalMatter.title + ' matter.';
+              //let test = s + ' the ' + legalMatter.title + ' matter.';
+              let test = s + ' this '  + ' matter.';
               this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully ' + test, false, 'View Matter List', 'Cancel', true)
                 .then((confirmed) => {
                   if (confirmed) {

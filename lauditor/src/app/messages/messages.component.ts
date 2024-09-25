@@ -224,7 +224,7 @@ export class MessagesComponent implements OnInit {
 
     //this.scrollToBottom();
 
-    if (this.product !== 'corporate' && this.product !== 'content' && this.userRole === 'AAM') {
+    if ((this.product == 'corporate' || this.product == 'lauditor' || this.product == 'connect') && this.userRole === 'AAM') {
       this.isActiveTeam('teams'); // Call isActiveTeam function with 'teams' as initial value
     }
   }

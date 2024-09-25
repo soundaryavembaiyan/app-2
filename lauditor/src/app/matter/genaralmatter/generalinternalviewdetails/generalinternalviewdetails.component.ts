@@ -515,12 +515,13 @@ export class GeneralinternalviewdetailsComponent implements OnInit {
             let index = this.selectedMembers.findIndex((d: any) => d.id === group.id); //find index in your array
             this.selectedMembers.splice(index, 1);
             this.teammembersList.push(group);
-            if (this.selectedMembers.length == 0) {
+            if (this.selectedMembers.length == 0 || this.teammembersList.length == 1) {
               let checkbox = document.getElementById('selectAllMembers') as HTMLInputElement | null;
               if (checkbox != null)
                 checkbox.checked = false;
             }
           }
+          
         })
     }
     removeClient(group: any) {
@@ -531,7 +532,7 @@ export class GeneralinternalviewdetailsComponent implements OnInit {
             let index = this.selectedClients.findIndex((d: any) => d.id === group.id); //find index in your array
             this.selectedClients.splice(index, 1);
             this.clientsList.push(group);
-            if (this.selectedClients.length == 0) {
+            if (this.selectedClients.length == 0 || this.clientsList.length == 1) {
               let checkbox = document.getElementById('selectAllClients') as HTMLInputElement | null;
               if (checkbox != null)
                 checkbox.checked = false;
@@ -562,7 +563,22 @@ export class GeneralinternalviewdetailsComponent implements OnInit {
       this.httpservice.sendPutRequest(URLUtils.updateGeneralHistoryMembers({ id: this.data.id }), data).subscribe(
         (res: any) => {
           this.onFeatureClick('T&C');
-          this.confirmationDialogService.confirm('Success', res.msg,false, '', '', false,'sm', false);
+          //this.confirmationDialogService.confirm('Success', res.msg,false, '', '', false,'sm', false);
+          if(val === 'members'){
+            this.confirmationDialogService.confirm('Success', 'Team Members list updated successfully.', false, '', '', false, 'sm', false);
+            let checkbox = document.getElementById('selectAllMembers') as HTMLInputElement | null;
+            if (checkbox != null){
+              checkbox.checked = false;
+            }
+          }
+          else if(val === 'clients'){
+            this.confirmationDialogService.confirm('Success', 'External Counsels list updated successfully.', false, '', '', false, 'sm', false);
+            let checkbox = document.getElementById('selectAllClients') as HTMLInputElement | null;
+            if (checkbox != null){
+              checkbox.checked = false;
+            }
+          }
+          else{}
         },
         (error: HttpErrorResponse) => {
           if (error.status === 401 || error.status === 403) {
@@ -575,6 +591,10 @@ export class GeneralinternalviewdetailsComponent implements OnInit {
     }
     cancelItems() {
       this.onFeatureClick('T&C');
+      let checkbox = (document.getElementById('selectAllMembers') as HTMLInputElement | null || document.getElementById('selectAllClients') as HTMLInputElement | null);
+      if (checkbox != null){
+        checkbox.checked = false;
+      }
     }
     sort(property: any, docsShared: any) {
       let docs = docsShared;

@@ -10,9 +10,9 @@
 
       <div>
         <p class="selectprior optionhigh2 casetito" [matTooltip]="data.Title" matTooltipPosition="after"> {{truncateString(data.Title)}} </p> 
-        <div class="flex-container">
+        <div class="flex-container" *ngIf="product === 'corporate'">
           <!-- <div class="selectpriorGrp optionhigh2 flexo" *ngFor="let item of groupName"> {{item}} </div>  -->
-          <b class="selGroup" *ngIf="product === 'corporate'">Selected Departments:</b>
+          <b class="selGroup">Selected Departments:</b>
           <div class="divShow" *ngFor="let item of (showAllItems ? groupName : groupName.slice(0, 2)); let i = index">
             {{ item }}
             <span *ngIf="groupName.length == 1"> </span>

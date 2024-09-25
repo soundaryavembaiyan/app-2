@@ -158,8 +158,8 @@ export class CreatelegalmatterComponent implements OnInit {
 
      //console.log("legalMatter",legalMatter)
     // console.log("corporate",this.corpClients)
-
-    this.confirmationDialogService.confirm('Confirmation', 'Are you sure you want to create ' + this.matterInfo.title + ' ?', true, 'Yes', 'No')
+    //this.confirmationDialogService.confirm('Confirmation', 'Are you sure you want to create ' + this.matterInfo.title + ' ?', true, 'Yes', 'No')
+    this.confirmationDialogService.confirm('Confirmation', 'Are you sure you want to create this matter?', true, 'Yes', 'No')
       .then((confirmed) => {
         if (confirmed) {
           this.httpService.sendPostRequest(URLUtils.createLegalMatter, legalMatter).subscribe((res: any) => {

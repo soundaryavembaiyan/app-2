@@ -245,7 +245,7 @@ export class MatterGroupsComponent implements OnInit {
     }
     this.selectedIds = this.editMatter.groups.map((obj: any) => { return obj.id })
     this.selectedDel = this.editMatter.groups.map((obj: any) => { return obj.canDelete })
-    // console.log('editMatter of selectedId', this.selectedIds)
+     // console.log('editMatter of selectedId', this.selectedIds)
     // console.log('this.editMatter', this.editMatter);
   }
 
@@ -625,12 +625,12 @@ export class MatterGroupsComponent implements OnInit {
       //console.log('data',data)
 
       if (this.product === 'corporate') {
-        this.confirmationDialogService.confirm('Confirmation', 'Are you sure do you want to update Department(s) for ' + this.editMatter.title + ' matter ?', true, 'Yes', 'No')
+        this.confirmationDialogService.confirm('Confirmation', 'Are you sure do you want to update Department(s) for this matter?', true, 'Yes', 'No')
           .then((confirmed) => {
             if (confirmed) {
               this.httpservice.sendPutRequest(url, payload).subscribe((res: any) => {
                 if (!res.error) {
-                  this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully updated Department(s) for ' + this.editMatter.title, false, 'View Matter List', 'Cancel', true)
+                  this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully updated Department(s) for this matter.', false, 'View Matter List', 'Cancel', true)
                     .then((confirmed) => {
                       if (confirmed) {
                         this.router.navigate(['/matter/' + this.pathName + '/view']);
@@ -650,12 +650,13 @@ export class MatterGroupsComponent implements OnInit {
           })
       }
       else{
-        this.confirmationDialogService.confirm('Confirmation', 'Are you sure do you want to update Group(s) for ' + this.editMatter.title + ' matter ?', true, 'Yes', 'No')
+        //        this.confirmationDialogService.confirm('Confirmation', 'Are you sure do you want to update Group(s) for ' + this.editMatter.title + ' matter ?', true, 'Yes', 'No')
+        this.confirmationDialogService.confirm('Confirmation', 'Are you sure do you want to update Group(s) for this matter?', true, 'Yes', 'No')
           .then((confirmed) => {
             if (confirmed) {
               this.httpservice.sendPutRequest(url, data).subscribe((res: any) => {
                 if (!res.error) {
-                  this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully updated Group(s) for ' + this.editMatter.title, false, 'View Matter List', 'Cancel', true)
+                  this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully updated Group(s) for this matter.', false, 'View Matter List', 'Cancel', true)
                     .then((confirmed) => {
                       if (confirmed) {
                         this.router.navigate(['/matter/' + this.pathName + '/view']);

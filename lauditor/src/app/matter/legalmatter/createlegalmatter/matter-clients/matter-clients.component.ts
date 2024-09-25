@@ -234,12 +234,10 @@ export class MatterClientsComponent implements OnInit {
 
     getClients() {
         let grps = this.groups.map((obj: any) => obj.id);
-
         let newGroups = [...this.groups];
-        console.log('newGroups',newGroups)
 
         this.groupName = this.groups.map((obj: any) => obj.name);
-        console.log('grp',this.groupName)
+        // console.log('grp',this.groupName)
 
         if (newGroups && newGroups.length > 2) {
             let tooltipGroupsArray = newGroups.splice(2, this.groups.length);
@@ -267,18 +265,20 @@ export class MatterClientsComponent implements OnInit {
                     this.clientsList = res['corporate'];
                 }
 
-
                 this.tempList.length = this.clientsList.length;
                 //console.log('tlist',this.tempList)
                 if (this.clients && this.clients.length > 0) {
                     this.selectedClients = [...this.clients];
-                    //console.log('selectedClients....',this.selectedClients)
+                    //console.log('selectedClients....1',this.selectedClients)
                     let res = this.clientsList.filter((el: any) => {
                         return !this.selectedClients.find((element: any) => {
                             return element.id === el.id;
                         });
                     });
                     this.clientsList = res;
+                    if(this.clientsList.length === 0){
+                        this.selectedClients = [];
+                    }
                     // console.log('clist',this.clientsList)
                     // console.log('slist',this.selectedClients)
 
@@ -290,30 +290,38 @@ export class MatterClientsComponent implements OnInit {
                 }
             }
         )
-        this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements,
-            { 'group_acls': grps, 'attachment_type': 'corporate', 'product': this.product }
-        ).subscribe(
+        this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, payload).subscribe(
             (res: any) => {
-                //console.log('corpres',res)
-
+                console.log('corpres',res)
                 if (!res['error'] && res['corporate']?.length > 0)
                     this.corporateList = res['corporate'];
-                //console.log('corporateList',this.corporateList)
+                console.log('corporateList',this.corporateList)
+                console.log('clients',this.clients)
 
                 this.tempList.length = this.corporateList.length;
 
                 if (this.clients && this.clients.length > 0) {
-                    this.selectedClients = [...this.clients];
-                    let res = this.corporateList.filter((el: any) => {
+                    this.selectedClients = this.clients;
+                    console.log('selectedClients....2',this.selectedClients)
+                    let resq = this.corporateList.filter((el: any) => {
                         return !this.selectedClients.find((element: any) => {
-                            return element.id === el.id;
+                             element.id === el.id;
                         });
                     });
+                    console.log('res',resq)
+                                        
+                    // Filter corporateList, keeping only clients that are in selectedClients
+                    // this.corporateList = this.corporateList.filter((corporateClient: any) => {
+                    //     return this.selectedClients.some((selectedClient: any) => selectedClient.id === corporateClient.id);
+                    // });
 
                     this.corporateList = res;
-                    //console.log('Ifcorplist',this.corporateList)
-
+                    console.log('Ifcorplist',this.corporateList)
+                    if(this.corporateList.length === 0){
+                        this.selectedClients = [];
+                    }
                 }
+
                 if (this.selectedClients.length == 0) {
                     let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
                     if (checkbox != null)

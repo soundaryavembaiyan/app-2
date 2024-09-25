@@ -159,8 +159,16 @@
                 
                 <!--Image-->
                 <div *ngIf="item.value.content === 'Image'">
-                  <label for="title" class="lableTitle">{{item.value.content}}</label>
+                  <label for="title" class="lableTitle" style="padding-right:5px">{{item.value.content}}<a class="hypendot" *ngIf="item.value.contentTitle.length > 0">&nbsp;-&nbsp;</a>
+                    <textarea class="overviewTitle" formControlName="contentTitle" type="text" (keypress)="onKeyPress($event)" readonly></textarea>                      
+                    <a class="hypendot" *ngIf="item.value.contentTitle.length > 38 && !isFirefox">...</a>
+                  </label>
+
+                  <img (click)="opencontentDialog(item,i)" class="expand" src="assets/img/expand.svg"/> 
                   <i class="fa fa-times close secclose" (click)="removeItem(i)" aria-hidden="true"></i>
+                  
+                  <!-- <label for="title" class="lableTitle">{{item.value.content}}</label>
+                  <i class="fa fa-times close secclose" (click)="removeItem(i)" aria-hidden="true"></i> -->
                 
                   <div class="row upload-container text-size form-control textareaDoc">
                   

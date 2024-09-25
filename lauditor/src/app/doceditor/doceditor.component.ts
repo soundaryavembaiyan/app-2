@@ -144,7 +144,7 @@ export class DoceditorComponent {
   imageAddCount:number = 1;
   maxImages = 2; 
   getImage:any;
-  supportedImageTypes: string[] = ['image/jpeg', 'image/png', 'image/gif'];
+  supportedImageTypes: string[] = ['image/jpeg', 'image/png'];
   
   @ViewChild('menuTrigger1') menuTrigger1!: MatMenuTrigger;
   @ViewChild('menuTrigger2') menuTrigger2!: MatMenuTrigger;
@@ -380,7 +380,6 @@ export class DoceditorComponent {
     // if(value === null){
     //   this.toast.error('I null')
     // }
-    //console.log('val',value)
     const randomId = this.idGenerator.generateId(10);
     const group = this.fb.group({
       randomId: [randomId],
@@ -419,7 +418,6 @@ export class DoceditorComponent {
   addBlock(type: string, editBlock?: boolean, value?: any, valueTitle?: any) {
     this.isOpen = true;
     this.content = type;
-
     const contentListItems = this.myForm.get('contentListItems') as FormArray;
     //console.log('contentListItems', contentListItems)
 
@@ -569,7 +567,7 @@ export class DoceditorComponent {
         this.insertPageBreak()
       }
       if (type === 'Image') {
-        contentListItems.push(this.addContent(type, value));
+        contentListItems.push(this.addContent(type, value, valueTitle));
       }
     }
     else {
@@ -652,12 +650,14 @@ export class DoceditorComponent {
   //OpenDialog boxes for all sections!!!
   opencontentDialog(item: any, itemIndex: any) {
     this.latexDialog = true;
+    let dialogHeight = item.value.content === 'Image' ? '250px' : '415px';
     const dialogRef = this.dialog.open(ContentDialogComponent, {
       width: '600px',
-      height: '415px',
+      height: dialogHeight,
       data: {
         contentData: item.value.contentData,
         contentTitle: item.value.contentTitle,
+        content:item.value.content,
       },
       hasBackdrop: true,
       panelClass: 'hello',
@@ -666,15 +666,16 @@ export class DoceditorComponent {
     });
     //console.log('pass data to dialog', dialogRef)
 
-    dialogRef.afterClosed().subscribe((result: { contentData: string, contentTitle: string }) => {
+    dialogRef.afterClosed().subscribe((result: { contentData: string, contentTitle: string,content:string }) => {
       if (result) {
         // this.contentData = result.contentData;
         // this.contentTitle = result.contentTitle;
         const contentTitleCont = (this.myForm.get('contentListItems') as FormArray).at(itemIndex).get('contentTitle');
         contentTitleCont?.setValue(result.contentTitle);
-
         const contentTitleDat = (this.myForm.get('contentListItems') as FormArray).at(itemIndex).get('contentData');
         contentTitleDat?.setValue(result.contentData);
+        // const content = (this.myForm.get('contentListItems') as FormArray).at(itemIndex).get('content');
+        // contentTitleDat?.setValue(result.content);
       }
     });
   }
@@ -1085,10 +1086,12 @@ export class DoceditorComponent {
       return
     }
 
-    // let latexDocument = `\\documentclass{article}\\usepackage{hyperref}
+    //let latexDocument = `\\documentclass{article}\\usepackage{hyperref}
     // \\usepackage{geometry}\\geometry{a4paper,total={170mm,257mm},left=20mm,top=20mm,}<ltk>\\title
     // {${this.title}}<ltk>\\author{${this.author}}<ltk>\\date{}<ltk>\\begin{document}<ltk>\\maketitle`;
-    let latexDocument = `\\documentclass{article}\\usepackage{graphicx}\\usepackage{tabularx}\\usepackage{hyperref}\\usepackage{geometry}\\geometry{a4paper,total={170mm,257mm},left=20mm,top=20mm,}<ltk>\\title{${this.title}}<ltk>\\author{${this.author}}<ltk>\\date{}<ltk>\\begin{document}<ltk>\\maketitle`;
+    //let latexDocument = `\\documentclass{article}\\usepackage{graphicx}\\usepackage{wrapfig}\\usepackage{tabularx}\\usepackage{hyperref}\\usepackage{geometry}\\geometry{a4paper,total={170mm,257mm},left=20mm,top=20mm,}<ltk>\\title{${this.title}}<ltk>\\author{${this.author}}<ltk>\\date{}<ltk>\\begin{document}<ltk>\\maketitle`;
+    
+      let latexDocument = `\\documentclass{article}\\usepackage{graphicx}\\usepackage{tabularx}\\usepackage{hyperref}\\usepackage{geometry}\\geometry{a4paper,total={170mm,257mm},left=20mm,top=20mm,}<ltk>\\title{${this.title}}<ltk>\\author{${this.author}}<ltk>\\date{}<ltk>\\begin{document}<ltk>\\maketitle`;
 
     // Check if the document needs to be saved
     if (!this.documentId) { // if the docId is empty  || contentListItems.length === 0
@@ -1264,10 +1267,11 @@ export class DoceditorComponent {
         return `\\begin{enumerate}${this.listData}\\end{enumerate}`;
       case 'Bulleted List':
         return `\\begin{itemize}${this.listData}\\end{itemize}`;
+      case 'Image':
+        // return `\\begin{figure}[h] \\centering \\includegraphics[width=0.9\\textwidth] {${imagesFolder}/${userid}/${this.contentDataControl.value}} \\caption{${this.contentTitleControl.value}} \\end{figure}`;
+         return `\\begin{figure}[h] \\includegraphics[width=0.8\\textwidth]{${imagesFolder}/${userid}/${this.contentDataControl.value}} \\caption{${this.contentTitleControl.value}} \\end{figure}`;
       case 'Page Break':
         return `\\newpage`;
-      case 'Image':
-        return `\\begin{figure}[h]\\includegraphics[width=1.0\\textwidth]{${imagesFolder}/${userid}/${this.contentDataControl.value}}\\end{figure}`;
       default:
         return ''; // Default case, handle appropriately
     }
@@ -1442,7 +1446,7 @@ export class DoceditorComponent {
       (req: any) => {
         if (req) {
           // this.latexcode = req[0];
-          // console.log("latexCode:", this.latexcode);
+          //console.log("latexCode:", this.latexcode);
           req.sort((a: any, b: any) => a.page - b.page); //Aligned as per the page no.
 
           this.latexBlock = req;
@@ -1539,17 +1543,32 @@ export class DoceditorComponent {
           blockType: 'Bulleted List',
           handler: (args: string[]) => ({ type: 'Bulleted List', content: args[0] || '', position: lateX.indexOf(args[0] || '') })
         },
+        // {
+        //   regex: /\\begin{figure}[^]*?\\includegraphics\[.*?\]\{([^}]+)\}[^]*?\\caption{}\\end{figure}/g,
+        //   blockType: 'Image',
+        //   handler: (args: string[]) => {
+        //     const imagePath = args[1];
+        //     const fileName = imagePath.substring(imagePath.lastIndexOf('/') + 1); // Extract only the filename
+        //     return { type: 'Image', title: args[1] || '', content: fileName || '', position: lateX.indexOf(args[0] || '') };
+        //   }
+        // }  
         {
-          regex: /\\begin{figure}[^]*?\\includegraphics\[.*?\]\{([^}]+)\}[^]*?\\end{figure}/g,
+          regex: /\\begin\{figure\}[^]*?\\includegraphics\[.*?\]\{([^}]+)\}[^]*?\\caption\{([^}]+)\}[^]*?\\end\{figure\}/g,
           blockType: 'Image',
           handler: (args: string[]) => {
-            const imagePath = args[1];
-            const fileName = imagePath.substring(imagePath.lastIndexOf('/') + 1); // Extract only the filename
-            return { type: 'Image', content: fileName || '', position: lateX.indexOf(args[0] || '') };
+            const imagePath = args[1]; 
+            const caption = args[2];    // Extract the caption name
+            const fileName = imagePath.substring(imagePath.lastIndexOf('/') + 1);  // Extract the filename        
+            return { 
+              type: 'Image', 
+              title: caption || '', 
+              content: fileName || '', 
+              position: lateX.indexOf(args[0]) 
+            };
           }
-        }        
+        }
       ];
-
+      //console.log('extractionRules',extractionRules)
       const extractedBlocks: any[] = [];
 
       extractionRules.forEach(rule => {
@@ -1569,7 +1588,6 @@ export class DoceditorComponent {
       // Add blocks to the output in the sorted order
       extractedBlocks.forEach((block) => {
         var content = block.content.replace(/<nln>/g, '\n');
-        //console.log('rev content', content)
         switch (block.type) {
           case 'Overview':
             this.addBlock('Overview', true, content);
@@ -1600,7 +1618,7 @@ export class DoceditorComponent {
             this.addBlock('Page Break', true, content);
             break;
           case 'Image':
-            this.addBlock('Image', true, content);
+            this.addBlock('Image', true, content, block.title);
             break;
           // Add cases for other types of blocks
         }
@@ -2175,7 +2193,7 @@ export class ContentDialogComponent {
 
   @Input() documentId: any;
   @Input() myForm: any;
-
+  @Input() getContent:any;
   @Input() content: any;
   contentTitle: any;
   //contentData: any;
@@ -2187,11 +2205,12 @@ export class ContentDialogComponent {
 
 
   constructor(
-    public dialogRef: MatDialogRef<ContentDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: { contentData: string, contentTitle: string },
+    public dialogRef: MatDialogRef<ContentDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: { content: string, contentData: string, contentTitle: string },
     private fb: FormBuilder, private toast: ToastrService
   ) {
     this.contentData = data.contentData;
     this.contentTitle = data.contentTitle;
+    this.content = data.content;
   }
 
   ngOnInit() {
@@ -2199,6 +2218,9 @@ export class ContentDialogComponent {
       contentData: [''],
       contentTitle: ['']
     });
+    // console.log('contentData', this.contentData)
+    // console.log('contentTitle', this.contentTitle)
+    // console.log('...content', this.content)
   }
 
   save() {

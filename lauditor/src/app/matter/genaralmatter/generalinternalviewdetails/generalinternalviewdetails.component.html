@@ -55,22 +55,21 @@
         <div class="col-6">
           <ul class="nav nav-pills mb-3 btnaction float-left " id="pills-tab" role="tablist">
             <li class="nav-item">
-              <button id="High" name="priority" class="selectprior optionhigh active" id="pills-home-tab"
+              <button id="High" name="priority" class="selectprior optionhigh active" id="pills-home-tab" [ngClass]="{'active':selectedVal=='TM'}"
                 data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home"
                 aria-selected="true" (click)="onClick('TM');onFeatureClick('T&C');">Team Member(s)</button>
             </li>
   
             <li class="nav-item" *ngIf="product != 'corporate'">
-              <button id="Medium" name="priority" class="selectprior optionaling" id="pills-profile-tab"
+              <button id="Medium" name="priority" class="selectprior optionaling" id="pills-profile-tab" [ngClass]="{'active':selectedVal=='Clients'}"
                 data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab"
                 aria-controls="pills-profile" aria-selected="false" (click)="onClick('Clients');onFeatureClick('T&C');">Client(s)</button>
             </li>
             <li class="nav-item" *ngIf="product == 'corporate'">
-              <button id="Medium" name="priority" class="selectprior optionaling" id="pills-profile-tab"
+              <button id="Medium" name="priority" class="selectprior optionaling" id="pills-profile-tab" [ngClass]="{'active':selectedVal=='Clients'}"
                 data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab"
                 aria-controls="pills-profile" aria-selected="false" (click)="onClick('Clients');onFeatureClick('T&C');">External Counsel(s)</button>
             </li>
-  
           </ul>
           <!-- <ul>
             <li class="nav-item">
@@ -101,7 +100,14 @@
             </div>
           </div>
           <div class="dashedborder">
-            <div class="col-4" style="margin-top: 15px;">
+            <div class="row" style="margin-top: 15px;">
+              <h6 class="col-6 assign">Assign Team Member(s)</h6>
+              <div class="col-6 selOn">
+                <label class="callselect">Select All</label>&nbsp;
+                <input type="checkbox" value="" id="selectAllMembers" (change)="selectAllMembers($event)">
+              </div>
+            </div>
+            <!-- <div class="col-4" style="margin-top: 15px;">
               <h6>Assign Team Member(s)</h6>
             </div>
             <div class="col-4">
@@ -114,7 +120,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
             <div class="form-group">
               <div class="input-group group-custom-align court" id="search">
                 <input type="text" class="form-control textbox" placeholder="Search Team Member"
@@ -170,7 +176,7 @@
           </div>
           
           <div class="dashedborder">
-            <div class="col-4" style="margin-top: 15px;">
+            <!-- <div class="col-4" style="margin-top: 15px;">
               <h6 *ngIf="product != 'corporate'">Assign Client(s)</h6>
               <h6 *ngIf="product == 'corporate'">Assign External Counsel(s)</h6>
             </div>
@@ -183,6 +189,14 @@
                       id="selectAllClients" (change)="selectAllClients($event)">
                   </div>
                 </div>
+              </div>
+            </div> -->
+            <div class="row" style="margin-top: 15px;">
+              <h6 class="col-6 assign" *ngIf="product != 'corporate'">Assign Client(s)</h6>
+              <h6 class="col-6 assign" *ngIf="product == 'corporate'">Assign External Counsel(s)</h6>
+              <div class="col-6 selOn">
+                <label class="callselect">Select All</label>&nbsp;
+                <input type="checkbox" value="" id="selectAllClients" (change)="selectAllClients($event)">
               </div>
             </div>
             <div class="form-group">
@@ -368,6 +382,10 @@
                     <label for="title" class="editcase">Start Date</label>
                     <div class='editable cnumber'>{{data.startdate}}</div>
                   </div>
+                  <div class="form-group summarycitem">
+                    <label for="title" class="editcase">End Date</label>
+                    <div class='editable cnumber'>{{data.closedate}}</div>
+                  </div>
                   <!-- for edit summary Description-->
                   <div class="form-group summarycitem">
                     <label for="title" class="editcase">Description </label>
@@ -381,11 +399,11 @@
                   <!-- for edit summary status-->
                   <div class="form-group Judges summarycitem">
                     <div class="statusprior">
-                      <label for="title" class="editcase"> Status </label>
+                      <label for="title" class="editcase">Status </label>
                       <div class='editable cnumber'>{{data.status}}</div>
                     </div>
                     <div class="statusprior">
-                      <label for="title" class="editcase"> Priority </label>
+                      <label for="title" class="editcase">Priority </label>
                       <div class='editable cnumber'>{{data.priority}}</div>
                     </div>
                   </div>

@@ -101,7 +101,14 @@
             </div>
           </div>
           <div class="dashedborder">
-            <div class="col-4" style="margin-top: 15px;">
+            <div class="row" style="margin-top: 15px;">
+              <h6 class="col-6 assign">Assign Team Member(s)</h6>
+              <div class="col-6 selOn">
+                <label class="callselect">Select All</label>&nbsp;
+                <input type="checkbox" value="" id="selectAllMembers" (change)="selectAllMembers($event)">
+              </div>
+            </div>
+            <!-- <div class="col-4" style="margin-top: 15px;">
               <h6>Assign Team Member(s)</h6>
             </div>
             <div class="col-4">
@@ -114,7 +121,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
             <div class="form-group">
               <div class="input-group group-custom-align court" id="search">
                 <input type="text" class="form-control textbox" placeholder="Search Team Member"
@@ -171,7 +178,7 @@
           </div>
   
           <div class="dashedborder">
-            <div class="col-4" style="margin-top: 15px;">
+            <!-- <div class="col-4" style="margin-top: 15px;">
               <h6 *ngIf="product != 'corporate'">Assign Client(s)</h6>
               <h6 *ngIf="product == 'corporate'">Assign External Counsel(s)</h6>
             </div>
@@ -184,6 +191,14 @@
                       id="selectAllClients" (change)="selectAllClients($event)">
                   </div>
                 </div>
+              </div>
+            </div> -->
+            <div class="row" style="margin-top: 15px;">
+              <h6 class="col-6 assign" *ngIf="product != 'corporate'">Assign Client(s)</h6>
+              <h6 class="col-6 assign" *ngIf="product == 'corporate'">Assign External Counsel(s)</h6>
+              <div class="col-6 selOn">
+                <label class="callselect">Select All</label>&nbsp;
+                <input type="checkbox" value="" id="selectAllClients" (change)="selectAllClients($event)">
               </div>
             </div>
             <div class="form-group ">
@@ -423,7 +438,7 @@
                   <!-- for edit summary matter-->
                   <div class="form-group summarycitem">
                     <label for="title" class="editcase">Matter Tags </label>
-                    <div class='editable cnumber'>2021 - 2022</div>
+                    <div class='editable cnumber'></div>
                   </div>
                   <!-- for edit summary matter-->
                   <div class="form-group Judges summarycitem">

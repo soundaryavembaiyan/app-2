@@ -107,9 +107,14 @@
         [disabled]="!(selectedGroups.length > 0)" 
         (click)="saveGroups()">Next</button>
         <!-- for Update Groups-->
-        <button *ngIf="isCreate" type="submit" class="btn btn-primary btnsave savecls grpBtn"
+        <button *ngIf="isCreate && product !== 'corporate'" type="submit" class="btn btn-primary btnsave savecls grpBtn"
         [disabled]="!(selectedGroups.length > 0 && isSaveEnable)" 
         [ngClass]="{'disabled': !(selectedGroups.length > 0 && isSaveEnable)}"
+        (click)="saveGroups()">Save</button>
+
+        <button *ngIf="isCreate && product === 'corporate'" type="submit" class="btn btn-primary btnsave savecls grpBtn"
+        [disabled]="!(selectedIds.length > 0 && isSaveEnable)" 
+        [ngClass]="{'disabled': !(selectedIds.length > 0 && isSaveEnable)}"
         (click)="saveGroups()">Save</button>
         <!-- for Update Groups-->
     </div>

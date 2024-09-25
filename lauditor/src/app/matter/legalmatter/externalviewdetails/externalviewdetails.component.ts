@@ -584,7 +584,22 @@ export class ExternalviewdetailsComponent implements OnInit {
       this.httpservice.sendPutRequest(URLUtils.updateLegalHistoryMembers(this.data.id), data).subscribe(
         (res: any) => {
           this.onFeatureClick('T&C');
-          this.confirmationDialogService.confirm('Success', res.msg, false, '', '', false, 'sm', false);
+          //this.confirmationDialogService.confirm('Success', res.msg, false, '', '', false, 'sm', false);
+          if(val === 'members'){
+            this.confirmationDialogService.confirm('Success', 'Team Members list updated successfully.', false, '', '', false, 'sm', false);
+            let checkbox = document.getElementById('selectAllMembers') as HTMLInputElement | null;
+            if (checkbox != null){
+              checkbox.checked = false;
+            }
+          }
+          else if(val === 'clients'){
+            this.confirmationDialogService.confirm('Success', 'External Counsels list updated successfully.', false, '', '', false, 'sm', false);
+            let checkbox = document.getElementById('selectAllClients') as HTMLInputElement | null;
+            if (checkbox != null){
+              checkbox.checked = false;
+            }
+          }
+          else{}
         },
         (error: HttpErrorResponse) => {
           if (error.status === 401 || error.status === 403) {
@@ -597,6 +612,10 @@ export class ExternalviewdetailsComponent implements OnInit {
     }
     cancelItems() {
       this.onFeatureClick('T&C');
+      let checkbox = (document.getElementById('selectAllMembers') as HTMLInputElement | null || document.getElementById('selectAllClients') as HTMLInputElement | null);
+      if (checkbox != null){
+        checkbox.checked = false;
+      }
     }
     sort(property: any, docsShared: any) {
       let docs = docsShared;

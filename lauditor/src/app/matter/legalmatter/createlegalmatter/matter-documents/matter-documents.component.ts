@@ -7,6 +7,7 @@ import { LeavepageComponent } from '../leavepage/leavepage.component';
 import { GeneralleavepageComponent } from 'src/app/matter/genaralmatter/creategeneralmatter/generalleavepage/generalleavepage.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 @Component({
 
@@ -48,6 +49,7 @@ export class MatterDocumentsComponent {
     groupName:any;
     showAllItems = false;
     pathName: string = "legalmatter";
+    product = environment.product;
 
     constructor(private httpservice: HttpService,
         private fb: FormBuilder,private dialog: MatDialog, private router: Router,
