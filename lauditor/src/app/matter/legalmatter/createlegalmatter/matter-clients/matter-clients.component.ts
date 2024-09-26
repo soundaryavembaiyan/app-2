@@ -257,78 +257,81 @@ export class MatterClientsComponent implements OnInit {
         }
         this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, payload).subscribe(
             (res: any) => {
-                //console.log('clientres',res)
-
-                if (!res['error'] && res['clients']?.length > 0) {
-                    this.clientsList = res['clients'];
-                } else if (!res['error'] && res['corporate']?.length > 0) {
-                    this.clientsList = res['corporate'];
-                }
-
-                this.tempList.length = this.clientsList.length;
-                //console.log('tlist',this.tempList)
+                this.selectedClients = [];
+                this.clientsList = res['corporate'];
+                // console.log('clientsList', this.clientsList);
+                // console.log('selectedClients', this.selectedClients);
                 if (this.clients && this.clients.length > 0) {
-                    this.selectedClients = [...this.clients];
-                    //console.log('selectedClients....1',this.selectedClients)
-                    let res = this.clientsList.filter((el: any) => {
-                        return !this.selectedClients.find((element: any) => {
-                            return element.id === el.id;
-                        });
+                    this.clients.forEach((client: any) => {
+                        const matchedClient = this.clientsList.find((el: any) => el.id === client.id);
+                        if (matchedClient) {
+                            this.selectedClients.push(matchedClient);
+                        }
                     });
-                    this.clientsList = res;
-                    if(this.clientsList.length === 0){
-                        this.selectedClients = [];
-                    }
-                    // console.log('clist',this.clientsList)
-                    // console.log('slist',this.selectedClients)
-
+                    // Filter the clientsList to remove already selected clients
+                    this.clientsList = this.clientsList.filter((el: any) => {
+                        return !this.selectedClients.find((selectedClient: any) => selectedClient.id === el.id);
+                    });                    
+                    // console.log('Filtered clientsList', this.clientsList);
+                    // console.log('Updated selectedClients', this.selectedClients);
                 }
+        
+                // Handle the 'selectAll' checkbox
                 if (this.selectedClients.length == 0) {
                     let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
-                    if (checkbox != null)
+                    if (checkbox != null) {
                         checkbox.checked = false;
-                }
-            }
-        )
-        this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, payload).subscribe(
-            (res: any) => {
-                console.log('corpres',res)
-                if (!res['error'] && res['corporate']?.length > 0)
-                    this.corporateList = res['corporate'];
-                console.log('corporateList',this.corporateList)
-                console.log('clients',this.clients)
-
-                this.tempList.length = this.corporateList.length;
-
-                if (this.clients && this.clients.length > 0) {
-                    this.selectedClients = this.clients;
-                    console.log('selectedClients....2',this.selectedClients)
-                    let resq = this.corporateList.filter((el: any) => {
-                        return !this.selectedClients.find((element: any) => {
-                             element.id === el.id;
-                        });
-                    });
-                    console.log('res',resq)
-                                        
-                    // Filter corporateList, keeping only clients that are in selectedClients
-                    // this.corporateList = this.corporateList.filter((corporateClient: any) => {
-                    //     return this.selectedClients.some((selectedClient: any) => selectedClient.id === corporateClient.id);
-                    // });
-
-                    this.corporateList = res;
-                    console.log('Ifcorplist',this.corporateList)
-                    if(this.corporateList.length === 0){
-                        this.selectedClients = [];
                     }
                 }
-
-                if (this.selectedClients.length == 0) {
-                    let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
-                    if (checkbox != null)
-                        checkbox.checked = false;
-                }
             }
-        )
+        );
+        // this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, payload).subscribe(
+        //     (res: any) => {
+        //         if (!res['error'] && res['clients']?.length > 0) {
+        //             this.clientsList = res['clients'];
+        //         } else if (!res['error'] && res['corporate']?.length > 0) {
+        //             this.clientsList = res['corporate'];
+        //         }
+        //         this.tempList.length = this.clientsList.length;
+        //         if (this.clients && this.clients.length > 0) {
+        //             this.selectedClients = [...this.clients];
+        //             let res = this.clientsList.filter((el: any) => {
+        //                 return !this.selectedClients.find((element: any) => {
+        //                     return element.id === el.id;
+        //                 });
+        //             });
+        //             this.clientsList = res;
+
+        //         }
+        //         if (this.selectedClients.length == 0) {
+        //             let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
+        //             if (checkbox != null)
+        //                 checkbox.checked = false;
+        //         }
+        //     }
+        // )
+        // this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, payload).subscribe(
+        //     (res: any) => {
+        //         if (!res['error'] && res['corporate']?.length > 0)
+        //             this.corporateList = res['corporate'];
+        //         this.tempList.length = this.corporateList.length;
+        //         if (this.clients && this.clients.length > 0) {
+        //             this.selectedClients = [...this.clients];
+        //             let res = this.corporateList.filter((el: any) => {
+        //                 return !this.selectedClients.find((element: any) => {
+        //                     return element.id === el.id;
+        //                 });
+        //             });
+        //             this.corporateList = res;
+        //         }
+
+        //         if (this.selectedClients.length == 0) {
+        //             let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
+        //             if (checkbox != null)
+        //                 checkbox.checked = false;
+        //         }
+        //     }
+        // )
     }
 
     onFilterValueChange() {

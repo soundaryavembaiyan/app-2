@@ -8,7 +8,7 @@
             <div class="col-6">
                 
                  <!-- For Lauditor, Content, Connect product - except GH-role-->
-                <div class="form-group" *ngIf="product != 'corporate' && roleId != 'GH'">
+                <div class="form-group" *ngIf="(product != 'corporate' && product != 'content' && product != 'connect') && roleId != 'GH'">
                     <label for="title" class="lable-size"> Category <span class="mandate">*</span> </label>
                     <!--Category for Groups-->
                     <select class="form-select form-control textbox calendofont nameSet" (change)="getCategory($event.target)" placeholder="Choose">
@@ -28,7 +28,7 @@
 
 
                  <!-- Content product - only GH-role-->
-                 <div class="form-group" *ngIf="product == 'content' && roleId == 'GH'">
+                 <div class="form-group" *ngIf="product == 'content'">
                     <label for="title" class="lable-size"> Category <span class="mandate">*</span> </label>
                     <select class="form-select form-control textbox calendofont nameSet" (change)="getCategory($event.target)" placeholder="Choose">
                             <option hidden value="">Select</option>
@@ -37,7 +37,7 @@
                  </div>
 
                  <!-- Connect product - only GH-role-->
-                 <div class="form-group" *ngIf="product == 'connect' && roleId == 'GH'">
+                 <div class="form-group" *ngIf="product == 'connect'">
                     <label for="title" class="lable-size"> Category <span class="mandate">*</span> </label> 
                     <select class="form-select form-control textbox calendofont nameSet" (change)="getCategory($event.target)" placeholder="Choose">
                             <option hidden value="">Select</option>

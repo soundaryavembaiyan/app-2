@@ -27,14 +27,14 @@
     
 </div>
 
-<div class="row width-alignment center" *ngIf="(product == 'corporate' || product == 'lauditor' || product == 'connect') && userRole === 'AAM'">
+<div class="row width-alignment center" *ngIf="(product == 'corporate' || product == 'lauditor' || product == 'connect' || product == 'content') && userRole === 'AAM'">
     <div #useThisTemplateVar class="switch  cswitch cswitchtwo msgswitch">
         <a href="javascript:void(0);" class="optiontwo teamtwo adminTeam" [ngClass]="{ 'active' : selectedValue === 'teams' }"
             (click)="isActiveTeam('teams')">Teams</a>
     </div>
 </div>
 
-<div class="row width-alignment center" *ngIf="product == 'content'">
+<div class="row width-alignment center" *ngIf="product == 'content' && userRole !== 'AAM'">
     <div #useThisTemplateVar class="switch  cswitch cswitchtwo msgswitch">
         <a href="javascript:void(0);" class="optionone compone" [ngClass]="{'active': selectedValue === 'clients'}"
             (click)="isActive('clients')">Customers</a>

@@ -1268,8 +1268,8 @@ export class DoceditorComponent {
       case 'Bulleted List':
         return `\\begin{itemize}${this.listData}\\end{itemize}`;
       case 'Image':
-        // return `\\begin{figure}[h] \\centering \\includegraphics[width=0.9\\textwidth] {${imagesFolder}/${userid}/${this.contentDataControl.value}} \\caption{${this.contentTitleControl.value}} \\end{figure}`;
-         return `\\begin{figure}[h] \\includegraphics[width=0.8\\textwidth]{${imagesFolder}/${userid}/${this.contentDataControl.value}} \\caption{${this.contentTitleControl.value}} \\end{figure}`;
+         return `\\begin{figure}[h] \\centering \\includegraphics[width=0.9\\textwidth] {${imagesFolder}/${userid}/${this.contentDataControl.value}} \\caption{${this.contentTitleControl.value}} \\end{figure}`;
+         //return `\\begin{figure}[h] \\includegraphics[width=0.8\\textwidth]{${imagesFolder}/${userid}/${this.contentDataControl.value}} \\caption{${this.contentTitleControl.value}} \\end{figure}`;
       case 'Page Break':
         return `\\newpage`;
       default:
@@ -1477,7 +1477,8 @@ export class DoceditorComponent {
     this.submitted = false;
 
     const lateX = this.latexcode?.document
-    const lateXArray = this.latexBlock.map(item => item.document); // Extracting document data into an array
+    const lateXArray = this.latexBlock.map(item => item.document).filter(Boolean); // Add filter to remove undefined entries
+    //const lateXArray = this.latexBlock.map(item => item.document); // Extracting document data into an array
     //console.log("lateXArray:", lateXArray);
 
     lateXArray.forEach(lateX => {
@@ -1542,31 +1543,42 @@ export class DoceditorComponent {
           regex: /\\begin{itemize}([^]*?)\\end{itemize}/g,
           blockType: 'Bulleted List',
           handler: (args: string[]) => ({ type: 'Bulleted List', content: args[0] || '', position: lateX.indexOf(args[0] || '') })
-        },
+        }, 
         // {
-        //   regex: /\\begin{figure}[^]*?\\includegraphics\[.*?\]\{([^}]+)\}[^]*?\\caption{}\\end{figure}/g,
+        //   regex: /\\begin\{figure\}[^]*?\\includegraphics\[.*?\]\{([^}]+)\}[^]*?\\caption\{(.*?)\}[^]*?\\end\{figure\}/g,
         //   blockType: 'Image',
         //   handler: (args: string[]) => {
-        //     const imagePath = args[1];
-        //     const fileName = imagePath.substring(imagePath.lastIndexOf('/') + 1); // Extract only the filename
-        //     return { type: 'Image', title: args[1] || '', content: fileName || '', position: lateX.indexOf(args[0] || '') };
+        //     const imagePath = args[1]; 
+        //     const caption = args[2] ? args[2] : ''; // Handle empty captions
+        //     const fileName = imagePath ? imagePath.substring(imagePath.lastIndexOf('/') + 1) : '';  // Safely extract the filename
+        // console.log('imagePath:', imagePath);
+        // console.log('caption:', caption || 'No caption provided');
+        // console.log('fileName:', fileName);
+        //     return { 
+        //       type: 'Image', 
+        //       title: caption,  // Set caption as title or 'No caption provided'
+        //       content: fileName, 
+        //       position: lateX.indexOf(args[0]) 
+        //     };
         //   }
-        // }  
+        // }
         {
-          regex: /\\begin\{figure\}[^]*?\\includegraphics\[.*?\]\{([^}]+)\}[^]*?\\caption\{([^}]+)\}[^]*?\\end\{figure\}/g,
+          regex: /\\begin\{figure\}[^]*?\\centering[^]*?\\includegraphics\[[^\]]*\]\s*\{([^}]+)\}\s*\\caption\{(.*?)\}\s*\\end\{figure\}/g,
           blockType: 'Image',
           handler: (args: string[]) => {
             const imagePath = args[1]; 
-            const caption = args[2];    // Extract the caption name
-            const fileName = imagePath.substring(imagePath.lastIndexOf('/') + 1);  // Extract the filename        
+            const caption = args[2] ? args[2] : ''; // Handle empty captions
+            const fileName = imagePath ? imagePath.substring(imagePath.lastIndexOf('/') + 1) : '';  // Safely extract the filename
             return { 
               type: 'Image', 
-              title: caption || '', 
-              content: fileName || '', 
+              title: caption,  // Set caption as title
+              content: fileName, 
               position: lateX.indexOf(args[0]) 
             };
           }
         }
+        
+        
       ];
       //console.log('extractionRules',extractionRules)
       const extractedBlocks: any[] = [];
@@ -1575,7 +1587,9 @@ export class DoceditorComponent {
         let match;
         while ((match = rule.regex.exec(lateX)) !== null) {
           const position = match.index; // Capture the position/index
-          const block = rule.handler(match.slice(0).map(arg => arg.trim().replace(/<ltk>/g, ''))); // Pass the matched data to the handler
+          //const block = rule.handler(match.slice(0).map(arg => arg.trim().replace(/<ltk>/g, ''))); // Pass the matched data to the handler
+          const block = rule.handler(match.slice(0).map(arg => (arg ? arg.trim().replace(/<ltk>/g, '') : '')));
+        
           if (block) {
             extractedBlocks.push({ ...block, position }); // Push an object with both block and position
           }
