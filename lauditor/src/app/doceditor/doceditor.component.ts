@@ -474,7 +474,8 @@ export class DoceditorComponent {
       type === 'Sub Section' && this.getContent === 'Overview' && !editBlock === true ||
       type === 'Sub Section' && this.getContent === 'Page Break' && !editBlock === true ||
       type === 'Sub Section' && this.getContent === 'Bulleted List' && !editBlock === true ||
-      type === 'Sub Section' && this.getContent === 'Numbered List' && !editBlock === true) {
+      type === 'Sub Section' && this.getContent === 'Numbered List' && !editBlock === true ||
+      type === 'Sub Section' && this.getContent === 'Image' && !editBlock === true) {
       this.toast.error('Invalid Selection. Please add Section before adding Sub Section or Sub Sub Section.');
       return
     }
@@ -483,7 +484,8 @@ export class DoceditorComponent {
       type === 'Sub Sub Section' && this.getContent === 'Page Break' && !editBlock === true ||
       type === 'Sub Sub Section' && this.getContent === 'Bulleted List' && !editBlock === true ||
       type === 'Sub Sub Section' && this.getContent === 'Numbered List' && !editBlock === true ||
-      type === 'Sub Sub Section' && this.getContent === 'Section' && !editBlock === true) {
+      type === 'Sub Sub Section' && this.getContent === 'Section' && !editBlock === true ||
+      type === 'Sub Sub Section' && this.getContent === 'Image' && !editBlock === true) {
       this.toast.error('Invalid Selection. Please add Sub Section before adding Sub Sub Section.');
       return
     }
@@ -1268,7 +1270,8 @@ export class DoceditorComponent {
       case 'Bulleted List':
         return `\\begin{itemize}${this.listData}\\end{itemize}`;
       case 'Image':
-         return `\\begin{figure}[h] \\centering \\includegraphics[width=0.9\\textwidth] {${imagesFolder}/${userid}/${this.contentDataControl.value}} \\caption{${this.contentTitleControl.value}} \\end{figure}`;
+         return `\\vspace{4\\baselineskip} \\begin{figure}[h] \\centering \\includegraphics[width=0.9\\textwidth] {${imagesFolder}/${userid}/${this.contentDataControl.value}} \\caption{${this.contentTitleControl.value}} \\end{figure}`;
+         //return `\\begin{figure}[h] \\centering \\includegraphics[width=0.9\\textwidth] {${imagesFolder}/${userid}/${this.contentDataControl.value}} \\caption{${this.contentTitleControl.value}} \\end{figure}`;
          //return `\\begin{figure}[h] \\includegraphics[width=0.8\\textwidth]{${imagesFolder}/${userid}/${this.contentDataControl.value}} \\caption{${this.contentTitleControl.value}} \\end{figure}`;
       case 'Page Break':
         return `\\newpage`;
