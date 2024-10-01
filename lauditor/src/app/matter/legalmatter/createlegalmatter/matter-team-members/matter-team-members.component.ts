@@ -38,22 +38,26 @@ export class MatterTeamMembersComponent {
 
     ngOnInit() {
         this.ownerName=localStorage.getItem('name');
-        this.getTeammembers();
+        //this.getTeammembers();
+        if (this.product == 'corporate') {
+            this.getCorpTeammembers();
+        }
+        else {
+            this.getTeammembers();
+        }
     }
     getTeammembers() {
         this.groupName = this.groups.map((obj: any) => obj.name);
         //console.log('grp',this.groupName)
-
         let grps = this.groups.map((obj: any) => obj.id);
-        this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements,
-                                        {'group_acls': grps, 'attachment_type': 'members'}).subscribe(
+        this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements,{'group_acls': grps, 'attachment_type': 'members'}).subscribe(
             (res: any) => {
                 if (!res['error'] && res['members']?.length > 0){
                     this.teammembersList = res['members'];
                     let index = this.teammembersList.findIndex((d: any) => d.name === this.ownerName); //find index in your array
-                   if(index > -1 ){
-                    this.teammembersList.splice(index, 1); //to remove the owner name in 1st index
-                   }
+                    if (index > -1) {
+                        this.teammembersList.splice(index, 1); //to remove the owner name in 1st index
+                    }
                     if (this.teammembers && this.teammembers.length > 0) {
                         this.selectedTeammembers = [...this.teammembers];
                         let res = this.teammembersList.filter((el: any) => {
@@ -71,6 +75,40 @@ export class MatterTeamMembersComponent {
                 }
         })
     }
+
+    getCorpTeammembers() {
+        this.groupName = this.groups.map((obj: any) => obj.name);
+        //console.log('grp',this.groupName)
+        let grps = this.groups.map((obj: any) => obj.id);
+        this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, { 'group_acls': grps, 'attachment_type': 'members' }).subscribe(
+            (res: any) => {
+
+                this.selectedTeammembers = [];
+                this.teammembersList = res['members'];
+                let index = this.teammembersList.findIndex((d: any) => d.name === this.ownerName); //find index in your array
+                if (index > -1) {
+                    this.teammembersList.splice(index, 1); //to remove the owner name in 1st index
+                }
+                if (this.teammembers && this.teammembers.length > 0) {
+                    this.teammembers.forEach((client: any) => {
+                        const matchedClient = this.teammembersList.find((el: any) => el.id === client.id);
+                        if (matchedClient) {
+                            this.selectedTeammembers.push(matchedClient);
+                        }
+                    });
+                    // Filter the clientsList to remove already selected clients
+                    this.teammembersList = this.teammembersList.filter((el: any) => {
+                        return !this.selectedTeammembers.find((selectedClient: any) => selectedClient.id === el.id);
+                    });
+                }
+                if (this.selectedTeammembers.length == 0) {
+                    let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
+                    if (checkbox != null)
+                        checkbox.checked = false;
+                }
+            })
+    }
+
     selectAll(event: any) {
         if (event?.target?.checked) {
             if (this.teammembersList?.length > 0) {

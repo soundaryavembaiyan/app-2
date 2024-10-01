@@ -145,7 +145,7 @@
     height: 25px;
 }
 
-.saveasImg{
+.saveasImg {
     width: 29px;
     height: 32px;
     margin-left: -1px;
@@ -1203,4 +1203,26 @@ button.mat-button {
     width: 20px;
     height: 20px;
     margin-top: -3px;
+}
+
+.deltabIcon {
+    margin-left: 10px;
+    float: right;
+    cursor: pointer;
+    font-weight: 900;
+    font-size: 18px;
+}
+.tabInput{
+    border-radius: 1px;
+    border: 1px solid #CED4DA;
+    background: #EEE;
+    height: 40px;
+    font-size: 18px;
+    text-align: justify;
+    font-weight: 600;
+}
+.tabInput::placeholder { /* Most modern browsers */
+    color: #727272;
+    font-size: 17px;
+    opacity: 1;
 }

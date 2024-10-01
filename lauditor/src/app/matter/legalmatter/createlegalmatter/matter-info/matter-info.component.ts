@@ -42,7 +42,7 @@ export class MatterInfoComponent implements OnInit {
     private httpService: HttpService, private dialog: MatDialog, private router: Router, private confirmationDialogService: ConfirmationDialogService) { }
 
   ngOnInit() {
-    console.log('data',this.data)
+    //console.log('data',this.data)
     this.caseRegister = this.fb.group({
       title: ['',[Validators.required,Validators.pattern(this.NoWhitespaceRegExp)]],
       case_number: ['',[ Validators.required,Validators.pattern(this.NoWhitespaceRegExp)]],

@@ -50,7 +50,7 @@
                 <button mat-menu-item (click)="addBlock('Bulleted List')"><img class="imgView" src="assets/img/unord.svg"/>&nbsp;Bulleted List</button>
                 <button mat-menu-item (click)="addBlock('Page Break');insertPageBreak()"><img class="imgPort" src="assets/img/pagebreak.svg"/>Page Break</button>
                 <button mat-menu-item (click)="addBlock('Image')"><img class="imgImg" src="assets/img/image.svg"/>&nbsp;Image</button>
-                <!-- <button mat-menu-item (click)="addBlock('Table')"><img class="imgTable" src="assets/img/table.svg"/>Table</button> -->
+                <button mat-menu-item (click)="addBlock('Table')"><img class="imgTable" src="assets/img/table.svg"/>Table</button>
             </mat-menu>
         </div> 
 
@@ -184,7 +184,6 @@
                         {{ item.get('contentData').value }}
                       </span>
                       </div>
-              
                     <input #fileInput type="file" accept="image/*" (change)="handleFileInput($event, i)" style="display: none" />
                 
                     <!-- Show the uploaded file name -->
@@ -199,6 +198,34 @@
                   </div>
                 </div>
                 <!--Image-->
+                
+                <!-- Table Block -->
+                <div *ngIf="item.value.content === 'Table'" class="form-group">
+                  <label for="title" class="lableTitle" style="padding-right:5px">{{item.value.content}}</label>
+                  <i class="fa fa-times close secclose" aria-hidden="true" (click)="removeItem(i)"></i>
+
+                  <div *ngIf="table.length > 0">
+                    <table>
+                      <thead>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let row of table; let j = index">
+                          <td *ngFor="let col of row">
+                            <input formControlName="contentData" class="tabInput" type="text" maxlength="350" 
+                            (input)="restrictSplCharacteratFirst($event)" (keypress)="onKeyPress($event)" placeholder="Enter your content"  />
+                          </td>
+                          <td>
+                            <i class="fa-solid fa-trash deltabIcon" *ngIf="j !== 0" (click)="removeRow(j)"></i> 
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <button style="width: auto;" class="pluslist addBtn" (click)="addRow()"><mat-icon class="closePlus" aria-hidden="true">add_circle_outline</mat-icon>&nbsp;Add Row</button>
+                    <button style="width: auto;" class="pluslist addBtn" (click)="addColumn()" *ngIf="columns.length !== 4"><mat-icon class="closePlus" aria-hidden="true">add_circle_outline</mat-icon>&nbsp;Add Column</button>
+                    <button style="width: auto;" class="pluslist addBtn" (click)="removeColumn()" *ngIf="columns.length === 4"><mat-icon class="closePlus" aria-hidden="true">remove_circle_outline</mat-icon>&nbsp;Remove Column</button>
+                  </div>
+                </div>
+                <!-- Table Block -->
 
             </div>
             </ng-container>

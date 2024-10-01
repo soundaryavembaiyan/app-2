@@ -44,24 +44,32 @@ export class ViewGeneralmatterComponent implements OnInit {
     // }
     // else{
     //   this.selectedOption = 'Internal Matters'
-      this.getLegalMatters();
+      this.getGeneralMatters();
     // }
     var role = localStorage.getItem("role")
     this.role = role
   }
 
-  getLegalMatters() {
+  getGeneralMatters() {
     this.spinnerService.show()
     this.httpservice.sendGetRequest(URLUtils.getGeneralMatter).subscribe((res: any) => {
       //this.generalMatters = res && res["matters"];
       if (res && res["matters"]) {
         this.generalMatters = res["matters"].map((matter: any) => {
+          const uniqueMembers = new Map(); // Remove duplicate members
+          matter.members.forEach((member: any) => {
+            if (!uniqueMembers.has(member.id)) {
+              uniqueMembers.set(member.id, member);
+            }
+          });
+          matter.members = Array.from(uniqueMembers.values());
+          
           matter.groups = matter.groups.filter((group: any) => 
             group.name !== 'AAM' && group.name !== 'SuperUser'
           );
           return matter;
         });
-        //console.log('Filtered generalMatters:', this.generalMatters);
+        console.log('Filtered generalMatters:', this.generalMatters);
       }
       //this.matterCount = this.generalMatters.length;
       //console.log('this.generalMatters',this.generalMatters.length)
@@ -87,7 +95,7 @@ export class ViewGeneralmatterComponent implements OnInit {
     if(this.selectedOption=="External Matters"){
       this.getExternalMatters()
     }else{
-      this.getLegalMatters()
+      this.getGeneralMatters()
     }
   }
 
@@ -181,7 +189,7 @@ export class ViewGeneralmatterComponent implements OnInit {
               this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully ' + test, false, 'View Matter List', 'Cancel', true)
                 .then((confirmed) => {
                   if (confirmed) {
-                    this.getLegalMatters();
+                    this.getGeneralMatters();
                   }
                 })
             }
@@ -206,7 +214,7 @@ export class ViewGeneralmatterComponent implements OnInit {
               this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully deleted ' + legalMatter.title, false, 'View Matter List', 'Cancel', true)
                 .then((confirmed) => {
                   if (confirmed) {
-                    this.getLegalMatters();
+                    this.getGeneralMatters();
                   }
                 })
             }

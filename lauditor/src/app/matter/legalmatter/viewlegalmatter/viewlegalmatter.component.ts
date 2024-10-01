@@ -62,12 +62,20 @@ export class ViewlegalmatterComponent implements OnInit {
       //this.legalMatters = res && res["matters"];
       if (res && res["matters"]) {
         this.legalMatters = res["matters"].map((matter: any) => {
+          const uniqueMembers = new Map(); // Remove duplicate members
+          matter.members.forEach((member: any) => {
+            if (!uniqueMembers.has(member.id)) {
+              uniqueMembers.set(member.id, member);
+            }
+          });
+          matter.members = Array.from(uniqueMembers.values());
+
           matter.groups = matter.groups.filter((group: any) => 
             group.name !== 'AAM' && group.name !== 'SuperUser'
           );
           return matter;
         });
-        //console.log('Filtered generalMatters:', this.legalMatters);
+        //console.log('Filtered legalMatters:', this.legalMatters);
       }
       //this.matterCount = this.legalMatters.length;
       //console.log('this.legalMatters',this.legalMatters.length)

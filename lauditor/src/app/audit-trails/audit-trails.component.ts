@@ -136,7 +136,9 @@ export class AuditTrailsComponent {
         this.httpService.sendGetRequest(URLUtils.getAudit).subscribe(
             (res: any) => {
                 this.auditLogs = res.data.reverse();
-                this.filterByCategory = this.auditLogs;
+                //this.filterByCategory = this.auditLogs;
+                this.filterByCategory = this.auditLogs.filter((log: any) => log.name.trim() !== 'MATTER');
+                //console.log('Filtered Data:', this.filterByCategory);
             });
 
     }

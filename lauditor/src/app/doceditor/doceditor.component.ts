@@ -24,10 +24,12 @@ import { MatMenuTrigger } from '@angular/material/menu';
 //import jsPDF from 'jspdf';
 
 
+
 @Component({
   selector: 'app-doceditor',
   templateUrl: './doceditor.component.html',
-  styleUrls: ['./doceditor.component.scss']
+  styleUrls: ['./doceditor.component.scss'],
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class DoceditorComponent {
@@ -149,6 +151,8 @@ export class DoceditorComponent {
   @ViewChild('menuTrigger1') menuTrigger1!: MatMenuTrigger;
   @ViewChild('menuTrigger2') menuTrigger2!: MatMenuTrigger;
   @ViewChild('fileInput') fileInput!: ElementRef;
+  columns: number[] = [];
+  table: any[] = [];
 
   // Listen to mouse leave event on the document
   @HostListener('document:mouseleave', ['$event'])
@@ -541,10 +545,18 @@ export class DoceditorComponent {
       this.toast.error('You can only add upto 2 images.');
       return;
     }
-    if (type === 'Image') {
+    if (type === 'Image' && !editBlock === true) {
       this.imageAddCount++;  // Increment the image counter when an image is added
     }
     // ***Image Condition*** //
+
+    // ***Table Condition*** //
+    if (type === 'Table') {
+      //this.table = [];
+      this.columns = [0, 1]; // Initialize with 2 columns
+      this.addRow();  // Add a default row with same columns
+    }
+    // ***Table Condition*** //
 
     //when Extraction function called(Edit)
     if (editBlock === true) {
@@ -574,6 +586,39 @@ export class DoceditorComponent {
     }
     else {
       contentListItems.push(this.addContent(type));
+    }
+  }
+
+  addRow() {
+    const newRow = Array(this.columns.length).fill('Enter value');
+    this.table.push(newRow);
+    //console.log('Ros:', newRow);
+    setTimeout(() => {
+      const textareas = document.querySelectorAll('.tabInput');
+      const lastTextarea = textareas[textareas.length - 2] as HTMLTextAreaElement;
+      lastTextarea.focus();
+    });
+  }
+  addColumn() {
+    if (this.columns.length < 4) {
+      this.columns.push(this.columns.length);  // Add new column
+      this.table = this.table.map(row => [...row, 'Enter value']); // Update all rows with new column
+      //console.log('table',this.table)
+      setTimeout(() => {
+        const textareas = document.querySelectorAll('.tabInput');
+        const lastTextarea = textareas[textareas.length - 2] as HTMLTextAreaElement;
+        lastTextarea.focus();
+      });
+    }
+  }
+  removeRow(i: number) {
+    //console.log('i',i)
+    this.table.splice(i, 1);
+  }
+  removeColumn() {
+    if (this.columns.length > 0) {
+      this.columns.pop();
+      this.table = this.table.map(row => row.slice(0, this.columns.length));
     }
   }
 

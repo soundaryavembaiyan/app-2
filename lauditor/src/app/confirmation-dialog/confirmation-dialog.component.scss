@@ -26,8 +26,20 @@
 }
 
 .modal-title {
-  margin-left: 25%;
-  color: midnightblue;
+  // margin-left: 25%;
+  // color: midnightblue;
+  margin-left: 20px !important;
+  font-weight: 900;
+  color: #004d87;
+}
+
+.close-btn {
+  background-color: transparent;
+  border: none;
+  color: #000;
+  font-size: 1.5rem;
+  font-weight: 800;
+  cursor: pointer;
 }
 
 .alertbox {

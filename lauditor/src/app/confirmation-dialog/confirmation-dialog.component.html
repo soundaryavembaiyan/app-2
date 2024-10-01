@@ -1,9 +1,11 @@
 <div  *ngIf="message?.isIframe">
 <div class="modal-header">
     <h4 class="modal-title">{{ title }}</h4>
-      <button type="button" class="close" aria-label="Close" (click)="dismiss()">
+      <!-- <button type="button" class="close" aria-label="Close" (click)="dismiss()">
         <span aria-hidden="true">&times;</span>
-      </button>
+      </button>-->
+      <button type="button" class="close-btn" aria-label="Close" (click)="dismiss()">X</button>
+      
     </div>
     <div class="modal-body" >
       <div class="watermark">
