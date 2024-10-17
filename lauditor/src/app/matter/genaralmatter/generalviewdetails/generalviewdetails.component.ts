@@ -632,9 +632,11 @@ export class GeneralViewDetailsComponent implements OnInit {
       }
     } else {
       this.teammembersList = this.selectedMembers.concat(this.teammembersList);
-      this.selectedMembers = [this.data.owner];
+      //this.selectedMembers = [this.data.owner];
+      this.selectedMembers = [];
     }
   }
+
   selectAllClients(event: any) {
     this.isSaveEnableClient=false;
     if (event?.target?.checked) {

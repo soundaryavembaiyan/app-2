@@ -2,8 +2,8 @@ import { map } from 'rxjs/operators';
 import { ConfirmationDialogService } from './../../confirmation-dialog/confirmation-dialog.service';
 import { EmailService } from './../../email/email.service';
 import { DatePipe } from '@angular/common';
-import { Component, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, ElementRef, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 import { ModalService } from 'src/app/model/model.service';
 import { HttpService } from 'src/app/services/http.service';
@@ -22,6 +22,8 @@ import { MatIconModule } from '@angular/material/icon';
     styleUrls: ['document-view.component.scss']
 })
 export class DocumentViewComponent implements OnInit {
+    @ViewChildren('tagTypeInput') tagTypeInputs!: QueryList<ElementRef>;
+    
     p: any=1;
     product = environment.product;
     sourcePath: any;
@@ -35,8 +37,10 @@ export class DocumentViewComponent implements OnInit {
     pdfSrc: any;
     viewer: string = "google";
     editDocform: any = FormGroup;
+    tagDocform: any = FormGroup;
     submitted: any;
     editDoc: any;
+    tagDoc:any;
     isDelete: boolean = false;
     editmetadata = false;
     isEncypted = false;
@@ -78,8 +82,9 @@ export class DocumentViewComponent implements OnInit {
     corp_matter_list:any[] = [];
     categories='';
     allowedFileTypes = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/rtf','text/csv','text/rtf'];
+    doc:any;
     
-    constructor(private httpservice: HttpService, private toast: ToastrService,
+    constructor(private httpservice: HttpService, private toast: ToastrService,private datePipe: DatePipe,
         private router: Router, private formBuilder: FormBuilder, private modalService: ModalService, public sanitizer: DomSanitizer,
         private documentService: DocumentService, private emailService: EmailService,
         private confirmationDialogService: ConfirmationDialogService,private spinnerService: NgxSpinnerService) {
@@ -140,6 +145,11 @@ export class DocumentViewComponent implements OnInit {
             description: ['', Validators.required],
             expiration_date: ['']
         });
+        // Initialize the tag form
+        this.tagDocform = this.formBuilder.group({
+            tags: this.formBuilder.array([]) // FormArray to hold the dynamic tags
+        });
+        
         if (this.clientDetails || this.selectedGroupItems) {
             this.getAllDocuments();
         }
@@ -158,6 +168,7 @@ export class DocumentViewComponent implements OnInit {
         //console.log("checked item " + JSON.stringify(this.groupViewItems));    
         // this.term = '';
     }
+      
     selectDuration(date: any) {
         this.bsValue = date;
     }
@@ -186,14 +197,25 @@ export class DocumentViewComponent implements OnInit {
     }
     selectGroup(val: boolean) {
         this.isSelectGroup = val;
-        if (!val) {
-            this.get_all_matters(this.selectedmatterType)
-            this.getAllDocuments();
-            
+        if (val) {
+          this.groupViewItems = this.groupViewItems.filter(item =>
+            !this.selectedGroupItems.some(selectedItem => selectedItem.id === item.id)
+          );
+        } else {
+          this.get_all_matters(this.selectedmatterType);
+          this.getAllDocuments();
         }
-        //this.getAllDocuments();
-        //console.log('isSelectGroup',this.isSelectGroup)
-    }
+      } 
+    // selectGroup(val: boolean) {
+    //     this.isSelectGroup = val;
+    //     if (!val) {
+    //         this.get_all_matters(this.selectedmatterType)
+    //         this.getAllDocuments();
+    //     }
+    //     //this.getAllDocuments();
+    //     //console.log('isSelectGroup',this.isSelectGroup)
+    // }
+
     // selectGroupItem(item: any, val: any) {
     //     //console.log("selected item" + JSON.stringify(item) + val);
     //     if (val) {
@@ -229,42 +251,109 @@ export class DocumentViewComponent implements OnInit {
         }
     }
 
+    // removeGroup(item: any) {
+    //     item.isChecked = false;
+    //     let index = this.selectedGroupItems?.findIndex((d: any) => d.id === item.id); //find index in your array
+    //     this.selectedGroupItems?.splice(index, 1);
+    //     this.get_all_matters(this.selectedmatterType)
+    //     this.getAllDocuments();
+    // }
     removeGroup(item: any) {
         item.isChecked = false;
-        let index = this.selectedGroupItems?.findIndex((d: any) => d.id === item.id); //find index in your array
-        this.selectedGroupItems?.splice(index, 1);
-        this.get_all_matters(this.selectedmatterType)
+        const index = this.selectedGroupItems.findIndex((d: any) => d.id === item.id);
+        if (index !== -1) {
+            this.selectedGroupItems.splice(index, 1);
+            const isAlreadyInGroupView = this.groupViewItems.some((group: any) => group.id === item.id);
+            if (!isAlreadyInGroupView) {
+                this.groupViewItems.push(item);
+            }
+        }
+        this.get_all_matters(this.selectedmatterType);
         this.getAllDocuments();
     }
+
     addEvent(test: any, val: any) {
         //console.log("val" + val)
         this.editDoc.expiration_date = val;
     }
     get f() { return this.editDocform.controls; }
+    get tagsFormArray(): FormArray {
+        return this.tagDocform.get('tags') as FormArray;
+    }
+      
 
-    editDocInfo(doc: any,tabsel?:any) {
-        
-        //console.log('form', this.editDocform)
+    editDocInfo(doc: any, tabsel?: any) {
         this.editDoc = JSON.parse(JSON.stringify(doc));
+        // console.log('form', this.editDocform)
+        // console.log("editDoc data", this.editDoc)
 
-        console.log('this.editDoc',doc?.groups_acls.map((group:any) => group.name))
+        // Convert the expiration date to a Date object
+        if (this.editDoc.expiration_date) {
+          const dateObj = new Date(this.editDoc.expiration_date);
+          this.editDoc.expiration_date = this.datePipe.transform(dateObj, 'MMM dd, yyyy'); // Format as "Oct 10, 2024"
+          this.editDocform.patchValue({ expiration_date: dateObj }); // Set the Date object for the date picker
+        }
 
-        if(tabsel=='encrypt'){
+        if (tabsel == 'encrypt') {
             this.tabsel = 'encrypt'
-        } else if(tabsel=='decrypt'){
+        } else if (tabsel == 'decrypt') {
             this.tabsel = 'decrypt'
         }
         //console.log("edit data " + JSON.stringify(this.editDoc));
     }
-    onSubmit() {
-        //console.log("date  " + this.bsValue);
 
-        this.submitted = true;
-        if (this.editDocform.invalid) {
-            return;
+    //View Tag Functionalitys
+    updateTagInfo(doc: any, tabsel?: any) {
+        this.doc = doc;
+        this.tagDoc = JSON.parse(JSON.stringify(doc));
+        // console.log('tagDocForm:',this.tagDocform);
+        // console.log('doc:',this.doc);
+
+        this.tagsFormArray.clear(); // Clear any existing controls
+
+        if (this.tagDoc.tag && this.tagDoc.tag.length > 0) {
+            this.tagDoc.tag.forEach((tag: { key: string; value: string }) => {
+                this.addTag(tag.key, tag.value);
+            });
+        } else {
+            this.addTag(); // add one emptyTag
         }
+    }
+
+    addTag(key: string = '', value: string = '') {
+        const tagGroup = this.formBuilder.group({
+            key: [key, Validators.required],
+            value: [value, Validators.required]
+        });
+        this.tagsFormArray.push(tagGroup);
+
+        setTimeout(() => {
+            // Focus on the last added "Tag type" input field
+            const tagTypeInputElement = this.tagTypeInputs.last;
+            if (tagTypeInputElement) {
+              tagTypeInputElement.nativeElement.focus();
+            }
+          });
+    }
+
+    removeTag(index: number) {
+        this.tagsFormArray.removeAt(index);
+        //console.log('in',index)
+        // if(index === 0){
+        //     this.addTag();
+        //     return;
+        // }
+    }
+
+    onSubmit() {
+        this.submitted = true;
+        // if (this.editDocform.invalid) {
+        //     return;
+        // }
+
         this.editDocform.value.expiration_date = this.bsValue ? this.pipe.transform(this.bsValue, 'dd-MM-yyyy') : '';
         let item = this.editDocform.value;
+
         //console.log("date  " + JSON.stringify(item));
         this.httpservice.sendPutRequest(URLUtils.editDocuments(this.editDoc), item).subscribe((res: any) => {
             //console.log("res---edir" + JSON.stringify(res));
@@ -281,12 +370,49 @@ export class DocumentViewComponent implements OnInit {
             if (error.status === 401 || error.status === 403) {
               const errorMessage = error.error.msg || 'Unauthorized';
               this.toast.error(errorMessage);
-              //console.log(error);
             }
-          }
+        });
+        this.reset();
+    }
+
+    ontagSubmit() {
+        this.submitted = true;
+        // console.log('tagDocForm:', this.tagDocform);
+        // console.log('ss doc:', this.doc);
+      
+        // Transform the tags into an object format
+        let transformedTags: { [key: string]: string } = {};
+        this.tagDocform.value.tags.forEach((tag: { key: string, value: string }) => {
+            if (tag.key && tag.value) {
+                transformedTags[tag.key] = tag.value;
+            }
+        });
+
+        let name = this.doc.name;
+        let payload = {
+            tags: transformedTags,
+            name: name
+        };
+    
+        // Send the PUT request with the constructed payload
+        this.httpservice.sendPutRequest(URLUtils.editTags(this.tagDoc), payload).subscribe(
+            (res: any) => {
+                if (res) {
+                    this.toast.success(res.msg);
+                } else {
+                    this.toast.error(res.msg);
+                }
+            },
+            (error: HttpErrorResponse) => {
+                if (error.status === 401 || error.status === 403) {
+                    const errorMessage = error.error.msg || 'Unauthorized';
+                    this.toast.error(errorMessage);
+                }
+            }
         );
         this.reset();
     }
+    
     get_all_matters(type:any,event?:any){
         this.spinnerService.show()
         let selectedGroups: any = [];
@@ -377,12 +503,15 @@ export class DocumentViewComponent implements OnInit {
 
     }
     selectEvent(item: any) {
+       // console.log('item',item)
         this.clientDetails = item;
-        localStorage.setItem("clientData", JSON.stringify(item));
-        this.httpservice.sendGetRequest(URLUtils.getMattersByClient(item)).subscribe((res: any) => {
+        //localStorage.setItem("clientData", JSON.stringify(item));
+        if(this.clientDetails){       
+            this.httpservice.sendGetRequest(URLUtils.getMattersByClient(item)).subscribe((res: any) => {
             this.matterList = res?.matterList;
             // //console.log("matterList " + JSON.stringify(this.matterList));
         })
+        }
         //console.log("test   " + JSON.stringify(item));
         this.getAllDocuments();
     }

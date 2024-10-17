@@ -84,6 +84,10 @@ export class DocumentComponent implements OnInit {
   }
   gotoDetail(item: any): void {
     this.router.navigate(['documents/' + this.docCategory, item]);
+    if(item === 'client'){
+      const link='/documents/mergepdf/'+ item
+      window.location.href = link
+    }
   }
   ngAfterViewInit() {
 

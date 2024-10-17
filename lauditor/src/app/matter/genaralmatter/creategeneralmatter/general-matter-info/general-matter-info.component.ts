@@ -127,6 +127,8 @@ export class GeneralMatterInfoComponent implements OnInit {
     if (this.generalForm.invalid) {
       return;
     }
+    let matter = this.generalForm.value
+    let body = {"title":matter.title, "matter_number": matter.matterNumber, "type": "general"} 
     // if(!this.isEdit){
     // this.generalForm.value.startdate = this.pipe.transform(this.generalForm.value.startdate, 'dd-MM-yyyy');
     // this.generalForm.value.closedate = this.pipe.transform(this.generalForm.value.closedate, 'dd-MM-yyyy');
@@ -177,7 +179,21 @@ export class GeneralMatterInfoComponent implements OnInit {
       )
     }
     else {
-      this.childButtonEvent.emit(this.generalForm.value);
+      this.httpService.sendPostRequest(URLUtils.checkMatterUnique, body).subscribe((res: any) => {
+        if(res.error){
+          // this.toast.error(res.msg);
+          // return;
+          this.confirmationDialogService.confirm('Alert', res.msg, false, 'OK','Cancel', true)
+          .then((confirmed) => {
+            if (confirmed) {
+            }
+          })
+        }
+        else{
+          this.childButtonEvent.emit(this.generalForm.value);
+        }
+      })
+      //this.childButtonEvent.emit(this.generalForm.value);
     }
     // this.isGroups=true;
   }

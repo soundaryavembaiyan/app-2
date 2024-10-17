@@ -343,6 +343,7 @@ export class DocumentUploadComponent implements OnInit {
           description: event.files[i].name.split('.')[0],
           type: event.files[i].type,
           file: file,
+          expiration_date: this.documentDetail.value.expiration_date,
           groups: this.groupId,
           client: this.clientId,
           matter: this.matters,
@@ -359,7 +360,6 @@ export class DocumentUploadComponent implements OnInit {
       this.downloadDisabled = false;
     }
     
-
     saveFiles() {
         let clientInfo = new Array();
         this.clientId?.forEach((item: any) => {
@@ -371,6 +371,14 @@ export class DocumentUploadComponent implements OnInit {
         })
         var vale = true
 
+        const formatDate = (dateString: string | Date): string => {
+            const date = new Date(dateString);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+            const year = date.getFullYear();
+            return `${day}-${month}-${year}`;
+        };
+
         for (var i = 0; i < this.uploadDocs.length; i++) {
             //console.log("test   " + JSON.stringify(this.uploadDocs));
             let fdata = new FormData();
@@ -379,7 +387,12 @@ export class DocumentUploadComponent implements OnInit {
             const ids = this.selectedGroupItems.map((obj: any) => obj.id);
             fdata.append('name', this.uploadDocs[i].name);
             fdata.append('description', this.uploadDocs[i].description);
-            fdata.append('expiration_date', this.uploadDocs[i].expiration_date ? this.uploadDocs[i]?.expiration_date : '');
+            //fdata.append('expiration_date', this.uploadDocs[i].expiration_date ? this.uploadDocs[i]?.expiration_date : '');
+
+            // Format expiration_date if it exists
+            const formattedExpirationDate = this.uploadDocs[i].expiration_date ? formatDate(this.uploadDocs[i].expiration_date) : '';
+            fdata.append('expiration_date', formattedExpirationDate);
+
             fdata.append('filename', this.uploadDocs[i].name)
             fdata.append('content_type', this.uploadDocs[i].type)
             fdata.append('category', this.filter)
@@ -394,9 +407,10 @@ export class DocumentUploadComponent implements OnInit {
             fdata.append('custom_encrypt', this.uploadDocs[i].custom_encrypt);
             fdata.append('downloadDisabled', this.uploadDocs[i].downloadDisabled);
             fdata.append('tags', this.uploadDocs[i].checked == true ? JSON.stringify(this.metaData) : '');
-            //console.log('fdata',fdata)
+            console.log('fdata',fdata)
             this.upload(i, fdata)
         }
+        console.log('uploadDocs',this.uploadDocs)
     }
     openModal(id: string) {
         this.modalService.open(id);
@@ -411,7 +425,6 @@ export class DocumentUploadComponent implements OnInit {
         this.spinnerService.show()
         this.httpservice.sendPostRequest(URLUtils.postDocumentsClient, file).subscribe(
             (res: any) => {
-
                 if (res.error == true) {
                     this.errorRes = false;
                     this.message = res.msg || res.msg.errors.clients || res.msg.errors.matters;
@@ -425,12 +438,7 @@ export class DocumentUploadComponent implements OnInit {
                     this.toastr.success('upload success');
                 }
                 // for displaying success msg in UI
-            }, 
-            // (err: any) => {
-            //     this.toastr.error('Could not upload the file:');
-            // }
-            
-            (error: HttpErrorResponse) => {
+            },(error: HttpErrorResponse) => {
                 this.spinnerService.hide()
                 if (error.status === 401 || error.status === 403) {
                   const errorMessage = error.error.msg || 'Unauthorized';
@@ -475,22 +483,51 @@ export class DocumentUploadComponent implements OnInit {
         let checkList: boolean = this.uploadDocs.every((v: any) => v.checked === true);
         this.allCheck = checkList;
     }
-    docEnable(item: any) {
-        this.downloadDisabled = item == "enable" ? false : true;
-        this.uploadDocs.forEach((item: any) => {
-            item.downloadDisabled = !this.downloadDisabled;
-        });
-        // this.downloadDisabled = item == "enable" ? true : false;
-        // this.uploadDocs.forEach((item: any) => {
-        //     item.downloadDisabled = this.downloadDisabled;
-        // });
-    }
-    encryptEnable(item: any) {
-        this.encryptDisabled = item == "enable" ? true : false;
+    // docEnable(item: any) {
+    //     this.downloadDisabled = item == "enable" ? false : true;
+    //     this.uploadDocs.forEach((item: any) => {
+    //         item.downloadDisabled = !this.downloadDisabled;
+    //     });
+    //     // this.downloadDisabled = item == "enable" ? true : false;
+    //     // this.uploadDocs.forEach((item: any) => {
+    //     //     item.downloadDisabled = this.downloadDisabled;
+    //     // });
+    // }
+    // encryptEnable(item: any) {
+    //     this.encryptDisabled = item == "enable" ? true : false;
+    //     this.uploadDocs.forEach((item: any) => {
+    //         item.custom_encrypt = this.encryptDisabled;
+    //     });
+    //    //console.log(this.uploadDocs)
+    // }
+    // disableDoc(val: any, enableFlag: boolean) {
+    //     this.isDisableDoc = enableFlag;
+    //     this.uploadDocs.forEach((item: any) => {
+    //         if (item.name == val.name) {
+    //             item.downloadDisabled = !this.isDisableDoc;
+    //         }
+    //     });
+    //     this.checker = this.uploadDocs.every((v: any) => v.downloadDisabled === true);
+    // }
+    // encrypttoggle(val: any, enableFlag: boolean) {
+    //     this.uploadDocs.forEach((item: any) => {
+    //         if (item.name == val.name) {
+    //             item.custom_encrypt = !enableFlag;
+    //         }
+    //     });
+    //     // this.checker = this.uploadDocs.every((v: any) => v.custom_encrypt === true);
+    // }
+    docEnable(action: string) {
+            this.downloadDisabled = action == "enable" ? false : true;
+            this.uploadDocs.forEach((item: any) => {
+                item.downloadDisabled = this.downloadDisabled;
+            });
+    }    
+    encryptEnable(action: string) {
+        this.encryptDisabled = action === "enable" ? true : false;
         this.uploadDocs.forEach((item: any) => {
             item.custom_encrypt = this.encryptDisabled;
         });
-       //console.log(this.uploadDocs)
     }
     disableDoc(val: any, enableFlag: boolean) {
         this.isDisableDoc = enableFlag;
@@ -499,19 +536,18 @@ export class DocumentUploadComponent implements OnInit {
                 item.downloadDisabled = !this.isDisableDoc;
             }
         });
-        this.checker = this.uploadDocs.every((v: any) => v.downloadDisabled === true);
+        this.downloadDisabled = this.uploadDocs.every((v: any) => v.downloadDisabled === true);
     }
-
     encrypttoggle(val: any, enableFlag: boolean) {
         this.uploadDocs.forEach((item: any) => {
             if (item.name == val.name) {
                 item.custom_encrypt = !enableFlag;
             }
         });
-        //console.log(this.uploadDocs)
-        
-        // this.checker = this.uploadDocs.every((v: any) => v.custom_encrypt === true);
+        this.encryptDisabled = this.uploadDocs.every((v: any) => v.custom_encrypt === true);
     }
+
+
     checkAllItem(event: any) {
         if (event) {
             for (let i = 0; i < this.uploadDocs.length; i++) {
@@ -624,6 +660,8 @@ export class DocumentUploadComponent implements OnInit {
         if (this.myInputVariable) {
             this.myInputVariable.nativeElement.value = '';
         }
+        const link='/documents/upload/'+ this.filter
+        window.location.href = link
         // window.location.reload();
         // this.router.navigate(['documents/upload/' + this.filter]);
         //  this.selectedGroupItems = [];

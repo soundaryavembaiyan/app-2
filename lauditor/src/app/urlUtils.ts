@@ -93,30 +93,61 @@ export class URLUtils {
     static updateProfile(args: any) {
         return `/profile/${args.field}/update`;
     }
+    static OutlookemailAuthentication(args: any) {
+        return `/outlook/authurl?authtoken=${args.token}`
+    }
+    static OutllokemailMessages(args: any) {
+        return `/api/v1/outlook/messages/${args.token}?rows=${args.rows}&labelid=${args.labelid}`
+    }
+    static OutlookMsgDetail(args: any){
+         return `/api/v1/outlook/message/detail/${args.token}/${args.id}`
+    }
+    
+    static OutlookNextPageMessages(args: any) { 
+        return `/api/v1/outlook/messages/${args.token}?rows=${args.rows}&labelid=${args.labelid}&nextpageurl=${args.nextpageurl}`
+    }
+    static OutlooksearchMessages(args: any) {
+        return `/api/v1/outlook/messages/${args.token}?rows=${args.rows}&subject=${args.search}&search=${args.search}`
+    }
+    static OutlookmessagesCount(args: any) {
+        return `/api/v1/outlook/label/${args.token}?labelid=${args.labelid}`
+    }
+    static OutlookMessageDetails(args: any) {
+        return `/api/v1/outlook/message/detail/${args.token}/${args.msgid}`
+    }
+    static OutlookMessageDocUpload(args: any) {
+        return `/api/v1/outlook/message/attachment/upload/${args.token}/${args.msgid }?attachid=${args.partid}`
+    }
+    static OutlooksendMessage(args: any) {
+        return `/api/v1/outlook/sendmail/attach/documents/${args.token}`
+    }
     static emailAuthentication(args: any) {
-        return `/gmail/authurl?authtoken=${args.token}`
+        return `/api/v1/gmail/authurl?authtoken=${args.token}`
     }
     static emailMessages(args: any) {
-        return `/gmail/messages/${args.token}?rows=${args.rows}`
+        return `/api/v1/gmail/messages/${args.token}?rows=${args.rows}`
     }
 
     static NextPageMessages(args: any) {
-        return `/gmail/messages/${args.token}?rows=${args.rows}&nextpagetoken=${args.nextpagetoken}`
+        return `/api/v1/gmail/messages/${args.token}?rows=${args.rows}&nextpagetoken=${args.nextpagetoken}`
     }
     static searchMessages(args: any) {
-        return `/gmail/messages/${args.token}?rows=${args.rows}&subject=${args.search}&search=${args.search}`
+        return `/api/v1/${args.type}/messages/${args.token}?rows=${args.rows}&subject=${args.search}&search=${args.search}&labelid=${args.labelid}`
     }
     static messagesCount(args: any) {
-        return `/gmail/label/${args.token}?labelid=${args.labelid}`
+        return `/api/v1/${args.type}/label/${args.token}?labelid=${args.labelid}`
     }
     static MessageDetails(args: any) {
-        return `/gmail/message/detail/${args.token}/${args.msgid}`
+        return `/api/v1/gmail/message/detail/${args.token}/${args.msgid}`
     }
     static MessageDocUpload(args: any) {
-        return `/gmail/message/attachment/upload/${args.token}/${args.msgid }?partid=${args.partid}`
+        return `/api/v1/gmail/message/attachment/upload/${args.token}/${args.msgid }?partid=${args.partid}`
     }
     static sendMessage(args: any) {
-        return `/gmail/sendmail/attach/documents/${args.token}`
+        return `/api/v1/${args.type}/sendmail/attach/documents/${args.token}`
+    }
+    static sendOutlookMessage(args: any) {
+        return `/api/v1/outlook/sendmail/${args.token}/${args.docid}`
     }
     static getClientMatter(args: any) {
         return `/v2/matter/all/${args.id}`
@@ -132,6 +163,9 @@ export class URLUtils {
     }
     static editDocuments(args: any) {
         return `/v3/document/${args.id}`
+    }
+    static editTags(args: any) {
+        return `/v3/document/tags/${args.id}`
     }
     static getGroupAuditLogs(args: any) {
         return `/v3/auditlogs/${args.id}`
@@ -540,6 +574,7 @@ export class URLUtils {
     static getLegalMatter = `/matter/legal`
     static getLegalMatterEventList = '/v3/matter/legal'
     static createLegalMatter = '/matter/legal/create'
+    static checkMatterUnique = '/matter/check/unique'
 
     //matter
     static matterIndiviuals = '/v3/relationship/temp-invite/consumer'

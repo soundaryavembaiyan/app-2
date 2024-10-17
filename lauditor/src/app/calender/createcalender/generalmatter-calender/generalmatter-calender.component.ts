@@ -149,7 +149,7 @@ export class GeneralMatterCalenderComponent implements OnInit {
     invitees_corporate: [''],
     attachments: [''],
     notifications: [''],
-    addtimesheet: [true],
+    addtimesheet: [this.product === 'corporate' ? false : true],
     recurrent_edit_choice: null
 
   })

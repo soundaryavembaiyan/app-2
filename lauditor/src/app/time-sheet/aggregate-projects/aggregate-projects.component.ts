@@ -99,6 +99,9 @@ export class AggregateProjectsComponent implements OnInit {
         }
     }
     downloadCSV() {
+      let totalBillable = 0;
+      let totalNonBillable = 0;
+      let totalHoursSum = 0;
         var exportcsvList = []
         if (this.viewMode == 'week') {
             var csvOptions = {
@@ -114,10 +117,26 @@ export class AggregateProjectsComponent implements OnInit {
               }
               for (let item of this.list) {
                 for (let tm of item['teamMembers']) {
-                  var mdata = { "case_no": item['caseNo'], 'project': item['projectName'], "client_name": item['clientName'], 'tm_name': tm['name'], "billable": tm['billableHours'], 'non_billable': tm['billableHours'], 'total': tm['total']}
+                    let totalHours = tm['billableHours'] + tm['nonBillableHours'];  // Calculate the total for each entr
+                    totalBillable += tm['billableHours'];  // Accumulate billable hours
+                    totalNonBillable += tm['nonBillableHours'];  // Accumulate non-billable hours
+                    totalHoursSum += totalHours;  // Accumulate total hours
+                  var mdata = { "case_no": item['caseNo'], 'project': item['projectName'], "client_name": item['clientName'], 'tm_name': tm['name'], "billable": tm['billableHours'], 'non_billable': tm['nonBillablehours'], 'total': tm['total']}
                   exportcsvList.push(mdata)
                 }
               }
+
+              // After processing all entries, append the grand total
+              var totalData = {
+                "case_no": 'Total',
+                "project": '',
+                "client_name": '',
+                "tm_name": '',
+                "billable": totalBillable + ':0',  // Format the grand total for billable hours
+                "non_billable": totalNonBillable + ':0',  // Format the grand total for non-billable hours
+                "total": totalHoursSum + ':0'  // Format the overall total hours
+              };
+              exportcsvList.push(totalData);
             const fileInfo = new ngxCsv(exportcsvList, "AggregateTimesheetTeamMemberWeek", csvOptions);
             // new AngularCsv(exportcsvList, "AggregateTimesheetTeamMemberWeek", this.csvOptions);
         }
@@ -135,10 +154,25 @@ export class AggregateProjectsComponent implements OnInit {
               }
               for (let item of this.list) {
                 for (let tm of item['teamMembers']) {
-                  var mdata = { "case_no": item['caseNo'], 'project': item['projectName'], "client_name": item['clientName'], 'tm_name': tm['name'], "billable": tm['billableHours'], 'non_billable': tm['billableHours'], 'total': tm['total']}
+                  let totalHours = tm['billableHours'] + tm['nonBillableHours'];  // Calculate the total for each entr
+                    totalBillable += tm['billableHours'];  // Accumulate billable hours
+                    totalNonBillable += tm['nonBillableHours'];  // Accumulate non-billable hours
+                    totalHoursSum += totalHours;  // Accumulate total hours
+                  var mdata = { "case_no": item['caseNo'], 'project': item['projectName'], "client_name": item['clientName'], 'tm_name': tm['name'], "billable": tm['billableHours'], 'non_billable': tm['nonBillablehours'], 'total': tm['total']}
                   exportcsvList.push(mdata)
                 }
               }
+              // After processing all entries, append the grand total
+              var totalData = {
+                "case_no": 'Total',
+                "project": '',
+                "client_name": '',
+                "tm_name": '',
+                "billable": totalBillable + ':0',  // Format the grand total for billable hours
+                "non_billable": totalNonBillable + ':0',  // Format the grand total for non-billable hours
+                "total": totalHoursSum + ':0'  // Format the overall total hours
+              };
+              exportcsvList.push(totalData);
             const fileInfo = new ngxCsv(exportcsvList, "AggregateTimesheetTeamMember",csvOptions);
             // new AngularCsv(exportcsvList, "AggregateTimesheetTeamMemberMonth", this.csvOptions);
         }

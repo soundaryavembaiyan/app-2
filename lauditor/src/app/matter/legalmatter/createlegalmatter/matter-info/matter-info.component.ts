@@ -157,6 +157,8 @@ export class MatterInfoComponent implements OnInit {
       return;
     }
     this.caseRegister.value.opponent_advocates = this.advicates;
+    let matter = this.caseRegister.value
+    let body = {"title":matter.title, "case_number": matter.case_number, "type": "legal"} 
     // this.caseRegister.value.status = 'Active'
     // this.caseRegister.value.priority = 'High'
     //this.caseRegister.value.status =this.caseRegister.status=="INVALID" || this.caseRegister.status=="VALID" ?"Active":this.caseRegister.status;
@@ -188,7 +190,7 @@ export class MatterInfoComponent implements OnInit {
           "user_id": obj.user_id
         }))
       }
-      //console.log('data',data)
+      //console.log('data',data) 
 
       this.httpService.sendPutRequest(URLUtils.updateLegalMatter(this.editeMatterInfo.id), data).subscribe((res: any) => {
         console.log('up',res);
@@ -211,7 +213,21 @@ export class MatterInfoComponent implements OnInit {
       )
     }
     else {
-      this.childButtonEvent.emit(this.caseRegister.value);
+      this.httpService.sendPostRequest(URLUtils.checkMatterUnique, body).subscribe((res: any) => {
+        if(res.error){
+          // this.toast.error(res.msg);
+          // return;
+          this.confirmationDialogService.confirm('Alert', res.msg, false, 'OK','Cancel', true)
+          .then((confirmed) => {
+            if (confirmed) {
+            }
+          })
+        }
+        else{
+          this.childButtonEvent.emit(this.caseRegister.value);
+        }
+      })
+      // this.childButtonEvent.emit(this.caseRegister.value);
     }
     // this.isGroups=true;
     // console.log('submit form',this.caseRegister.value)

@@ -150,7 +150,7 @@ export class LegalMatterCalenderComponent implements OnInit {
     invitees_internal: [''],
     attachments: [''],
     notifications: [''],
-    addtimesheet: [true],
+    addtimesheet: [this.product === 'corporate' ? false : true],
     recurrent_edit_choice: null
 
   })

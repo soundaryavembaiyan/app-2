@@ -93,6 +93,8 @@ export class RelationshipGroupAccessComponent implements OnInit {
           this.groupList = this.groupList.filter((group: any) => !selectedGroupIds.has(group.id));
           this.filteredData = this.groupList.filter((group: any) => !selectedGroupIds.has(group.id));
         }
+        this.isSaveDisabled = this.groupList?.length === 1;
+        //console.log('cc groupList', this.groupList)
       });
     }
     //Only for Lauditor product.
@@ -109,7 +111,8 @@ export class RelationshipGroupAccessComponent implements OnInit {
             can_delete: canDeleteMap.get(group.id)
         }));
         }
-        //console.log('groupList', this.groupList)
+        this.isSaveDisabled = this.groupList?.length === 1;
+        //console.log('ll groupList', this.groupList)
     })
     }
   }

@@ -80,6 +80,7 @@ export class EmailComponent implements OnInit, AfterViewInit {
   grpclientData: any;
   check = false;
   editDoc: any;
+  type='gmail';
 
   ngOnInit() {
     this.composeForm = this.formBuilder.group({
@@ -101,9 +102,10 @@ export class EmailComponent implements OnInit, AfterViewInit {
       this.composeForm.controls['documents'].setValue(this.selectedAttachments);
       localStorage.removeItem("docs");
     }
-    this.getMessageCount(); //dialog
+    // this.getMessageCount(); //dialog
+    this.openDialog()
     this.get_all_matters(this.selectedmatterType)
-    //this.emailAuthentication();
+    // this.emailAuthentication();
     //console.log('filter', this.filter)
   }
   get f() { return this.composeForm.controls; }
@@ -113,28 +115,44 @@ export class EmailComponent implements OnInit, AfterViewInit {
       this.modalService.open('compose-email');
   }
 
-  emailAuthentication() {
+  // var emailauthurlgmail = '';
+  // var emailauthurloutlook='';
+
+  emailAuthentication(type:any) {
+    console.log(type)
+    const validationDone = localStorage.getItem('validationDone');
+    const token = localStorage.getItem('TOKEN');
+    const emailAuthUrls: { [key: string]: string } = {
+        gmail: `/api/v1/gmail/authurl?authtoken=${token}`,
+        outlook: `/outlook/authurl?authtoken=${token}`
+    };
+    
     if (!localStorage.getItem('validationDone')) {
-      this.httpservice.sendGetEmailRequest(URLUtils.emailAuthentication({ "token": localStorage.getItem('TOKEN') })).subscribe(
-        (res: any) => {
-          if (!res.error && res.url) {
-            localStorage.setItem('validationDone', 'true');
-            if (!localStorage.getItem('popupOpened')) {
-              this.openDialog(res.url); // Open dialog of (google/outlook)
-              //window.open(res.url, 'coffergoogleAuthWin', "height = 450px, width = 750px");
-            }
-            localStorage.setItem('popupOpened', 'true');
-          }
-        });
-    }
-    else {
-      this.getMessageCount();
-    }
+      const emailAuthUrl = emailAuthUrls[type];
+
+      if (emailAuthUrl) {
+          this.httpservice.sendGetEmailRequest(emailAuthUrl).subscribe(
+              (res: any) => {
+                  if (!res.error && res.url) {
+                      
+                      localStorage.setItem('validationDone', 'true');
+                      if (!localStorage.getItem('popupOpened')) {
+                          console.log(res.url);
+                          window.open(res.url, 'coffergoogleAuthWin', "height=450px, width=750px");
+                      }
+                      localStorage.setItem('popupOpened', 'true');
+                  }
+              });
+      }
+  } else {
+     this.handleMessageCountClick();
+      
+  }
   }
 
   getMessageCount() {
     var globalVar = this;
-    this.httpservice.sendGetEmailRequest(URLUtils.messagesCount({ "token": localStorage.getItem('TOKEN'), "labelid": 'INBOX' })).subscribe(
+    this.httpservice.sendGetEmailRequest(URLUtils.messagesCount({ "token": localStorage.getItem('TOKEN'), "labelid": 'INBOX' ,'type':this.type})).subscribe(
       (res: any) => {
         if (!res.error) {
           this.count = res.data?.messagesTotal;
@@ -145,14 +163,33 @@ export class EmailComponent implements OnInit, AfterViewInit {
         //setInterval(function () {
         localStorage.removeItem('validationDone');
         this.isAuthenticated = false;
-        globalVar.emailAuthentication();
+        globalVar.emailAuthentication(this.type);
         //}, 10000);
       });
   }
 
-  openDialog(authUrl: string): void {
+  getOutlookMessageCount() {
+    var globalVar = this;
+    this.httpservice.sendGetEmailRequest(URLUtils.OutlookmessagesCount({ "token": localStorage.getItem('TOKEN'), "labelid": 'INBOX'})).subscribe(
+      (res: any) => {
+        if (!res.error) {
+          this.count = res?.totalItemCount;
+          console.log("herer")
+          this.getOutlookMessages();
+        }
+      },
+      (error: any) => {
+        //setInterval(function () {
+        localStorage.removeItem('validationDone');
+        this.isAuthenticated = false;
+        globalVar.emailAuthentication(this.type);
+        //}, 10000);
+      });
+  }
+
+  openDialog(): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      data: { editDoc: this.editDoc, authUrl: authUrl },
+      data: { editDoc: this.editDoc },
       width: '500px',
       height: '255px',
       hasBackdrop: true,
@@ -161,16 +198,22 @@ export class EmailComponent implements OnInit, AfterViewInit {
     });
 
    dialogRef.afterClosed().subscribe(result => {
-    if (result === 'continue') {
+    if (result) {
+      console.log(result)
       // Open the authentication window
-      const popupWindow = window.open(authUrl, 'coffergoogleAuthWin', "height=450px,width=750px");
+      if(result){
+        this.type=result
+        this.emailAuthentication(result)
+       
+      }           
+      
       // Check if the popup window is closed or not
-      const checkPopupClosed = setInterval(() => {
-        if (popupWindow?.closed) {
-          clearInterval(checkPopupClosed); // Stop checking once closed
-          location.reload(); // Refresh the page
-        }
-      }, 1000);
+      // const checkPopupClosed = setInterval(() => {
+      //   if (popupWindow?.closed) {
+      //     clearInterval(checkPopupClosed); // Stop checking once closed
+      //     location.reload(); // Refresh the page
+      //   }
+      // }, 1000);
     }
   });
 }
@@ -195,10 +238,90 @@ export class EmailComponent implements OnInit, AfterViewInit {
         //setInterval(function () {
         localStorage.removeItem('validationDone');
         this.isAuthenticated = false;
-        globalVar.emailAuthentication();
+        globalVar.emailAuthentication(this.type);
         //}, 10000);
       });
   }
+
+
+  handleMessageCountClick() {
+    if (this.type === 'outlook') {
+        this.getOutlookMessageCount();
+    } else if(this.type === 'gmail') {
+        this.getMessageCount();
+    }
+}
+
+handleNextPageClick() {
+  if (this.type === 'outlook') {
+      this.getNextPageOutlookMessages();
+  } else if(this.type === 'gmail') {
+      this.getNextPageMessages();
+  }
+}
+
+  getOutlookMessages() {
+    var globalVar = this;
+    console.log("ee")
+    this.httpservice.sendGetEmailRequest(URLUtils.OutllokemailMessages({ "token": localStorage.getItem('TOKEN'), "rows": 10 ,"labelid": 'INBOX'})).subscribe(
+      async (res: any) => {
+        if (!res.error) {
+          this.isFirstPage = true;
+          this.nextToken = res['@odata.nextLink'];
+          console.log(this.nextToken)
+          this.messages = res.value;
+          this.pageNumber = 1;
+          this.messagesMap.set(this.pageNumber, res);
+
+          // Fetch attachments for messages that have them
+          await Promise.all(this.messages.map(async (message: any) => {
+            message.fromName = message.from.emailAddress.name;
+            message.msgId = message.id
+            if (message.hasAttachments) {
+                message.attachments = await this.fetchAttachments(message.id);
+            }
+        }));
+        console.log(this.messages)
+          // this.messages.forEach((element: any) => {
+          //   element.fromName = element.from.emailAddress.name;
+          // });
+          this.isAuthenticated = true;
+        }
+      },
+      (error: any) => {
+        //setInterval(function () {
+        localStorage.removeItem('validationDone');
+        this.isAuthenticated = false;
+        globalVar.emailAuthentication(this.type);
+        //}, 10000);
+      });
+  }
+
+  fetchAttachments(messageId: string): Promise<any[]> {
+    return new Promise((resolve, reject) => {
+
+        this.httpservice.sendGetEmailRequest(URLUtils.OutlookMsgDetail({ "token": localStorage.getItem('TOKEN'),"id": messageId})).subscribe(
+            (res: any) => {
+                if (!res.error) {
+                   const attachments = res.attachments.value.map((attachment: any) => {
+                    attachment.filename = attachment.name; // Assign filename
+                    attachment.partId = attachment.id;
+                    return attachment;
+                });
+                    resolve(attachments);
+                } else {
+                    reject(res.error);
+                }
+            },
+            (error: any) => {
+                reject(error);
+            }
+        );
+    });
+}
+
+
+
   getNextPageMessages() {
     var globalVar = this;
     this.httpservice.sendGetEmailRequest(URLUtils.NextPageMessages({ "token": localStorage.getItem('TOKEN'), "rows": 10, "nextpagetoken": this.nextToken })).subscribe(
@@ -216,19 +339,63 @@ export class EmailComponent implements OnInit, AfterViewInit {
         // setInterval(function () {
         localStorage.removeItem('validationDone');
         this.isAuthenticated = false;
-        globalVar.emailAuthentication();
+        globalVar.emailAuthentication(this.type);
+        //}, 10000);
+      })
+  }
+  getNextPageOutlookMessages() {
+    var globalVar = this;
+    console.log("this necy",this.nextToken)
+    this.httpservice.sendGetEmailRequest(URLUtils.OutlookNextPageMessages({ "token": localStorage.getItem('TOKEN'), "rows": 10,"labelid": 'INBOX', "nextpageurl": this.nextToken })).subscribe(
+      async (res: any) => {
+        this.isFirstPage = false;
+        this.nextToken = res['@odata.nextLink'];
+        this.messages = res.value;
+        this.pageNumber = this.pageNumber + 1;
+        this.messagesMap.set(this.pageNumber, res);
+        // Fetch attachments for messages that have them
+          await Promise.all(this.messages.map(async (message: any) => {
+            message.fromName = message.from.emailAddress.name;
+            message.msgId = message.id
+            if (message.hasAttachments) {
+                message.attachments = await this.fetchAttachments(message.id);
+            }
+        }));
+      },
+      (error: any) => {
+        // setInterval(function () {
+        localStorage.removeItem('validationDone');
+        this.isAuthenticated = false;
+        globalVar.emailAuthentication(this.type);
         //}, 10000);
       })
   }
   onKeydown(event: any) {
     if (event.key === "Enter" || event.type === "click") {
-      this.httpservice.sendGetEmailRequest(URLUtils.searchMessages({ "token": localStorage.getItem('TOKEN'), "rows": 10, "search": this.searchText })).subscribe(
-        (res: any) => {
-          this.messages = res.messages;
+      this.httpservice.sendGetEmailRequest(URLUtils.searchMessages({"type":this.type, "token": localStorage.getItem('TOKEN'), "rows": 10, "search": this.searchText , "labelid":"INBOX" })).subscribe(
+       async (res: any) => {
+          if(this.type=='outlook'){
+            this.nextToken = res['@odata.nextLink'];
+            this.messages = res.value;
+            this.messagesMap.set(this.pageNumber, res);
+        // Fetch attachments for messages that have them
+          await Promise.all(this.messages.map(async (message: any) => {
+            message.fromName = message.from.emailAddress.name;
+            message.msgId = message.id
+            if (message.hasAttachments) {
+                message.attachments = await this.fetchAttachments(message.id);
+            }
+        }));
+
+          } else {
+            this.messages = res.messages;
           this.nextToken = res.nextPageToken;
           this.messages.forEach((element: any) => {
             element.fromName = element.from.split("<")[0];
           });
+
+          }
+          
         })
     }
   }
@@ -239,10 +406,20 @@ export class EmailComponent implements OnInit, AfterViewInit {
       this.isFirstPage = true;
     };
     let data = this.messagesMap.get(this.pageNumber);
-    this.nextToken = data?.nextPageToken;
+    console.log(data)
+    if(this.type=='outlook'){
+      this.nextToken = data['@odata.nextLink'];
+      this.messages = data?.value;
+
+    } else {
+      this.nextToken = data?.nextPageToken;
     this.messages = data?.messages;
+
+    }
+    
   }
   documentClick(msgid: any, partid: any) {
+    console.log(msgid,partid)
     this.msgAndpartId = {
       "msgId": msgid,
       "partId": partid
@@ -273,7 +450,8 @@ export class EmailComponent implements OnInit, AfterViewInit {
 
   getGroups() {
     this.httpservice.sendGetRequest(URLUtils.getGroups).subscribe((res: any) => {
-      this.groupViewItems = res?.data;
+      //this.groupViewItems = res?.data;
+      this.groupViewItems = res?.data.filter((group: any) => group.name !== 'AAM' && group.name !== 'SuperUser');
       this.groupViewItems.forEach((item: any) => {
         item.isChecked = false;
       })
@@ -321,8 +499,14 @@ export class EmailComponent implements OnInit, AfterViewInit {
       "enableDownload": true
     }
 
-    //console.log('obj',obj)
-    this.httpservice.sendPostEmailRequest(URLUtils.MessageDocUpload({ "token": localStorage.getItem('TOKEN'), "msgid": this.msgAndpartId.msgId, "partid": this.msgAndpartId.partId }), obj).subscribe((res: any) => {
+    console.log('obj',this.type)
+    var req;
+    if(this.type=='gmail'){
+      req = URLUtils.MessageDocUpload({ "token": localStorage.getItem('TOKEN'), "msgid": this.msgAndpartId.msgId, "partid": this.msgAndpartId.partId })
+    } else {
+      req = URLUtils.OutlookMessageDocUpload({ "token": localStorage.getItem('TOKEN'), "msgid": this.msgAndpartId.msgId, "partid": this.msgAndpartId.partId })
+    }
+    this.httpservice.sendPostEmailRequest(req, obj).subscribe((res: any) => {
       if (res) {
         this.spinnerService.hide();
         this.confirmationDialogService.confirm('Success', res.msg, false, '', '', false, 'sm', false);
@@ -399,6 +583,7 @@ export class EmailComponent implements OnInit, AfterViewInit {
   }
   onAttach() {
     localStorage.setItem('inputs', JSON.stringify(this.composeForm.value));
+    localStorage.setItem('type',this.type);
     this.emailService.emailEvent(true);
     if (this.product == 'corporate') {
       this.router.navigate(['/documents/view/firm']);
@@ -506,7 +691,7 @@ export class EmailComponent implements OnInit, AfterViewInit {
     if (!this.composeForm.valid) {
       return;
     }
-    this.httpservice.sendPostEmailRequest(URLUtils.sendMessage({ "token": localStorage.getItem('TOKEN') }), this.composeForm.value).subscribe((res: any) => {
+    this.httpservice.sendPostEmailRequest(URLUtils.sendMessage({ "token": localStorage.getItem('TOKEN'),"type":localStorage.getItem('type') }), this.composeForm.value).subscribe((res: any) => {
       if (res) {
         this.spinnerService.hide();
         this.confirmationDialogService.confirm('Success', 'Mail sent successfully.', false, '', '', false, 'sm', false);
@@ -598,17 +783,18 @@ export class EmailComponent implements OnInit, AfterViewInit {
   template: `
   <div mat-dialog-content>
   <div class="closeDialog">
-        <i class="fa fa-times closeBtn" (click)="closeDialog()" aria-hidden="true"></i>
+        <i class="fa fa-times closeBtn" (click)="onCloseDialog()" aria-hidden="true"></i>
     </div>
 
    <h1 mat-dialog-title class="mailoption">Choose a Mail account provider…</h1>
-      <mat-radio-group aria-label="Select an option">
-        <!-- <mat-radio-button value="1"><img class="gImg" src="assets/img/outlook.svg"/></mat-radio-button> -->
-        <mat-radio-button value="2"><img class="oImg" src="assets/img/google.svg"/></mat-radio-button>
+      <mat-radio-group aria-label="Select an option" [(ngModel)]="selectedOption">
+        <mat-radio-button value="outlook"><img class="gImg" src="assets/img/outlook.svg"/></mat-radio-button>
+        <mat-radio-button value="gmail"><img class="oImg" src="assets/img/google.svg"/></mat-radio-button>
       </mat-radio-group>
       <div mat-dialog-actions class="overviewSave savefilenameBtn">
-          <button type="reset" class="btn btn-default btncancel btnfont" (click)="closeDialog()">Cancel</button> 
-           <button type="submit" class="btn btn-default btnsave savefile pull-right btnfont" (click)="continue()">Continue</button> 
+          <button type="reset" class="btn btn-default btncancel btnfont" (click)="onCloseDialog()">Cancel</button> 
+           <button type="submit" class="btn btn-default btnsave savefile pull-right btnfont" 
+           [ngClass]="{ 'is-invalid': !selectedOption }" (click)="continue()">Continue</button> 
       </div> 
   </div>
 `,
@@ -616,22 +802,33 @@ export class EmailComponent implements OnInit, AfterViewInit {
 })
 export class ConfirmationDialogComponent {
   editDoc: any;
+  selectedOption: any;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public data: any,private toast: ToastrService,
     public dialogRef: MatDialogRef<ConfirmationDialogComponent>
   ) { }
 
   ngOnInit() {
-
+      console.log('selectedOption',this.selectedOption)
   }
 
   continue() {
-    this.dialogRef.close('continue');
+    this.dialogRef.close(this.selectedOption);
+  }
+  onCloseDialog() {
+    // Only close the dialog if an option is selected
+    if (this.selectedOption) {
+      this.closeDialog();
+    } 
+    else{
+      this.toast.error('Please choose a Gmail or Outlook account.')
+    }
   }
   closeDialog() {
     this.dialogRef.close()
   }
 
 }
+
 

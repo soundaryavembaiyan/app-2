@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 
-import { CommonModule } from '@angular/common';
+import { CommonModule,DatePipe } from '@angular/common';
 // import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { DocumentComponent } from './document.component';
@@ -87,7 +87,7 @@ import { MAT_RADIO_DEFAULT_OPTIONS, MatRadioModule } from '@angular/material/rad
     exports: [
         DocumentViewComponent,
     ],
-    providers: [BsDatepickerConfig,DocumentService,{
+    providers: [BsDatepickerConfig,DocumentService,DatePipe,{
         provide: MAT_RADIO_DEFAULT_OPTIONS,
         useValue: { color: 'cyan' },
     }],

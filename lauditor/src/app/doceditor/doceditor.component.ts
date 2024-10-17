@@ -24,7 +24,6 @@ import { MatMenuTrigger } from '@angular/material/menu';
 //import jsPDF from 'jspdf';
 
 
-
 @Component({
   selector: 'app-doceditor',
   templateUrl: './doceditor.component.html',
@@ -38,7 +37,7 @@ export class DoceditorComponent {
   @ViewChild('contento_', { static: false }) contento!: ElementRef;
   @ViewChildren('contento') contentoElements!: QueryList<ElementRef>;
   @ViewChild(LatexblockComponent) childComp!: LatexblockComponent;
-
+  @ViewChildren('tableInput') tableInput!: QueryList<ElementRef>;
   //@ViewChild(SaveasBoxComponent) saveComp!: SaveasBoxComponent;
 
   product = environment.product;
@@ -96,6 +95,7 @@ export class DoceditorComponent {
   contentTitleControl: any
 
   listData: any;
+  tableData: any;
   getContent: any;
 
   selectedSection: boolean = true;
@@ -147,12 +147,15 @@ export class DoceditorComponent {
   maxImages = 2; 
   getImage:any;
   supportedImageTypes: string[] = ['image/jpeg', 'image/png'];
-  
+  //columns: number[] = [];
+  //table: any[] = [];
+  columns: string[] = ['Column 1']; 
+  tableRows: string[][] = [[]];
+  tabData:any;
+
   @ViewChild('menuTrigger1') menuTrigger1!: MatMenuTrigger;
   @ViewChild('menuTrigger2') menuTrigger2!: MatMenuTrigger;
-  @ViewChild('fileInput') fileInput!: ElementRef;
-  columns: number[] = [];
-  table: any[] = [];
+  @ViewChild('fileInput') fileInput!: ElementRef; 
 
   // Listen to mouse leave event on the document
   @HostListener('document:mouseleave', ['$event'])
@@ -179,7 +182,7 @@ export class DoceditorComponent {
     private toast: ToastrService, private documentService: DocumentService, private cdr: ChangeDetectorRef,
     private renderer: Renderer2, private modalService: ModalService, private spinnerService: NgxSpinnerService, private confirmationDialogService: ConfirmationDialogService,
     public sanitizer: DomSanitizer, public dialog: MatDialog) {
-    // this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(this.url);
+     this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(this.url);
   }
 
   ngOnInit() {
@@ -381,22 +384,24 @@ export class DoceditorComponent {
   }
 
   addContent(type: any, value?: any, valueTitle?: any) {
-    // if(value === null){
-    //   this.toast.error('I null')
-    // }
+    // console.log('val',value)
     const randomId = this.idGenerator.generateId(10);
     const group = this.fb.group({
       randomId: [randomId],
       content: [type],
       contentData: ['', Validators.required],
       contentTitle: ['', Validators.required],
-      orderListItems: this.fb.array([this.createNestedContentItem()])
+      orderListItems: this.fb.array([this.createNestedContentItem()]),
+      tableRows: this.fb.array([this.createTableRow()])
     });
+    
     if (value || valueTitle) {
       group.get('contentData')?.setValue(value);
       group.get('contentTitle')?.setValue(valueTitle);
       const nestedContentItem = this.createNestedContentItem(value);
       (group.get('orderListItems') as FormArray).push(nestedContentItem);
+      const rows = this.fb.array([this.createTableRow(value)]);
+      group.setControl('tableRows', rows);  
     }
     return group;
   }
@@ -418,12 +423,44 @@ export class DoceditorComponent {
     }
     return group;
   }
+  // addContentTable(type: any, value?: any, valueTitle?: any) {
+  //   const randomId = this.idGenerator.generateId(10);
+  //   const group = this.fb.group({
+  //     randomId: [randomId],
+  //     content: [type],
+  //     contentData: ['', Validators.required],
+  //     contentTitle: ['', Validators.required],
+  //     tableRows: this.fb.array([])
+  //   });
+  //   if (value) {
+  //     group.get('contentData')?.setValue(value);
+  //     group.get('contentTitle')?.setValue(valueTitle);
+  //     const rows1 = this.createTableRow(value);
+  //     (group.get('tableRows') as FormArray).push(rows1);  
+  //   }
+  //   return group;
+  // }
+
+  addContentTable(type: string, tableRows?: FormArray) {
+    const randomId = this.idGenerator.generateId(10);
+    const group = this.fb.group({
+      randomId: [randomId],
+      content: [type],
+      contentData: ['', Validators.required],
+      contentTitle: ['', Validators.required],
+      tableRows: tableRows || this.fb.array([])  // provided FormArray
+    });
+  
+    // Push the new group into your content list form array
+    (this.myForm.get('contentListItems') as FormArray).push(group);
+  }
 
   addBlock(type: string, editBlock?: boolean, value?: any, valueTitle?: any) {
     this.isOpen = true;
     this.content = type;
     const contentListItems = this.myForm.get('contentListItems') as FormArray;
     //console.log('contentListItems', contentListItems)
+    //console.log('addB value', value)
 
     for (let i = 0; i < contentListItems.length; i++) {
       const item = contentListItems.at(i);
@@ -552,9 +589,15 @@ export class DoceditorComponent {
 
     // ***Table Condition*** //
     if (type === 'Table') {
-      //this.table = [];
-      this.columns = [0, 1]; // Initialize with 2 columns
-      this.addRow();  // Add a default row with same columns
+      // Set focus on the table fields
+      setTimeout(() => {
+        const newIndex = contentListItems.length - 1;
+        const inputs = document.querySelectorAll(`.oderAlign:nth-child(${newIndex + 1}) .tabInput.textfield`);
+        const lastInput = inputs[inputs.length - 1] as HTMLInputElement;
+        if (lastInput && !editBlock === true) {
+          lastInput.focus();
+        }
+      }, 100); 
     }
     // ***Table Condition*** //
 
@@ -583,42 +626,102 @@ export class DoceditorComponent {
       if (type === 'Image') {
         contentListItems.push(this.addContent(type, value, valueTitle));
       }
+      if (type === 'Table') {
+        contentListItems.push(this.addContentTable(type, value));        
+      }
     }
     else {
       contentListItems.push(this.addContent(type));
     }
   }
 
-  addRow() {
-    const newRow = Array(this.columns.length).fill('Enter value');
-    this.table.push(newRow);
-    //console.log('Ros:', newRow);
-    setTimeout(() => {
-      const textareas = document.querySelectorAll('.tabInput');
-      const lastTextarea = textareas[textareas.length - 2] as HTMLTextAreaElement;
-      lastTextarea.focus();
-    });
+  createTableRow(value?: any): FormArray {
+    //console.log('cc val', value)
+    console.log('this.columns',this.columns)
+    let row = this.fb.array([]);
+    if (value) {    
+      for (let i = 0; i < this.columns.length; i++) {
+        row.push(this.fb.control(value, Validators.required));
+      }
+    }
+    else {
+      for (let i = 0; i < this.columns.length; i++) {
+        row.push(this.fb.control('', Validators.required));
+      }
+    }
+    return row;
   }
+  
+  addRow() {
+    const contentListItems = this.myForm.get('contentListItems') as FormArray;
+    const lastItemGroup = contentListItems.at(contentListItems.length - 1) as FormGroup;
+    if (lastItemGroup) {
+      const tableControl = lastItemGroup.get('tableRows') as FormArray;
+      if (tableControl) {
+        tableControl.push(this.createTableRow());
+        setTimeout(() => {
+          this.setFocusOnInput(tableControl.length - 1, 0);
+        }, 0);
+      }
+    }
+    //this.setFocusOnFirstInput()  // Set focus on the table fields
+  }
+
   addColumn() {
-    if (this.columns.length < 4) {
-      this.columns.push(this.columns.length);  // Add new column
-      this.table = this.table.map(row => [...row, 'Enter value']); // Update all rows with new column
-      //console.log('table',this.table)
-      setTimeout(() => {
-        const textareas = document.querySelectorAll('.tabInput');
-        const lastTextarea = textareas[textareas.length - 2] as HTMLTextAreaElement;
-        lastTextarea.focus();
+    this.columns.push(`Column ${this.columns.length + 1}`);
+    const contentListItems = this.myForm.get('contentListItems') as FormArray;
+    const tableControl = contentListItems.at(contentListItems.length - 1)?.get('tableRows') as FormArray;
+    if (tableControl) {
+      tableControl.controls.forEach((row: any) => {
+        row.push(this.fb.control('', Validators.required));
       });
     }
+    this.setFocusOnFirstInput()  // Set focus on the table fields
   }
-  removeRow(i: number) {
-    //console.log('i',i)
-    this.table.splice(i, 1);
+
+  removeRow(index: number) {
+    const contentListItems = this.myForm.get('contentListItems') as FormArray;
+    const tableControl = contentListItems.at(contentListItems.length - 1)?.get('tableRows') as FormArray;
+    tableControl.removeAt(index);
   }
-  removeColumn() {
-    if (this.columns.length > 0) {
-      this.columns.pop();
-      this.table = this.table.map(row => row.slice(0, this.columns.length));
+
+  removeColumn(index: number) {
+    this.columns.splice(index, 1);
+    const contentListItems = this.myForm.get('contentListItems') as FormArray;
+    const tableControl = contentListItems.at(contentListItems.length - 1)?.get('tableRows') as FormArray;
+    tableControl.controls.forEach((row: any) => {
+      row.removeAt(index);
+    });
+  }
+
+  getControlName(rowIndex?: number, colIndex?: number) {
+    return `row${rowIndex}_col${colIndex}`; // Unique name for each input control
+  }
+
+  trackByIndex(index: number){
+    //console.log('tarckIndex',index)
+    return index;
+  }
+  
+  setFocusOnFirstInput() {
+      const contentListItems = this.myForm.get('contentListItems') as FormArray;
+      // Set focus on the table fields
+      setTimeout(() => {
+        const newIndex = contentListItems.length - 1;
+        const inputs = document.querySelectorAll(`.oderAlign:nth-child(${newIndex + 1}) .tabInput.textfield`);
+        const lastInput = inputs[inputs.length - 1] as HTMLInputElement;
+        if (lastInput) {
+          lastInput.focus();
+        }
+      }, 100);
+  }
+
+  setFocusOnInput(rowIndex: number, colIndex: number) {
+    // Calculate the index based on row and column.
+    const index = rowIndex * this.columns.length + colIndex;
+    const inputElement = this.tableInput.toArray()[index];
+    if (inputElement) {
+      inputElement.nativeElement.focus();
     }
   }
 
@@ -786,15 +889,17 @@ export class DoceditorComponent {
       this.toast.error('Document changes not saved. Please try again.');
       return;
     }
+    const link =  `/doceditor`;
+    window.location.href = link;
 
     // this.myForm.reset(); //reset form.
     // this.documentname = ' '
     //window.location.reload();
 
     //Navigated at same loc.
-    setTimeout(() => { 
-      window.location.reload();
-    }, 500);
+    // setTimeout(() => { 
+    //   window.location.reload();
+    // }, 500);
 
     // const preservedValues = {
     //   // title: this.myForm.get('title').value,
@@ -980,8 +1085,9 @@ export class DoceditorComponent {
     const contentListItems = this.myForm.get('contentListItems') as FormArray;
     // console.log('form', this.myForm)
     // console.log('only cont',contentListItems)
-    // console.log('len',contentListItems.value)
+    // console.log('cVal',contentListItems.value)
     // console.log('content', this.content)
+    // console.log('getContent', this.getContent)
 
     if (contentListItems.value.length === 0) {
       this.toast.error('Please add atleast one segment from the "Insert" menu to create the document.');
@@ -993,7 +1099,7 @@ export class DoceditorComponent {
       const item = contentListItems.at(i);
       if (item) {
         const getContent = item.get('content')?.value;
-
+        
         const currentContent = contentListItems.at(i).get('content')?.value;
         const previousContent = contentListItems.at(i - 1).get('content')?.value;
         // console.log('currentContent', currentContent)
@@ -1053,6 +1159,8 @@ export class DoceditorComponent {
       const item = contentListItems.at(i);
       if (item) {
         const getContent = item.get('content')?.value;
+        const tableRows = item.get('tableRows')?.value;
+        //console.log('tableRows', tableRows)
 
         this.contentDataControl = item.get('contentData');
         this.contentTitleControl = item.get('contentTitle');
@@ -1061,7 +1169,7 @@ export class DoceditorComponent {
         // console.log('contentTitleControl',this.contentTitleControl)
 
         const data = this.contentDataControl.value;
-        //console.log('data',data)
+        // console.log('data',data)
         if (getContent == 'Overview' || getContent == 'Section' || getContent == 'Sub Section' || getContent == 'Sub Sub Section' || getContent == 'Paragraph') {
           if (data === '' || data === undefined || data === " " || data === null) {
             this.toast.error(`${getContent} is mandatory. Please add the text.`);
@@ -1074,21 +1182,26 @@ export class DoceditorComponent {
             return;
           }
         }
-
-        const orderListItems = item.get('orderListItems') as FormArray; // orderListItems within each item
-        // console.log('orrrr',orderListItems)
-        for (let j = 0; j < orderListItems.length; j++) {
-          const itemo = orderListItems.at(j);
-          if (itemo) {
-            this.listData += `\\item ${itemo.get('contentData')?.value}`; //get all ordered & unordered lists
-            const data2 = itemo.value?.contentData;
-            if (getContent == 'Numbered List' || getContent == 'Bulleted List') {
-              if (data2 === '' || data2 === undefined || data2 === " "|| data2 === null) {
+        if (getContent == 'Numbered List' || getContent == 'Bulleted List') {
+          const orderListItems = item.get('orderListItems') as FormArray; // orderListItems within each item
+          //console.log('orrrr',orderListItems)
+          for (let j = 0; j < orderListItems.length; j++) {
+            const itemo = orderListItems.at(j);
+            //console.log('itemo11',itemo)
+            if (itemo) {
+              this.listData += `\\item ${itemo.get('contentData')?.value}`; //get all ordered & unordered lists
+              const data2 = itemo.value?.contentData;
+              //console.log('d1',data2)
+              if (data2 === '' || data2 === undefined || data2 === " " || data2 === null) {
                 this.toast.error(`${getContent} is mandatory. Please add the text.`);
                 return;
               }
             }
           }
+        }
+        if (tableRows && tableRows.some((row: any) => row.some((cell: any) => cell === ""))) {
+          this.toast.error(`${getContent} is mandatory. Please add the text.`);
+          return;
         }
       }
     }
@@ -1109,7 +1222,7 @@ export class DoceditorComponent {
 
   saveFile() {
     const saveForm = this.saveForm.value.documentname;
-    console.log('saveform', saveForm)
+    //console.log('saveform', saveForm)
     // if (saveForm === '' || saveForm === " " || saveForm === null && !this.documentId) {
     //   this.submitted = true;
     //   return
@@ -1138,7 +1251,7 @@ export class DoceditorComponent {
     // {${this.title}}<ltk>\\author{${this.author}}<ltk>\\date{}<ltk>\\begin{document}<ltk>\\maketitle`;
     //let latexDocument = `\\documentclass{article}\\usepackage{graphicx}\\usepackage{wrapfig}\\usepackage{tabularx}\\usepackage{hyperref}\\usepackage{geometry}\\geometry{a4paper,total={170mm,257mm},left=20mm,top=20mm,}<ltk>\\title{${this.title}}<ltk>\\author{${this.author}}<ltk>\\date{}<ltk>\\begin{document}<ltk>\\maketitle`;
     
-      let latexDocument = `\\documentclass{article}\\usepackage{graphicx}\\usepackage{tabularx}\\usepackage{hyperref}\\usepackage{geometry}\\geometry{a4paper,total={170mm,257mm},left=20mm,top=20mm,}<ltk>\\title{${this.title}}<ltk>\\author{${this.author}}<ltk>\\date{}<ltk>\\begin{document}<ltk>\\maketitle`;
+    let latexDocument = `\\documentclass{article}\\usepackage{graphicx}\\usepackage{tabularx}\\usepackage{hyperref}\\usepackage{geometry}\\geometry{a4paper,total={170mm,257mm},left=20mm,top=20mm,}<ltk>\\title{${this.title}}<ltk>\\author{${this.author}}<ltk>\\date{}<ltk>\\begin{document}<ltk>\\maketitle`;
 
     // Check if the document needs to be saved
     if (!this.documentId) { // if the docId is empty  || contentListItems.length === 0
@@ -1180,16 +1293,55 @@ export class DoceditorComponent {
         let getContent = item.get('content')?.value;
         this.contentDataControl = item.get('contentData');
         this.contentTitleControl = item.get('contentTitle');
+        // console.log('process contentDataControl:', this.contentDataControl)
 
-        //Track the lists contentData
-        const orderListItems = item.get('orderListItems') as FormArray; // orderListItems within each item
-        this.listData = '';//prevent undefined!!!
-        for (let j = 0; j < orderListItems.length; j++) {
-          const itemo = orderListItems.at(j);
-          if (itemo) {
-            this.listData += `\\item ${itemo.get('contentData')?.value}`; //get all ordered & unordered lists
+        //Track the Orderlists contentData
+        if (getContent === 'Numbered List' || getContent === 'Bulleted List') {
+          const orderListItems = item.get('orderListItems') as FormArray; // orderListItems within each item
+          this.listData = '';//prevent undefined!!!
+          for (let j = 0; j < orderListItems.length; j++) {
+            const itemo = orderListItems.at(j);
+            if (itemo) {
+              this.listData += `\\item ${itemo.get('contentData')?.value}`; //get all ordered & unordered lists
+              //console.log('ll',this.listData)
+            }
           }
         }
+                
+        //Track the Tablelists contentData
+        if (getContent === 'Table') {
+          const tableListItems = item.get('tableRows') as FormArray;
+          //console.log('tableListItems', tableListItems);
+          let allTableData = '';
+          let keyString = '{ ';
+          // Construct the keyString for the column definitions
+          if (tableListItems.length > 0) {
+            const itemo = tableListItems.at(0) as FormArray; // Take the first row as a reference for columns
+            for (let j = 0; j < itemo.length; j++) {
+              keyString += '<thsep>X'; // Add <thsep> between X for each column in LaTeX format
+            }
+            keyString += ' <thsep>} \\hline ';
+          }
+
+          for (let i = 0; i < tableListItems.length; i++) {
+            const itemo = tableListItems.at(i) as FormArray;
+            // console.log('tab-itemo', itemo);
+
+            let rowData = '';  // Store each row's value
+            for (let j = 0; j < itemo.length; j++) {
+              const cellValue = itemo.at(j).value;
+              //console.log('cellValue', cellValue);
+              rowData += `${cellValue}<csep>`;  // Add cell value and format using <csep> for column separators
+            }
+
+            rowData = rowData.replace(/<csep>$/, '<rsep> \\hline ');  // Replace the last <csep> with <rsep> for row end
+            allTableData += rowData.trim() + " ";  // Store all table data in rows
+          }
+          // Final formatted LaTeX table string
+          this.tableData = `${keyString} ${allTableData}`;
+          //console.log('Formatted LaTeX Table: ', this.tableData);
+        }
+
         blocksProcessed++;
 
         // Append block content to the pageContent
@@ -1203,17 +1355,14 @@ export class DoceditorComponent {
         // Check if the block count exceeds the threshold or it's the last item
         if (blocksProcessed > maxBlocks || i === contentListItems.length - 1) {
           //this.toast.info('Following content will move to next page')
-
-          // Prepare request object
           let reqq: any;
           if (currentPage === 1) {
-            // For the first page, include both latexDocument and pageContent
             reqq = {
               "document": latexDocument + pageContent.replace(/\n/g, '<nln>'),
               "page": currentPage
             };
-          } else {
-            // For subsequent pages, include only pageContent if it's the last page
+          }
+          else {
             reqq = {
               "document": pageContent.replace(/\n/g, '<nln>'),
               "page": currentPage
@@ -1295,7 +1444,10 @@ export class DoceditorComponent {
   getBlockContent(contentType: string) {
     // console.log('contenType',contentType)
     // console.log('contentTitleControl',this.contentTitleControl)
-    // console.log('contentDataControl',this.contentDataControl)
+    // console.log('getBlock contentDataControl',this.contentDataControl)
+    // console.log('getBlock listData',this.listData)
+    //  console.log('getBlock tableData',this.tableData)
+
     let imagesFolder = "/home/ubuntu/latekapi/uploads";
     let userid = localStorage.getItem('user_id');
 
@@ -1316,8 +1468,8 @@ export class DoceditorComponent {
         return `\\begin{itemize}${this.listData}\\end{itemize}`;
       case 'Image':
          return `\\vspace{4\\baselineskip} \\begin{figure}[h] \\centering \\includegraphics[width=0.9\\textwidth] {${imagesFolder}/${userid}/${this.contentDataControl.value}} \\caption{${this.contentTitleControl.value}} \\end{figure}`;
-         //return `\\begin{figure}[h] \\centering \\includegraphics[width=0.9\\textwidth] {${imagesFolder}/${userid}/${this.contentDataControl.value}} \\caption{${this.contentTitleControl.value}} \\end{figure}`;
-         //return `\\begin{figure}[h] \\includegraphics[width=0.8\\textwidth]{${imagesFolder}/${userid}/${this.contentDataControl.value}} \\caption{${this.contentTitleControl.value}} \\end{figure}`;
+      case 'Table':
+        return `\\begin{tabularx}{1.0\\textwidth} ${this.tableData} \\end{tabularx}`
       case 'Page Break':
         return `\\newpage`;
       default:
@@ -1592,24 +1744,6 @@ export class DoceditorComponent {
           blockType: 'Bulleted List',
           handler: (args: string[]) => ({ type: 'Bulleted List', content: args[0] || '', position: lateX.indexOf(args[0] || '') })
         }, 
-        // {
-        //   regex: /\\begin\{figure\}[^]*?\\includegraphics\[.*?\]\{([^}]+)\}[^]*?\\caption\{(.*?)\}[^]*?\\end\{figure\}/g,
-        //   blockType: 'Image',
-        //   handler: (args: string[]) => {
-        //     const imagePath = args[1]; 
-        //     const caption = args[2] ? args[2] : ''; // Handle empty captions
-        //     const fileName = imagePath ? imagePath.substring(imagePath.lastIndexOf('/') + 1) : '';  // Safely extract the filename
-        // console.log('imagePath:', imagePath);
-        // console.log('caption:', caption || 'No caption provided');
-        // console.log('fileName:', fileName);
-        //     return { 
-        //       type: 'Image', 
-        //       title: caption,  // Set caption as title or 'No caption provided'
-        //       content: fileName, 
-        //       position: lateX.indexOf(args[0]) 
-        //     };
-        //   }
-        // }
         {
           regex: /\\begin\{figure\}[^]*?\\centering[^]*?\\includegraphics\[[^\]]*\]\s*\{([^}]+)\}\s*\\caption\{(.*?)\}\s*\\end\{figure\}/g,
           blockType: 'Image',
@@ -1624,9 +1758,16 @@ export class DoceditorComponent {
               position: lateX.indexOf(args[0]) 
             };
           }
-        }
-        
-        
+        },
+        {
+          regex: /\\begin\{tabularx\}[^]*?\\end\{tabularx\}/g,
+          blockType: 'Table',
+          handler: (args: string[]) => ({ 
+            type: 'Table', 
+            content: args[0] || '', 
+            position: lateX.indexOf(args[0] || '') 
+          })
+        }  
       ];
       //console.log('extractionRules',extractionRules)
       const extractedBlocks: any[] = [];
@@ -1682,6 +1823,33 @@ export class DoceditorComponent {
           case 'Image':
             this.addBlock('Image', true, content, block.title);
             break;
+          // case 'Table':
+          //   const tableRows = content.match(/\\hline\s*([^\\]*)/g);
+          //   const tableData = tableRows ? tableRows.map((row: any) => row.replace(/\\hline\s*/, '').trim()).filter((row: any) => row !== '') : [];
+          //   if (tableData.length > 0) {
+          //     this.addBlock('Table', true, tableData);
+          //   }
+          //   break;
+          case 'Table':
+            const cleanedContent = block.content
+            .replace(/\\begin{tabularx}\{.*?\}.*?\{.*?\}/g, '') // Remove \begin{tabularx}{...}{...}
+            .replace(/\\end{tabularx}/g, '')                    // Remove \end{tabularx}
+            .replace(/\\hline/g, '')                            // Remove any \hline commands
+            .trim();
+          const rows = cleanedContent.split('<rsep>').map((row: string) => row.trim()).filter((row: any) => row); // split content into rows using <rsep>
+          const tableRows: FormArray = this.fb.array([]);
+          // Iterate each row to extract columns
+          rows.forEach((rowData: string) => {
+            const columns = rowData.split('<csep>').map(col => col.trim());
+    
+            // Create a new FormArray for the row
+            const rowFormArray = this.fb.array(columns.map(columnData => this.fb.control(columnData)));
+    
+            // Push the FormArray representing the row into the tableRows FormArray
+            tableRows.push(rowFormArray);
+          });
+          this.addContentTable('Table', tableRows);
+          break;
           // Add cases for other types of blocks
         }
         //console.log('extractedBlocks',extractedBlocks)
@@ -1798,10 +1966,11 @@ export class DoceditorComponent {
       this.httpservice.sendDeleteLatexRequest(URLUtils.deleteDocid(this.documentId)).subscribe((res: any) => {
         if (!res.error) {
           this.toast.success('Document deleted successfully.');
-          //window.location.reload();
-          setTimeout(() => {
-            window.location.reload();
-          }, 500);
+          // setTimeout(() => {
+          //   window.location.reload();
+          // }, 500);
+          const link =  `/doceditor`;
+          window.location.href = link;
         }
       },
         (error: HttpErrorResponse) => {
@@ -2400,7 +2569,6 @@ export class ContentDialogComponent {
       this.toast.error('\\ should not be the first character');
       return;
     }
-
   }
 
   restricttextSpace(event: any) {

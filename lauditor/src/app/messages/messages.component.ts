@@ -37,6 +37,7 @@ export class MessagesComponent implements OnInit {
   @ViewChildren('item')
   itemElements!: QueryList<any>;
   selectedValue: string = 'clients';
+  hideClient = false;
   date:any;
   private itemContainer: any;
   private scrollContainer: any;
@@ -235,8 +236,22 @@ export class MessagesComponent implements OnInit {
   StartVideo(){
     let token = localStorage.getItem('TOKEN')
     let name = localStorage.getItem('name')
-    const link =  `${environment.AVChat}?logintype=pro&token=${token}&jid=${URLUtils.get_jid()}&name=${name}`;
-    window.location.href = link;
+
+    // Check role and set hideClient accordingly
+    if (localStorage.getItem('role') === 'AAM') {
+      this.hideClient = true;
+    }
+    
+    const link =  `${environment.AVChat}?logintype=pro&token=${token}&jid=${URLUtils.get_jid()}&name=${name}&hideclient=${this.hideClient}`;
+    //window.location.href = link;
+    // Open the authentication window
+    window.open(link, 'AV Chat', 'noopener,noreferrer');
+    history.pushState(null, '', window.location.href);
+      window.onpopstate = function() {
+          history.go(1);
+      };
+
+  
   }
   stanzaHandler(msg: any) {
     // Strophe.ui.conn.addHandler(Strophe.ui.stanzaHandler, null, "message")

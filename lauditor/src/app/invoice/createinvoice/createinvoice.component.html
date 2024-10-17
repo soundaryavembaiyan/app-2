@@ -391,7 +391,7 @@
 
     <th>
       <div class="form-group input-group">
-        <input  placeholder="(%)" maxlength="5" (input)="totalVal($event)" min="0" max="100" step="any" class="form-controle" formControlName="discount" name="Disc" />
+        <input  placeholder="(%)" maxlength="5" (input)="discountVal($event)" min="0" max="100" step="any" class="form-controle" formControlName="discount" name="Disc" />
       </div>
     
       <div *ngIf="f['discount'].errors" class="errorStyle">
@@ -414,7 +414,7 @@
 
     <th>
       <div class="form-group input-group">
-        <input  placeholder="(%)" maxlength="5" (input)="totalVal($event)"  min="0" max="100" step="any" class="form-controle" formControlName="tax" name="Disc" />
+        <input  placeholder="(%)" maxlength="5" (input)="taxVal($event)"  min="0" max="100" step="any" class="form-controle" formControlName="tax" name="Disc" />
       </div>
     
       <div *ngIf="f['tax'].errors" class="errorStyle">

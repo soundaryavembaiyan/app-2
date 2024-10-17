@@ -333,11 +333,20 @@ export class DashboardComponent implements OnInit, OnChanges {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         const activeItem = this.navItem.find(item => this.router.url.includes(item.link));
-        // console.log('activeItem',activeItem)
+        //console.log('activeItem',activeItem)
         if (activeItem) {
           this.categoryName = activeItem.name;
+          //console.log('categoryName',this.categoryName)
+
           localStorage.setItem('categoryName', this.categoryName);
           localStorage.setItem('activeNavItem', activeItem.id);
+
+          if (this.product === 'corporate' && activeItem.name === 'Groups') {
+            this.categoryName = 'Departments'; // Change 'Groups' to 'Departments'
+            activeItem.name = 'Departments';
+            localStorage.setItem('categoryName', this.categoryName); // Update localStorage
+            localStorage.setItem('activeNavItem', activeItem.id);
+          }
         }
         // else {
         //   this.categoryName = 'Dashboard';

@@ -8,6 +8,7 @@ import { DatePipe } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { ChangeDetectorRef, ElementRef, ViewChild } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-createinvoice',
@@ -465,8 +466,13 @@ export class CreateinvoiceComponent {
   calculateAmount(item: FormGroup): number {
     const quantity = item.get('quantity')?.value;
     const unitPrice = item.get('unitPrice')?.value;
+        
+    // Check if both values are valid numbers, otherwise return 0
+    if (isNaN(quantity) || isNaN(unitPrice)) {
+      return 0;
+    }
+
     const totalAmount = quantity * unitPrice;
-  
     // Round off to two decimal places
     const roundedAmount = Number(totalAmount.toFixed(2));
     return roundedAmount;
@@ -544,11 +550,25 @@ export class CreateinvoiceComponent {
   onFocused(e: any) {
   }
 
+  // getClients() {
+  //   this.relationshipSubscribe = this.httpservice.getFeaturesdata(URLUtils.getAllRelationship).subscribe((res: any) => {
+  //     this.data = res?.data?.relationships;
+  //     //console.log('entityclients', this.data)
+  //   });
+  // }
   getClients() {
-    this.relationshipSubscribe = this.httpservice.getFeaturesdata(URLUtils.getAllRelationship).subscribe((res: any) => {
-      this.data = res?.data?.relationships;
-      //console.log(this.data)
-    });
+    //forkJoin - Fetching data from multiple API endpoints & combining their res.
+    this.relationshipSubscribe = forkJoin([
+      this.httpservice.getFeaturesdata(URLUtils.getAllRelationship),
+      this.httpservice.getFeaturesdata(URLUtils.getCalenderExternal)
+    ]).subscribe(
+      ([entityRes, corporateRes]: [any, any]) => {
+        // Extracting entity and corporate clients
+        const entityClients = entityRes?.data?.relationships;
+        const corporateClients = corporateRes?.relationships;
+        this.data = [...entityClients, ...corporateClients]; // Combine all clients into a single
+        //console.log('Combined clientsData:', this.data);
+      });
   }
 
   get f() { return this.createinvoiceForm.controls; }
@@ -589,16 +609,50 @@ export class CreateinvoiceComponent {
     } else {
       inputElement.classList.remove('has-value');
     }
-
   }
 
-  totalVal(event: Event){
+  // totalVal(event: Event){
+  //   const inputElement = event.target as HTMLInputElement;
+  //   if (!inputElement.value.match(/^(?!0$)\d+(\.\d{0,2})?$/))  //Accept 0=/^\d+(\.\d{0,2})?$/
+  //   {
+  //     inputElement.value = '';
+  //   }
+  // }
+  discountVal(event: Event) {
     const inputElement = event.target as HTMLInputElement;
-    if (!inputElement.value.match(/^(?!0$)\d+(\.\d{0,2})?$/))  //Accept 0=/^\d+(\.\d{0,2})?$/
-    {
+    const trimmedValue = inputElement.value.trim();
+  
+    // Update the value to be trimmed
+    inputElement.value = trimmedValue;
+
+    if (!trimmedValue.match(/^(?!0$)\d+(\.\d{0,2})?$/) && trimmedValue !== '') {
       inputElement.value = '';
     }
+    // Update the form control values
+    const discountControl = this.createinvoiceForm.get('discount');
+    if (discountControl) {
+      discountControl.setValue(inputElement.value, { emitEvent: false });
+      discountControl.updateValueAndValidity();
+    }
   }
+  taxVal(event: Event) {
+    const inputElement = event.target as HTMLInputElement;
+    const trimmedValue = inputElement.value.trim();
+  
+    // Update the value to be trimmed
+    inputElement.value = trimmedValue;
+  
+    if (!trimmedValue.match(/^(?!0$)\d+(\.\d{0,2})?$/) && trimmedValue !== '') {
+      inputElement.value = '';
+    }
+    // Update the form control values
+    const taxControl = this.createinvoiceForm.get('tax');
+    if (taxControl) {
+      taxControl.setValue(inputElement.value, { emitEvent: false });
+      taxControl.updateValueAndValidity();
+    }
+  }
+  
 
   validateInput(event: any) {
     const input = event.key;

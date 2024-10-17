@@ -1205,24 +1205,206 @@ button.mat-button {
     margin-top: -3px;
 }
 
-.deltabIcon {
+// .deltabIcon {
+//     margin-left: 10px;
+//     margin-top: 12px;
+//     float: right;
+//     cursor: pointer;
+//     font-weight: 900;
+//     font-size: 18px;
+// }
+
+// .tabInput {
+//     border-radius: 1px;
+//     border: 1px solid #CED4DA;
+//     background: #EEE;
+//     height: 40px;
+//     text-align: justify;
+//     //font-weight: 600;
+// }
+
+// .tabInput::placeholder {
+//     /* Most modern browsers */
+//     color: #727272;
+//     font-size: 16px;
+//     opacity: 1;
+// }
+
+// .table-container {
+//     padding: 5px;
+//     display: flex;
+//     flex-direction: column;
+//     //gap: 10px;
+// }
+
+// .table-row {
+//     display: flex;
+//     //width: 100%;
+//     //gap: 10px; /* Space between columns */
+// }
+
+// .table-column {
+//     display: flex;
+//     flex-direction: column;
+//     position: relative;
+//     // flex: 1;
+//     flex: none;
+//     //padding: 5px;
+// }
+
+// input {
+//     width: 100%;
+//     //padding: 10px;
+//     box-sizing: border-box;
+// }
+
+// .remove-column-btn {
+//     position: absolute;
+//     top: -20px;
+//     right: -10px;
+//     font-size: 18px;
+//     border: 0px;
+// }
+
+// .remove-row-btn {
+//     margin-left: 10px;
+//     background-color: red;
+//     color: white;
+//     border: none;
+//     border-radius: 3px;
+//     cursor: pointer;
+// }
+
+// .add-column-btn,
+// .add-row-btn {
+//     margin-top: 10px;
+//     padding: 5px 10px;
+//     background-color: #00498e;
+//     color: white;
+//     border: none;
+//     border-radius: 3px;
+//     cursor: pointer;
+// }
+
+// .add-column-btn:disabled {
+//     background-color: #d3d3d3;
+// }
+
+// // Responsive Styles
+// // Adjust font sizes for smaller screens
+// @media only screen and (max-width: 768px) {
+//     .tabInput {
+//         width: 45px;
+//     }
+
+//     .deltabIcon,
+//     .remove-column-btn,
+//     .add-column-btn,
+//     .add-row-btn {
+//         font-size: 1em;
+//     }
+// }
+
+// // Adjust for tablet screens
+// @media only screen and (min-width: 768px) and (max-width: 1024px) {
+//     .tabInput {
+//         width: 105px;
+//     }
+
+//     .remove-column-btn {
+//         margin-right: 7px;
+//     }
+// }
+
+// // Adjust for tablet view
+// @media only screen and (min-width: 400px) and (max-width: 768px) {
+//     .tabInput {
+//         width: 74px;
+//     }
+
+//     .remove-column-btn {
+//         margin-right: 7px;
+//     }
+// }
+
+.table-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.table-row {
+    display: flex;
+    width: 92%;
+    padding-right: 5px;
+    flex-wrap: nowrap;
+    margin-left: 15px;
+}
+
+.table-column {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.tabInput {
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 1px;
+    border: 1px solid #CED4DA;
+    background: #EEE;
+    height: 40px;
+    text-align: justify;
+}
+
+.tabInput::placeholder {
+    color: #727272;
+    opacity: 1;
+}
+
+.remove-column-btn {
+    position: absolute;
+    top: -33px;
+    right: -1px;
+    font-size: 18px;
+    padding-top: 10px;
+    border: 0px;
+}
+
+.delo {
+    color: white;
+    cursor: not-allowed;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.deltabIcon,
+.delo {
+    cursor: pointer;
     margin-left: 10px;
+    margin-top: 12px;
     float: right;
     cursor: pointer;
     font-weight: 900;
     font-size: 18px;
 }
-.tabInput{
-    border-radius: 1px;
-    border: 1px solid #CED4DA;
-    background: #EEE;
-    height: 40px;
-    font-size: 18px;
-    text-align: justify;
-    font-weight: 600;
+
+.add-column-btn,
+.add-row-btn {
+    // margin-top: 10px;
+    // margin-left: 20px;
+    margin: 15px;
+    padding: 5px 10px;
+    background-color: #00498e;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
 }
-.tabInput::placeholder { /* Most modern browsers */
-    color: #727272;
-    font-size: 17px;
-    opacity: 1;
+
+.add-column-btn:disabled {
+    background-color: #d3d3d3;
 }

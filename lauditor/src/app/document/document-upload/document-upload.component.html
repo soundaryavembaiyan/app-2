@@ -190,12 +190,11 @@
       <label for="title" 
         class=" selected">Selected Document(s)</label>
       <div class="row">
-        <div class=" col-6 m-tb"
-          [ngClass]="{'mouseAction':uploadDocs.length==0}">
+        <!-- <div class=" col-6 m-tb" [ngClass]="{'mouseAction':uploadDocs.length==0}">
           <!-- <div class="btnaction">
             <a href="#" class="selectprior optionhigh active"> Enable Download</a>
             <a href="#" class="selectprior optionaling"> Disable Download</a>
-          </div> -->
+          </div> --
           <div class="btn-group buttonSize" role="group" aria-label="Basic radio toggle button group">
             <input type="radio" class="btn-check" name="btnradio" id="btnradio1"
               autocomplete="off" [checked]="checker">
@@ -207,21 +206,21 @@
             <label class="btn btn-outline-primary" for="btnradio2"
               (click)="docEnable('disable')">Disable Download</label>
           </div>
-
         </div>
         <div class="col-6 m-tb width-align-upload" [ngClass]="{'mouseAction':uploadDocs.length==0}">
-          <div class="btn-group" role="group" aria-label="Basic radio toggle
-            button group">
+          <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
             <!-- <input type="radio" class="btn-check" name="btnradio1" id="btnradio3" autocomplete="off">
             <label class="btn btn-outline-primary active" for="btnradio3" (click)="filterDoc('editMeta')">Edit Metadeta</label> -->
             <!-- <input type="radio" class="btn-check" name="btnradio1"
-              id="btnradio4" autocomplete="off"> -->
+              id="btnradio4" autocomplete="off"> --
             <label class="btn btn-outline-primary" for="btnradio4" [ngClass]="{'active':addTag}"
               (click)="filterDoc('addTags')">Add Tags</label>
+
               <input type="radio" class="btn-check" name="btnradio" id="btnradio3"
               autocomplete="off"  [checked]="encryptDisabled">
             <label class="btn btn-outline-primary" for="btnradio3"
               (click)="encryptEnable('enable')">Enable Encryption</label>
+              
               <input type="radio" class="btn-check" name="btnradio" id="btnradio5"
               autocomplete="off" [checked]="!encryptDisabled">
             <label class="btn btn-outline-primary" for="btnradio5"
@@ -230,8 +229,47 @@
           <div *ngIf="!editMetaFlag" class="selectAll float-right"> Select All
             <input  type="checkbox" class="inputEl" #inputEl [checked]="allCheck" (change)="checkAllItem(inputEl.checked)">
           </div>
+        </div> -->
 
+        
+        <!--Enable/Disable Download-->
+        <div class="col-6 m-tb" [ngClass]="{'mouseAction': uploadDocs.length == 0}">
+          <div class="btn-group buttonSize" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" [checked]="downloadDisabled">
+            <label class="btn btn-outline-primary" for="btnradio1"
+              [ngClass]="{'active': downloadDisabled && uploadDocs.length > 0}" 
+              (click)="docEnable('disable')">Enable Download</label>
+      
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" [checked]="!downloadDisabled">
+            <label class="btn btn-outline-primary" for="btnradio2"
+              [ngClass]="{'active': !downloadDisabled && uploadDocs.length > 0}" 
+              (click)="docEnable('enable')">Disable Download</label>
+          </div>
         </div>
+        
+        <!--Enable/Disable Encryption-->
+        <div class="col-6 m-tb width-align-upload" [ngClass]="{'mouseAction': uploadDocs.length == 0}">
+          <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <label class="btn btn-outline-primary" for="btnradio4" [ngClass]="{'active': addTag && uploadDocs.length > 0}"
+              (click)="filterDoc('addTags')">Add Tags</label>
+      
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" [checked]="encryptDisabled">
+            <label class="btn btn-outline-primary" for="btnradio3"
+              [ngClass]="{'active': encryptDisabled && uploadDocs.length > 0}" 
+              (click)="encryptEnable('enable')">Enable Encryption</label>
+      
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off" [checked]="!encryptDisabled">
+            <label class="btn btn-outline-primary" for="btnradio5"
+              [ngClass]="{'active': !encryptDisabled && uploadDocs.length > 0}" 
+              (click)="encryptEnable('disable')">Disable Encryption</label>
+          </div>
+          <div *ngIf="!editMetaFlag" class="selectAll float-right">
+            Select All
+            <input type="checkbox" class="inputEl" #inputEl [checked]="allCheck" (change)="checkAllItem(inputEl.checked)">
+          </div>
+        </div>
+
+        <!--File Enable/Disable actions-->
         <div class="codeAlign">
           <div class="cod" *ngFor="let item of uploadDocs;let i= index">
 
@@ -253,8 +291,7 @@
                     <td class="icons" *ngIf="addTag"><input
                         type="checkbox" [checked]="item.checked" #inputE2
                         (change)="checkedItem(inputE2.checked,item)"></td>
-                    <td class="icons" [ngClass]="{'disable':
-                      !item.downloadDisabled}"><i class="fa fa-download"
+                    <td class="icons" [ngClass]="{'disable': !item.downloadDisabled}"><i class="fa fa-download"
                         (click)="disableDoc(item ,item.downloadDisabled)"></i></td>
                     <!-- <td class="icons" *ngIf="item.custom_encrypt" (click)="encrypttoggle(item ,item.downloadDisabled)" matTooltip="Click to Disable Encryption">
                         <mat-icon>lock</mat-icon>
@@ -367,7 +404,7 @@
                     <div class="col-5">
                       <div class="form-group name-set">
                         <label for="title" class="fontbold tab-margin">Tag Type</label>
-                        <input type="text" [(ngModel)]="value.tagtype"
+                        <input type="text" [(ngModel)]="value.tagtype" maxlength="30"
                         (input)="restricttextSpace($event)" pattern="[^\s]*"
                           #name="ngModel" name="tags{{ i }}"
                           class="form-control textbox" id="caseType">
@@ -376,7 +413,7 @@
                     <div class="col-5">
                       <div class="form-group name-set">
                         <label for="title" class="fontbold tab-margin">Tags</label>
-                        <input type="text" [(ngModel)]="value.tag"
+                        <input type="text" [(ngModel)]="value.tag" maxlength="100"
                         (input)="restricttextSpace($event)" pattern="[^\s]*"
                           #name="ngModel" name="tags{{ i }}"
                           class="form-control textbox" id="caseType">

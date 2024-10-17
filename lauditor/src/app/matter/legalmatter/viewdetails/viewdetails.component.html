@@ -1032,7 +1032,11 @@
               <td class="tabclass doco">{{doc.description}}</td>
               <td class="tabclass">{{doc.created | date: 'MMMM dd, yyyy'}}</td>
               <td class="tabclass">{{doc.addedBy}}</td>
-              <td class="tabclass"><img (click)="viewDocument(doc)" src="assets/img/eyesico.svg"/></td>
+              <td class="tabclass">
+                <button (click)="viewDocument(doc)" style="background:none; border:none; padding:0;">
+                    <img src="assets/img/eyesico.svg" alt="View Document" />
+                </button>
+            </td>
               <td class="tabclass"><i (click)="documentDelete(doc)" *ngIf="data?.type == 'internal'"  class="fa fa-regular fa-circle-xmark calimg calitem input-group-append sgroup removeddoc" aria-hidden="true"></i></td>
             </tr>
           </tbody>

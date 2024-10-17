@@ -482,7 +482,8 @@ export class GeneralinternalviewdetailsComponent implements OnInit {
         }
       } else {
         this.teammembersList = this.selectedMembers.concat(this.teammembersList);
-        this.selectedMembers = [this.data.owner];
+        //this.selectedMembers = [this.data.owner];
+        this.selectedMembers = [];
       }
     }
     selectAllClients(event: any) {

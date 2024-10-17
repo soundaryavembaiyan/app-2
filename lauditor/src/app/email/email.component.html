@@ -20,7 +20,7 @@
         </div>
         <div class="row">
             <div class="col-2 ">
-                <div class="btn calpre" (click)="getMessageCount();">
+                <div class="btn calpre" (click)="handleMessageCountClick();">
                     <div class="icon"> <i class="fa fa-envelope"
                             style="font-size:24px;color:grey;padding-right:10px;"></i>
                     </div>
@@ -33,14 +33,14 @@
                     <div class="col-sm-12">
                         <div class="float-right">
                             <a href="javascript:void(0)" class="selectprior
-                                optionhigh" (click)="getMessages()" [ngClass]="{'active':isFirstPage}"> First</a>
+                                optionhigh" (click)="handleMessageCountClick()" [ngClass]="{'active':isFirstPage}"> First</a>
                             <a href="javascript:void(0)" class="selectprior
                                 optionaling" [ngClass]="isFirstPage? 'disable' :
                                 '' " (click)="!isFirstPage?onPrevious():null"> <i class="fa fa-thin fa-chevron-left
                                     icon" aria-hidden="true"></i> Previous</a>
                             <a href="javascript:void(0)" class="selectprior
                                 optionlow optionaling" [ngClass]="nextToken==''?'disable':''"
-                                (click)="getNextPageMessages()"> Next<i class="fa fa-thin
+                                (click)="handleNextPageClick()"> Next<i class="fa fa-thin
                                     fa-chevron-right icon" aria-hidden="true"></i></a>
                         </div>
                     </div>
@@ -66,7 +66,7 @@
                                 class="let">{{attachment.filename}}</span></div>
                     </div>
                 </div> -->
-                    <div class="pdf-list-inbox" *ngIf="message.attachments.length>0">
+                    <div class="pdf-list-inbox" *ngIf="message.attachments?.length>0">
                         <div (click)="documentClick(message.msgId,attachment.partId);removeCliExGroups()"
                             [hidden]="attachment.filename ===''" class="pdf-data"
                             *ngFor="let attachment of message.attachments">
@@ -193,7 +193,7 @@
 
                             <div *ngIf="check">
                                 <!--Groups added on Client doc-->
-                                <!-- <div class="form-group" id="selectbx" *ngIf="clientId.length>0">
+                                <div class="form-group" id="selectbx" *ngIf="clientId.length>0">
                                     <div class="input-group court" id="search">
                                         <div class="multicheck form-control textbox grpMargin"
                                             style="border-radius: 5px;">
@@ -232,7 +232,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div> -->
+                                </div> 
                                 <!--Groups added on Client doc-->
 
                                 <div *ngIf="clientId.length>0">
