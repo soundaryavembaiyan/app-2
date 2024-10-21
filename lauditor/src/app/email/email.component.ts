@@ -29,6 +29,7 @@ export class EmailComponent implements OnInit, AfterViewInit {
     private formBuilder: FormBuilder, private emailService: EmailService, private toast: ToastrService,
     private router: Router, private dialog: MatDialog) { }
   messagesMap: Map<number, any> = new Map<number, any>();
+  pageTokenMap: Map<number, string> = new Map<number, any>();  
   messages: any;
   product = environment.product;
   count: number = 0;
@@ -83,6 +84,7 @@ export class EmailComponent implements OnInit, AfterViewInit {
   type='gmail';
 
   ngOnInit() {
+    this.autoRefresh()
     this.composeForm = this.formBuilder.group({
       toEmail: ['', [Validators.required, Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)]],
       subject: ['', Validators.required],
@@ -164,7 +166,9 @@ export class EmailComponent implements OnInit, AfterViewInit {
         localStorage.removeItem('validationDone');
         this.isAuthenticated = false;
         globalVar.emailAuthentication(this.type);
+        this.autoRefresh()
         //}, 10000);
+
       });
   }
 
@@ -183,6 +187,7 @@ export class EmailComponent implements OnInit, AfterViewInit {
         localStorage.removeItem('validationDone');
         this.isAuthenticated = false;
         globalVar.emailAuthentication(this.type);
+        this.autoRefresh();
         //}, 10000);
       });
   }
@@ -239,6 +244,7 @@ export class EmailComponent implements OnInit, AfterViewInit {
         localStorage.removeItem('validationDone');
         this.isAuthenticated = false;
         globalVar.emailAuthentication(this.type);
+        this.autoRefresh()
         //}, 10000);
       });
   }
@@ -272,6 +278,7 @@ handleNextPageClick() {
           this.messages = res.value;
           this.pageNumber = 1;
           this.messagesMap.set(this.pageNumber, res);
+          this.pageTokenMap.set(this.pageNumber, this.nextToken);
 
           // Fetch attachments for messages that have them
           await Promise.all(this.messages.map(async (message: any) => {
@@ -293,6 +300,7 @@ handleNextPageClick() {
         localStorage.removeItem('validationDone');
         this.isAuthenticated = false;
         globalVar.emailAuthentication(this.type);
+        this.autoRefresh()
         //}, 10000);
       });
   }
@@ -340,19 +348,22 @@ handleNextPageClick() {
         localStorage.removeItem('validationDone');
         this.isAuthenticated = false;
         globalVar.emailAuthentication(this.type);
+        this.autoRefresh()
         //}, 10000);
       })
   }
   getNextPageOutlookMessages() {
     var globalVar = this;
-    console.log("this necy",this.nextToken)
-    this.httpservice.sendGetEmailRequest(URLUtils.OutlookNextPageMessages({ "token": localStorage.getItem('TOKEN'), "rows": 10,"labelid": 'INBOX', "nextpageurl": this.nextToken })).subscribe(
+    let nextTokenForPage = this.pageTokenMap.get(this.pageNumber);
+   
+    this.httpservice.sendGetEmailRequest(URLUtils.OutlookNextPageMessages({ "token": localStorage.getItem('TOKEN'), "rows": 10,"labelid": 'INBOX', "nextpageurl":encodeURIComponent(nextTokenForPage?.toString() || '')  })).subscribe(
       async (res: any) => {
         this.isFirstPage = false;
         this.nextToken = res['@odata.nextLink'];
         this.messages = res.value;
         this.pageNumber = this.pageNumber + 1;
         this.messagesMap.set(this.pageNumber, res);
+        this.pageTokenMap.set(this.pageNumber, this.nextToken);
         // Fetch attachments for messages that have them
           await Promise.all(this.messages.map(async (message: any) => {
             message.fromName = message.from.emailAddress.name;
@@ -367,8 +378,14 @@ handleNextPageClick() {
         localStorage.removeItem('validationDone');
         this.isAuthenticated = false;
         globalVar.emailAuthentication(this.type);
+        this.autoRefresh()
         //}, 10000);
       })
+  }
+  autoRefresh(): void {
+    setInterval(() => {
+      this.handleMessageCountClick()
+    }, 10000); 
   }
   onKeydown(event: any) {
     if (event.key === "Enter" || event.type === "click") {
@@ -408,7 +425,7 @@ handleNextPageClick() {
     let data = this.messagesMap.get(this.pageNumber);
     console.log(data)
     if(this.type=='outlook'){
-      this.nextToken = data['@odata.nextLink'];
+      this.nextToken = this.pageTokenMap.get(this.pageNumber);
       this.messages = data?.value;
 
     } else {

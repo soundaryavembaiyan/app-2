@@ -38,7 +38,6 @@ export class ViewlegalmatterComponent implements OnInit {
   currentPage: number = 1;
   //matterCount:any;
   role: any;
-  
 
   constructor(private httpservice: HttpService, private http: HttpClient, private matterService: MatterService, 
     private router: Router, private toast: ToastrService,private modalService: ModalService,
@@ -78,7 +77,7 @@ export class ViewlegalmatterComponent implements OnInit {
         //console.log('Filtered legalMatters:', this.legalMatters);
       }
       //this.matterCount = this.legalMatters.length;
-      //console.log('this.legalMatters',this.legalMatters.length)
+      //console.log('this.legalMatters',this.legalMatters)
       this.spinnerService.hide()
     })
   }
@@ -138,19 +137,24 @@ export class ViewlegalmatterComponent implements OnInit {
     this.router.navigate(['/matter/legalmatter/updateGroups'])
   }
   loadEditMatterInfo(legalMatter: any) {
-    this.matterService.editLegalMatter(legalMatter);
+    // this.matterService.editLegalMatter(legalMatter);
+    this.httpservice.sendGetRequest(URLUtils.getLegalMatterInfoDetails(legalMatter.id)).subscribe((res: any) => {
+      this.matterService.editLegalMatter(res.matter);
+    })
     this.router.navigate(['/matter/legalmatter/matterEdit'])
-
   }
   loadViewDetails(legalMatter: any,type:any) {
-    const legal = { ...legalMatter, type: type };
-    this.matterService.editLegalMatter(legal);
+    // const legal = { ...legalMatter, type: type };
+    // this.matterService.editLegalMatter(legal);
+    this.httpservice.sendGetRequest(URLUtils.getLegalMatterInfoDetails(legalMatter.id)).subscribe((res: any) => {
+      const legal = { ...res.matter, id:legalMatter.id, type: type };
+      this.matterService.editLegalMatter(legal);
+    })
     this.router.navigate(['/matter/legalmatter/viewDetails'])
     
     if(this.product == 'corporate' && this.selectedOption !='External Matters'){
     this.router.navigate(['/matter/legalmatter/externalviewDetails'])
     }
-   
   }
   onMouseOver(grps: any) {
     let newList = [...grps]
@@ -218,8 +222,8 @@ export class ViewlegalmatterComponent implements OnInit {
         );
       }
     })
-}
-delete (legalMatter: any) {
+  }
+  delete (legalMatter: any) {
   this.confirmationDialogService.confirm('Confirmation', legalMatter.title + ' matter contains ' + legalMatter.documents?.length + ' documents. Are you sure do you want to delete this matter?', true, 'Yes', 'No')
     .then((confirmed) => {
       if (confirmed) {
@@ -243,5 +247,5 @@ delete (legalMatter: any) {
         });
       }
     })
-}
+  }
 }

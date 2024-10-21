@@ -26,6 +26,7 @@ export class AddAdivicateComponent implements OnInit {
         return this.memberDetail.controls;
     }
     ngOnInit(): void {
+        //console.log('editAdvocatesList',this.editAdvocatesList)
         if (this.editAdvocatesList?.length > 0) {
             this.advicate = this.editAdvocatesList;
         }

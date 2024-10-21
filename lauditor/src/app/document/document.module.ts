@@ -39,6 +39,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatButtonModule} from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
 import { MAT_RADIO_DEFAULT_OPTIONS, MatRadioModule } from '@angular/material/radio';
 // import { BrowserModule } from '@angular/platform-browser';
 @NgModule({
@@ -53,6 +54,7 @@ import { MAT_RADIO_DEFAULT_OPTIONS, MatRadioModule } from '@angular/material/rad
         MatDatepickerModule,
         MatNativeDateModule,
         MatFormFieldModule,
+        MatSelectModule,
         MatCardModule,
         MatInputModule,
         AutocompleteLibModule,

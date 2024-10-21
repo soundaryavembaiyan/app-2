@@ -582,6 +582,9 @@ export class URLUtils {
     static updateLegalMatter(Id: any) {
         return `/matter/legal/update/` + Id;
     }
+    static getLegalMatterInfoDetails(Id: any) {
+        return `/v3/matter/legal/` + Id;
+    }
     static deleteLegalMatter(Id: any) {
         return `/matter/legal/delete/` + Id;
     }
@@ -661,6 +664,9 @@ export class URLUtils {
     }
     static deleteGeneralMatter(Id: any) {
         return `/matter/general/delete/` + Id;
+    }
+    static getGeneralMatterInfoDetails(Id: any) {
+        return `/v3/matter/general/` + Id;
     }
     static updateGeneralAcls(Id: any) {
         return `/matter/general/` + Id + `/acls`

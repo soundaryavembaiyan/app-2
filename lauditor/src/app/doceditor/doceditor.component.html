@@ -203,24 +203,23 @@
                 <div class="container" *ngIf="item.value.content === 'Table'" class="form-group">
                   <label for="title" class="lableTitle">{{item.value.content}}</label>
                   <i class="fa fa-times close secclose" aria-hidden="true" (click)="removeItem(i)"></i>
-
-                <div class="table-container" formArrayName="tableRows">
-                  <div class="table-row" *ngFor="let row of item.get('tableRows').controls; let j = index" [formArrayName]="j">
-                    <div class="table-column" *ngFor="let col of row.controls; let colIndex = index">
-                      <i class="fa fa-minus-circle remove-column-btn" *ngIf="j === 0 && colIndex !== 0" (click)="removeColumn(colIndex)"></i>
-                      <input #tableInput class="tabInput textfield" type="text" [formControlName]="colIndex" placeholder="Enter your content" maxlength="5000"
-                        (input)="restrictSplCharacteratFirst($event)" (keypress)="onKeyPress($event); onEnterPress($event)"/>
-                    </div>
-                    <i class="fa-solid fa-trash delo" [ngClass]="{'delo': j === 0}" *ngIf="j === 0"></i>
-                    <i class="fa-solid fa-trash deltabIcon" *ngIf="j !== 0" (click)="removeRow(j)"></i>
+              
+                  <div class="table-container" formArrayName="tableRows">
+                      <div class="table-row" *ngFor="let row of item.get('tableRows').controls; let j = index" [formArrayName]="j">
+                          <div class="table-column" *ngFor="let col of row.controls; let colIndex = index">
+                              <i class="fa fa-minus-circle remove-column-btn" *ngIf="j === 0 && colIndex !== 0" (click)="removeColumn(i, colIndex)"></i>
+                              <input #tableInput class="tabInput textfield" type="text" [formControlName]="colIndex" placeholder="Enter your content" maxlength="5000"
+                               (input)="restrictSplCharacteratFirst($event)" (keypress)="onKeyPress($event); onEnterPress($event)"/>
+                          </div>
+                          <i class="fa-solid fa-trash delo" [ngClass]="{'delo': j === 0}" *ngIf="j === 0"></i>
+                          <i class="fa-solid fa-trash deltabIcon" *ngIf="j !== 0" (click)="removeRow(i,j)"></i>
+                      </div>
                   </div>
-                </div>
-                
-                <button class="add-column-btn" type="button" [disabled]="columns.length >= 4" (click)="addColumn()">Add Column</button>
-                <button class="add-row-btn" type="button" (click)="addRow()">Add Row</button>
+                  
+                  <button class="add-column-btn" type="button" [disabled]="item.get('tableRows').controls[0].controls.length >= 4" (click)="addColumn(i)">Add Column</button>
+                  <button class="add-row-btn" type="button" (click)="addRow(i)">Add Row</button>
                 </div>
                 <!-- Table Block -->
-
             </div>
             </ng-container>
         </div>

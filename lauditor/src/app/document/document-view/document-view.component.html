@@ -509,16 +509,18 @@
                     <label for="tagKey-{{ i }}" class="lable-size">Tag Type</label>
                     <input #tagTypeInput type="text" formControlName="key" class="text-size form-control group-name-text"
                       id="tagKey-{{ i }}" (input)="restrictSpaces($event)" oninput="this.value = this.value.replace(/[^A-Za-z0-9-()._ ]|^ /g,'')"
-                      maxlength="50" autocomplete="off">
+                      maxlength="30" autocomplete="off">
                   </div>
+                  <div class="count-text">{{tag.get('key')?.value.length}}/30</div>
                 </div>
                 <div class="col-6">
                   <div class="form-group nameSet">
                     <label for="tagValue-{{ i }}" class="lable-size">Tags</label>
                     <input type="text" formControlName="value" class="text-size form-control group-name-text"
                       id="tagValue-{{ i }}" (input)="restrictSpaces($event)" oninput="this.value = this.value.replace(/[^A-Za-z0-9-()._ ]|^ /g,'')"
-                      maxlength="50" autocomplete="off">
+                      maxlength="100" autocomplete="off">
                   </div>
+                  <div class="count-text">{{tag.get('value')?.value.length}}/100</div>
                 </div>
 
                 <div class="col-12 text-end">

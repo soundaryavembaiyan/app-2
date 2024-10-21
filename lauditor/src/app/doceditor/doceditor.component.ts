@@ -516,7 +516,8 @@ export class DoceditorComponent {
       type === 'Sub Section' && this.getContent === 'Page Break' && !editBlock === true ||
       type === 'Sub Section' && this.getContent === 'Bulleted List' && !editBlock === true ||
       type === 'Sub Section' && this.getContent === 'Numbered List' && !editBlock === true ||
-      type === 'Sub Section' && this.getContent === 'Image' && !editBlock === true) {
+      type === 'Sub Section' && this.getContent === 'Image' && !editBlock === true ||
+      type === 'Sub Section' && this.getContent === 'Table' && !editBlock === true) {
       this.toast.error('Invalid Selection. Please add Section before adding Sub Section or Sub Sub Section.');
       return
     }
@@ -526,7 +527,8 @@ export class DoceditorComponent {
       type === 'Sub Sub Section' && this.getContent === 'Bulleted List' && !editBlock === true ||
       type === 'Sub Sub Section' && this.getContent === 'Numbered List' && !editBlock === true ||
       type === 'Sub Sub Section' && this.getContent === 'Section' && !editBlock === true ||
-      type === 'Sub Sub Section' && this.getContent === 'Image' && !editBlock === true) {
+      type === 'Sub Sub Section' && this.getContent === 'Image' && !editBlock === true ||
+      type === 'Sub Sub Section' && this.getContent === 'Table' && !editBlock === true) {
       this.toast.error('Invalid Selection. Please add Sub Section before adding Sub Sub Section.');
       return
     }
@@ -578,13 +580,13 @@ export class DoceditorComponent {
     // ***Page Break Condition*** //
 
     // ***Image Condition*** //
-    if (type === 'Image' && this.imageAddCount > 2  && !editBlock === true) {
-      this.toast.error('You can only add upto 2 images.');
-      return;
-    }
-    if (type === 'Image' && !editBlock === true) {
-      this.imageAddCount++;  // Increment the image counter when an image is added
-    }
+    // if (type === 'Image' && this.imageAddCount > 2  && !editBlock === true) {
+    //   this.toast.error('You can only add upto 2 images.');
+    //   return;
+    // }
+    // if (type === 'Image' && !editBlock === true) {
+    //   this.imageAddCount++;  // Increment the image counter when an image is added
+    // }
     // ***Image Condition*** //
 
     // ***Table Condition*** //
@@ -637,7 +639,7 @@ export class DoceditorComponent {
 
   createTableRow(value?: any): FormArray {
     //console.log('cc val', value)
-    console.log('this.columns',this.columns)
+    //console.log('this.columns',this.columns)
     let row = this.fb.array([]);
     if (value) {    
       for (let i = 0; i < this.columns.length; i++) {
@@ -648,50 +650,115 @@ export class DoceditorComponent {
       for (let i = 0; i < this.columns.length; i++) {
         row.push(this.fb.control('', Validators.required));
       }
+      //return this.fb.array([this.fb.control('')]);
     }
     return row;
   }
+
+  // createEmptyRow(): FormArray {
+  //   return this.fb.array([this.fb.control('')]);  // Create a new row with one empty column
+  // }
+  // addRowx() {
+  //   const contentListItems = this.myForm.get('contentListItems') as FormArray;
+  //   const lastItemGroup = contentListItems.at(contentListItems.length - 1) as FormGroup;
+  //   if (lastItemGroup) {
+  //     const tableControl = lastItemGroup.get('tableRows') as FormArray;
+  //     if (tableControl) {
+  //       tableControl.push(this.createTableRow());
+  //       setTimeout(() => {
+  //         this.setFocusOnInput(tableControl.length - 1, 0);
+  //       }, 0);
+  //     }
+  //   }
+  //   //this.setFocusOnFirstInput()  // Set focus on the table fields
+  // }
+  // addColumnx() {
+  //   this.columns.push(`Column ${this.columns.length + 1}`);
+  //   const contentListItems = this.myForm.get('contentListItems') as FormArray;
+  //   const tableControl = contentListItems.at(contentListItems.length - 1)?.get('tableRows') as FormArray;
+  //   if (tableControl) {
+  //     tableControl.controls.forEach((row: any) => {
+  //       row.push(this.fb.control('', Validators.required));
+  //     });
+  //   }
+  //   this.setFocusOnFirstInput()  // Set focus on the table fields
+  // }
+  // removeRowx(index: number) {
+  //   const contentListItems = this.myForm.get('contentListItems') as FormArray;
+  //   const tableControl = contentListItems.at(contentListItems.length - 1)?.get('tableRows') as FormArray;
+  //   tableControl.removeAt(index);
+  // }
+  // removeColumnx(index: number) {
+  //   this.columns.splice(index, 1);
+  //   const contentListItems = this.myForm.get('contentListItems') as FormArray;
+  //   const tableControl = contentListItems.at(contentListItems.length - 1)?.get('tableRows') as FormArray;
+  //   tableControl.controls.forEach((row: any) => {
+  //     row.removeAt(index);
+  //   });
+  // }
+
+  addRow(index: any) {
+    const contentListItems = this.myForm.get('contentListItems') as FormArray;
+    const tableGroup = contentListItems.at(index).get('tableRows') as FormArray;
   
-  addRow() {
-    const contentListItems = this.myForm.get('contentListItems') as FormArray;
-    const lastItemGroup = contentListItems.at(contentListItems.length - 1) as FormGroup;
-    if (lastItemGroup) {
-      const tableControl = lastItemGroup.get('tableRows') as FormArray;
-      if (tableControl) {
-        tableControl.push(this.createTableRow());
-        setTimeout(() => {
-          this.setFocusOnInput(tableControl.length - 1, 0);
-        }, 0);
-      }
+    // Check if there are any empty fields before adding a new row
+    if (this.hasEmptyFields(tableGroup)) {
+      this.toast.error('Please add a text in the empty field');
+      return;
     }
-    //this.setFocusOnFirstInput()  // Set focus on the table fields
-  }
+  
+    if (tableGroup) {
+      // Determine the number of columns in the existing rows
+      const numberOfColumns = (tableGroup.at(0) as FormArray)?.length || 0;
+      // Create a new row with the same number of columns
+      const newRow = this.fb.array(
+        Array(numberOfColumns).fill('').map(() => this.fb.control(''))
+      );
+      tableGroup.push(newRow);
 
-  addColumn() {
-    this.columns.push(`Column ${this.columns.length + 1}`);
-    const contentListItems = this.myForm.get('contentListItems') as FormArray;
-    const tableControl = contentListItems.at(contentListItems.length - 1)?.get('tableRows') as FormArray;
-    if (tableControl) {
-      tableControl.controls.forEach((row: any) => {
-        row.push(this.fb.control('', Validators.required));
-      });
+      this.setFocusOnInput(index);
+      // Focus on the first input of the newly added row
+      // setTimeout(() => {
+      //   this.setFocusOnInput(index, tableGroup.length - 1);
+      // }, 0);
     }
-    this.setFocusOnFirstInput()  // Set focus on the table fields
   }
-
-  removeRow(index: number) {
+  
+  addColumn(index: number) {
     const contentListItems = this.myForm.get('contentListItems') as FormArray;
-    const tableControl = contentListItems.at(contentListItems.length - 1)?.get('tableRows') as FormArray;
-    tableControl.removeAt(index);
-  }
-
-  removeColumn(index: number) {
-    this.columns.splice(index, 1);
-    const contentListItems = this.myForm.get('contentListItems') as FormArray;
-    const tableControl = contentListItems.at(contentListItems.length - 1)?.get('tableRows') as FormArray;
-    tableControl.controls.forEach((row: any) => {
-      row.removeAt(index);
+    const tableGroup = contentListItems.at(index).get('tableRows') as FormArray;
+  
+    // Check if there are any empty fields before adding a new column
+    if (this.hasEmptyFields(tableGroup)) {
+      this.toast.error('Please add a text in the empty field');
+      return;
+    }
+    // Add a new control (empty column) to each existing row
+    tableGroup.controls.forEach(row => {
+      (row as FormArray).push(this.fb.control(''));
     });
+    this.setFocusOnFirstInput();
+  }
+
+  removeRow(tableIndex: number, rowIndex: number) {
+    const contentListItems = this.myForm.get('contentListItems') as FormArray;
+    const tableGroup = contentListItems.at(tableIndex).get('tableRows') as FormArray;
+    tableGroup.removeAt(rowIndex);
+  }
+
+  removeColumn(tableIndex: number, colIndex: number) {
+    const contentListItems = this.myForm.get('contentListItems') as FormArray;
+    const tableGroup = contentListItems.at(tableIndex).get('tableRows') as FormArray;
+    // Remove the column at `colIndex` from each row
+    tableGroup.controls.forEach(row => {
+      (row as FormArray).removeAt(colIndex);
+    });
+  }
+  
+  private hasEmptyFields(tableGroup: FormArray): boolean {
+    return tableGroup.controls.some(row => 
+      (row as FormArray).controls.some(control => control.value.trim() === '')
+    );
   }
 
   getControlName(rowIndex?: number, colIndex?: number) {
@@ -705,7 +772,6 @@ export class DoceditorComponent {
   
   setFocusOnFirstInput() {
       const contentListItems = this.myForm.get('contentListItems') as FormArray;
-      // Set focus on the table fields
       setTimeout(() => {
         const newIndex = contentListItems.length - 1;
         const inputs = document.querySelectorAll(`.oderAlign:nth-child(${newIndex + 1}) .tabInput.textfield`);
@@ -716,15 +782,33 @@ export class DoceditorComponent {
       }, 100);
   }
 
-  setFocusOnInput(rowIndex: number, colIndex: number) {
-    // Calculate the index based on row and column.
-    const index = rowIndex * this.columns.length + colIndex;
-    const inputElement = this.tableInput.toArray()[index];
-    if (inputElement) {
-      inputElement.nativeElement.focus();
-    }
+  // setFocusOnInput(rowIndex: number, colIndex: number) {
+  //   const index = rowIndex * this.columns.length + colIndex;
+  //   const inputElement = this.tableInput.toArray()[index];
+  //   if (inputElement) {
+  //     inputElement.nativeElement.focus();
+  //   }
+  // }
+  
+  setFocusOnInput(index: number) {
+    const contentListItems = this.myForm.get('contentListItems') as FormArray;
+    const tableGroup = contentListItems.at(index).get('tableRows') as FormArray;
+  
+    setTimeout(() => {
+      const newRowIndex = tableGroup.length - 1; // Get the index of the newly added row
+      const inputSelector = `.oderAlign:nth-of-type(${index + 1}) .table-row:nth-child(${newRowIndex + 1}) .tabInput.textfield`;
+      // console.log('Input selector:', inputSelector);
+      const firstInput = document.querySelector(inputSelector) as HTMLInputElement;
+  
+      if (firstInput) {
+        firstInput.focus(); // Focus on the first input
+      } else {
+        console.error('Input element not found for selector:', inputSelector);
+      }
+    }, 0);
   }
 
+  //Ordered List functionality
   createNestedContentItem(value?: any): FormGroup {
     if (value) {
       return this.fb.group({
@@ -735,7 +819,6 @@ export class DoceditorComponent {
       contentData: ['', Validators.required]
     });
   }
-
   addNestedContentItem(contentIndex: number, value?: any) {
     const contentArray = this.myForm.get('contentListItems') as FormArray;
     const nestedArray = contentArray.at(contentIndex).get('orderListItems') as FormArray;
@@ -780,20 +863,18 @@ export class DoceditorComponent {
       }
     });
   }
-
   removeList(contentIndex: number, orderIndex: number, i?: any) {
     const contentListItemsArray = this.myForm.get('contentListItems') as FormArray;
     const contentItem = contentListItemsArray.at(contentIndex);
     const orderListItemsArray = contentItem.get('orderListItems') as FormArray;
     orderListItemsArray.removeAt(orderIndex);
   }
-
   removeItem(i: number) {
     const contentListItems = this.myForm.get('contentListItems') as FormArray;
     const removedItem = contentListItems.at(i).value;//for Img
-    if (removedItem.content === 'Image') {
-      this.imageAddCount--;  // Decrement the image count --
-    }
+    // if (removedItem.content === 'Image') {
+    //   this.imageAddCount--;  // Decrement the image count --
+    // }
     contentListItems.removeAt(i);
   }  
   
@@ -1169,7 +1250,7 @@ export class DoceditorComponent {
         // console.log('contentTitleControl',this.contentTitleControl)
 
         const data = this.contentDataControl.value;
-        // console.log('data',data)
+        //console.log('data',data)
         if (getContent == 'Overview' || getContent == 'Section' || getContent == 'Sub Section' || getContent == 'Sub Sub Section' || getContent == 'Paragraph') {
           if (data === '' || data === undefined || data === " " || data === null) {
             this.toast.error(`${getContent} is mandatory. Please add the text.`);
@@ -1199,9 +1280,11 @@ export class DoceditorComponent {
             }
           }
         }
+        if (getContent == 'Table'){
         if (tableRows && tableRows.some((row: any) => row.some((cell: any) => cell === ""))) {
           this.toast.error(`${getContent} is mandatory. Please add the text.`);
           return;
+        }
         }
       }
     }
@@ -1469,7 +1552,7 @@ export class DoceditorComponent {
       case 'Image':
          return `\\vspace{4\\baselineskip} \\begin{figure}[h] \\centering \\includegraphics[width=0.9\\textwidth] {${imagesFolder}/${userid}/${this.contentDataControl.value}} \\caption{${this.contentTitleControl.value}} \\end{figure}`;
       case 'Table':
-        return `\\begin{tabularx}{1.0\\textwidth} ${this.tableData} \\end{tabularx}`
+        return `\\begin{center}\\begin{tabularx}{1.0\\textwidth} ${this.tableData} \\end{tabularx} \\end{center}`
       case 'Page Break':
         return `\\newpage`;
       default:

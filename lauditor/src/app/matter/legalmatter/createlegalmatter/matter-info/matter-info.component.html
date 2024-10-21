@@ -225,7 +225,7 @@
           
               </div>
             </div> -->
-            <add-adivicate [editAdvocatesList]="data?.opponent_advocates||editeMatterInfo?.opponentAdvocates" (childButtonEvent)="receiveAutoMsgHandler($event)" ></add-adivicate>
+            <add-adivicate [editAdvocatesList]="editeMatterInfo.opponentAdvocates || data.opponent_advocates" (childButtonEvent)="receiveAutoMsgHandler($event)" ></add-adivicate>
             <!-- end advocate -->
             <!-- pagination -->
 

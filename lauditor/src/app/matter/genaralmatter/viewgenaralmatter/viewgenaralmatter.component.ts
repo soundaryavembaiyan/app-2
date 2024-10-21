@@ -121,19 +121,26 @@ export class ViewGeneralmatterComponent implements OnInit {
     this.router.navigate(['/matter/generalmatter/updateGroups'])
   }
   loadEditMatterInfo(legalMatter: any) {
-    this.matterService.editGeneralMatter(legalMatter);
+    //this.matterService.editGeneralMatter(legalMatter);
+    this.httpservice.sendGetRequest(URLUtils.getGeneralMatterInfoDetails(legalMatter.id)).subscribe((res: any) => {
+      console.log('res',res)
+      this.matterService.editGeneralMatter(res.matter);
+    })
     this.router.navigate(['/matter/generalmatter/matterEdit'])
   }
   loadViewDetails(legalMatter: any, type: any) {
-    const legal = { ...legalMatter, type: type };
-    this.matterService.editGeneralMatter(legal);
+    // const legal = { ...legalMatter, type: type };
+    // this.matterService.editGeneralMatter(legal);
+    this.httpservice.sendGetRequest(URLUtils.getGeneralMatterInfoDetails(legalMatter.id)).subscribe((res: any) => {
+      const legal = { ...res.matter, id:legalMatter.id, type: type };
+      this.matterService.editGeneralMatter(legal);
+    })
     this.router.navigate(['/matter/generalmatter/viewDetails'])
 
     if (this.product == 'corporate' && this.selectedOption != 'External Matters') {
       this.router.navigate(['/matter/generalmatter/generalinternalviewdetails'])
     }
   }
-
   onMouseOver(grps: any) {
     let newList = [...grps]
     this.hoveredGroups = [];

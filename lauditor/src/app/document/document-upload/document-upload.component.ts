@@ -407,10 +407,10 @@ export class DocumentUploadComponent implements OnInit {
             fdata.append('custom_encrypt', this.uploadDocs[i].custom_encrypt);
             fdata.append('downloadDisabled', this.uploadDocs[i].downloadDisabled);
             fdata.append('tags', this.uploadDocs[i].checked == true ? JSON.stringify(this.metaData) : '');
-            console.log('fdata',fdata)
+            //console.log('fdata',fdata)
             this.upload(i, fdata)
         }
-        console.log('uploadDocs',this.uploadDocs)
+        //console.log('uploadDocs',this.uploadDocs)
     }
     openModal(id: string) {
         this.modalService.open(id);
