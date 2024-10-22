@@ -152,6 +152,7 @@ export class IndividualComponent {
         this.showForm = false;
         this.reqError.show = false;
         this.msg = '';
+        this.groupList = [];
         this.sfSubmitted = false;
         this.closeMode = true; //remove the formMode msg & selectedGrps
         this.searchForm.controls['email'].setValue("")

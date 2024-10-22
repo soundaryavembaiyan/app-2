@@ -114,6 +114,7 @@ export class ExternalPartnerComponent {
     this.showForm = false;
     this.reqError.show = false;
     this.msg = '';
+    this.groupList = [];
     this.closeMode = true; //remove the formMode msg & selectedGrps
   }
 

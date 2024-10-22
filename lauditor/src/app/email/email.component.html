@@ -50,7 +50,7 @@
         </div>
         <div class="mail-list">
             <div class="input-group court p-bottom" *ngFor="let message of
-                messages">
+                messages | filter:searchText">
                 <div class="form-control textbox ">
                     <div class="row">
                         <div class="col-3">

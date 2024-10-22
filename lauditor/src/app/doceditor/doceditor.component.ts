@@ -702,10 +702,10 @@ export class DoceditorComponent {
     const tableGroup = contentListItems.at(index).get('tableRows') as FormArray;
   
     // Check if there are any empty fields before adding a new row
-    if (this.hasEmptyFields(tableGroup)) {
-      this.toast.error('Please add a text in the empty field');
-      return;
-    }
+    // if (this.hasEmptyFields(tableGroup)) {
+    //   this.toast.error('Please add a text in the empty field');
+    //   return;
+    // }
   
     if (tableGroup) {
       // Determine the number of columns in the existing rows
@@ -729,10 +729,10 @@ export class DoceditorComponent {
     const tableGroup = contentListItems.at(index).get('tableRows') as FormArray;
   
     // Check if there are any empty fields before adding a new column
-    if (this.hasEmptyFields(tableGroup)) {
-      this.toast.error('Please add a text in the empty field');
-      return;
-    }
+    // if (this.hasEmptyFields(tableGroup)) {
+    //   this.toast.error('Please add a text in the empty field');
+    //   return;
+    // }
     // Add a new control (empty column) to each existing row
     tableGroup.controls.forEach(row => {
       (row as FormArray).push(this.fb.control(''));
@@ -1031,6 +1031,7 @@ export class DoceditorComponent {
   onKeyPress(event: any) {
     const restrictedCharacters = /[{}]/;
     const restrictedCharacters1 = /[\\]/;
+    const restrictedCharacters2 = /[&]/;
 
     // Check if the pressed key is a Space 
     if (event.key === ' ' && (event.target as HTMLTextAreaElement).selectionStart === 0) {
@@ -1049,6 +1050,11 @@ export class DoceditorComponent {
       this.toast.error('Please avoid using backslash.');
       event.preventDefault();
     }
+    // else if (restrictedCharacters2.test(event.key)) {
+    //   this.showErrorMessage = true;
+    //   this.toast.error('Please avoid using ampersand(&)');
+    //   event.preventDefault();
+    // }
     else {
       this.showErrorMessage = false;
     }
@@ -1062,6 +1068,18 @@ export class DoceditorComponent {
     }
   }
   
+  onKeyPressAmp(event: any) {
+    const restrictedCharacters = /[&]/;
+    if (restrictedCharacters.test(event.key)) {
+      this.showErrorMessage = true;
+      this.toast.error('Please avoid using ampersand(&)');
+      event.preventDefault();
+    }
+    else {
+      this.showErrorMessage = false;
+    }
+  }
+
   restrictNoFirst(event: any) {
     let inputValue: string = event.target.value;
     if (inputValue.length > 0 && inputValue.charAt(0) === '0' || inputValue.charAt(0) === '1' || inputValue.charAt(0) === '2' || inputValue.charAt(0) === '3' ||
@@ -1280,11 +1298,15 @@ export class DoceditorComponent {
             }
           }
         }
-        if (getContent == 'Table'){
-        if (tableRows && tableRows.some((row: any) => row.some((cell: any) => cell === ""))) {
-          this.toast.error(`${getContent} is mandatory. Please add the text.`);
-          return;
-        }
+        if (getContent == 'Table') {
+          //console.log('tableRows', tableRows)
+          const hasAllEmptyRows = tableRows && tableRows.every((row: any) =>
+            row.every((cell: any) => cell === "")
+          );
+          if (hasAllEmptyRows) {
+            this.toast.error(`${getContent} column values are mandatory. Please add value.`);
+            return;
+          }
         }
       }
     }
@@ -2043,7 +2065,6 @@ export class DoceditorComponent {
     }
     this.modalService.open('custom-modal-2');
   }
-
   deleteDoc() {
     if (this.documentId) {
       this.httpservice.sendDeleteLatexRequest(URLUtils.deleteDocid(this.documentId)).subscribe((res: any) => {
@@ -2067,7 +2088,6 @@ export class DoceditorComponent {
   closeModal(id: string) {
     this.modalService.close(id);
   }
-
   closeDialog() {
     this.modalService.close('custom-modal-1');
     this.saveForm.reset();
