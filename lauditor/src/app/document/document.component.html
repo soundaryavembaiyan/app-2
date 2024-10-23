@@ -19,12 +19,14 @@
 
           <div class="switch  cswitch cswitchtwo">
             <!-- Product condition for label-->
-            <a href="javascript:void(0);" class="details doc-option  client " (click)="gotoDetail('client')" *ngIf="product != 'content' && product != 'corporate'">Client</a>
-            <a href="javascript:void(0);" class="details doc-option  client " (click)="gotoDetail('client')" *ngIf="product == 'content'">Customer</a>
+            <a href="javascript:void(0);" class="details doc-option client " (click)="gotoDetail('client')" *ngIf="product != 'content' && product != 'corporate'">Client</a>
+            <a href="javascript:void(0);" class="details doc-option client " (click)="gotoDetail('client')" *ngIf="product == 'content'">Customer</a>
             <!-- <a href="javascript:void(0);" class="details doc-option  client " (click)="gotoDetail('client')" *ngIf="product == 'corporate'">Internal</a> -->
 
-            <a href="javascript:void(0);" class=" details doc-option  firm" (click)="gotoDetail('firm')" *ngIf="product != 'corporate'">Firm</a>
+            <a href="javascript:void(0);" class=" details doc-option firm" [ngClass]="{'delFirm': docCategory === 'view' && role==='SU'}" (click)="gotoDetail('firm')" *ngIf="product != 'corporate'">Firm</a>
             <!-- <a href="javascript:void(0);" class=" details doc-option  firm" (click)="gotoDetail('firm')" *ngIf="product == 'corporate'">Internal</a> -->
+
+            <a href="javascript:void(0);" class=" details doc-option delete delDelete" (click)="gotoDetail('delete')" *ngIf="product != 'corporate' && docCategory === 'view' && role==='SU'">Deleted</a>
             <!-- Product condition for label ends here..-->
           </div>
         </div>

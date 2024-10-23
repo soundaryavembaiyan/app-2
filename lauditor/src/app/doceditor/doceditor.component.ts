@@ -1068,18 +1068,25 @@ export class DoceditorComponent {
     }
   }
   
+  // Replace all instances of "&" with an empty string
   onKeyPressAmp(event: any) {
-    const restrictedCharacters = /[&]/;
-    if (restrictedCharacters.test(event.key)) {
+    const restrictedCharacter = '&';
+    if (event.key === restrictedCharacter) {
       this.showErrorMessage = true;
-      this.toast.error('Please avoid using ampersand(&)');
+      //this.toast.error('Please avoid using ampersand (&)');
       event.preventDefault();
-    }
-    else {
+    } else {
       this.showErrorMessage = false;
     }
   }
-
+  replaceAmpersand(event: any) {
+    const inputElement = event.target;
+    const value = inputElement.value;
+    if (value.includes('&')) {
+      inputElement.value = value.replace(/&/g, '');
+    }
+  } 
+  
   restrictNoFirst(event: any) {
     let inputValue: string = event.target.value;
     if (inputValue.length > 0 && inputValue.charAt(0) === '0' || inputValue.charAt(0) === '1' || inputValue.charAt(0) === '2' || inputValue.charAt(0) === '3' ||
@@ -1460,10 +1467,11 @@ export class DoceditorComponent {
         // Check if the block count exceeds the threshold or it's the last item
         if (blocksProcessed > maxBlocks || i === contentListItems.length - 1) {
           //this.toast.info('Following content will move to next page')
+          console.log('pageContent',pageContent)
           let reqq: any;
           if (currentPage === 1) {
             reqq = {
-              "document": latexDocument + pageContent.replace(/\n/g, '<nln>'),
+              "document": latexDocument + pageContent.replace(/\n/g, '<nln>').replace(/&/g, ''),
               "page": currentPage
             };
           }

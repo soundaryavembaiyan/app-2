@@ -17,6 +17,8 @@ export class DocumentComponent implements OnInit {
   activeChildBtn: any;
   product = environment.product;
   isFromEmail:boolean=false;
+  role:any;
+
   constructor(private httpservice: HttpService, private router: Router, private aroute: ActivatedRoute,
     private emailService:EmailService) {
     this.router.events.subscribe((val) => {
@@ -44,6 +46,7 @@ export class DocumentComponent implements OnInit {
       if(window.location.href.indexOf('upload')>-1)
       this.isFromEmail=false;
     });
+    this.role = localStorage.getItem("role")
   }
   onActivate(event:any) {
     // window.scroll(0,0);
@@ -83,11 +86,13 @@ export class DocumentComponent implements OnInit {
     this.isDisplay = !this.isDisplay;
   }
   gotoDetail(item: any): void {
+    // console.log('item',item)
+    // console.log('docCategory',this.docCategory)
     this.router.navigate(['documents/' + this.docCategory, item]);
-    if(item === 'client'){
-      const link='/documents/mergepdf/'+ item
-      window.location.href = link
-    }
+    // if(item === 'client'){
+    //   const link='/documents/mergepdf/'+ item
+    //   window.location.href = link
+    // }
   }
   ngAfterViewInit() {
 

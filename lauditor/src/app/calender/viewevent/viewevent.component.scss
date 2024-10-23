@@ -82,10 +82,8 @@
 
 .bellinfo {
     font-size: 16px;
-
     margin-bottom: 0px;
     color: #000;
-
 }
 
 .subnotification {
@@ -95,6 +93,8 @@
 .bellico {
     padding-top: 5px;
     padding-right: 5px;
+    width: 30px;
+    height: 25px;
 }
 
 .belldate {
@@ -117,7 +117,7 @@
     width: 25px;
     text-align: center;
     font-size: 14px;
-    padding: 2px;
+    padding: 4px;
 }
 
 .namecirclesub {
@@ -157,7 +157,8 @@
 }
 
 .timsheetsubitem {
-    padding-top: 15px;
+    //padding-top: 15px;
+    padding-bottom: 15px;
 }
 
 .usernamelist {

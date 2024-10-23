@@ -131,6 +131,11 @@ textarea {
 	width: 30%;
 	float: left;
 }
+.remItem {
+	margin: 3px;
+	width: auto;
+	float: left;
+}
 
 .listItem {
 	width: 90%;
@@ -197,4 +202,11 @@ margin-right: 10px;
     border: none !important;
 	margin-top: 5px;
     font-weight: bold;
+}
+
+.disabled-save-button {
+    background-color: #004d87; 
+    color: white; 
+    cursor: not-allowed;
+    opacity: 0.6;
 }

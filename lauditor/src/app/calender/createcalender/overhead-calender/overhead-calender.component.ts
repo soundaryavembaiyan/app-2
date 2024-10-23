@@ -30,6 +30,7 @@ export class OverheadCalenderComponent implements OnInit {
   ];
   pipe = new DatePipe('en-US');
   bsValue = new Date();
+  //bsValue!: Date 
   FromTime: any;
   ToTime: any;
   notificationItems: any = [];
@@ -62,12 +63,12 @@ export class OverheadCalenderComponent implements OnInit {
   corpList: any = [];
   selectedCorp:any =[];
   clientcorpList:any = [];
-
+  isEditPage = false;
   
 
   constructor(
     private httpservice: HttpService,
-    public fb: FormBuilder,
+    public fb: FormBuilder,private datePipe: DatePipe,
     private confirmationDialogService: ConfirmationDialogService,
     private toast: ToastrService, 
     private router: Router, private calenderService: CalenderService,
@@ -76,6 +77,7 @@ export class OverheadCalenderComponent implements OnInit {
   ngOnInit() {
     this.setTimes();
     if (window.location.pathname.indexOf("edit") > -1) {
+      this.isEditPage = true;
       this.calenderService.editCalenderObservable.subscribe((result: any) => {
         if (result && result.event_type == 'overhead') {
           this.editInfo = result;
@@ -362,8 +364,6 @@ export class OverheadCalenderComponent implements OnInit {
            // console.log("aaaaaaaaa ",this.tohrs);
           } 
     }
-    
-    
   }
   togetTime(event: any) {
     this.display=true;
@@ -371,6 +371,7 @@ export class OverheadCalenderComponent implements OnInit {
     this.diff(this.selectedQuantity, this.ToSelectedQuantity);
     //console.log(this.diff(this.selectedQuantity, this.ToSelectedQuantity));
   }
+
   allDay(event: any) {
     //console.log(event.target.checked);
     if(event.target.checked){
@@ -385,8 +386,9 @@ export class OverheadCalenderComponent implements OnInit {
   }
   selectDuration(date: any) {
     this.bsValue = date;
-    //console.log(this.bsValue);
+    console.log('dd',this.bsValue);
   }
+  
   addNotification() {
     //console.log(this.notificationItems);
     // if (!this.editInfo)
@@ -394,6 +396,7 @@ export class OverheadCalenderComponent implements OnInit {
   }
   removeNotification(i: number) {
     this.notificationItems.splice(i, 1);
+    this.isEditPage = false;
   }
   onOptionsSelected(event: any, index: number) {
     var value = event.target.value
@@ -408,7 +411,10 @@ export class OverheadCalenderComponent implements OnInit {
   }
   onKey(event: any, index: any, type: any) {
     let value = event.target.value
-    this.notificationItems[index][type] = value
+    value = value.replace(/[^0-9]/g, '');// Remove non-numeric characters
+    this.notificationItems[index][type] = value;
+    event.target.value = value;
+
     if (value == "") {
       $('#' + index + "_notificationTime").text("This field is required")
     }
@@ -418,6 +424,7 @@ export class OverheadCalenderComponent implements OnInit {
     }
   }
   ChangeNotificationValidation(value: any, type: any, index: any) {
+    this.isValidNotification = false; 
     if (type == 'minutes') {
       if (Number(value) < 1 || Number(value) > 60) {
         this.isValidNotification=true;
@@ -446,6 +453,7 @@ export class OverheadCalenderComponent implements OnInit {
       }
     }
   }
+
   addTeamMember() {
     // let tm = this.tmsList.find((d: any) => d.name === this.CalenderForm.value.invitees_internal); //find index in your array
     // this.selectedTeammembers.push(tm);
@@ -468,6 +476,7 @@ export class OverheadCalenderComponent implements OnInit {
     let index = this.selectedTeammembers.findIndex((d: any) => d.id === teamMember.id); //find index in your array
     this.selectedTeammembers.splice(index, 1);
     this.tmsList.push(teamMember);
+    this.isEditPage = false;
   }
   onChangeEntity(event: any) {
     //console.log(event.target.value);
@@ -506,6 +515,7 @@ export class OverheadCalenderComponent implements OnInit {
     let index = this.selectedCorp.findIndex((d: any) => d.id === client.id); //find index in your array
     this.selectedCorp.splice(index, 1);
     this.clientcorpList.push(client);
+    this.isEditPage = false;
   }
 
 
@@ -525,9 +535,11 @@ export class OverheadCalenderComponent implements OnInit {
   // }
 
   removeClient(client: any) {
+    this.isEditPage = true;
     let index = this.selectedClients.findIndex((d: any) => d.id === client.id); //find index in your array
     this.selectedClients.splice(index, 1);
     this.clientsList.push(client);
+    this.isEditPage = false;
   }
 
 
@@ -550,15 +562,17 @@ export class OverheadCalenderComponent implements OnInit {
      this.selectedconsumer?.splice(index, 1);
      this.conlist?.push(con);
    }
+   this.isEditPage = false;
  }
   onSubmit() {
     this.isSubmitted = true;
     if(this.isValidNotification){
-      return
+      return;
     }
     if (!this.CalenderForm.valid) {
       //console.log('error');
-    } else {
+    } 
+    else {
       if (this.CalenderForm.value.addtimesheet) {
 
         if(this.CalenderForm.value.allday){
@@ -664,7 +678,6 @@ export class OverheadCalenderComponent implements OnInit {
       )
     }
     }
-
   }
 
   onReset(){

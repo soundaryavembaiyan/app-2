@@ -2,7 +2,7 @@
 <div class="row view-document">
   <div class="col-12">
     <div class="row">
-
+      <!-- Client code -->
       <div class="col-6" *ngIf="filterKey==='client'">
         <div class="form-group" *ngIf="product != 'corporate'">
           <label for="title" class="fontbold">Client Name <span class="mandate">*</span></label>
@@ -35,7 +35,9 @@
           </div>
         </div>
       </div>
-      <!-- firm code -->
+      <!-- Client code -->
+
+      <!-- Firm code -->
       <div class="col-6" *ngIf="filterKey==='firm'">
         <div class="form-group " id="selectbx">
           <div class="input-group court" id="search">
@@ -100,7 +102,18 @@
                      
         </div>
       </div>
-  
+       <!-- Firm code -->
+
+      <!-- Approval code -->
+      <div class="col-6" *ngIf="filterKey==='delete'">
+
+          <div class="form-group" *ngIf="product != 'corporate'">
+            <label for="title" class="fontbold keydel">List of Documents Pending Approval</label>
+          </div>
+
+      </div>
+      <!-- Approval code -->
+
       <div class="col-6" >
         <div class="form-group float-right">
           <div class="input-group court" id="search">
@@ -114,7 +127,7 @@
           <img src="assets/img/" class="calimg calitem input-group-append searchimg">
         <--  </div>
         </div> -->
-        <div class="form-group float-right" *ngIf="!isFromEmail">
+        <div class="form-group float-right" *ngIf="!isFromEmail && filterKey !== 'delete'">
           <div class="dropdown-select filter" *ngIf="product !='connect'">
             <select (change)="onChange($event.target)">
               <option [selected]="i.value ==value" *ngFor="let i of options">{{i.name}}</option>
@@ -159,7 +172,7 @@
       <div *ngIf="filterKey==='firm' && product == 'corporate' && selectedmatterType != 'internal'" class="custusername tab-margin fontweight">List of External Documents</div>      
       <!-- <div *ngIf="filterKey==='firm' && product == 'corporate'" class="custusername tab-margin fontweight">List of Internal Documents</div> -->
 
-     <div *ngIf="documents && documents?.length==0 && errorMsg" class="custom-alert"> List of  Documents not available!!</div>
+     <div *ngIf="documents && documents?.length==0 && errorMsg && filterKey !== 'delete'" class="custom-alert"> List of Documents not available!!</div>
      <div *ngIf="documents.length>0">
       <div class="table-scroll">
       <table class="table table-borderless tblgrid">
@@ -388,8 +401,99 @@
     </div>
     </div>
   </div>
-
 </div>
+
+<!--Delete Approval-->
+<div *ngIf="filterKey==='delete'">
+  <div class="col-sm-12 gridtable  width-alignment table-wrapper">
+    <div *ngIf="delApproval && delApproval.length === 0" class="custom-alert">List of Documents Pending Approval not available!!</div>
+    <div *ngIf="delApproval.length>0">
+      <div class="table-scroll">
+        <table class="table table-borderless tblgrid">
+          <thead>
+            <tr class="theader">
+              <th style="width:200px !important">
+                <p class="thheadname">Name</p>
+                <img src="assets/img/SORT.PNG" (click)="sortDocuments('name')" class="sortico">
+              </th>
+              <th style="width:200px !important">
+                <p class="thheadname">Description</p>
+                <img src="assets/img/SORT.PNG" class="sortico" (click)="sortDocuments('description')">
+              </th>
+              <th>
+                <p class="thheadname">Created on</p>
+                <img src="assets/img/SORT.PNG" class="sortico" (click)="sortDocuments('created')">
+              </th>
+              <th>
+                <p class="thheadname">Deleted By</p>
+                <img src="assets/img/SORT.PNG" class="sortico" (click)="sortDocuments('deleted_by')">
+              </th>
+              <th>
+                <p class="thheadname">Deleted On</p>
+                <img src="assets/img/SORT.PNG" class="sortico" (click)="sortDocuments('deleted_on')">
+                <img class="sortico">
+              </th>
+              <th>
+                <p class="thheadname">Document Type</p>
+                <img src="assets/img/SORT.PNG" class="sortico" (click)="sortDocuments('doctype')">
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="rone veiw-items" [ngClass]="{'active': document.isChecked}"
+              *ngFor="let document of delApproval | filter:term | paginate: { itemsPerPage: 10, currentPage: p } ">
+              <td style="text-decoration: underline;">{{document.name}}</td>
+              <td>{{document.description}}</td>
+              <td>{{document.created| date:'MMM d, y'}}</td>
+              <td>{{document.deleted_by}}</td>
+              <td>{{document.deleted_on}}</td>
+              <td>{{document.doctype}}</td>
+              <td>
+                <button type="button" class="btn btn-primary  dropdown-toggle actionbtn" data-bs-toggle="dropdown"
+                  [ngClass]="{'disabled': document.isdisabled}">
+                  Action
+                </button>
+                <ul class="dropdown-menu dropdown-menu-start">
+                  <li>
+                    <a class="dropdown-item" (click)="viewApprovalDocument(document);openModal('view-doc-1')">View</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" (click)="editDocInfo(document);openModal('custom-modal-22')">Delete</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" (click)="editDocInfo(document);openModal('custom-modal-restore-22')">Restore</a>
+                  </li>
+                </ul>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row">
+        <div class="col-6"> <label for="">Showing <span>{{fromCount}}</span>to <span>{{toCount}}</span> of <span
+              *ngIf="delApproval">{{delApproval.length}}</span> entries</label></div>
+        <div class="col-6">
+          <pagination-controls class="float-right" (pageChange)="p= $event" [maxSize]="7" [responsive]="true"
+            (pageChange)="pageChanged($event)">
+          </pagination-controls>
+        </div>
+      </div>
+    </div>
+    <div class="row main stepitem " *ngIf="isFromEmail">
+      <div class="col-sm-12">
+        <!-- button cancel and save -->
+        <div class="btnbox">
+          <button type="reset" class="btn btn-default
+                btncancel" (click)="cancelAttachments()">Cancel</button>
+          <button type="submit" class="btn btn-default btnsaved savecls" [ngClass]="{'disable':!(selectedAttachments.length>0)
+                }" (click)="saveAttachments()">Attach Documents</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Delete Approval-->
+
 
 
 <jw-modal id="view-doc-1" class=" view-doc-1 doc-view-scs ">
@@ -485,8 +589,6 @@
   </div>
 </div>
 
-
-
 <div class="modal fade editInfoModal1" id="editInfoModal2" tabindex="-1" aria-labelledby="exampleModalLabel"
   aria-hidden="true">
   <div class="modal-dialog  modal-xl">
@@ -541,9 +643,6 @@
 
   </div>
 </div>
-
-
-
 
 <jw-modal id="custom-modal-1" class="doc-view-scs">
   <!-- <div class="doc-view-scs-body">
@@ -660,7 +759,6 @@
   </div>
 </jw-modal>
 
-
 <jw-modal id="custom-modal-iframe" class="doc-iframe-scs">
   <div class="doc-iframe-scs-body ">
     <div class="close-x float-right" (click)="closeModal('custom-modal-iframe');">X</div>
@@ -691,5 +789,91 @@
     </div>
   </div>
 </jw-modal>
+
+<!--Delete Approval popups-->
+<jw-modal id="custom-modal-22" class="doc-view-scs">
+  <div class="doc-view-scs-body" *ngIf="editDoc">
+    <div class="container">
+      <div class="row">
+        <div class="">
+          <div class="iconclose" (click)="closeModal('custom-modal-22');">X</div>
+          <div class="alertpara">
+            <p class="alertparatxt"> Alert </p>
+          </div>
+          <div class="alertext">
+             Are you sure to permenantly delete<br>
+            <strong>{{editDoc.name}}</strong> document?
+          </div>
+        </div>
+        <div class="alertbutton">
+          <button class="btn btn-default  alertbtn alertbtnno" (click)="closeModal('custom-modal-22');">No</button>
+          <button class="btn btn-default alertbtn alertbtnyes"
+            (click)="closeModal('custom-modal-22');deleteApprovalDocument(editDoc)">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</jw-modal>
+
+<jw-modal id="custom-modal-success-22" class="doc-view-scs">
+  <div class="container">
+    <div class="row" *ngIf="data">
+      <div class="alertbox">
+        <div class="close-x float-right" (click)="closeModal('custom-modal-success-22');">X</div>
+        <div class="alertpara">
+          <p class="alertparatxt">Success</p>
+        </div>
+
+        <div class="alertext"><strong>{{editDoc.name}}</strong> deleted successfully.</div>
+        <div class="center">
+          <button class="btn btn-primary okbtn" (click)="closeModal('custom-modal-success-22')">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</jw-modal>
+
+<jw-modal id="custom-modal-restore-22" class="doc-view-scs">
+  <div class="doc-view-scs-body" *ngIf="editDoc">
+    <div class="container">
+      <div class="row">
+        <div class="">
+          <div class="iconclose" (click)="closeModal('custom-modal-restore-22');">X</div>
+          <div class="alertpara">
+            <p class="alertparatxt"> Alert </p>
+          </div>
+          <div class="alertext">
+             Are you sure to restore<br>
+            <strong>{{editDoc.name}}</strong> document?
+          </div>
+        </div>
+        <div class="alertbutton">
+          <button class="btn btn-default  alertbtn alertbtnno" (click)="closeModal('custom-modal-restore-22');">No</button>
+          <button class="btn btn-default alertbtn alertbtnyes"
+            (click)="closeModal('custom-modal-restore-22');restoreApprovalDocument(editDoc)">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</jw-modal>
+
+<jw-modal id="custom-modal-success-restore-22" class="doc-view-scs">
+  <div class="container">
+    <div class="row" *ngIf="data">
+      <div class="alertbox">
+        <div class="close-x float-right" (click)="closeModal('custom-modal-success-restore-22');">X</div>
+        <div class="alertpara">
+          <p class="alertparatxt">Success</p>
+        </div>
+
+        <div class="alertext"><strong>{{editDoc.name}}</strong> restored successfully.</div>
+        <div class="center">
+          <button class="btn btn-primary okbtn" (click)="closeModal('custom-modal-success-restore-22')">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</jw-modal>
+
 <ngx-spinner  size="medium" type="ball-clip-rotate"></ngx-spinner>
 

@@ -35,6 +35,8 @@ export class ViewEventComponent implements OnInit {
   product = environment.product;
   pdfSrc: any;
   docapi = environment.doc2pdf;
+  repeat_interval:any;
+  repetition=false;
 
   toggleContent(): void {
     this.expanded = !this.expanded;
@@ -67,11 +69,17 @@ export class ViewEventComponent implements OnInit {
           }
 
           if (this.eventInfo?.notifications && this.eventInfo?.notifications?.length > 0) {
-            this.firstNotification = this.eventInfo?.notifications[0];
-            this.remainingNotications = this.eventInfo?.notifications.slice(1, this.eventInfo?.notifications.length);
+            //this.firstNotification = this.eventInfo?.notifications[0];
+            //this.remainingNotications = this.eventInfo?.notifications.slice(1, this.eventInfo?.notifications.length);
+            this.firstNotification = this.eventInfo?.notifications[0]?.replace('-', ' ');
+            this.remainingNotications = this.eventInfo?.notifications.slice(1).map((notification: string) => notification.replace('-', ' '));
           }
           this.OrganizerFirstLetter = this.eventInfo.owner_name.charAt(0)?.toUpperCase();
           this.scheduledDate = this.eventInfo.allday ? new Date(this.eventInfo?.from_ts).toDateString() + ' : All Day' : new Date(this.eventInfo?.from_ts).toDateString() + ' : ' + this.pipe.transform(this.eventInfo?.from_ts, 'h:mm a') + ' - ' + this.pipe.transform(this.eventInfo?.to_ts, 'h:mm a');
+          this.repeat_interval = this.eventInfo?.repeat_interval || '';
+          this.repetition = !!this.repeat_interval;  // Set repetition to true only if repeat_interval is not empty
+          console.log('repeat_interval', this.repeat_interval);
+          
           let teamMembersList = this.eventInfo.invitees_internal.map((person: any) => ({ "name": person.name, "rsvp": person.rsvp }));
           this.teamMembers = [];
           //console.log('teamMembers',this.teamMembers)

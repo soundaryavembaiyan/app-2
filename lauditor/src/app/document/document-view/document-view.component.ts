@@ -83,6 +83,7 @@ export class DocumentViewComponent implements OnInit {
     categories='';
     allowedFileTypes = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/rtf','text/csv','text/rtf'];
     doc:any;
+    delApproval: any[] = [];
     
     constructor(private httpservice: HttpService, private toast: ToastrService,private datePipe: DatePipe,
         private router: Router, private formBuilder: FormBuilder, private modalService: ModalService, public sanitizer: DomSanitizer,
@@ -167,8 +168,15 @@ export class DocumentViewComponent implements OnInit {
         })
         //console.log("checked item " + JSON.stringify(this.groupViewItems));    
         // this.term = '';
+        this.getDeleteApprovalList();
     }
-      
+    
+    getDeleteApprovalList(){
+        this.httpservice.sendGetRequest(URLUtils.deleteApprovalGetLists).subscribe((res: any) => {
+            this.delApproval = res.documents;
+            console.log('d',this.delApproval);
+        })
+    }
     selectDuration(date: any) {
         this.bsValue = date;
     }
@@ -775,8 +783,10 @@ export class DocumentViewComponent implements OnInit {
         this.isReverse = !this.isReverse;
         if (this.isReverse) {
             this.documents = this.documents?.sort((p1: any, p2: any) => (p1[val] < p2[val]) ? 1 : (p1[val] > p2[val]) ? -1 : 0);
+            this.delApproval = this.delApproval?.sort((p1: any, p2: any) => (p1[val] < p2[val]) ? 1 : (p1[val] > p2[val]) ? -1 : 0);
         } else {
             this.documents = this.documents?.sort((p1: any, p2: any) => (p1[val] > p2[val]) ? 1 : (p1[val] < p2[val]) ? -1 : 0);
+            this.delApproval = this.delApproval?.sort((p1: any, p2: any) => (p1[val] > p2[val]) ? 1 : (p1[val] < p2[val]) ? -1 : 0);
         }
     }
 
@@ -824,5 +834,48 @@ export class DocumentViewComponent implements OnInit {
         inputValue = inputValue.replace(/\s{2,}/g, ' ');
         event.target.value = inputValue;
         return;
+    }
+
+    viewApprovalDocument(item:any){
+        let documentId: any = {
+            docid: item.id,
+            doctype: item.doctype
+        };
+
+        this.httpservice.sendPostRequest(URLUtils.deleteApprovalView, documentId).subscribe((res: any) => {
+            this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(res.data.url);
+        });
+        this.pdfSrc = item.filename;
+    }
+    deleteApprovalDocument(val: any) {
+        // let selectedId: any = [];
+        // selectedId.push(val.id)
+        let documentId: any = {
+            docid: val.id,
+            doctype: val.doctype
+        };
+        this.httpservice.sendPostRequest(URLUtils.deleteApprovalDelete, documentId).subscribe((res: any) => {
+            this.modalService.open('custom-modal-success-22');
+            this.getDeleteApprovalList();
+        },
+        (error: HttpErrorResponse) => {
+            if (error.status === 401 || error.status === 403) {
+              const errorMessage = error.error.msg || 'Unauthorized';
+              this.toast.error(errorMessage);
+              console.log(error);
+            }
+        });
+    }
+    restoreApprovalDocument(item:any){
+        let documentId: any = {
+            docid: item.id,
+            doctype: item.doctype
+        };
+
+        this.httpservice.sendPostRequest(URLUtils.deleteApprovalRestore, documentId).subscribe((res: any) => {
+            console.log("resss" ,res);
+            this.modalService.open('custom-modal-success-restore-22');
+            this.getDeleteApprovalList();
+        });
     }
 }

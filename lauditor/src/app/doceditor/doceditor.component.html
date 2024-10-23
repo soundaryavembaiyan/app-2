@@ -209,7 +209,7 @@
                           <div class="table-column" *ngFor="let col of row.controls; let colIndex = index">
                               <i class="fa fa-minus-circle remove-column-btn" *ngIf="j === 0 && colIndex !== 0" (click)="removeColumn(i, colIndex)"></i>
                               <input #tableInput class="tabInput textfield" type="text" [formControlName]="colIndex" placeholder="Enter your content" maxlength="5000"
-                               (input)="restrictSplCharacteratFirst($event)" (keypress)="onKeyPress($event);onKeyPressAmp($event);onEnterPress($event)"/>
+                               (input)="restrictSplCharacteratFirst($event);replaceAmpersand($event)" (keypress)="onKeyPress($event);onKeyPressAmp($event);onEnterPress($event)"/>
                           </div>
                           <i class="fa-solid fa-trash delo" [ngClass]="{'delo': j === 0}" *ngIf="j === 0"></i>
                           <i class="fa-solid fa-trash deltabIcon" *ngIf="j !== 0" (click)="removeRow(i,j)"></i>

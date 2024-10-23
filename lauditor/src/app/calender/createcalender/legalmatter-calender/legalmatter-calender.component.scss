@@ -218,3 +218,14 @@ margin-right: 10px;
 	margin-top: 5px;
     font-weight: bold;
 }
+.remItem {
+	margin: 3px;
+	width: auto;
+	float: left;
+}
+.disabled-save-button {
+    background-color: #004d87; 
+    color: white; 
+    cursor: not-allowed;
+    opacity: 0.6;
+}

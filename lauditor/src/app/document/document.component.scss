@@ -59,6 +59,14 @@
         border-top-right-radius: 5px ;
         border-bottom-right-radius: 5px ;
     }
+    &.delFirm {
+      border-top-right-radius: 0px;
+      border-bottom-right-radius: 0px;
+    }
+    &.delDelete {
+      border-top-right-radius: 5px;
+      border-bottom-right-radius: 5px;
+    }
  
 }
 .arrowitem{

@@ -62,6 +62,7 @@ export class RemindersCalenderComponent implements OnInit {
   corpList: any = [];
   selectedCorp:any =[];
   clientcorpList:any = [];
+  isEditPage = false;
 
   constructor(
     private router: Router,
@@ -73,6 +74,7 @@ export class RemindersCalenderComponent implements OnInit {
   ngOnInit() {
     this.setTimes();
     if (window.location.pathname.indexOf("edit") > -1) {
+      this.isEditPage = true;
       this.calenderService.editCalenderObservable.subscribe((result: any) => {
         if (result && result.event_type == 'reminders') {
           this.editInfo = result;
@@ -355,6 +357,7 @@ export class RemindersCalenderComponent implements OnInit {
   }
   removeNotification(i: number) {
     this.notificationItems.splice(i, 1);
+    this.isEditPage = false;
   }
   onOptionsSelected(event: any, index: number) {
     var value = event.target.value
@@ -369,6 +372,10 @@ export class RemindersCalenderComponent implements OnInit {
   }
   onKey(event: any, index: any, type: any) {
     let value = event.target.value
+    value = value.replace(/[^0-9]/g, '');// Remove non-numeric characters
+    this.notificationItems[index][type] = value;
+    event.target.value = value;
+    
     this.notificationItems[index][type] = value
     if (value == "") {
       $('#' + index + "_notificationTime").text("This field is required")
@@ -379,6 +386,7 @@ export class RemindersCalenderComponent implements OnInit {
     }
   }
   ChangeNotificationValidation(value: any, type: any, index: any) {
+    this.isValidNotification = false; 
     if (type == 'minutes') {
       if (Number(value) < 1 || Number(value) > 60) {
         this.isValidNotification=true;
@@ -428,6 +436,7 @@ export class RemindersCalenderComponent implements OnInit {
     let index = this.selectedTeammembers.findIndex((d: any) => d.id === teamMember.id); //find index in your array
     this.selectedTeammembers.splice(index, 1);
     this.tmsList.push(teamMember);
+    this.isEditPage = false;
   }
   onChangeEntity(event: any) {
     //console.log(event.target.value);
@@ -473,6 +482,7 @@ export class RemindersCalenderComponent implements OnInit {
     let index = this.selectedClients.findIndex((d: any) => d.id === client.id); //find index in your array
     this.selectedClients.splice(index, 1);
     this.clientsList.push(client);
+    this.isEditPage = false;
   }
 
   // addCorp() {
@@ -487,6 +497,7 @@ export class RemindersCalenderComponent implements OnInit {
     let index = this.selectedCorp.findIndex((d: any) => d.id === client.id); //find index in your array
     this.selectedCorp.splice(index, 1);
     this.clientcorpList.push(client);
+    this.isEditPage = false;
   }
 
   addconsumerinvites() {
@@ -510,6 +521,7 @@ export class RemindersCalenderComponent implements OnInit {
      this.selectedconsumer?.splice(index, 1);
      this.conlist?.push(con);
    }
+   this.isEditPage = false;
  }
   onSubmit() {
     this.isSubmitted = true;

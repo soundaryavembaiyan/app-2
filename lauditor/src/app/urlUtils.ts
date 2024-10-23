@@ -277,6 +277,13 @@ export class URLUtils {
     static updateTags(args: any) {
         return `/docs/professional/${args.id}/tags`
     }
+
+    //Delete Approval Doc
+    static deleteApprovalGetLists=`/docs/deleted/list`
+    static deleteApprovalView = `/docs/deleted/view`
+    static deleteApprovalDelete =`/docs/deleted/delete`
+    static deleteApprovalRestore =`/docs/deleted/restore`
+
     //timesheets
     static getTimeSheets = '/v3/user/timesheets'
     static getTasksDetails(args: any) {

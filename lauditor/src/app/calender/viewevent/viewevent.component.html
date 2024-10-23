@@ -52,7 +52,7 @@
             <div class="row containerbox containerboxone ">
                 <div class="col-sm-12">
                     <div class="connectinfo">
-                        <p class="monthtitle">{{scheduledDate}}</p>
+                        <p class="monthtitle">{{scheduledDate}} <b *ngIf="repetition"> | {{ repeat_interval | titlecase }}</b></p> 
                         <label class="timezone">{{eventInfo.timezone_location}}</label>
                     </div>
                 </div>
@@ -60,11 +60,12 @@
             <!-- interanl containr box -->
             <div class="row containerbox formcontainer">
                 <div class="col-sm-7">
+                    <p class="teamclient">Meeting Agenda</p>
                     <p class="meetingitem itemFlex read-more-content" *ngIf="eventInfo.description" [ngClass]="{ 'expanded': expanded }"> {{eventInfo.description}}</p>
                     <!--<u (click)="toggleContent()" class="underline"> {{ expanded ? 'Read Less' : 'Read More' }} </u>-->
                     <p class="teamclient bellinfo"
                         *ngIf="eventInfo.notifications?.length>0">
-                        <img src="assets/img/bellico.JPG" class="bellico">
+                        <img src="assets/img/bell.svg" class="bellico">
                         {{firstNotification}} before
                     </p>
                     <p class="teamclient bellinfo subnotification"
@@ -116,12 +117,12 @@
             <div class="row containerbox formcontainer">
                 <div class="col-xs-12 col-sm-6">
                     <div>
-                        <label class="namecircle">{{OrganizerFirstLetter}}</label>
+                        <label class="namecircle">{{OrganizerFirstLetter}}</label>&nbsp;
                         <label class="usernamelist">{{eventInfo.owner_name}}</label>
                         <p class="lblorg">(organizer)</p>
                     </div>
                     <div class="emptyrow" *ngFor="let tm of teamMembers">
-                        <label class="namecircle namecirclesub">{{tm.firstChar}}</label>
+                        <label class="namecircle namecirclesub">{{tm.firstChar}}</label>&nbsp;
                         <label class="usernamelist">{{tm.name}}
                             <img *ngIf="tm.rsvp==='Yes'"
                                 src="assets/img/tick.JPG" class="tickico">
@@ -136,7 +137,7 @@
                     <div class="horzline"></div>
                     <div *ngFor="let client of clients">
                         <div class="timsheetsubitem" *ngIf="client.entName">
-                            <label class="namecircle namecirclesubtwo">{{client.firstCharEntity}}</label>
+                            <label class="namecircle namecirclesubtwo">{{client.firstCharEntity}}</label>&nbsp;
                             <label class="usernamelist" style="font-weight:
                                 bold;">{{client.entName}}
                                 <img *ngIf="client.rsvp==='Yes'"
@@ -151,7 +152,7 @@
                             </label>
                         </div>
                         <div class="timsheetsubitem"  *ngIf="client.tmId!='consumer'">
-                            <label class="namecircle namecirclesubtwo">{{client.firstChar}}</label>
+                            <label class="namecircle namecirclesubtwo">{{client.firstChar}}</label>&nbsp;
                             <label class="usernamelist" >{{client.name}}
                                 <img *ngIf="client.rsvp==='Yes'"
                                     src="assets/img/tick.JPG"
@@ -165,7 +166,7 @@
                             </label>
                         </div>
                         <div class="timsheetsubitem" *ngIf="client.tmId=='consumer'">
-                            <label class="namecircle namecirclesubtwo">{{client.firstChar}}</label>
+                            <label class="namecircle namecirclesubtwo">{{client.firstChar}}</label>&nbsp;
                             <label class="usernamelist" style="font-weight:
                                 bold;">{{client.name}}  
                                 <img *ngIf="client.rsvp==='Yes'"

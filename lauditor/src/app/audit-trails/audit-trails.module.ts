@@ -16,6 +16,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { DocumentRoutingModule } from '../document/document.routing.module';
 import { SharedModule } from '../shared/shared.module';
 import { AuditRoutingModule } from './audit-routing.module';
+import { MatSelectModule } from '@angular/material/select';
 
 // This Module's Components
 import { AuditTrailsComponent } from './audit-trails.component';
@@ -37,6 +38,7 @@ import { AuditTrailsComponent } from './audit-trails.component';
         NgxPaginationModule,
         MatPaginatorModule ,
         MatTableModule,
+        MatSelectModule,
         BsDatepickerModule.forRoot(),
 
         ],
