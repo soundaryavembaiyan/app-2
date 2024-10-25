@@ -32,13 +32,8 @@
 
                 <div class="col-1">
                     <div class="d-inline float-right">
-                        <img src="assets/img/editicon.JPG"
-                            *ngIf="eventInfo.owner"
-                            class="icocontext " (click)="onEdit()">
-                        <img src="assets/img/deleteico.jpg"
-                            class="icocontext"
-                            (click)="onDelete()">
-
+                        <img src="assets/img/editicon.JPG" *ngIf="eventInfo.owner" class="icocontext" (click)="onEdit()">
+                        <img src="assets/img/deleteico.jpg" *ngIf="eventInfo.owner" class="icocontext" (click)="onDelete()">
                     </div>
                 </div>
             </div>

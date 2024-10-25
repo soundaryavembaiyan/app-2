@@ -11,6 +11,7 @@ export const environment = {
   DOC2FILE :'https://dev.utils.doc2pdf.digicoffer.com/api/v1/docfile2pdf',
   AVChat:'https://dev.testavchat.digicoffer.com/',
   lateXAPI: 'https://devapi.latex.digicoffer.com',
+  latexImageFolder: '/home/ubuntu/latekapi/uploads',
   xmppDomain: 'devchat.vitacape.com',
   product: 'connect',
   production: false

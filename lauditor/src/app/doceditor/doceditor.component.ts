@@ -64,6 +64,7 @@ export class DoceditorComponent {
   docid: any;
   currentDocId: any;
   latexdoc = environment.lateXAPI;
+  latexImageFolder = environment.latexImageFolder;
   submitted = false;
 
   selectedValue: string = "create";
@@ -1561,7 +1562,7 @@ export class DoceditorComponent {
     // console.log('getBlock listData',this.listData)
     //  console.log('getBlock tableData',this.tableData)
 
-    let imagesFolder = "/home/ubuntu/latekapi/uploads";
+    let imagesFolder = this.latexImageFolder;
     let userid = localStorage.getItem('user_id');
 
     switch (contentType) {

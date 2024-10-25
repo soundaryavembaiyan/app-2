@@ -106,11 +106,9 @@
 
       <!-- Approval code -->
       <div class="col-6" *ngIf="filterKey==='delete'">
-
-          <div class="form-group" *ngIf="product != 'corporate'">
+          <div class="form-group">
             <label for="title" class="fontbold keydel">List of Documents Pending Approval</label>
           </div>
-
       </div>
       <!-- Approval code -->
 
@@ -426,11 +424,11 @@
               </th>
               <th>
                 <p class="thheadname">Deleted By</p>
-                <img src="assets/img/SORT.PNG" class="sortico" (click)="sortDocuments('deleted_by')">
+                <img src="assets/img/SORT.PNG" class="sortico" (click)="sortDocuments('deletedBy')">
               </th>
               <th>
                 <p class="thheadname">Deleted On</p>
-                <img src="assets/img/SORT.PNG" class="sortico" (click)="sortDocuments('deleted_on')">
+                <img src="assets/img/SORT.PNG" class="sortico" (click)="sortDocuments('deletedOn')">
                 <img class="sortico">
               </th>
               <th>
@@ -444,9 +442,9 @@
               *ngFor="let document of delApproval | filter:term | paginate: { itemsPerPage: 10, currentPage: p } ">
               <td style="text-decoration: underline;">{{document.name}}</td>
               <td>{{document.description}}</td>
-              <td>{{document.created| date:'MMM d, y'}}</td>
-              <td>{{document.deleted_by}}</td>
-              <td>{{document.deleted_on}}</td>
+              <td>{{document.created | date:'MMM d, y'}}</td>
+              <td>{{document.deletedBy}}</td>
+              <td>{{document.deletedOn}}</td>
               <td>{{document.doctype}}</td>
               <td>
                 <button type="button" class="btn btn-primary  dropdown-toggle actionbtn" data-bs-toggle="dropdown"

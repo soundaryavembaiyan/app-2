@@ -12,6 +12,7 @@ export const environment = {
     chatops:' https://dev.utils.chat.digicoffer.com',
     xmppDomain: 'chat.vitacape.com',
     lateXAPI: ' https://stagingapi.latex.digicoffer.com',
+    latexImageFolder: '/home/ubuntu/latekeditor_api_python/uploads',
     product: 'connect',
     production: true
   };

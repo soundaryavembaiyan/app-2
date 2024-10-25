@@ -3,6 +3,7 @@ export const environment = {
     emailApi:"https://dev.utils.mail.digicoffer.com",
     doc2pdf:"https://dev.utils.doc2pdf.digicoffer.com/api/v1/doc2pdf",
     lateXAPI: 'https://devapi.latex.digicoffer.com',
+    latexImageFolder: '/home/ubuntu/latekapi/uploads',
     paymentgatway:"https://dev2.payment.digicoffer.com/",
     chatops:' https://dev.utils.chat.digicoffer.com',
     xmppDomain: 'devchat.vitacape.com',

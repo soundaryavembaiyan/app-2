@@ -365,6 +365,7 @@ export class GeneralMatterCalenderComponent implements OnInit {
     //console.log(this.notificationItems);
     // if (!this.editInfo)
     this.notificationItems.push({ time: "10", type: "minutes" });
+    this.isEditPage = false;
   }
   removeNotification(i: number) {
     this.notificationItems.splice(i, 1);
@@ -389,7 +390,9 @@ export class GeneralMatterCalenderComponent implements OnInit {
     
     this.notificationItems[index][type] = value
     if (value == "") {
-      $('#' + index + "_notificationTime").text("This field is required")
+      //$('#' + index + "_notificationTime").text("This field is required")
+      $('#' + index + "_notificationTime").text("");
+      this.notificationItems[index].time = "";
     }
     else {
       $('#' + index + "_notificationTime").text("")
@@ -602,37 +605,73 @@ export class GeneralMatterCalenderComponent implements OnInit {
       });
     }
   }
+  // getTime(event: any) {
+  //   this.selectedQuantity = event.target.value;
+  //   this.ToSelectedQuantity = this.addMinutesToTime(this.selectedQuantity, 30);
+  //   this.CalenderForm.controls['to_ts'].setValue(this.ToSelectedQuantity);
+  //   //console.log(this.diff(this.selectedQuantity, this.ToSelectedQuantity));
+  //   if(this.selectedQuantity){
+  //     this.displayEndTime=this.tohrs.filter((x: number)=>{
+  //       return x > this.selectedQuantity;
+  //     });
+  //     this.tohrs=this.displayEndTime;
+  //     //console.log("aaaaaaaaa ",this.tohrs);
+  //   }
+
+  //   if( this.display==true){
+
+  //         this.tohrs=this.hrs;
+  //         //console.log("bbbbbbbbb ", this.tohrs);
+  //         if(this.selectedQuantity){
+  //           this.displayEndTime=this.tohrs.filter((x: number)=>{
+  //             return x > this.selectedQuantity;
+  //           });
+  //           this.tohrs=this.displayEndTime;
+  //          // console.log("aaaaaaaaa ",this.tohrs);
+  //         } 
+  //   }
+  // }
   getTime(event: any) {
     this.selectedQuantity = event.target.value;
     this.ToSelectedQuantity = this.addMinutesToTime(this.selectedQuantity, 30);
-    this.CalenderForm.controls['to_ts'].setValue(this.ToSelectedQuantity);
-    //console.log(this.diff(this.selectedQuantity, this.ToSelectedQuantity));
-    if(this.selectedQuantity){
-      this.displayEndTime=this.tohrs.filter((x: number)=>{
-        return x > this.selectedQuantity;
-      });
-      this.tohrs=this.displayEndTime;
-      //console.log("aaaaaaaaa ",this.tohrs);
-    }
-
-    if( this.display==true){
-
-          this.tohrs=this.hrs;
-          //console.log("bbbbbbbbb ", this.tohrs);
-          if(this.selectedQuantity){
-            this.displayEndTime=this.tohrs.filter((x: number)=>{
-              return x > this.selectedQuantity;
-            });
-            this.tohrs=this.displayEndTime;
-           // console.log("aaaaaaaaa ",this.tohrs);
-          } 
-    }
+    this.CalenderForm.controls['to_ts'].setValue(this.ToSelectedQuantity);// Update the form control with the new end time
+  
+    // Filter to ensure only valid end times (times after the selected start time)
+    this.displayEndTime = this.hrs.filter((x: string) => {
+      return this.compareTimes(x, this.selectedQuantity) > 0; // Keep only times after the selected start time
+    });
+    this.tohrs = this.displayEndTime;
   }
+  compareTimes(time1: string, time2: string): number {
+    const [hours1, minutes1] = time1.split(':').map(Number);
+    const [hours2, minutes2] = time2.split(':').map(Number);
+
+    const date1 = new Date();
+    const date2 = new Date();
+
+    // Handle times across midnight by adding one day if needed
+    if (hours1 < hours2 || (hours1 === hours2 && minutes1 < minutes2)) {
+      // If time1 is technically on the next day
+      date1.setDate(date1.getDate() + 1);
+    }
+    date1.setHours(hours1, minutes1);
+    date2.setHours(hours2, minutes2);
+
+    return date1.getTime() - date2.getTime(); // Return difference in milliseconds
+  }
+
   togetTime(event: any) {
     this.display=true;
     this.ToSelectedQuantity = event.target.value;
     this.diff(this.selectedQuantity, this.ToSelectedQuantity);
     //console.log(this.diff(this.selectedQuantity, this.ToSelectedQuantity));
+  }
+  formatTime24to12(time: string): string {
+    const [hours, minutes] = time.split(':').map(Number);
+    const suffix = hours >= 12 ? 'pm' : 'am';
+    const hour12 = hours % 12 || 12;
+    const formattedTime = hour12 + ':' + (minutes < 10 ? '0' + minutes : minutes) + ' ' + suffix;
+    return formattedTime;
   }
   onSubmit() {
     this.isSubmitted = true;
@@ -700,33 +739,47 @@ export class GeneralMatterCalenderComponent implements OnInit {
         if (!this.CalenderForm.valid) {	
           return;	
         }	
-        this.editCalenderDialogService.open();	
-        this.editCalenderDialogService.editCalObservable.subscribe((data:any)=>{	
-          if(data){	
-          this.CalenderForm.value.recurrent_edit_choice = data;	
-          this.httpservice.sendPutRequest(URLUtils.updateEvent({'eventId':this.editInfo?.id,'offset':this.editInfo?.timezone_offset}), this.CalenderForm.value).subscribe((res: any) => {	
-            if (!res.error) {	
-              this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully modified the event', false, 'View Changes', 'Cancel', true).then((confirmed) => {	
-                this.editCalenderDialogService.editCalSubmitted.next(null);
-                if (confirmed)	
-                  this.router.navigate(['/meetings/view']);	
-                else	
-                  window.location.reload();	
-              })	
-            } else {	
-              this.confirmationDialogService.confirm('Alert', res.msg, false, '', '', false, 'sm', false)	
-            }	
-          },
-          (error: HttpErrorResponse) => {
-            if (error.status === 401 || error.status === 403) {
-              const errorMessage = error.error.msg || 'Unauthorized';
-              this.toast.error(errorMessage);
-              console.log(error);
-            } 
-          });	
-          return;	
-        }	
-        });     	
+        // this.editCalenderDialogService.open();	
+        // this.editCalenderDialogService.editCalObservable.subscribe((data:any)=>{	
+        //   if(data){	
+        //   this.CalenderForm.value.recurrent_edit_choice = data;	
+        //   this.httpservice.sendPutRequest(URLUtils.updateEvent({'eventId':this.editInfo?.id,'offset':this.editInfo?.timezone_offset}), this.CalenderForm.value).subscribe((res: any) => {	
+        //     if (!res.error) {	
+        //       this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully modified the event', false, 'View Changes', 'Cancel', true).then((confirmed) => {	
+        //         this.editCalenderDialogService.editCalSubmitted.next(null);
+        //         if (confirmed)	
+        //           this.router.navigate(['/meetings/view']);	
+        //         else	
+        //           window.location.reload();	
+        //       })	
+        //     } else {	
+        //       this.confirmationDialogService.confirm('Alert', res.msg, false, '', '', false, 'sm', false)	
+        //     }	
+        //   },
+        //   (error: HttpErrorResponse) => {
+        //     if (error.status === 401 || error.status === 403) {
+        //       const errorMessage = error.error.msg || 'Unauthorized';
+        //       this.toast.error(errorMessage);
+        //       console.log(error);
+        //     } 
+        //   });	
+        //   return;	
+        // }	
+        // }); 
+        
+        const validIntervals = ['weekly', 'daily', 'biweekly', 'monthly', 'yearly'];
+        //Event reccurring dialog
+        if (this.editInfo?.repeat_interval && validIntervals.includes(this.editInfo.repeat_interval.toLowerCase())) {
+          this.editCalenderDialogService.open();
+          this.editCalenderDialogService.editCalObservable.subscribe((data: any) => {
+            if (data) {
+              this.CalenderForm.value.recurrent_edit_choice = data;
+              this.sendUpdateRequest(); // Proceed with update request
+            }
+          });
+        } else {
+          this.sendUpdateRequest(); // If repeat_interval is empty directly proceed with the update request
+        }     	
       }	
       else{
       this.httpservice.sendPostRequest(URLUtils.createEvent, this.CalenderForm.value).subscribe((res: any) => {
@@ -750,6 +803,36 @@ export class GeneralMatterCalenderComponent implements OnInit {
       })
     }
   }
+  }
+
+  sendUpdateRequest() {
+    this.httpservice.sendPutRequest(
+      URLUtils.updateEvent({ 'eventId': this.editInfo?.id, 'offset': this.editInfo?.timezone_offset }),
+      this.CalenderForm.value
+    ).subscribe(
+      (res: any) => {
+        if (!res.error) {
+          this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully modified the event', false, 'View Changes', 'Cancel', true)
+            .then((confirmed) => {
+              this.editCalenderDialogService.editCalSubmitted.next(null);
+              if (confirmed) {
+                this.router.navigate(['/meetings/view']);
+              } else {
+                window.location.reload();
+              }
+            });
+        } else {
+          this.confirmationDialogService.confirm('Alert', res.msg, false, '', '', false, 'sm', false);
+        }
+      },
+      (error: HttpErrorResponse) => {
+        if (error.status === 401 || error.status === 403) {
+          const errorMessage = error.error.msg || 'Unauthorized';
+          this.toast.error(errorMessage);
+          console.log(error);
+        }
+      }
+    );
   }
 
   onReset(){

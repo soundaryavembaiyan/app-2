@@ -75,6 +75,7 @@ export class GeneralMatterInfoComponent implements OnInit {
       this.matterService.editGeneralMatterObservable.subscribe((result: any) => {
         if (result) {
           this.editeMatterInfo = result;
+          //console.log('editeMatterInfo',this.editeMatterInfo)
           this.isEdit = true;
           this.generalForm.patchValue(this.editeMatterInfo);
           if (this.editeMatterInfo?.startdate && this.editeMatterInfo.startdate != "") {
@@ -173,7 +174,7 @@ export class GeneralMatterInfoComponent implements OnInit {
         if (error.status === 401 || error.status === 403) {
           const errorMessage = error.error.msg || 'Unauthorized';
           this.toast.error(errorMessage);
-          console.log(error);
+          //console.log(error);
         }
       }
       )

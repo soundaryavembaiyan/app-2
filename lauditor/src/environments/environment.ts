@@ -13,6 +13,7 @@ export const environment = {
   xmppDomain: 'devchat.vitacape.com',
   chatops:' https://dev.utils.chat.digicoffer.com',
   lateXAPI: 'https://devapi.latex.digicoffer.com',
+  latexImageFolder: '/home/ubuntu/latekapi/uploads',
   AVChat:'https://dev.testavchat.digicoffer.com/',
   product: 'lauditor',
   production: false

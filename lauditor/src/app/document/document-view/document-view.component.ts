@@ -174,7 +174,7 @@ export class DocumentViewComponent implements OnInit {
     getDeleteApprovalList(){
         this.httpservice.sendGetRequest(URLUtils.deleteApprovalGetLists).subscribe((res: any) => {
             this.delApproval = res.documents;
-            console.log('d',this.delApproval);
+            //console.log('d',this.delApproval);
         })
     }
     selectDuration(date: any) {

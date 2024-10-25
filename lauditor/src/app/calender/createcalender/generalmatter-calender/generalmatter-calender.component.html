@@ -37,12 +37,12 @@
         
                                     <select class="marginright form-control timeClass" (change)="getTime($event)" formControlName="from_ts">
                                         <option *ngFor="let option of hrs" [value]="option" [selected]="option == selectedQuantity">
-                                            {{ option }}
+                                            {{ formatTime24to12(option) }}
                                         </option>
                                     </select>
                                     <select class="form-control timeClass" (change)="togetTime($event)" formControlName="to_ts">
                                         <option *ngFor="let option of tohrs" [value]="option" [selected]="option == ToSelectedQuantity">
-                                            {{ option }}
+                                            {{ formatTime24to12(option) }}
                                         </option>
                                     </select>    
                                 </span>

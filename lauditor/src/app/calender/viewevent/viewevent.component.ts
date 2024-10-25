@@ -123,6 +123,9 @@ export class ViewEventComponent implements OnInit {
   }
 
   onDelete() {
+    // console.log('eveInfo', this.eventInfo)
+    // let name=localStorage.getItem('name');
+    //if(this.eventInfo.owner_name === name){
     this.confirmationDialogService.confirm('Confirmation', 'Are you sure do you want to delete ' + this.eventInfo.title, true, 'Yes')
       .then((confirmed) => {
         if (confirmed) {
@@ -140,6 +143,11 @@ export class ViewEventComponent implements OnInit {
           );
         }
       })
+    //}
+    // else{
+    //   this.toaster.error('You are not authorized to delete this event.')
+    //   return;
+    // }
   }
 
   onClickAttending(val: string) {

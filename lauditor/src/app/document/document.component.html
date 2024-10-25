@@ -26,7 +26,7 @@
             <a href="javascript:void(0);" class=" details doc-option firm" [ngClass]="{'delFirm': docCategory === 'view' && role==='SU'}" (click)="gotoDetail('firm')" *ngIf="product != 'corporate'">Firm</a>
             <!-- <a href="javascript:void(0);" class=" details doc-option  firm" (click)="gotoDetail('firm')" *ngIf="product == 'corporate'">Internal</a> -->
 
-            <a href="javascript:void(0);" class=" details doc-option delete delDelete" (click)="gotoDetail('delete')" *ngIf="product != 'corporate' && docCategory === 'view' && role==='SU'">Deleted</a>
+            <a href="javascript:void(0);" class=" details doc-option delete delDelete" (click)="gotoDetail('delete')" *ngIf="(product != 'corporate' && product != 'content' && product != 'connect') && docCategory === 'view' && role==='SU'">Deleted</a>
             <!-- Product condition for label ends here..-->
           </div>
         </div>

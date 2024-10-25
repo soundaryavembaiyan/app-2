@@ -69,7 +69,7 @@ export class ViewGeneralmatterComponent implements OnInit {
           );
           return matter;
         });
-        console.log('Filtered generalMatters:', this.generalMatters);
+        //console.log('Filtered generalMatters:', this.generalMatters);
       }
       //this.matterCount = this.generalMatters.length;
       //console.log('this.generalMatters',this.generalMatters.length)
@@ -90,7 +90,7 @@ export class ViewGeneralmatterComponent implements OnInit {
     this.selectedOption = event.target.value;
     // Perform additional actions based on the selected option
     // For example, you can call a function or update other variables
-    console.log('Selected option:', this.selectedOption);
+    //console.log('Selected option:', this.selectedOption);
     // Your additional actions here
     if(this.selectedOption=="External Matters"){
       this.getExternalMatters()
@@ -123,7 +123,7 @@ export class ViewGeneralmatterComponent implements OnInit {
   loadEditMatterInfo(legalMatter: any) {
     //this.matterService.editGeneralMatter(legalMatter);
     this.httpservice.sendGetRequest(URLUtils.getGeneralMatterInfoDetails(legalMatter.id)).subscribe((res: any) => {
-      console.log('res',res)
+      //console.log('res',res)
       this.matterService.editGeneralMatter(res.matter);
     })
     this.router.navigate(['/matter/generalmatter/matterEdit'])
@@ -132,7 +132,7 @@ export class ViewGeneralmatterComponent implements OnInit {
     // const legal = { ...legalMatter, type: type };
     // this.matterService.editGeneralMatter(legal);
     this.httpservice.sendGetRequest(URLUtils.getGeneralMatterInfoDetails(legalMatter.id)).subscribe((res: any) => {
-      const legal = { ...res.matter, id:legalMatter.id, type: type };
+      const legal = { ...res.matter, type: type, groups:legalMatter.groups };
       this.matterService.editGeneralMatter(legal);
     })
     this.router.navigate(['/matter/generalmatter/viewDetails'])
