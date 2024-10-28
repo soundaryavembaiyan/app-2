@@ -16,6 +16,7 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { ViewEventComponent } from './viewevent/viewevent.component';
 import { ToastrModule } from 'ngx-toastr';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { ToastrModule } from 'ngx-toastr';
     FormsModule,
     CommonModule,
     ReactiveFormsModule,
+    MatSelectModule,
     CalenderRoutingModule,
     BsDatepickerModule.forRoot(),
     ToastrModule.forRoot(),

@@ -265,7 +265,7 @@
            <td style="padding: 25px;">
             <div class="form-group input-group">
                  <input maxlength="10" (input)="onInput($event);restrictFirstPosition($event)" formControlName="unitPrice" class="form-control textbox txtS" 
-                 placeholder="Rate" style="width: 100px;" oninput="this.value = this.value.replace(/[^A-Za-z0-9 ]|^ /g,'')" required/> 
+                 placeholder="Rate" style="width: 100px;" oninput="this.value = this.value.replace(/[^A-Za-z0-9]|^ /g,'')" required/> 
             </div>
             <div *ngIf="submitted && createinvoiceForm.get('invoice_items').controls[i].get('unitPrice').invalid" class="errorStyle" style="height: 0px;">
               <small *ngIf="createinvoiceForm.get('invoice_items').controls[i].get('unitPrice').errors.required">This field is required</small>
@@ -295,7 +295,7 @@
           <td style="padding: 25px;">
             <div class="form-group input-group">
                  <input maxlength="10" (input)="onInput($event);restrictFirstPosition($event)" formControlName="quantity" class="form-control textbox txtS" 
-                 placeholder="Quantity" style="width: 100px;" oninput="this.value = this.value.replace(/[^A-Za-z0-9 ]|^ /g,'')" required/> 
+                 placeholder="Quantity" style="width: 100px;" oninput="this.value = this.value.replace(/[^A-Za-z0-9]|^ /g,'')" required/> 
             </div>
             <div *ngIf="submitted && createinvoiceForm.get('invoice_items').controls[i].get('quantity').invalid" class="errorStyle" style="height: 0px;">
               <small *ngIf="createinvoiceForm.get('invoice_items').controls[i].get('quantity').errors.required">This field is required</small>
@@ -391,7 +391,8 @@
 
     <th>
       <div class="form-group input-group">
-        <input  placeholder="(%)" maxlength="5" (input)="discountVal($event)" min="0" max="100" step="any" class="form-controle" formControlName="discount" name="Disc" />
+        <input  placeholder="(%)" maxlength="5" min="0" max="100" step="any" class="form-controle" formControlName="discount" name="Disc" 
+        (input)="onInputDT($event);restrictFirstPosition($event);discountVal($event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '')"/>
       </div>
     
       <div *ngIf="f['discount'].errors" class="errorStyle">
@@ -414,7 +415,8 @@
 
     <th>
       <div class="form-group input-group">
-        <input  placeholder="(%)" maxlength="5" (input)="taxVal($event)"  min="0" max="100" step="any" class="form-controle" formControlName="tax" name="Disc" />
+        <input  placeholder="(%)" maxlength="5" min="0" max="100" step="any" class="form-controle" formControlName="tax" name="Disc" 
+        (input)="onInputDT($event);restrictFirstPosition($event);taxVal($event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '')"/>
       </div>
     
       <div *ngIf="f['tax'].errors" class="errorStyle">

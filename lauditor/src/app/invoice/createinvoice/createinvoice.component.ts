@@ -592,24 +592,24 @@ export class CreateinvoiceComponent {
 
   }
   
-  onInput(event: Event) {
-    // const inputElement = event.target as HTMLInputElement;
-    // if (!inputElement.value.match(/^(?!0$)\d+(\.\d{0,2})?$/)) {
-    //   inputElement.value = '';
-    // }
-   const inputwholeElement = event.target as HTMLInputElement;
-   if (!inputwholeElement.value.match(/^[1-9][0-9]{0,9}$/)) {
-    inputwholeElement.value = '';
-    }
+  // onInput(event: Event) {
+  //   // const inputElement = event.target as HTMLInputElement;
+  //   // if (!inputElement.value.match(/^(?!0$)\d+(\.\d{0,2})?$/)) {
+  //   //   inputElement.value = '';
+  //   // }
+  //  const inputwholeElement = event.target as HTMLInputElement;
+  //  if (!inputwholeElement.value.match(/^[1-9][0-9]{0,9}$/)) {
+  //   inputwholeElement.value = '';
+  //   }
 
-    //Hide the placeholder text in Firefox
-    const inputElement = event.target as HTMLInputElement;
-    if (inputElement.value) {
-      inputElement.classList.add('has-value');
-    } else {
-      inputElement.classList.remove('has-value');
-    }
-  }
+  //   //Hide the placeholder text in Firefox
+  //   const inputElement = event.target as HTMLInputElement;
+  //   if (inputElement.value) {
+  //     inputElement.classList.add('has-value');
+  //   } else {
+  //     inputElement.classList.remove('has-value');
+  //   }
+  // }
 
   // totalVal(event: Event){
   //   const inputElement = event.target as HTMLInputElement;
@@ -676,11 +676,65 @@ restrictSpaces(event: any) {
   return
 }
 
+// restrictFirstPosition(event: any): void {
+//   const input = event.target.value;
+//   if (input && input[0] === '0') {
+//     event.target.value = input.substring(1);
+//   }
+// }
+onInput(event: Event) {
+  const inputElement = event.target as HTMLInputElement;
+  
+  // Only allow numbers and spaces, and remove other invalid characters
+  inputElement.value = inputElement.value.replace(/[^0-9 ]/g, '');
+  
+  // If the first character is still zero, remove it
+  this.restrictFirstPosition(event);
+  
+  // Add 'has-value' class if the input is not empty (for visual purposes)
+  if (inputElement.value) {
+    inputElement.classList.add('has-value');
+  } else {
+    inputElement.classList.remove('has-value');
+  }
+}
+
 restrictFirstPosition(event: any): void {
   const input = event.target.value;
   if (input && input[0] === '0') {
-    event.target.value = input.substring(1);
+    event.target.value = input.substring(1);  // Remove the leading zero
+  }
+}
+onInputDT(event: Event) {
+  const inputElement = event.target as HTMLInputElement;
+  
+  // Allow only numbers and one dot, remove other invalid characters
+  inputElement.value = inputElement.value.replace(/[^0-9.]/g, '');
+
+  // Ensure only one dot is allowed
+  const dotCount = (inputElement.value.match(/\./g) || []).length;
+  if (dotCount > 1) {
+    inputElement.value = inputElement.value.substring(0, inputElement.value.lastIndexOf('.'));
+  }
+
+  // Remove leading zeros (if present)
+  this.restrictFirstPositionDT(event);
+
+  // Add 'has-value' class if the input is not empty (for visual purposes)
+  if (inputElement.value) {
+    inputElement.classList.add('has-value');
+  } else {
+    inputElement.classList.remove('has-value');
+  }
+}
+
+restrictFirstPositionDT(event: Event): void {
+  const inputElement = event.target as HTMLInputElement;
+  if (inputElement.value.startsWith('0') && inputElement.value[1] !== '.') {
+    inputElement.value = inputElement.value.substring(1);  // Remove leading zero unless it's followed by a dot
   }
 }
 }
+
+
 
