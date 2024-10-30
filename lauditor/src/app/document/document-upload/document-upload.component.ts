@@ -592,7 +592,8 @@ export class DocumentUploadComponent implements OnInit {
         if (this.filter === 'client') {
             this.clientId.push(item);
             this.httpservice.sendGetRequest(URLUtils.getMattersByClient(item)).subscribe((res: any) => {
-                this.matterList = res?.matterList;
+                //this.matterList = res?.matterList;
+                this.matterList = this.filterUniqueMatters(res?.matterList);
             });
 
             let clientInfo = new Array();
@@ -624,6 +625,17 @@ export class DocumentUploadComponent implements OnInit {
         } else {
             this.groupId.push(item?.id);
         }
+    }
+    
+    // filter out duplicate matters based on 'id' or 'type'
+    filterUniqueMatters(matterList: any[]): any[] {
+        const uniqueMattersById = new Map(); // ensure uniqueness based on 'id'
+        matterList.forEach(matter => {
+            if (!uniqueMattersById.has(matter.id)) {
+                uniqueMattersById.set(matter.id, matter);
+            }
+        });
+        return Array.from(uniqueMattersById.values());
     }
 
     // cancelClient() {

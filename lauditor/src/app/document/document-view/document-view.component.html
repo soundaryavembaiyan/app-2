@@ -337,8 +337,9 @@
               currentPage: p } ">
 
             <td style="text-decoration: underline">{{document.name}}</td>
-            <td>{{document.status}}</td>
-            <td>{{document.created| date:'MMM d, y'}}</td>
+            <!-- <td>{{document.status}}</td>-->
+            <td>{{document.status === 'finished' ? 'Completed' : document.status === 'failed' ? 'Failed' : document.status}}</td>
+            <td>{{document.created | date:'MMM d, y'}}</td>
             <td>{{document.createdby}}</td>
             <td>
               <div *ngFor="let tag of document.tags">{{tag}}</div>
@@ -431,22 +432,22 @@
                 <img src="assets/img/SORT.PNG" class="sortico" (click)="sortDocuments('deletedOn')">
                 <img class="sortico">
               </th>
-              <th>
+              <!--<th>
                 <p class="thheadname">Document Type</p>
                 <img src="assets/img/SORT.PNG" class="sortico" (click)="sortDocuments('doctype')">
-              </th>
+              </th>-->
             </tr>
           </thead>
           <tbody>
             <tr class="rone veiw-items" [ngClass]="{'active': document.isChecked}"
               *ngFor="let document of delApproval | filter:term | paginate: { itemsPerPage: 10, currentPage: p } ">
-              <td style="text-decoration: underline;">{{document.name}}</td>
-              <td>{{document.description}}</td>
-              <td>{{document.created | date:'MMM d, y'}}</td>
-              <td>{{document.deletedBy}}</td>
-              <td>{{document.deletedOn | date:'MMM d, y'}}</td>
-              <td>{{document.doctype}}</td>
-              <td>
+              <td class="tabclass" style="text-decoration: underline;">{{document.name}}</td>
+              <td class="tabclass">{{document.description}}</td>
+              <td class="tabclass">{{document.created | date:'MMM d, y'}}</td>
+              <td class="tabclass">{{document.deletedBy}}</td>
+              <td class="tabclass">{{document.deletedOn | date:'MMM d, y'}}</td>
+              <!--<td class="tabclass">{{document.doctype}}</td>-->
+              <td class="tabclass">
                 <button type="button" class="btn btn-primary  dropdown-toggle actionbtn" data-bs-toggle="dropdown"
                   [ngClass]="{'disabled': document.isdisabled}">
                   Action
@@ -607,7 +608,7 @@
                 <div class="col-6">
                   <div class="form-group nameSet">
                     <label for="tagKey-{{ i }}" class="lable-size">Tag Type</label>
-                    <input #tagTypeInput type="text" formControlName="key" class="text-size form-control group-name-text"
+                    <input #tagTypeInput type="text" formControlName="key" class="text-size form-control group-name-text addtagField"
                       id="tagKey-{{ i }}" (input)="restrictSpaces($event)" oninput="this.value = this.value.replace(/[^A-Za-z0-9-()._ ]|^ /g,'')"
                       maxlength="30" autocomplete="off">
                   </div>
@@ -666,7 +667,8 @@
         <div *ngIf="editmetadata" class="alertext">Congratulations!! You have successfully updated document information.
         </div>
         <div *ngIf="isDelete" class="alertext">Congratulations!! You have successfully deleted 
-          <b> {{ editDoc.name.length > 50 ? editDoc.name.substring(0, 50) + '... ' : editDoc.name }}</b> document.
+          <!--<b> {{ editDoc.name.length > 50 ? editDoc.name.substring(0, 50) + '... ' : editDoc.name }}</b> -->
+          document.
         </div>
         <div *ngIf="isEncypted" class="alertext">Congratulations!! You have successfully encrypted <b>{{editDoc.name}}</b>
           document.
@@ -693,9 +695,10 @@
           </div>
           <div class="alertext">This action cannot be undone.<br>
             Are you sure you want to delete<br>
-            <strong style="font-weight: 900;">
+            <!--<strong style="font-weight: 900;">
               {{ editDoc.name.length > 50 ? editDoc.name.substring(0, 50) + '... ' : editDoc.name }}
-            </strong> document?
+            </strong> -->
+            document?
           </div>
         </div>
         <div class="alertbutton delBtn">
@@ -718,7 +721,8 @@
           </div>
           <div class="alertext">
             Are you sure you want to delete<br>
-            <b>{{editDoc.name}}</b> document?
+          <!-- <b>{{editDoc.name}}</b> -->
+            document?
           </div>
         </div>
         <div class="alertbutton">
@@ -798,12 +802,12 @@
           <div class="alertpara">
             <p class="alertparatxt"> Alert </p>
           </div>
-          <div class="alertext">
+          <div class="alertexto">
              Are you sure to permenantly delete<br>
             <strong>{{editDoc.name}}</strong> document?
           </div>
         </div>
-        <div class="alertbutton">
+        <div class="alertbutton bot">
           <button class="btn btn-default  alertbtn alertbtnno" (click)="closeModal('custom-modal-22');">No</button>
           <button class="btn btn-default alertbtn alertbtnyes"
             (click)="closeModal('custom-modal-22');deleteApprovalDocument(editDoc)">Yes</button>
@@ -822,7 +826,7 @@
           <p class="alertparatxt">Success</p>
         </div>
 
-        <div class="alertext"><strong>{{editDoc.name}}</strong> deleted successfully.</div>
+        <div class="alertexto"><strong>{{editDoc.name}}</strong> deleted successfully.</div>
         <div class="center">
           <button class="btn btn-primary okbtn" (click)="closeModal('custom-modal-success-22')">OK</button>
         </div>
@@ -840,12 +844,12 @@
           <div class="alertpara">
             <p class="alertparatxt"> Alert </p>
           </div>
-          <div class="alertext">
+          <div class="alertexto">
              Are you sure to restore<br>
             <strong>{{editDoc.name}}</strong> document?
           </div>
         </div>
-        <div class="alertbutton">
+        <div class="alertbutton bot">
           <button class="btn btn-default  alertbtn alertbtnno" (click)="closeModal('custom-modal-restore-22');">No</button>
           <button class="btn btn-default alertbtn alertbtnyes"
             (click)="closeModal('custom-modal-restore-22');restoreApprovalDocument(editDoc)">Yes</button>
@@ -864,7 +868,7 @@
           <p class="alertparatxt">Success</p>
         </div>
 
-        <div class="alertext"><strong>{{editDoc.name}}</strong> restored successfully.</div>
+        <div class="alertexto"><strong>{{editDoc.name}}</strong> restored successfully.</div>
         <div class="center">
           <button class="btn btn-primary okbtn" (click)="closeModal('custom-modal-success-restore-22')">OK</button>
         </div>

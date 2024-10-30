@@ -121,20 +121,22 @@ export class ViewGeneralmatterComponent implements OnInit {
     this.router.navigate(['/matter/generalmatter/updateGroups'])
   }
   loadEditMatterInfo(legalMatter: any) {
-    //this.matterService.editGeneralMatter(legalMatter);
-    this.httpservice.sendGetRequest(URLUtils.getGeneralMatterInfoDetails(legalMatter.id)).subscribe((res: any) => {
-      //console.log('res',res)
-      this.matterService.editGeneralMatter(res.matter);
-    })
+    this.matterService.editGeneralMatter(legalMatter);
+    // this.httpservice.sendGetRequest(URLUtils.getGeneralMatterInfoDetails(legalMatter.id)).subscribe((res: any) => {
+    //   console.log('res',res)
+    //   this.matterService.editGeneralMatter(res.matter);
+    // })
     this.router.navigate(['/matter/generalmatter/matterEdit'])
   }
   loadViewDetails(legalMatter: any, type: any) {
-    // const legal = { ...legalMatter, type: type };
-    // this.matterService.editGeneralMatter(legal);
-    this.httpservice.sendGetRequest(URLUtils.getGeneralMatterInfoDetails(legalMatter.id)).subscribe((res: any) => {
-      const legal = { ...res.matter, type: type, groups:legalMatter.groups };
-      this.matterService.editGeneralMatter(legal);
-    })
+     const legal = { ...legalMatter, type: type };
+     this.matterService.editGeneralMatter(legal);
+    // this.httpservice.sendGetRequest(URLUtils.getGeneralMatterInfoDetails(legalMatter.id)).subscribe((res: any) => {
+    //   console.log('rrr',res)
+    //   const legal = { ...res.matter, type: type, groups:legalMatter?.groups };
+    //   console.log('legal',legal)
+    //   this.matterService.editGeneralMatter(legal);
+    // })
     this.router.navigate(['/matter/generalmatter/viewDetails'])
 
     if (this.product == 'corporate' && this.selectedOption != 'External Matters') {

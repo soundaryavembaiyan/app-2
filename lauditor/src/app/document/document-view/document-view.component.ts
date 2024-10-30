@@ -84,7 +84,7 @@ export class DocumentViewComponent implements OnInit {
     allowedFileTypes = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/rtf','text/csv','text/rtf'];
     doc:any;
     delApproval: any[] = [];
-    
+
     constructor(private httpservice: HttpService, private toast: ToastrService,private datePipe: DatePipe,
         private router: Router, private formBuilder: FormBuilder, private modalService: ModalService, public sanitizer: DomSanitizer,
         private documentService: DocumentService, private emailService: EmailService,
@@ -170,13 +170,30 @@ export class DocumentViewComponent implements OnInit {
         // this.term = '';
         this.getDeleteApprovalList();
     }
-    
+
     getDeleteApprovalList(){
         this.httpservice.sendGetRequest(URLUtils.deleteApprovalGetLists).subscribe((res: any) => {
             this.delApproval = res.documents;
+            this.sortDocumentsByDeletedOn()
             //console.log('d',this.delApproval);
         })
     }
+    sortDocumentsByDeletedOn() {
+        this.delApproval.sort((a, b) => {
+          const dateA = a.deletedOn ? new Date(a.deletedOn) : null;
+          const dateB = b.deletedOn ? new Date(b.deletedOn) : null;
+    
+          if (dateA && dateB) {
+            return dateB.getTime() - dateA.getTime(); // Sort in descending order
+          } else if (!dateA) {
+            return 1; // Place null values at the end
+          } else if (!dateB) {
+            return -1; // Place null values at the end
+          }
+          return 0;
+        });
+    }
+
     selectDuration(date: any) {
         this.bsValue = date;
     }
@@ -314,9 +331,6 @@ export class DocumentViewComponent implements OnInit {
     updateTagInfo(doc: any, tabsel?: any) {
         this.doc = doc;
         this.tagDoc = JSON.parse(JSON.stringify(doc));
-        // console.log('tagDocForm:',this.tagDocform);
-        // console.log('doc:',this.doc);
-
         this.tagsFormArray.clear(); // Clear any existing controls
 
         if (this.tagDoc.tag && this.tagDoc.tag.length > 0) {
@@ -334,14 +348,15 @@ export class DocumentViewComponent implements OnInit {
             value: [value, Validators.required]
         });
         this.tagsFormArray.push(tagGroup);
-
+         
+        // Focus on the last added "Tag type" input field
         setTimeout(() => {
-            // Focus on the last added "Tag type" input field
-            const tagTypeInputElement = this.tagTypeInputs.last;
-            if (tagTypeInputElement) {
-              tagTypeInputElement.nativeElement.focus();
+            const inputs = document.querySelectorAll('.addtagField');
+            const lastInput = inputs[inputs.length - 1] as HTMLInputElement; // Get the last input element
+            if (lastInput) {
+              lastInput.focus(); // Focus on the last input
             }
-          });
+          }, 100);
     }
 
     removeTag(index: number) {
@@ -418,7 +433,7 @@ export class DocumentViewComponent implements OnInit {
                 }
             }
         );
-        this.reset();
+        this.getAllDocuments();
     }
     
     get_all_matters(type:any,event?:any){
@@ -432,6 +447,7 @@ export class DocumentViewComponent implements OnInit {
             this.httpservice.sendPutRequest(URLUtils.getAllMatters,payload).subscribe((res:any)=>{
                 if(res.error == false){
                     this.corp_matter_list = res.matterList
+                    //console.log("matterList",this.corp_matter_list)
                     this.onChangeMatters("")
                     this.spinnerService.hide()
                 } else {
@@ -484,7 +500,7 @@ export class DocumentViewComponent implements OnInit {
                 if (this.viewMode == 1)
                     this.documents = res?.data?.reverse();
                 else
-                    this.documents = res?.data?.items?.reverse()
+                    this.documents = res?.data?.items?.reverse();
                 this.documents.forEach((item: any) => {
                     item.expiration_date=item.expiration_date=='NA'?null:new Date(item.expiration_date);
                     
@@ -510,18 +526,41 @@ export class DocumentViewComponent implements OnInit {
               });
 
     }
+    // selectEvent(item: any) {
+    //    // console.log('item',item)
+    //     this.clientDetails = item;
+    //     //localStorage.setItem("clientData", JSON.stringify(item));
+    //     if(this.clientDetails){       
+    //         this.httpservice.sendGetRequest(URLUtils.getMattersByClient(item)).subscribe((res: any) => {
+    //         this.matterList = res?.matterList;
+    //         // //console.log("matterList " + JSON.stringify(this.matterList));
+    //     })
+    //     }
+    //     //console.log("test   " + JSON.stringify(item));
+    //     this.getAllDocuments();
+    // }
+
     selectEvent(item: any) {
-       // console.log('item',item)
         this.clientDetails = item;
-        //localStorage.setItem("clientData", JSON.stringify(item));
-        if(this.clientDetails){       
+        if (this.clientDetails) {
             this.httpservice.sendGetRequest(URLUtils.getMattersByClient(item)).subscribe((res: any) => {
-            this.matterList = res?.matterList;
-            // //console.log("matterList " + JSON.stringify(this.matterList));
-        })
+                // Filter the matter list to remove duplicates by 'id'
+                this.matterList = this.filterUniqueMatters(res?.matterList);
+                //console.log("matterList",this.matterList)
+            });
         }
-        //console.log("test   " + JSON.stringify(item));
         this.getAllDocuments();
+    }
+    
+    // filter out duplicate matters based on 'id' or 'type'
+    filterUniqueMatters(matterList: any[]): any[] {
+        const uniqueMattersById = new Map(); // ensure uniqueness based on 'id'
+        matterList.forEach(matter => {
+            if (!uniqueMattersById.has(matter.id)) {
+                uniqueMattersById.set(matter.id, matter);
+            }
+        });
+        return Array.from(uniqueMattersById.values());
     }
 
     onChangeSearch(val: string) {

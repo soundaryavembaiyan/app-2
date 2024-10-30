@@ -193,7 +193,7 @@ export class MatterInfoComponent implements OnInit {
       //console.log('data',data) 
 
       this.httpService.sendPutRequest(URLUtils.updateLegalMatter(this.editeMatterInfo.id), data).subscribe((res: any) => {
-        console.log('up',res);
+        //console.log('up',res);
         if(!res.error){
           this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully updated the matter information.',false,'View Matter List','Cancel',true)
           .then((confirmed) => {
@@ -207,7 +207,7 @@ export class MatterInfoComponent implements OnInit {
         if (error.status === 401 || error.status === 403) {
           const errorMessage = error.error.msg || 'Unauthorized';
           this.toast.error(errorMessage);
-          console.log(error);
+          //console.log(error);
         }
       }
       )

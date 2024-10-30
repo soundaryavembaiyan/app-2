@@ -267,10 +267,21 @@ export class MergePdfComponent implements OnInit {
     }
     getMatterList(item: any) {
         this.httpservice.sendGetRequest(URLUtils.getMattersByClient(item)).subscribe((res: any) => {
-            this.matterList = res?.matterList;
+            //this.matterList = res?.matterList;
+            this.matterList = this.filterUniqueMatters(res?.matterList);
             //console.log("matterList " + JSON.stringify(this.matterList));
         })
     }
+        // filter out duplicate matters based on 'id' or 'type'
+        filterUniqueMatters(matterList: any[]): any[] {
+            const uniqueMattersById = new Map(); // ensure uniqueness based on 'id'
+            matterList.forEach(matter => {
+                if (!uniqueMattersById.has(matter.id)) {
+                    uniqueMattersById.set(matter.id, matter);
+                }
+            });
+            return Array.from(uniqueMattersById.values());
+        }
     onChangeSearch(val: string) {
         // fetch remote data from here
         // And reassign the 'data' which is binded to 'data' property.

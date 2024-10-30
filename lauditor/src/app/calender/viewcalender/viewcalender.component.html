@@ -40,7 +40,7 @@
 </div>
 <ng-template #customCellTemplate let-day="day" let-locale="locale">
   <td class="commontd">
-    <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+   <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
    <span *ngFor="let item of day.events" (click)="onEventClick(item)">
     <input class="bullet" type="radio" id="html" name="fav_language" value="HTML" *ngIf="day.events[0]?.title">
     <label for="html" class="lbltime">{{ item.title}}</label><br/>

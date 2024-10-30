@@ -550,23 +550,37 @@ export class OthersCalenderComponent implements OnInit {
 
     const date1 = new Date();
     const date2 = new Date();
-
-    // Handle times across midnight by adding one day if needed
-    if (hours1 < hours2 || (hours1 === hours2 && minutes1 < minutes2)) {
-      // If time1 is technically on the next day
-      date1.setDate(date1.getDate() + 1);
-    }
-    date1.setHours(hours1, minutes1);
-    date2.setHours(hours2, minutes2);
+    // // Handle times across midnight by adding one day if needed
+    // if (hours1 < hours2 || (hours1 === hours2 && minutes1 < minutes2)) {
+    //   // If time1 is technically on the next day
+    //   date1.setDate(date1.getDate() + 1);
+    // }
+    // date1.setHours(hours1, minutes1);
+    // date2.setHours(hours2, minutes2);
+    date1.setHours(hours1, minutes1, 0, 0);
+    date2.setHours(hours2, minutes2, 0, 0);
 
     return date1.getTime() - date2.getTime(); // Return difference in milliseconds
   }
+  // togetTime(event: any) {
+  //   this.display=true;
+  //   this.ToSelectedQuantity = event.target.value;
+  //   this.diff(this.selectedQuantity, this.ToSelectedQuantity);
+  //   //console.log(this.diff(this.selectedQuantity, this.ToSelectedQuantity));
+  // }
   togetTime(event: any) {
-    this.display=true;
     this.ToSelectedQuantity = event.target.value;
-    this.diff(this.selectedQuantity, this.ToSelectedQuantity);
-    //console.log(this.diff(this.selectedQuantity, this.ToSelectedQuantity));
+    
+    // Validate end time against start time
+    if (this.compareTimes(this.ToSelectedQuantity, this.selectedQuantity) <= 0) {
+      // If end time is invalid (earlier or equal to start time), reset it
+      this.ToSelectedQuantity = this.addMinutesToTime(this.selectedQuantity, 30);
+      this.CalenderForm.controls['to_ts'].setValue(this.ToSelectedQuantity);
+    } else {
+      this.CalenderForm.controls['to_ts'].setValue(this.ToSelectedQuantity);
+    }
   }
+  
   formatTime24to12(time: string): string {
     const [hours, minutes] = time.split(':').map(Number);
     const suffix = hours >= 12 ? 'pm' : 'am';
