@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { HttpService } from 'src/app/services/http.service';
 import { MatterService } from './../../../matter.service';
 import { URLUtils } from 'src/app/urlUtils';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
@@ -26,6 +26,7 @@ export class MatterGroupsComponent implements OnInit {
   @Output() selectedGroupsEvent: EventEmitter<any> = new EventEmitter();
   @Output() selectedClientsEvent: EventEmitter<any> = new EventEmitter();
   @Output() selectedTmsEvent: EventEmitter<any> = new EventEmitter();
+  @ViewChild('selectAllCheckbox') selectAllCheckbox!: ElementRef<HTMLInputElement>;
 
   selectedClients: any = [];
   @Input() data: any = {};
@@ -292,12 +293,19 @@ export class MatterGroupsComponent implements OnInit {
             });
             this.groupsList = res
           }
+          // console.log('groupsList',this.groupsList)
+          // console.log('selectedGroups',this.selectedGroups)
           if (this.selectedGroups.length == 0) {
             let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
             if (checkbox != null)
               checkbox.checked = false;
           }
-
+          if (this.groupsList.length === 0) {
+              this.selectAllCheckbox.nativeElement.checked = true;            
+            // let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
+            // if (checkbox != null)
+            //     checkbox.checked = true;
+          }
         })
     } else {
       //console.error('this.clients is not an array', this.clients);

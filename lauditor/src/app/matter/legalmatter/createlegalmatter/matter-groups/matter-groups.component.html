@@ -36,7 +36,9 @@
         <h5 class="float-left grpFont" *ngIf ="product =='corporate'">Assign to Department(s)<span class="mandate">*</span></h5> 
         <h5 class="float-right lop" *ngIf="!isEdit">
           <label class="callselect checkAll">Select All</label>&nbsp;
-          <input type="checkbox" value="" id="selectAll" (change)="selectAll($event)">
+          <input type="checkbox" value="" 
+          [checked]="filteredData?.length > 0 && selectedGroups.length === filteredData.length" 
+          id="selectAll" (change)="selectAll($event)" #selectAllCheckbox>
         </h5>
         <!-- <div class="selOn" *ngIf="!isEdit">
           <label class="callselect checkAll">Select All</label>&nbsp;
@@ -67,7 +69,7 @@
 
         <div class="form-group" id="selectbx ">
           <div class="input-group group-custom-align court matterpadding" id="search"
-            *ngFor="let group of groupsList |filter:searchText">
+            *ngFor="let group of groupsList | filter:searchText">
             <div class="multicheck form-control textbox">
               <div class="callselect textAl" [innerHtml]="group.name"></div>
               <input class="form-check-inpu calimg calitem input-group-app end checkboxitem" #inputEl type="checkbox" id="flexCheckDefault"

@@ -45,7 +45,9 @@
         <h5 class="float-left grpFont">Assign Team Member(s)</h5> 
         <h5 class="float-right lop" *ngIf="isSelectAllVisible">
           <label class="callselect checkAll">Select All</label>&nbsp;
-          <input type="checkbox" value="" id="selectAll" (change)="selectAll($event)">
+          <input type="checkbox" value="" 
+          [checked]="filteredData?.length > 0 && selectedTeammembers.length === filteredData.length" 
+          id="selectAll" (change)="selectAll($event)">
         </h5>
         <!-- <div class="col-3">
           <div class="form-group" id="selectbx">

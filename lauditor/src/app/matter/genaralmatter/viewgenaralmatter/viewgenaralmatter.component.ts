@@ -121,11 +121,11 @@ export class ViewGeneralmatterComponent implements OnInit {
     this.router.navigate(['/matter/generalmatter/updateGroups'])
   }
   loadEditMatterInfo(legalMatter: any) {
-    this.matterService.editGeneralMatter(legalMatter);
-    // this.httpservice.sendGetRequest(URLUtils.getGeneralMatterInfoDetails(legalMatter.id)).subscribe((res: any) => {
-    //   console.log('res',res)
-    //   this.matterService.editGeneralMatter(res.matter);
-    // })
+    //this.matterService.editGeneralMatter(legalMatter);
+    this.httpservice.sendGetRequest(URLUtils.getGeneralMatterInfoDetails(legalMatter.id)).subscribe((res: any) => {
+      console.log('res',res)
+      this.matterService.editGeneralMatter(res.matter);
+    })
     this.router.navigate(['/matter/generalmatter/matterEdit'])
   }
   loadViewDetails(legalMatter: any, type: any) {

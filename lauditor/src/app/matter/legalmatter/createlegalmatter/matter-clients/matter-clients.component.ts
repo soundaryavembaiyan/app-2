@@ -212,6 +212,11 @@ export class MatterClientsComponent implements OnInit {
                 if (checkbox != null)
                     checkbox.checked = false;
             }
+            if (this.clients.length === 0) {
+                let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
+                if (checkbox != null)
+                    checkbox.checked = true;
+            }
         });
     }
 

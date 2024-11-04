@@ -73,7 +73,9 @@
                 </div>
                 <div class="col-sm-5">
                     <p class="teamclient">Join with Google Meet</p>
-                    <p class="meetingitem itemFlex"> {{eventInfo.meeting_link}}</p>
+                    <p class="meetingitem itemFlex"> 
+                        <a class="joinmeet" [href]="eventInfo.meeting_link" target="_blank">{{eventInfo.meeting_link}}</a>
+                    </p>
                     <p class="teamclient">Join by Phone</p>
                     <p class="meetingitem itemFlex"> {{eventInfo.dialin}}</p>
                 </div>

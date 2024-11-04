@@ -90,19 +90,24 @@ export class MatterDocumentsComponent {
     getDocuments() {
         this.groupName = this.groups.map((obj: any) => obj.name);;
         //console.log('grp',this.groupName)
-        var cli =[]
+        var cli = []
         let grps = this.groups.map((obj: any) => obj.id);
-        cli = this.clients.map((obj:any) => obj.id);
+        cli = this.clients.map((obj: any) => obj.id);
         cli.push(this.corporate)
-        
+
         this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements,
-            { 'group_acls': grps, 'attachment_type': 'documents' ,'clients':cli}).subscribe(
+            { 'group_acls': grps, 'attachment_type': 'documents', 'clients': cli }).subscribe(
                 (res: any) => {
                     //console.log('res',res)
                     if (!res['error'] && res['documents']?.length > 0) {
                         this.documentsList = res['documents'];
                     }
                 })
+        if (this.documentsList.length === 0) {
+            let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
+            if (checkbox != null)
+                checkbox.checked = true;
+        }
     }
     selectDocument(document: any) {
         this.selectedDocuments.push(document);

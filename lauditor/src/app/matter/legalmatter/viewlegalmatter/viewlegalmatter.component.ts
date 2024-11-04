@@ -148,7 +148,6 @@ export class ViewlegalmatterComponent implements OnInit {
     // this.matterService.editLegalMatter(legal);
     this.httpservice.sendGetRequest(URLUtils.getLegalMatterInfoDetails(legalMatter.id)).subscribe((res: any) => {
       const legal = { ...res.matter, type: type, groups:legalMatter.groups };
-      //console.log('leg',legal)
       this.matterService.editLegalMatter(legal);
     })
     this.router.navigate(['/matter/legalmatter/viewDetails'])

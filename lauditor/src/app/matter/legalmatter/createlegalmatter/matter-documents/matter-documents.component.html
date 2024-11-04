@@ -41,7 +41,9 @@
         <h5 class="float-left grpFont">Attach Document(s)</h5>
         <h5 class="float-right lop" *ngIf="isSelectAllVisible">
           <label class="callselect checkAll">Select All</label>&nbsp;
-          <input type="checkbox" value="" id="selectAll" (change)="selectAll($event)" #selectAllCheckbox>
+          <input type="checkbox" value="" 
+          [checked]="filteredData?.length > 0 && selectedDocuments.length === filteredData.length" 
+          id="selectAll" (change)="selectAll($event)" #selectAllCheckbox>
         </h5>
         
         <div class="switch relationship-tabs cswitch float-left">

@@ -72,6 +72,11 @@ export class MatterTeamMembersComponent {
                         if (checkbox != null)
                           checkbox.checked = false;
                       }
+                    if (this.teammembersList.length === 0) {
+                        let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
+                        if (checkbox != null)
+                            checkbox.checked = true;
+                    }
                 }
         })
     }
@@ -197,17 +202,20 @@ export class MatterTeamMembersComponent {
     //   }
     keyup() {
         if (this.searchText == ' ') {
-          this.searchText = this.searchText.replace(/\s/g, '');
+            this.searchText = this.searchText.replace(/\s/g, '');
         }
-        this.filteredData = this.teammembersList.filter((item: any) => item.name.toLocaleLowerCase().includes(this.searchText));
+        // this.filteredData = this.teammembersList.filter((item: any) => item.name.toLocaleLowerCase().includes(this.searchText));
+        const searchLower = this.searchText.toLowerCase();
+        this.filteredData = this.teammembersList.filter((item: any) => item.name.toLowerCase().includes(searchLower));
+
         // Update visibility based on the filtered data
         this.isSelectAllVisible = this.filteredData.length > 0;
-    
+
         let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
         if (checkbox != null) {
-          checkbox.checked = false;
+            checkbox.checked = false;
         }
-      }
+    }
       truncateString(text: string): string {
         if (text.length > 25) {
           return text.slice(0, 25) + '...';
