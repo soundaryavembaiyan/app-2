@@ -38,10 +38,14 @@ export class AddShortTextComponent implements OnInit {
     private sanitizer: DomSanitizer, private documentService: DocumentService, 
     private modalService: ModalService, private formBuilder: FormBuilder) {
     this.myForm = this.formBuilder.group({
-      smalltext_align: ['topcenter'],
-      smalltext_fontsize: ['small'],
-      smalltext_page: ['1'],
+      smalltext_align: [''],
+      smalltext_fontsize: [''],
+      smalltext_page: [''],
       smalltext_content: ['']
+      // smalltext_align: ['topcenter'],
+      // smalltext_fontsize: ['small'],
+      // smalltext_page: ['1'],
+      // smalltext_content: ['']
     })
   }
   ngOnInit(): void {
@@ -152,7 +156,6 @@ export class AddShortTextComponent implements OnInit {
     this.submitted = true;
 
     if (this.myForm.invalid) {
-     
       return; 
     }
     let msg = ""
@@ -202,13 +205,6 @@ export class AddShortTextComponent implements OnInit {
         this.httpservice.sendPutRequest(URLUtils.addShortTextqueue, res.data).subscribe((res: any) => {
           this.modalService.open('doc-del-success');
           //console.log("put call  " + JSON.stringify(res))
-        },
-        (error: HttpErrorResponse) => {
-          if (error.status === 401 || error.status === 403) {
-            const errorMessage = error.error.msg || 'Unauthorized';
-            this.toast.error(errorMessage);
-            console.log(error);
-          }
         });
       }
     },

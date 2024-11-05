@@ -225,11 +225,49 @@ div.selectprior {
     color: #fff;
 }
 .docname, .tittext{
-    font-weight: 900;
+    font-weight: 900 !important;
 }
 .okbtn{
     background-color: #004D87;
 }
 .alertok{
     padding-bottom: 20px;
+}
+
+//for RadioButtons
+.custom-checkbox .form-check-input[type="radio"] {
+    appearance: none; /* Remove default radio button style */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 30px;
+    height: 30px;
+    background-color: #fff;
+    border: 1px solid #cecece;
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+}
+
+.custom-checkbox .form-check-input[type="radio"]:checked::before {
+    content: '✔';
+    color: black;
+    font-size: 16px;
+    position: absolute;
+    top: 5px;
+    left: 6px;
+}
+.custom-checkbox .form-check-label {
+    margin-left: 5px;
+}
+
+.topIn{
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+.topBot{
+    margin-left: 20px;
+    margin-top: 10px;
+}
+.bo{
+    font-weight: 900 !important;
 }

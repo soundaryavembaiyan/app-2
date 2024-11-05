@@ -33,7 +33,7 @@ export class MergePdfComponent implements OnInit {
     selectedMatterItem: any;
     filter: any = "client";
     term:any;
-    clientId: any;
+    clientId: any[]=[];
     isSelectGroup: boolean = false;
     selectedGroupItems: any = [];
     values: any = [];
@@ -48,6 +48,7 @@ export class MergePdfComponent implements OnInit {
     selectedmatterType='internal';
     matter_type: any[] = [{'title':'Internal Matter','value':'internal'},{'title':'External Matter','value':'external'}];
     corp_matter_list:any[] = [];
+    getClient: any;
     
     public selectedValue: any;
     constructor(private httpservice: HttpService,
@@ -246,10 +247,11 @@ export class MergePdfComponent implements OnInit {
         if (item) {
             this.clientId = item.id;
             this.getMatterList(item)
-            let clients = new Array();
-            clients.push(item)
-            this.documentModel.clients = clients;
-            localStorage.setItem("clientDetail", JSON.stringify(clients));
+            this.getClient = new Array();
+            //console.log('cl',this.getClient)
+            this.getClient.push(item)
+            this.documentModel.clients = this.getClient;
+            localStorage.setItem("clientDetail", JSON.stringify(this.getClient));
             localStorage.setItem("clientData", JSON.stringify(item));
             this.getAllDocuments();
             // if (this.filter === 'client') {
@@ -282,7 +284,10 @@ export class MergePdfComponent implements OnInit {
             });
             return Array.from(uniqueMattersById.values());
         }
-    onChangeSearch(val: string) {
+    onChangeSearch(val: any) {
+        if (val == undefined) {
+            this.getClient = [];
+        }
         // fetch remote data from here
         // And reassign the 'data' which is binded to 'data' property.
     }
@@ -344,6 +349,7 @@ export class MergePdfComponent implements OnInit {
     // }
     selectGroupItem(item: any, val: any) {
         //console.log("selected item" + JSON.stringify(item) + val);
+        //console.log('selectedGroupItems',this.selectedGroupItems);
         if (val) {
             item.isChecked = val;
             this.selectedGroupItems.push(item);

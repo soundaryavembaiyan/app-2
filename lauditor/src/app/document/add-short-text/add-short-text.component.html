@@ -28,7 +28,7 @@
               <div class="col-5">
                 <div class="rowItem form-group name-set">
                   <label>Text <span class="mandate">*</span></label>
-                  <input class="form-control smalltext_content textbox" type="text" maxlength="30"
+                  <input formControlName="smalltext_content" class="form-control smalltext_content textbox" type="text" maxlength="30"
                     (input)="onKey($event, i, 'smalltext_content')" value="{{item.smalltext_content}}" min="0" />
                   <!-- <p class="text-danger" [id]="i+'_smalltext_content_length'" style="margin-bottom: 0px;">Max
                     characters: 30</p> -->
@@ -37,7 +37,7 @@
                 <div class="form-group name-set">
                 <label>Text Position <span class="mandate">*</span></label>
                 <div class="rowItem">
-                  <select class="form-control smalltext_align textbox" (change)="onChangeSmallTextAllign($event, i)">
+                  <select formControlName="smalltext_align" class="form-control smalltext_align textbox" (change)="onChangeSmallTextAllign($event, i)">
                     <option value="select">Choose</option>
                     <option value="left">Bottom Left</option>
                     <option value="right">Bottom Right</option>
@@ -54,13 +54,13 @@
               <div class="col-5">
                 <div class="rowItem orm-group name-set">
                   <label>Page Number <span class="mandate">*</span></label>
-                  <input class="form-control smalltext_page textbox" type="number" value="{{item.smalltext_page}}" min="0"
+                  <input formControlName="smalltext_page" class="form-control smalltext_page textbox" type="number" value="{{item.smalltext_page}}" min="0"
                     (input)="onKey($event, i, 'smalltext_page')" />
                   <p class="text-danger" [id]="i+'_smalltext_page'"></p>
                 </div>
                 <div class="orm-group name-set">
                   <label>Font Size <span class="mandate">*</span></label>
-                  <select class="form-control smalltext_fontsize textbox" (change)="onChangeSmallTextFontSize($event, i)">
+                  <select formControlName="smalltext_fontsize" class="form-control smalltext_fontsize textbox" (change)="onChangeSmallTextFontSize($event, i)">
                     <option value="select">Choose</option>
                     <option value="small">Small</option>
                     <option value="medium">Medium</option>
@@ -89,7 +89,7 @@
             </div> -->
             <div class="btnbox">
               <button type="reset" class="btn btn-default btncancel" (click)="cancel()">Cancel</button>
-              <button type="submit" class="btn btnsave">Save</button>
+              <button type="submit" class="btn btnsave" [disabled]="myForm.pristine || myForm.invalid">Save</button>
           </div>
           </form>
         </div>
@@ -109,7 +109,9 @@
           <div class="alertpara">
             <p class="alertparatxt">Confirmation</p>
           </div>
-          <div class="alertext">Are you sure you want to add Short text to Approved {{data.name}} document?</div>
+          <div class="alertext">Are you sure you want to add Short text to Approved 
+            <!-- {{data.name}}  -->
+            document?</div>
           <div class="alertbutton">
             <button class="btn btn-default alertbtn alertbtnno" (click)="closeModal('doc-shirt-text');">No</button>
             <button class="btn btn-default alertbtn alertbtnyes"
@@ -130,7 +132,9 @@
           <div class="alertpara">
             <p class="alertparatxt"> Success</p>
           </div>
-          <div class="alertext">Congratulations!! You have successfully added Short text to {{data.name}} document.</div>
+          <div class="alertext">Congratulations!! You have successfully added Short text to
+             <!-- {{data.name}}  -->
+             the document.</div>
           <div class="center">
             <button class="btn btn-primary okbtn" (click)="closeModal('doc-del-success'); cancel()">OK</button>
         </div>

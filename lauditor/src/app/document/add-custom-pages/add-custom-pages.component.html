@@ -202,7 +202,9 @@
                         <div class="alertpara">
                             <p class="alertparatxt alertpad">Confirmation</p>
                         </div>
-                        <div class="alertext">Are you sure you want add Custom page Numbers to Approved {{data.name}} document?</div>
+                        <div class="alertext">Are you sure you want add Custom Page Numbers to Approved 
+                            <!-- {{data.name}}  -->
+                            document?</div>
                         <div class="alertbutton">
                             <button class="btn btn-default  alertbtn alertbtnno"
                                 (click)="closeModal('doc-del-pages');">No</button>
@@ -224,7 +226,9 @@
                         <div class="alertpara">
                             <p class="alertparatxt alertpad">Success</p>
                         </div>
-                        <div class="alertext">Congratulations!! <br> You have successfully added Custom page Numbers to {{data.name}} document.</div>
+                        <div class="alertext">Congratulations!! <br> You have successfully added Custom Page Numbers to 
+                            <!-- {{data.name}}  -->
+                            the document.</div>
                         <div class="center">
                             <button class="btn btn-primary okbtn" (click)="closeModal('doc-del-success');cancel()">OK</button>
                         </div>

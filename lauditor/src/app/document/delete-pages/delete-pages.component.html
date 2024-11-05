@@ -63,7 +63,9 @@
                     <div class="alertpara">
                         <p class="alertparatxt"> Alert</p>
                     </div>
-                    <div class="alertext">Are you sure you want to delete <b>{{data.name}}</b> document pages <b>{{DocumentNumbers}}</b></div>
+                    <div class="alertext">Are you sure you want to delete 
+                        <!-- <b>{{data.name}}</b> -->
+                         document pages <b>{{DocumentNumbers}}</b></div>
                     <div class="alertbutton">
                         <button class="btn btn-default  alertbtn alertbtnno"
                             (click)="closeModal('doc-del-pages')">No</button>
@@ -85,7 +87,9 @@
                     <div class="alertpara">
                         <p class="alertparatxt"> Success</p>
                     </div>
-                    <div class="alertext">Congratulations!! You have successfully deleted {{data.name}} document pages.
+                    <div class="alertext">Congratulations!! You have successfully deleted 
+                        <!-- {{data.name}}  -->
+                       the document pages.
                     </div>
                     <div class="center">
                         <button class="btn btn-primary  " (click)="closeModal('doc-del-pages');cancel()">OK</button>

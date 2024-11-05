@@ -35,7 +35,7 @@
                     <textarea rows="4" formControlName="content" cols="50" class="form-control textbox" name="content" (input)="restricttextSpace($event)"
                     [(ngModel)]="docModelData.content"></textarea>
                 </div>
-                <div class=" form-check mx-md-n5 mt-n1  form-group name-set ">
+                <div class=" form-check mx-md-n5 mt-n1  form-group name-set">
                     <input class="form-check-input titleChecks" type="checkbox" value="" #inputE1 id="flexCheckDefault"
                         (change)="showBookmark(inputE1.checked)" >
                     <label class="form-check-label label-name" for="flexCheckDefault">
@@ -103,27 +103,27 @@
                                 Page Number Format
                             </label>
                             <div class="page-number">
-                                <div class="form-check form-check-inline">
+                                <div class="form-check form-check-inline custom-checkbox">
                                     <input class="form-check-input" type="radio" name="pagenumberformatradio"
-                                        id="inlineRadio1" value="#PAGENUM#" (change)="numberFormat($event.target)">
+                                        id="inlineRadio1" value="#PAGENUM#" (change)="numberFormat($event.target)">&nbsp;
                                     <label class="form-check-label" for="inlineRadio1">1,2,3</label>
-                                </div>
-                                <div class="form-check form-check-inline">
+                                </div>&nbsp; 
+                                <div class="form-check form-check-inline custom-checkbox">
                                     <input class="form-check-input" type="radio" name="pagenumberformatradio"
                                         id="inlineRadio2" value="Page(#PAGENUM#)"
-                                        (change)="numberFormat($event.target)">
+                                        (change)="numberFormat($event.target)">&nbsp;
                                     <label class="form-check-label" for="inlineRadio2">Page(1 of 2)</label>
-                                </div>
-                                <div class="form-check form-check-inline">
+                                </div>&nbsp;
+                                <div class="form-check form-check-inline custom-checkbox">
                                     <input class="form-check-input" type="radio" name="pagenumberformatradio"
                                         id="inlineRadio3" value="Page(#PAGENUM# of #TOTALPAGES#)"
-                                        (change)="numberFormat($event.target)">
-                                    <label class="form-check-label" for="inlineRadio3">Page I</label>
-                                </div>
-                                <div class="form-check form-check-inline">
+                                        (change)="numberFormat($event.target)">&nbsp;
+                                    <label class="form-check-label" for="inlineRadio3">Page (1)</label>
+                                </div>&nbsp;
+                                <div class="form-check form-check-inline custom-checkbox">
                                     <input class="form-check-input" type="radio" name="pagenumberformatradio"
                                         id="inlineRadio3" value="Page (#ROM-PAGENUM# of #ROM-TOTALPAGES#)"
-                                        (change)="numberFormat($event.target)">
+                                        (change)="numberFormat($event.target)">&nbsp;
                                     <label class="form-check-label" for="inlineRadio3">Page I of II</label>
                                 </div>
                             </div>
@@ -135,26 +135,20 @@
                         <div class="blank_page">
                             <div class="check-box-position page-position">
                                 <div class="top-align">
-                                    <div class="form-check form-check-inline">
-                                        <label class="form-check-label" for="inlineRadio1">Top Left</label>
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                            id="inlineRadio1" value="topleft"
-                                            (change)="numberPositionChange($event.target)">
-
+                                    <div class="form-check form-check-inline custom-checkbox">
+                                        <label class="form-check-label" for="inlineRadio1">Top Left</label><br>
+                                        <input class="form-check-input topIn" type="radio" name="inlineRadioOptions"
+                                            id="inlineRadio1" value="topleft" (change)="numberPositionChange($event.target)">
                                     </div>
-                                    <div class="form-check form-check-inline">
-                                        <label class="form-check-label" for="inlineRadio2">Top Center</label>
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                            id="inlineRadio2" value="topcenter"
-                                            (change)="numberPositionChange($event.target)">
-
+                                    <div class="form-check form-check-inline custom-checkbox">
+                                        <label class="form-check-label" for="inlineRadio2">Top Center</label><br>
+                                        <input class="form-check-input topIn" type="radio" name="inlineRadioOptions"
+                                            id="inlineRadio2" value="topcenter" (change)="numberPositionChange($event.target)">
                                     </div>
-                                    <div class="form-check form-check-inline">
-                                        <label class="form-check-label" for="inlineRadio3">Top right</label>
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                            id="inlineRadio3" value="topright"
-                                            (change)="numberPositionChange($event.target)">
-
+                                    <div class="form-check form-check-inline custom-checkbox">
+                                        <label class="form-check-label" for="inlineRadio3">Top right</label><br>
+                                        <input class="form-check-input topIn" type="radio" name="inlineRadioOptions"
+                                            id="inlineRadio3" value="topright" (change)="numberPositionChange($event.target)">
                                     </div>
                                 </div>
                             </div>
@@ -166,22 +160,22 @@
                             </div>
                             <div class="check-box-position page-position">
                                 <div class="bottom-align">
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions"
+                                    <div class="form-check form-check-inline custom-checkbox">
+                                        <input class="form-check-input topBot" type="radio" name="inlineRadioOptions"
                                             id="inlineRadio1" value="left"
-                                            (change)="numberPositionChange($event.target)">
+                                            (change)="numberPositionChange($event.target)"><br>
                                         <label class="form-check-label" for="inlineRadio1">Bottom Left</label>
                                     </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions"
+                                    <div class="form-check form-check-inline custom-checkbox">
+                                        <input class="form-check-input topBot" type="radio" name="inlineRadioOptions"
                                             id="inlineRadio2" value="center"
-                                            (change)="numberPositionChange($event.target)">
+                                            (change)="numberPositionChange($event.target)"><br>
                                         <label class="form-check-label" for="inlineRadio2">Bottom Center</label>
                                     </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="inlineRadioOptions"
+                                    <div class="form-check form-check-inline custom-checkbox">
+                                        <input class="form-check-input topBot" type="radio" name="inlineRadioOptions"
                                             id="inlineRadio3" value="right"
-                                            (change)="numberPositionChange($event.target)">
+                                            (change)="numberPositionChange($event.target)"><br>
                                         <label class="form-check-label" for="inlineRadio3">Bottom right</label>
                                     </div>
                                 </div>
@@ -233,7 +227,7 @@
 </div>
 
 <jw-modal id="custom-modal-0" class="doc-merge-model">
-    <div class="doc-merge-model-body">
+    <div class="doc-merge-model-body" style="margin-top:20px;margin-left:10px">
         <!-- <div class="close-x float-right" (click)="closeModal('custom-modal-1');clearTest();">X</div> -->
         <div class="col-12 width-alignment" *ngIf="docDetailsData">
 
@@ -244,7 +238,7 @@
                         <label for="docDetails" class="doc-number tittext"> Add title and text
                         </label>
                         <div>
-                            <label for="docDetails" class="fontbold"> Document Name </label>
+                            <label for="docDetails" class="fontbold bo"> Document Name </label>
                         </div>
                         <div>
                             <label for="docDetails" class="fontbold"> {{docDetailsData.name}} </label>

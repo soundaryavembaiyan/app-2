@@ -84,6 +84,7 @@ export class DocumentViewComponent implements OnInit {
     allowedFileTypes = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/rtf','text/csv','text/rtf'];
     doc:any;
     delApproval: any[] = [];
+    getClient:any;
 
     constructor(private httpservice: HttpService, private toast: ToastrService,private datePipe: DatePipe,
         private router: Router, private formBuilder: FormBuilder, private modalService: ModalService, public sanitizer: DomSanitizer,
@@ -259,6 +260,7 @@ export class DocumentViewComponent implements OnInit {
 
     selectGroupItem(item: any, val: any) {
         //console.log("selected item" + JSON.stringify(item) + val);
+        //console.log('selectedGroupItems',this.selectedGroupItems);
         if (!this.selectedGroupItems) {
             this.selectedGroupItems = []; // Empty array - null
         }
@@ -542,6 +544,16 @@ export class DocumentViewComponent implements OnInit {
 
     selectEvent(item: any) {
         this.clientDetails = item;
+        // console.log("clientDetails",this.clientDetails)
+        this.getAllDocuments();
+        //To get a clientlists length
+        this.getClient = new Array();
+        // console.log('cl',this.getClient)
+        this.getClient.push(item)
+        this.clientDetails = this.getClient;
+        localStorage.setItem("clientDetail", JSON.stringify(this.getClient));
+        localStorage.setItem("clientData", JSON.stringify(item));
+
         if (this.clientDetails) {
             this.httpservice.sendGetRequest(URLUtils.getMattersByClient(item)).subscribe((res: any) => {
                 // Filter the matter list to remove duplicates by 'id'
@@ -549,7 +561,7 @@ export class DocumentViewComponent implements OnInit {
                 //console.log("matterList",this.matterList)
             });
         }
-        this.getAllDocuments();
+        // this.getAllDocuments();
     }
     
     // filter out duplicate matters based on 'id' or 'type'
@@ -563,7 +575,10 @@ export class DocumentViewComponent implements OnInit {
         return Array.from(uniqueMattersById.values());
     }
 
-    onChangeSearch(val: string) {
+    onChangeSearch(val: any) {
+        if (val == undefined) {
+            this.getClient = [];
+        }
         // fetch remote data from here
         // And reassign the 'data' which is binded to 'data' property.
     }

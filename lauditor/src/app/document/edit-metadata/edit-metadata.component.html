@@ -62,7 +62,8 @@
                     <div class="alertpara">
                         <p class="alertparatxt alertpad"> Confirmation</p>
                     </div>
-                    <div class="alertext">Are you sure you want to update metadata for approved {{data.name}} documents ?</div>
+                    <div class="alertext">Are you sure you want to update metadata for approved 
+                        <!-- {{data.name}}  --> documents?</div>
                     <div class="alertbutton">
                         <button class="btn btn-default alertbtn alertbtnno" (click)="closeModal('doc-edimeta-data');">No</button>
                         <button class="btn btn-default alertbtn alertbtnyes" (click)="addTags();openModel('doc-editmeta-success');">Yes</button>
@@ -82,7 +83,8 @@
                     <div class="alertpara">
                         <p class="alertparatxt"> Success</p>
                     </div>
-                    <div class="alertext">Congratulations!! You have successfully updated metadata for  {{data.name}} document.
+                    <div class="alertext">Congratulations!! You have successfully updated metadata for  
+                        <!-- {{data.name}}  --> the document.
                     </div>   
                     <div class="center">
                         <button class="btn btn-primary okbtn" (click)="closeModal('doc-editmeta-success');cancel()">OK</button>

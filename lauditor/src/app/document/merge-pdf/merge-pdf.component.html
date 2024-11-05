@@ -10,8 +10,11 @@
           <label for="title" class="fontbold">Client Name <span class="mandate">*</span></label>
           <div class="ng-autocomplete textbox">
             <ng-autocomplete class="ngauto" [data]="data" [searchKeyword]="keyword"  placeholder="Type to select"
-              (selected)='selectEvent($event)' (inputChanged)='onChangeSearch($event)'[initialValue]="selectedClient"
-              (inputFocused)='onFocused($event)' [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate">
+              (selected)='selectEvent($event)' 
+              (inputCleared)='onChangeSearch($event)'
+              [initialValue]="selectedClient"
+              (inputFocused)='onFocused($event)' 
+              [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate">
               <!-- <i class="fa fa-chevron-down" aria-hidden="true"></i> -->
             </ng-autocomplete>
             <ng-template #itemTemplate let-item>
@@ -103,7 +106,8 @@
         </div> -->
 
         <!-- <div  class="invalid-feedback" *ngIf="clientErr"> Please select client</div> -->
-      </div>
+     </div>
+
       <div class="col-6">
         <div class="form-group float-right">
           <div class="input-group court" id="search">
@@ -138,8 +142,8 @@
 
   <h1  *ngIf="filter=='firm' && product == 'corporate' && selectedmatterType == 'internal'" class="custusername margin-top">List of Internal Documents</h1>
   <h1  *ngIf="filter=='firm' && product == 'corporate' && selectedmatterType != 'internal'" class="custusername margin-top">List of External Documents</h1>
-
-  <div *ngIf="documents && documents?.length==0 && errorMsg " class="custom-alert">List of Documents not available!!</div>
+  <div *ngIf="getClient?.length>0 || selectedGroupItems?.length>0">
+  <div *ngIf="documents && documents?.length==0 && errorMsg" class="custom-alert">List of Documents not available!!</div>
     <table class="table table-borderless tblgrid">
     <tbody>
       <tr class="rone veiw-items"  [class.protected] = "document.is_encrypted" [ngClass]="{'active': document.isChecked, 'disabled-row': document.is_password}"
@@ -175,7 +179,7 @@
         </td>
       </tr>
     </tbody>
-  </table>
+    </table>
   <div *ngIf="errorMsg" class="row main stepitem">
     <div class="col-sm-12">
       <!-- button cancel and save -->
@@ -186,4 +190,4 @@
       </div>
     </div>
   </div>
-</div>
+</div></div>

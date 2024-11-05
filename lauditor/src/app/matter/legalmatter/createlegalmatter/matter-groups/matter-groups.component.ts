@@ -71,6 +71,8 @@ export class MatterGroupsComponent implements OnInit {
   delId: any;
   selId: any;
   canDelete:any;
+  isSelectAllChecked: boolean = false;
+
 
   constructor(private httpservice: HttpService,
     private matterService: MatterService,
@@ -295,17 +297,19 @@ export class MatterGroupsComponent implements OnInit {
           }
           // console.log('groupsList',this.groupsList)
           // console.log('selectedGroups',this.selectedGroups)
+
           if (this.selectedGroups.length == 0) {
             let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
             if (checkbox != null)
               checkbox.checked = false;
           }
           if (this.groupsList.length === 0) {
-              this.selectAllCheckbox.nativeElement.checked = true;            
+            this.selectAllCheckbox.nativeElement.checked = true;
             // let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
             // if (checkbox != null)
-            //     checkbox.checked = true;
+            //   checkbox.checked = true;
           }
+
         })
     } else {
       //console.error('this.clients is not an array', this.clients);
@@ -435,6 +439,7 @@ export class MatterGroupsComponent implements OnInit {
   
   selectAll(event: any) {
     this.isSaveEnable = true;
+
     if (event?.target?.checked) {
       if (this.groupsList?.length > 0) {
         if (this.filteredData?.length > 0) {

@@ -54,7 +54,9 @@
                     <div class="alertpara">
                         <p class="alertparatxt">Confirmation</p>
                     </div>
-                    <div class="alertext bolText">Are you sure you want to add Watermark to Approved <b>{{data.name}}</b> document?</div>
+                    <div class="alertext bolText">Are you sure you want to add Watermark to Approved 
+                        <!-- <b>{{data.name}}</b>  -->
+                        document?</div>
                     <div class="alertbutton">
                         <button class="btn btn-default  alertbtn alertbtnno"
                             (click)="closeModal('add-watermark');">No</button>
@@ -76,7 +78,9 @@
                     <div class="alertpara">
                         <p class="alertparatxt"> Success</p>
                     </div>
-                    <div class="alertext">Congratulations!! You have successfully added watermark to {{data.name}} document.
+                    <div class="alertext">Congratulations!! You have successfully added Watermark to 
+                        <!-- {{data.name}} -->
+                        the document.
                     </div>
                     <div class="center">
                         <button class="btn btn-primary okbtn" (click)="closeModal('doc-watermark-success');cancel()">OK</button>
