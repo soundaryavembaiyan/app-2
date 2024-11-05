@@ -139,7 +139,8 @@ export class ViewlegalmatterComponent implements OnInit {
   loadEditMatterInfo(legalMatter: any) {
     // this.matterService.editLegalMatter(legalMatter);
     this.httpservice.sendGetRequest(URLUtils.getLegalMatterInfoDetails(legalMatter.id)).subscribe((res: any) => {
-      this.matterService.editLegalMatter(res.matter);
+      const legal = { ...res.matter, groups:legalMatter.groups, id:legalMatter.id };
+      this.matterService.editLegalMatter(legal);
     })
     this.router.navigate(['/matter/legalmatter/matterEdit'])
   }
@@ -147,7 +148,7 @@ export class ViewlegalmatterComponent implements OnInit {
     // const legal = { ...legalMatter, type: type };
     // this.matterService.editLegalMatter(legal);
     this.httpservice.sendGetRequest(URLUtils.getLegalMatterInfoDetails(legalMatter.id)).subscribe((res: any) => {
-      const legal = { ...res.matter, type: type, groups:legalMatter.groups };
+      const legal = { ...res.matter, type: type, groups:legalMatter.groups, id:legalMatter.id };
       this.matterService.editLegalMatter(legal);
     })
     this.router.navigate(['/matter/legalmatter/viewDetails'])
