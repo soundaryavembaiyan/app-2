@@ -390,4 +390,5 @@ export class MergePdfComponent implements OnInit {
         event.target.value = inputValue;
         return;
     }
+  
 }
