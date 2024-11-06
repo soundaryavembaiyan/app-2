@@ -152,7 +152,7 @@ export class DocumentViewComponent implements OnInit {
             tags: this.formBuilder.array([]) // FormArray to hold the dynamic tags
         });
         
-        if (this.getClient.length>0 || this.clientDetails || this.selectedGroupItems) {
+        if (this.clientDetails || this.selectedGroupItems) {
             this.getAllDocuments();
         }
         if(this.selectedGroupItems){
@@ -545,15 +545,12 @@ export class DocumentViewComponent implements OnInit {
     selectEvent(item: any) {
         this.clientDetails = item;
         //console.log("clientDetails",this.clientDetails)
-
         //To get a clientlists length
         this.getClient = new Array();
         //console.log('cl',this.getClient)
          this.getClient.push(this.clientDetails)
-        // this.clientDetails = this.getClient;
          localStorage.setItem("clientDetail", JSON.stringify(this.getClient));
          localStorage.setItem("clientData", JSON.stringify(this.getClient));
-
         if (this.clientDetails) {
             this.httpservice.sendGetRequest(URLUtils.getMattersByClient(item)).subscribe((res: any) => {
                 // Filter the matter list to remove duplicates by 'id'
