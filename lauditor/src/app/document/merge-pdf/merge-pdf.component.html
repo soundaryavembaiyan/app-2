@@ -27,6 +27,7 @@
             <!-- <i class="fa fa-chevron-down"></i> -->
           </div>
         </div>
+        <div *ngIf="getClient?.length>0">
         <div class="form-group" *ngIf="product === 'lauditor' || product === 'corporate'">
           <label for="title" class="fontbold">Matter </label>
           <!-- <label for="title" class="fontbold" *ngIf="product == 'corporate'">Matter <span class="mandate">*</span></label> -->
@@ -37,7 +38,7 @@
             </select>
             <!-- <i class="fa fa-chevron-down"></i> -->
           </div>
-        </div>
+        </div></div>
       </div>
       <!-- firm code -->
      <div class="col-6" *ngIf="filter==='firm' || product == 'corporate'">
