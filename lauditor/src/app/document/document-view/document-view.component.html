@@ -229,13 +229,16 @@
               </button>
             </td>
             <td><i class="fa-solid fa-arrow-down" aria-hidden="true" [class.disable]="!document.is_disabled"></i></td>
+
+
+
             <td *ngIf="!isFromEmail">
-              <div><!--class="dropdown"-->
-                <button type="button" class="btn btn-primary  dropdown-toggle actionbtn" 
+              <div class="dropdown"><!--class="dropdown"-->
+                <button type="button" class="btn btn-primary dropdown-toggle actionbtn" 
                 data-bs-toggle="dropdown" [ngClass]="{'disabled': document.isdisabled}">
                   Action
                 </button>
-                <ul class="dropdown-menu dropdown-menu-start">
+                <ul class="dropdown-menu dropdown-menu-start custom-dropdown">
                   <li>
                     <a class="dropdown-item" (click)="viewDocument(document);openModal('view-doc-1')">View</a>
                   </li>
@@ -263,6 +266,7 @@
                 </ul>
               </div>
             </td>
+
             <td *ngIf="isFromEmail">
               <input type="checkbox"  #inputE2 (change)="selectDoc(document,inputE2.checked)">
             </td>
@@ -351,12 +355,12 @@
             </td>
             <td><i class="fa-solid fa-arrow-down"></i></td>
             <td>
-              <div><!--class="dropdown"-->
+              <div class="dropdown"><!--class="dropdown"-->
                 <button type="button" class="btn btn-primary  dropdown-toggle actionbtn" 
                 [ngClass]="{'disabled': document.isdisabled}" data-bs-toggle="dropdown">
                   Action
                 </button>
-                <ul class="dropdown-menu custom-dropdown">
+                <ul class="dropdown-menu dropdown-menu-start custom-dropdown">
                   <li>
                     <a class="dropdown-item" (click)="reMergeDocument(document)">Re-Merge</a>
                   </li>
