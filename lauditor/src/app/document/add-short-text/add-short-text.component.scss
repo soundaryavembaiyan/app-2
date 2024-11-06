@@ -107,3 +107,10 @@ hr {
     margin-top: 12px;
     margin-bottom: -5px;
 }
+
+.btn.btnsave:disabled {
+    background-color: #004d8773;
+    color: white;
+    opacity: 1;
+    cursor: not-allowed;
+}
