@@ -64,7 +64,6 @@ export class OverheadCalenderComponent implements OnInit {
   selectedCorp:any =[];
   clientcorpList:any = [];
   isEditPage = false;
-  
 
   constructor(
     private httpservice: HttpService,
@@ -82,6 +81,19 @@ export class OverheadCalenderComponent implements OnInit {
         if (result && result.event_type == 'overhead') {
           this.editInfo = result;
           this.CalenderForm.patchValue(result);
+          // Set visibility based on repeat_interval
+          if (this.editInfo.repeat_interval && this.editInfo.repeat_interval !== '') {
+            this.CalenderForm.controls['addtimesheet'].setValue(false);
+          }
+
+          // dynamically hide or show "Add to Timesheet"
+          this.CalenderForm.get('repeat_interval')?.valueChanges.subscribe(value => {
+            if (value !== '') {
+              this.CalenderForm.controls['addtimesheet'].setValue(false); // Hide in case of selected repetition
+            } else {
+              this.CalenderForm.controls['addtimesheet'].setValue(true); // Show if "None" is selected
+            }
+          });
           this.notificationItems = this.editInfo.notifications.map((obj: any) => ({ time: obj.split("-")[0], type: obj.split("-")[1] }));
           this.CalenderForm.controls["date"].setValue(new Date(this.editInfo.from_ts.split('T')[0]));
           this.CalenderForm.controls['from_ts'].setValue(this.editInfo.from_ts.split("T")[1].split(":")[0]+':'+this.editInfo.from_ts.split("T")[1].split(":")[1]);
@@ -140,6 +152,10 @@ export class OverheadCalenderComponent implements OnInit {
     addtimesheet: [true],
     recurrent_edit_choice: null
   })
+  shouldHideAddToTimesheet() {
+    const repeatInterval = this.CalenderForm.get('repeat_interval')?.value;
+    return repeatInterval && repeatInterval !== '';
+  }
   onChangeMatter(event:any){
     if (!this.editInfo){
       this.selectedClients = []
@@ -153,7 +169,7 @@ export class OverheadCalenderComponent implements OnInit {
       this.notificationItems = []
       this.notificationItems.push({ time: "10", type: "minutes" });
       this.CalenderForm.patchValue({
-      repeat_interval: 'none',
+      //repeat_interval: 'none',
       meeting_link: '',
       dialin: '',
       date: new Date(),
@@ -291,28 +307,57 @@ export class OverheadCalenderComponent implements OnInit {
     s = s.replace(':', '');
     return parseInt(s);
   }
+  // diff(s1: any, s2: any) {
+  //   this.increaseTodate = false;
+  //   this.displayDuration = true;
+  //   let fromDate = new Date();
+  //   let time1 = this.removeColon(s1);
+  //   let time2 = this.removeColon(s2);
+  //   if (time2 < time1) {
+  //     this.increaseTodate = true;
+  //     this.displayDuration = false;
+  //   }
+  //   let hourDiff = time2 / 100 - time1 / 100;
+  //   if (time2 % 100 >= time1 % 100) hourDiff = hourDiff - 1;
+  //   let minDiff = (time2 % 100) + (60 - (time1 % 100));
+  //   if (minDiff >= 60) {
+  //     hourDiff++;
+  //     minDiff = minDiff - 60;
+  //   }
+  //   var res = hourDiff.toString().split('.')[0] + ':' + minDiff.toString();
+  //   this.selectedHours = hourDiff.toString().split('.')[0];
+  //   this.selectedMinutes = minDiff.toString();
+  //   return res;
+  // }
   diff(s1: any, s2: any) {
     this.increaseTodate = false;
     this.displayDuration = true;
+
+    // Parse start and end times
+    const [startHours, startMinutes] = s1.split(':').map(Number);
+    const [endHours, endMinutes] = s2.split(':').map(Number);
+
     let fromDate = new Date();
-    let time1 = this.removeColon(s1);
-    let time2 = this.removeColon(s2);
-    if (time2 < time1) {
-      this.increaseTodate = true;
-      this.displayDuration = false;
+    let toDate = new Date();
+
+    fromDate.setHours(startHours, startMinutes, 0, 0);
+    toDate.setHours(endHours, endMinutes, 0, 0);
+
+    // Adjust for times that cross midnight
+    if (toDate < fromDate) {
+      toDate.setDate(toDate.getDate() + 1);
     }
-    let hourDiff = time2 / 100 - time1 / 100;
-    if (time2 % 100 >= time1 % 100) hourDiff = hourDiff - 1;
-    let minDiff = (time2 % 100) + (60 - (time1 % 100));
-    if (minDiff >= 60) {
-      hourDiff++;
-      minDiff = minDiff - 60;
-    }
-    var res = hourDiff.toString().split('.')[0] + ':' + minDiff.toString();
-    this.selectedHours = hourDiff.toString().split('.')[0];
-    this.selectedMinutes = minDiff.toString();
-    return res;
+
+    // Calculate the difference in milliseconds
+    const diffMs = toDate.getTime() - fromDate.getTime();
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+
+    // Set values to display
+    this.selectedHours = diffHours.toString();
+    this.selectedMinutes = diffMinutes.toString();
   }
+
   hrsData() {
     for (let i = 0; i <= 23; i++) {
       this.mins.forEach((minute) => {
@@ -373,10 +418,14 @@ export class OverheadCalenderComponent implements OnInit {
     // Filter to ensure only valid end times (times after the selected start time)
     this.displayEndTime = this.hrs.filter((x: string) => {
       return this.compareTimes(x, this.selectedQuantity) > 0; // Keep only times after the selected start time
-    });
+    });    
+    // Ensure 12:00 AM is added when start time is close to midnight
+    if (this.selectedQuantity === '23:45' && !this.displayEndTime.includes('00:00')) {
+        this.displayEndTime.push('00:00'); // 12:00 AM in 24-hour format
+    }
     this.tohrs = this.displayEndTime;
   }
-  
+
   compareTimes(time1: string, time2: string): number {
     const [hours1, minutes1] = time1.split(':').map(Number);
     const [hours2, minutes2] = time2.split(':').map(Number);
@@ -390,12 +439,16 @@ export class OverheadCalenderComponent implements OnInit {
     // }
     // date1.setHours(hours1, minutes1);
     // date2.setHours(hours2, minutes2);
+        
+    // Adjust date if time1 is technically the next day (crosses midnight)
+    if (hours1 < hours2 || (hours1 === hours2 && minutes1 < minutes2)) {
+      date1.setDate(date1.getDate() + 1); // Increment day for date1
+    }
     date1.setHours(hours1, minutes1, 0, 0);
     date2.setHours(hours2, minutes2, 0, 0);
     
     return date1.getTime() - date2.getTime(); // Return difference in milliseconds
   }
-  
   
   // togetTime(event: any) {
   //   this.display=true;
@@ -414,6 +467,7 @@ export class OverheadCalenderComponent implements OnInit {
     } else {
       this.CalenderForm.controls['to_ts'].setValue(this.ToSelectedQuantity);
     }
+    this.diff(this.selectedQuantity, this.ToSelectedQuantity);
   }
   
   formatTime24to12(time: string): string {
@@ -454,7 +508,7 @@ export class OverheadCalenderComponent implements OnInit {
     var value = event.target.value
     this.notificationItems[index]['type'] = value
     if (this.notificationItems[index]['time'] == "") {
-      $('#' + index + "_notificationTime").text("This field is required")
+      //$('#' + index + "_notificationTime").text("This field is required")
     }
     else {
       $('#' + index + "_notificationTime").text("")
@@ -623,6 +677,7 @@ export class OverheadCalenderComponent implements OnInit {
     if(this.isValidNotification){
       return;
     }
+  
     if (!this.CalenderForm.valid) {
       //console.log('error');
     } 
@@ -655,8 +710,41 @@ export class OverheadCalenderComponent implements OnInit {
           }];
           this.CalenderForm.value.timesheets = timesheets;
         }
-       
-        console.log('CalenderForm', this.CalenderForm);
+        // Ensure all notifications have default values if empty
+        this.notificationItems = this.notificationItems.map((item: { time: any; type: any; }) => {
+          // Handle empty time values
+          if (!item.time || item.time.trim() === "") {
+            // If the time is empty, keep the existing type but set default time
+            if (item.type === "minutes") {
+              return { time: "10", type: "minutes" };
+            } else if (item.type === "hours") {
+              return { time: "1", type: "hours" };
+            } else if (item.type === "weeks") {
+              return { time: "1", type: "weeks" };
+            } else if (item.type === "days") {
+              return { time: "1", type: "days" };
+            }
+          }
+          // Handle specific cases for "-minutes", "-hours", "-weeks", and "-months"
+          if (item.time.trim() === "-minutes") {
+            return { time: "10", type: "minutes" };  // Default to 10-minutes
+          }
+          if (item.time.trim() === "-hours") {
+            return { time: "1", type: "hours" };  // Default to 1-hour
+          }
+          if (item.time.trim() === "-weeks") {
+            return { time: "1", type: "weeks" };  // Default to 1-week
+          }
+          if (item.time.trim() === "-days") {
+            return { time: "1", type: "days" };  // Default to 1-month
+          }
+
+          return item;  // Return the item if no changes are needed
+        });
+
+        // Update notifications field in the form
+        this.CalenderForm.value.notifications = this.notificationItems.map((item: { time: any; type: any; }) => `${item.time}-${item.type}`);
+        // console.log('CalenderForm', this.CalenderForm);
       }
       this.diff(this.CalenderForm?.value?.from_ts, this.CalenderForm?.value?.to_ts);
       let given_date = new Date();
@@ -737,10 +825,17 @@ export class OverheadCalenderComponent implements OnInit {
         }
       },
       (error: HttpErrorResponse) => {
-        if (error.status === 401 || error.status === 403) {
-          const errorMessage = error.error.msg || 'Unauthorized';
+        if (error.status === 400 || error.status === 401 || error.status === 403) {
+            let errorMessage = 'Unauthorized'; // Default message
+            if (error.error.errors && error.error.errors.length > 0) {
+              const firstError = error.error.errors[0];
+              if (firstError.field === "to_ts") {
+                errorMessage = "End time must be greater than Start time";
+              } else {
+                errorMessage = firstError.msg || errorMessage;
+              }
+            }
           this.toast.error(errorMessage);
-          console.log(error);
         } 
       }
       )

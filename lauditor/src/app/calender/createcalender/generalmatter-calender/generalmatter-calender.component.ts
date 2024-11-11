@@ -392,7 +392,7 @@ export class GeneralMatterCalenderComponent implements OnInit {
     var value = event.target.value
     this.notificationItems[index]['type'] = value
     if (this.notificationItems[index]['time'] == "") {
-      $('#' + index + "_notificationTime").text("This field is required")
+      //$('#' + index + "_notificationTime").text("This field is required")
     }
     else {
       $('#' + index + "_notificationTime").text("")

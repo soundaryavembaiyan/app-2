@@ -55,7 +55,8 @@
             <!-- interanl containr box -->
             <div class="row containerbox formcontainer">
                 <div class="col-sm-7">
-                    <p class="teamclient">Meeting Agenda</p>
+                    <p class="teamclient" *ngIf="eventInfo?.title !== 'reminders'">Meeting Agenda</p>
+                    <p class="teamclient" *ngIf="eventInfo?.title === 'reminders'">Reminders</p>
                     <p class="meetingitem itemFlex read-more-content" *ngIf="eventInfo.description" [ngClass]="{ 'expanded': expanded }"> {{eventInfo.description}}</p>
                     <!--<u (click)="toggleContent()" class="underline"> {{ expanded ? 'Read Less' : 'Read More' }} </u>-->
                     <p class="teamclient bellinfo"
@@ -71,7 +72,7 @@
 
 
                 </div>
-                <div class="col-sm-5">
+                <div class="col-sm-5" *ngIf="eventInfo?.title !== 'reminders'">
                     <p class="teamclient">Join with Google Meet</p>
                     <p class="meetingitem itemFlex"> 
                         <a class="joinmeet" [href]="eventInfo.meeting_link" target="_blank">{{eventInfo.meeting_link}}</a>

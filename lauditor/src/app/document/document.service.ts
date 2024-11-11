@@ -34,7 +34,7 @@ export class DocumentService {
   }
 
   addDocModel(doc: any) {
-    this.docModel = doc
+    this.docModel = doc;
   }
   getDocModel() {
     return this.docModel;

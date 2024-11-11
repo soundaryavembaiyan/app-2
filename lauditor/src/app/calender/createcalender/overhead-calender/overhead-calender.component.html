@@ -5,7 +5,7 @@
                 <div class="col-sm-12">
                     <div class="container">
                         <div class="form-group">
-                            <label for="title" class="fontbold">Subject/Task<span class="mandate">*</span>
+                            <label for="title" class="fontbold">Subject / Task<span class="mandate">*</span>
                             </label>
                             <select class="form-select calendorselect" (change)="onChangeMatter($event)" formControlName="title">
                                 <option hidden value="">Please Select Subject/Task</option>
@@ -13,10 +13,10 @@
                                 </option>
                             </select>
                             <div *ngIf="isSubmitted && f.title.errors?.['required']" class="invalid-feedback">
-                                <sup>*</sup>Subject/Task is required
+                                Subject/Task is required
                             </div>
                         </div>
-                        <div class="form-group" *ngIf="product === 'lauditor'">
+                        <div class="form-group" *ngIf="product === 'lauditor' && !shouldHideAddToTimesheet()">
                             <input class="checkbox" type="checkbox"
                                 id="addtimesheet" name="fav_language"
                                 value="addtimesheet"
@@ -28,7 +28,7 @@
                             </label>
                             <input class="form-control dateClass" bsDatepicker id="drp" #dp1="bsDatepicker"
                                 [bsValue]="bsValue" (bsValueChange)='selectDuration($event)' readonly
-                                formControlName="date" [bsConfig]="{dateInputFormat: 'MMM DD, YYYY', showWeekNumbers:false }">
+                                formControlName="date" [bsConfig]="{dateInputFormat: 'ddd,MMM D, YYYY', showWeekNumbers:false }">
                             <img src="assets/img/formcalendor.svg" class="formcalico" id="datepicker"
                                 (click)="dp1.show()">
 
@@ -40,6 +40,7 @@
                                             {{ formatTime24to12(option) }}
                                         </option>
                                     </select>
+                                    To &nbsp;
                                     <select class="form-control timeClass" (change)="togetTime($event)" formControlName="to_ts">
                                         <option *ngFor="let option of tohrs" [value]="option" [selected]="option == ToSelectedQuantity">
                                             {{ formatTime24to12(option) }}
@@ -117,7 +118,7 @@
                 <li *ngFor="let item of notificationItems let i = index">
                     <div class="row">
                         <div class="rowItem">
-                            <input class="form-control notificationTime" type="number" [(ngModel)]="item.time"
+                            <input class="form-control notificationTime" type="text" [(ngModel)]="item.time"
                                 #name="ngModel" name="tags{{ i }}" min="0" [ngModelOptions]="{standalone: true}"
                                 (input)="onKey($event, i, 'time')" />
                             <p class="text-danger" [id]="i+'_notificationTime'"></p>
@@ -127,8 +128,7 @@
                             <select class="notificationRow form-control form-select" [(ngModel)]="item.type" #name="ngModel"
                                 name="tags{{ i }}" [ngModelOptions]="{standalone: true}"
                                 (change)='onOptionsSelected($event,i)'>
-                                <option value="minutes">Minutes
-                                </option>
+                                <option value="minutes">Minutes</option>
                                 <option value="hours">Hours</option>
                                 <option value="days">Days</option>
                                 <option value="weeks">Weeks</option>

@@ -99,6 +99,7 @@ export class PdfDocumentMergeComponent implements OnInit, AfterViewInit, OnDestr
         this.docModelData.title = this.mergeDetail.value.title;
         this.docModelData.content = this.mergeDetail.value.content;
         this.docModelData.body = '';
+        this.docModelData.category = this.filter;
         this.docModelData.show_bookmark = this.isShowBookMark;
         this.docModelData.showpagenum = this.docModelData.showpagenum;
         this.docModelData.cutomepage = this.iscustomPage;

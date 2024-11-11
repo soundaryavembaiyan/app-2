@@ -212,6 +212,10 @@ export class DocumentViewComponent implements OnInit {
             this.isDecrypted = false;
             this.isEncypted = false;
             this.getAllDocuments();
+            //Pagination doc has only 1
+            if (this.documents.length === 0) {
+                this.p--;
+            }
         },
         (error: HttpErrorResponse) => {
             if (error.status === 401 || error.status === 403) {
@@ -756,7 +760,11 @@ export class DocumentViewComponent implements OnInit {
             //console.log("res" + res);
             this.modalService.open('custom-modal-1');
             this.isDelete = true;
-            this.getAllDocuments();
+            this.getAllDocuments();            
+            //Pagination doc has only 1
+            if (this.documents.length === 0) {
+                this.p--;
+            }
         },
         (error: HttpErrorResponse) => {
             if (error.status === 401 || error.status === 403) {

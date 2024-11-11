@@ -12,7 +12,7 @@
                                 <sup>*</sup>
                             </div>-->
                             <div *ngIf="isSubmitted && f.description.errors?.['required'] || isSubmitted && f.description.errors?.['pattern']" class="invalid-feedback">
-                                <sup>*</sup>Message is required.
+                               Message is required.
                             </div>
                         </div>
                         <div class="form-group">
@@ -20,19 +20,19 @@
                             </label>
                             <input class="form-control dateClass" bsDatepicker id="drp" #dp1="bsDatepicker"
                                 [bsValue]="bsValue" (bsValueChange)='selectDuration($event)' readonly
-                                formControlName="date" [bsConfig]="{dateInputFormat: 'MMM DD, YYYY', showWeekNumbers:false }">
+                                formControlName="date" [bsConfig]="{dateInputFormat: 'ddd,MMM D, YYYY', showWeekNumbers:false }">
                             <img src="assets/img/formcalendor.svg" class="formcalico" id="datepicker"
                                 (click)="dp1.show()">
 
                                 <span *ngIf="showTime">
                                     <label for="time" class="fontbold marginright">Time<span class="mandate">*</span>
                                     </label>
-        
                                     <select class="marginright form-control timeClass" (change)="getTime($event)" formControlName="from_ts">
                                         <option *ngFor="let option of hrs" [value]="option" [selected]="option == selectedQuantity">
                                             {{ formatTime24to12(option) }}
                                         </option>
                                     </select>
+                                    To &nbsp;
                                     <select class="form-control timeClass" (change)="togetTime($event)" formControlName="to_ts">
                                         <option *ngFor="let option of tohrs" [value]="option" [selected]="option == ToSelectedQuantity">
                                             {{ formatTime24to12(option) }}
@@ -112,7 +112,7 @@
                 <li *ngFor="let item of notificationItems let i = index">
                     <div class="row">
                         <div class="rowItem">
-                            <input class="form-control notificationTime" type="number" [(ngModel)]="item.time"
+                            <input class="form-control notificationTime" type="text" [(ngModel)]="item.time"
                                 #name="ngModel" name="tags{{ i }}" min="0" [ngModelOptions]="{standalone: true}"
                                 (input)="onKey($event, i, 'time')" />
                             <p class="text-danger" [id]="i+'_notificationTime'"></p>

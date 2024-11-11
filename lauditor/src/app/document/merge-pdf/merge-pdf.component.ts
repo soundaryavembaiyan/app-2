@@ -328,7 +328,11 @@ export class MergePdfComponent implements OnInit {
           doc.isChecked = false;
         });
         this.selectedDoc = []; // Clear the selected documents array
+<<<<<<< Updated upstream
         const link =  'documents/mergepdf/' + this.filter;
+=======
+        const link =  `documents/mergepdf/client`;
+>>>>>>> Stashed changes
         window.location.href = link;
       }
       

@@ -66,29 +66,47 @@ export class ViewCalenderComponent implements OnInit, AfterViewInit {
   }
   createEvents() {
     this.events = [];
+    // this.monthData.forEach((item: any) => {
+    //   this.events = this.events.concat(
+    //     {
+    //       start: new Date(item.from_ts),
+    //       end: new Date(item.to_ts),
+    //       title: item.allday ? '' + item.title : this.pipe.transform(item.from_ts, 'h:mm a') + ' ' + item.title,
+    //       id: item.id + 'TZ' + (0 - Number(item.timezone_offset?.split(',')[0])),
+    //       allDay: item.allday
+    //       // color: this.applyColor(item.event_type)
+    //     }
+    //   );
+    // });
+    // // Sort events to set all-day events to be first
+    // this.events.sort((a, b) => {
+    //   if (a.allDay === b.allDay) {
+    //     return 0; // no change in order if both are either all-day or non-all-day
+    //   }
+    //   return a.allDay ? -1 : 1; // allday events first
+    // });
+
+    // Filter out events set to 'None'
     this.monthData.forEach((item: any) => {
-      this.events = this.events.concat(
-        {
+      if (item.eventFrequency !== 'None') { // Ensure 'None' events are not added
+        this.events = this.events.concat({
           start: new Date(item.from_ts),
           end: new Date(item.to_ts),
           title: item.allday ? '' + item.title : this.pipe.transform(item.from_ts, 'h:mm a') + ' ' + item.title,
           id: item.id + 'TZ' + (0 - Number(item.timezone_offset?.split(',')[0])),
           allDay: item.allday
           // color: this.applyColor(item.event_type)
-        }
-      );
-    });
-    // Sort events to set all-day events to be first
-    this.events.sort((a, b) => {
-      if (a.allDay === b.allDay) {
-        return 0; // no change in order if both are either all-day or non-all-day
+        });
       }
-      return a.allDay ? -1 : 1; // allday events first
     });
+
+    // Sort events to set all-day events to be first
+    this.events.sort((a, b) => (a.allDay === b.allDay) ? 0 : a.allDay ? -1 : 1);
 
     this.refresh.next(true);
     this.scrollToCurrentView();
   }
+  
   applyColor(eventtype: any) {
     switch (eventtype) {
       case 'legal':

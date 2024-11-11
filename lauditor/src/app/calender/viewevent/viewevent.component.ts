@@ -78,7 +78,7 @@ export class ViewEventComponent implements OnInit {
           this.scheduledDate = this.eventInfo.allday ? new Date(this.eventInfo?.from_ts).toDateString() + ' : All Day' : new Date(this.eventInfo?.from_ts).toDateString() + ' : ' + this.pipe.transform(this.eventInfo?.from_ts, 'h:mm a') + ' - ' + this.pipe.transform(this.eventInfo?.to_ts, 'h:mm a');
           this.repeat_interval = this.eventInfo?.repeat_interval || '';
           this.repetition = !!this.repeat_interval;  // Set repetition to true only if repeat_interval is not empty
-          console.log('repeat_interval', this.repeat_interval);
+          //console.log('repeat_interval', this.repeat_interval);
           
           let teamMembersList = this.eventInfo.invitees_internal.map((person: any) => ({ "name": person.name, "rsvp": person.rsvp }));
           this.teamMembers = [];
@@ -118,7 +118,7 @@ export class ViewEventComponent implements OnInit {
 
   onEdit() {
     this.calenderService.editEvent(this.eventInfo); //get the edit datas
-    //console.log('EvInfo',this.eventInfo)
+    console.log('EvInfo',this.eventInfo)
     this.router.navigate(['/meetings/edit'])
   }
 
