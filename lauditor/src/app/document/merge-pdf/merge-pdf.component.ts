@@ -27,7 +27,9 @@ export class MergePdfComponent implements OnInit {
     selectedItem: any;
     selectedDoc: any = [];
     matterList: any;
-    selectedClient = "";
+    //selectedClient = "";
+    selectedClient: string = '';
+
     documentModel = new DocumentModel();
     selectedLevel: any;
     selectedMatterItem: any;
@@ -87,8 +89,17 @@ export class MergePdfComponent implements OnInit {
             this.httpservice.getFeaturesdata(URLUtils.getCalenderExternal).subscribe((res: any) => {
                 this.corpData = res?.relationships.map((obj:any)=>({ "id": obj.id, "type": "corporate","name":obj.name}))
                 this.data = this.reldata.concat(this.corpData)
-            });
 
+                // Trigger selectEvent if name matches
+                const client = JSON.parse(localStorage.getItem('clientData') || '{}');
+                if (client && client.name) {
+                    this.selectedClient = client.name;  // Set the selected client name
+                    const matchedItem = this.data.find((item: any) => item.name === client.name);
+                    if (matchedItem) {
+                        this.selectEvent(matchedItem);
+                    }
+                }
+            });
         });
         this.httpservice.sendGetRequest(URLUtils.getGroups).subscribe((res: any) => {
             //this.groupViewItems = res?.data;
@@ -98,7 +109,11 @@ export class MergePdfComponent implements OnInit {
                 item.isChecked = false;
             })
         })
-        //this.getAllDocuments();
+        this.getAllDocuments();
+
+        this.filter = window.location.pathname.split("/").splice(-2)[1];
+        localStorage.setItem('filter', this.filter);
+        
     }
     get_all_matters(type:any,event?:any){
         this.spinnerService.show()
@@ -132,7 +147,6 @@ export class MergePdfComponent implements OnInit {
 
         }
     }
-    
     getAllDocuments() {
         let clientData: any = localStorage.getItem('clientDetail');
         let client = JSON.parse(clientData);
@@ -267,6 +281,7 @@ export class MergePdfComponent implements OnInit {
             // }
         }
     }
+    
     getMatterList(item: any) {
         this.httpservice.sendGetRequest(URLUtils.getMattersByClient(item)).subscribe((res: any) => {
             //this.matterList = res?.matterList;
@@ -313,6 +328,8 @@ export class MergePdfComponent implements OnInit {
           doc.isChecked = false;
         });
         this.selectedDoc = []; // Clear the selected documents array
+        const link =  'documents/mergepdf/' + this.filter;
+        window.location.href = link;
       }
       
     onChange(val: any) {
@@ -390,5 +407,4 @@ export class MergePdfComponent implements OnInit {
         event.target.value = inputValue;
         return;
     }
-  
 }
