@@ -105,7 +105,9 @@ export class EmailComponent implements OnInit, AfterViewInit {
       localStorage.removeItem("docs");
     }
     // this.getMessageCount(); //dialog
-    this.openDialog()
+    if (!localStorage.getItem('validationDone')) {
+      this.openDialog()
+    }
     this.get_all_matters(this.selectedmatterType)
     // this.emailAuthentication();
     //console.log('filter', this.filter)
@@ -148,7 +150,6 @@ export class EmailComponent implements OnInit, AfterViewInit {
       }
   } else {
      this.handleMessageCountClick();
-      
   }
   }
 
@@ -827,7 +828,7 @@ export class ConfirmationDialogComponent {
   ) { }
 
   ngOnInit() {
-      console.log('selectedOption',this.selectedOption)
+      //console.log('selectedOption',this.selectedOption)
   }
 
   continue() {
@@ -835,12 +836,13 @@ export class ConfirmationDialogComponent {
   }
   onCloseDialog() {
     // Only close the dialog if an option is selected
-    if (this.selectedOption) {
-      this.closeDialog();
-    } 
-    else{
-      this.toast.error('Please choose a Gmail or Outlook account.')
-    }
+    // if (this.selectedOption) {
+    //   this.closeDialog();
+    // } 
+    // else{
+    //   this.toast.error('Please choose a Gmail or Outlook account.')
+    // }
+    this.closeDialog();
   }
   closeDialog() {
     this.dialogRef.close()
