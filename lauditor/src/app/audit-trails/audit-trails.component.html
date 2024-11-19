@@ -8,50 +8,103 @@
             <div class="col-6">
                 
                  <!-- For Lauditor, Content, Connect product - except GH-role-->
-                <div class="form-group" *ngIf="(product != 'corporate' && product != 'content' && product != 'connect') && roleId != 'GH'">
+                <div class="form-group" *ngIf="(product != 'corporate' && product != 'content' && product != 'connect') && (roleId != 'GH' && roleId != 'AAM')">
                     <label for="title" class="lable-size"> Category <span class="mandate">*</span> </label>
                     <!--Category for Groups-->
-                    <select class="form-select form-control textbox calendofont nameSet" (change)="getCategory($event.target)" placeholder="Choose">
+                     <!-- <select class="form-select form-control textbox calendofont nameSet" (change)="getCategory($event.target)" placeholder="Choose">
                             <option hidden value="">Select</option>
                             <option class="textbox" *ngFor="let i of categoryList" value="{{i.value}}"> {{i.name}} </option>
-                    </select>
+                    </select>  -->
+                    <div class="dropdown">
+                        <button type="button" class="btn dropdown-toggle actionbtn custom-dropdown-toggle" data-bs-toggle="dropdown">{{ selectedCategory || 'Select' }}</button>
+                        <ul class="dropdown-menu custom-dropdown">
+                            <li *ngFor="let i of categoryList" (click)="getCategory(i); $event.preventDefault()">
+                                <a class="dropdown-item" href="javascript:void(0)">{{ i.name }}</a>
+                            </li>
+                        </ul>
+                    </div>
                  </div>
 
                  <!-- Lauditor product - only GH-role-->
                  <div class="form-group" *ngIf="product == 'lauditor' && roleId == 'GH'">
                     <label for="title" class="lable-size"> Category <span class="mandate">*</span> </label>
-                    <select class="form-select form-control textbox calendofont nameSet" (change)="getCategory($event.target)" placeholder="Choose">
+                    <!-- <select class="form-select form-control textbox calendofont nameSet" (change)="getCategory($event.target)" placeholder="Choose">
                             <option hidden value="">Select</option>
                             <option class="textbox" *ngFor="let i of categoryList" value="{{i.value}}">{{i.name}}</option>
-                    </select>
+                    </select> -->
+                    <div class="dropdown">
+                        <button type="button" class="btn dropdown-toggle actionbtn custom-dropdown-toggle" data-bs-toggle="dropdown">{{ selectedCategory || 'Select' }}</button>
+                        <ul class="dropdown-menu custom-dropdown">
+                            <li *ngFor="let i of categoryList" (click)="getCategory(i); $event.preventDefault()">
+                                <a class="dropdown-item" href="javascript:void(0)">{{ i.name }}</a>
+                            </li>
+                        </ul>
+                    </div>
                  </div>
 
+                <!-- All Products - only AAM-role-->
+                 <!-- <div class="form-group" *ngIf="(product == 'lauditor' || product == 'corporate' || product == 'content' || product == 'connect') && roleId == 'AAM'">
+                    <label for="title" class="lable-size"> Category <span class="mandate">*</span> </label>
+                    <div class="dropdown">
+                        <button type="button" class="btn dropdown-toggle actionbtn custom-dropdown-toggle" data-bs-toggle="dropdown">{{ selectedCategory || 'Select' }}</button>
+                        <ul class="dropdown-menu custom-dropdown">
+                            <li *ngFor="let i of categoryListAAM" (click)="getCategory(i); $event.preventDefault()">
+                                <a class="dropdown-item" href="javascript:void(0)">{{ i.name }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                 </div> -->
+                <!-- All Products - only AAM-role-->
 
                  <!-- Content product - only GH-role-->
                  <div class="form-group" *ngIf="product == 'content'">
                     <label for="title" class="lable-size"> Category <span class="mandate">*</span> </label>
-                    <select class="form-select form-control textbox calendofont nameSet" (change)="getCategory($event.target)" placeholder="Choose">
+                    <!-- <select class="form-select form-control textbox calendofont nameSet" (change)="getCategory($event.target)" placeholder="Choose">
                             <option hidden value="">Select</option>
                             <option class="textbox" *ngFor="let i of categoryContGH" value="{{i.value}}"> {{i.name}} </option>
-                    </select>
+                    </select> -->
+                    <div class="dropdown">
+                        <button type="button" class="btn dropdown-toggle actionbtn custom-dropdown-toggle" data-bs-toggle="dropdown">{{ selectedCategory || 'Select' }}</button>
+                        <ul class="dropdown-menu custom-dropdown">
+                            <li *ngFor="let i of categoryContGH" (click)="getCategory(i); $event.preventDefault()">
+                                <a class="dropdown-item" href="javascript:void(0)">{{ i.name }}</a>
+                            </li>
+                        </ul>
+                    </div>
                  </div>
 
                  <!-- Connect product - only GH-role-->
                  <div class="form-group" *ngIf="product == 'connect'">
                     <label for="title" class="lable-size"> Category <span class="mandate">*</span> </label> 
-                    <select class="form-select form-control textbox calendofont nameSet" (change)="getCategory($event.target)" placeholder="Choose">
+                    <!-- <select class="form-select form-control textbox calendofont nameSet" (change)="getCategory($event.target)" placeholder="Choose">
                             <option hidden value="">Select</option>
                             <option class="textbox" *ngFor="let i of categoryConnectGH" value="{{i.value}}"> {{i.name}} </option>
-                    </select>
+                    </select> -->
+                    <div class="dropdown">
+                        <button type="button" class="btn dropdown-toggle actionbtn custom-dropdown-toggle" data-bs-toggle="dropdown">{{ selectedCategory || 'Select' }}</button>
+                        <ul class="dropdown-menu custom-dropdown">
+                            <li *ngFor="let i of categoryConnectGH" (click)="getCategory(i); $event.preventDefault()">
+                                <a class="dropdown-item" href="javascript:void(0)">{{ i.name }}</a>
+                            </li>
+                        </ul>
+                    </div>
                  </div>
 
                  <!-- Only for Corporate product -->
                  <div class="form-group" *ngIf="product == 'corporate'">
                     <label for="title" class="lable-size"> Category <span class="mandate">*</span></label>
-                    <select class="form-select form-control textbox calendofont nameSet" (change)="getCategory($event.target)" placeholder="Choose">
+                    <!-- <select class="form-select form-control textbox calendofont nameSet" (change)="getCategory($event.target)" placeholder="Choose">
                         <option hidden value="">Select</option>
                         <option class="textbox" *ngFor="let i of categoryCorp" value="{{i.value}}"> {{i.name}} </option>
-                    </select>
+                    </select> -->
+                    <div class="dropdown">
+                        <button type="button" class="btn dropdown-toggle actionbtn custom-dropdown-toggle" data-bs-toggle="dropdown">{{ selectedCategory || 'Select' }}</button>
+                        <ul class="dropdown-menu custom-dropdown">
+                            <li *ngFor="let i of categoryCorp" (click)="getCategory(i); $event.preventDefault()">
+                                <a class="dropdown-item" href="javascript:void(0)">{{ i.name }}</a>
+                            </li>
+                        </ul>
+                    </div>
                  </div>
 
                 <!-- <div class="form-group nameSet">
