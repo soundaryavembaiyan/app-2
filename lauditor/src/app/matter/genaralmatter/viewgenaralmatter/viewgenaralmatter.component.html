@@ -49,10 +49,6 @@
             <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('matterType')">
           </th>
           <th>
-            <p class="thheadname"> Date of Filing</p>
-            <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('created_on')">
-          </th>
-          <th>
             <p class="thheadname"> Status</p>
             <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('status')">
           </th>
@@ -73,7 +69,6 @@
           <td>{{generalMatter.title}}</td>
           <td>{{generalMatter.matterNumber}}</td>
           <td>{{generalMatter.matterType}}</td>
-          <td>{{generalMatter.created_on}}</td>
           <td>{{generalMatter.status}}</td>
           <td *ngIf="this.selectedOption == 'External Matters'">{{generalMatter.owner?.firm_name}}</td>
           <!--no dept for external-->

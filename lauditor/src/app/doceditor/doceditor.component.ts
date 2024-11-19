@@ -656,48 +656,6 @@ export class DoceditorComponent {
     return row;
   }
 
-  // createEmptyRow(): FormArray {
-  //   return this.fb.array([this.fb.control('')]);  // Create a new row with one empty column
-  // }
-  // addRowx() {
-  //   const contentListItems = this.myForm.get('contentListItems') as FormArray;
-  //   const lastItemGroup = contentListItems.at(contentListItems.length - 1) as FormGroup;
-  //   if (lastItemGroup) {
-  //     const tableControl = lastItemGroup.get('tableRows') as FormArray;
-  //     if (tableControl) {
-  //       tableControl.push(this.createTableRow());
-  //       setTimeout(() => {
-  //         this.setFocusOnInput(tableControl.length - 1, 0);
-  //       }, 0);
-  //     }
-  //   }
-  //   //this.setFocusOnFirstInput()  // Set focus on the table fields
-  // }
-  // addColumnx() {
-  //   this.columns.push(`Column ${this.columns.length + 1}`);
-  //   const contentListItems = this.myForm.get('contentListItems') as FormArray;
-  //   const tableControl = contentListItems.at(contentListItems.length - 1)?.get('tableRows') as FormArray;
-  //   if (tableControl) {
-  //     tableControl.controls.forEach((row: any) => {
-  //       row.push(this.fb.control('', Validators.required));
-  //     });
-  //   }
-  //   this.setFocusOnFirstInput()  // Set focus on the table fields
-  // }
-  // removeRowx(index: number) {
-  //   const contentListItems = this.myForm.get('contentListItems') as FormArray;
-  //   const tableControl = contentListItems.at(contentListItems.length - 1)?.get('tableRows') as FormArray;
-  //   tableControl.removeAt(index);
-  // }
-  // removeColumnx(index: number) {
-  //   this.columns.splice(index, 1);
-  //   const contentListItems = this.myForm.get('contentListItems') as FormArray;
-  //   const tableControl = contentListItems.at(contentListItems.length - 1)?.get('tableRows') as FormArray;
-  //   tableControl.controls.forEach((row: any) => {
-  //     row.removeAt(index);
-  //   });
-  // }
-
   addRow(index: any) {
     const contentListItems = this.myForm.get('contentListItems') as FormArray;
     const tableGroup = contentListItems.at(index).get('tableRows') as FormArray;
@@ -741,19 +699,66 @@ export class DoceditorComponent {
     this.setFocusOnFirstInput();
   }
 
+  // removeRow(tableIndex: number, rowIndex: number) {
+  //   const contentListItems = this.myForm.get('contentListItems') as FormArray;
+  //   const tableGroup = contentListItems.at(tableIndex).get('tableRows') as FormArray;
+  //   tableGroup.removeAt(rowIndex);
+  // }
+
+  // removeColumn(tableIndex: number, colIndex: number) {
+  //   const contentListItems = this.myForm.get('contentListItems') as FormArray;
+  //   const tableGroup = contentListItems.at(tableIndex).get('tableRows') as FormArray;
+  //   // Remove the column at `colIndex` from each row
+  //   tableGroup.controls.forEach(row => {
+  //     (row as FormArray).removeAt(colIndex);
+  //   });
+  // }
+  
   removeRow(tableIndex: number, rowIndex: number) {
     const contentListItems = this.myForm.get('contentListItems') as FormArray;
     const tableGroup = contentListItems.at(tableIndex).get('tableRows') as FormArray;
-    tableGroup.removeAt(rowIndex);
-  }
+    const row = tableGroup.at(rowIndex).value;
+    const isRowEmpty = row.every((cell: string) => !cell || cell.trim() === ''); // Check if all values in the row are empty
 
+    if (isRowEmpty) {
+      tableGroup.removeAt(rowIndex);
+    }
+    else {
+      this.confirmationDialogService.confirm('Confirmation', 'Are you sure you want to remove this row?', true, 'Yes', 'No')
+        .then((confirmed) => {
+          if (confirmed) {
+            tableGroup.removeAt(rowIndex);
+          }
+        });
+    }
+  }
+  
   removeColumn(tableIndex: number, colIndex: number) {
     const contentListItems = this.myForm.get('contentListItems') as FormArray;
     const tableGroup = contentListItems.at(tableIndex).get('tableRows') as FormArray;
-    // Remove the column at `colIndex` from each row
-    tableGroup.controls.forEach(row => {
-      (row as FormArray).removeAt(colIndex);
+
+    const isColumnEmpty = tableGroup.controls.every((row: AbstractControl) => {
+      const rowArray = row.value;
+      return !rowArray[colIndex] || rowArray[colIndex].trim() === '';// Check if the column is empty across all rows
     });
+
+    if (isColumnEmpty) {
+      tableGroup.controls.forEach((row: AbstractControl) => {
+        const rowArray = row as FormArray;
+        rowArray.removeAt(colIndex);
+      });
+    }
+    else {
+      this.confirmationDialogService.confirm('Confirmation', 'Are you sure you want to remove this column?', true, 'Yes', 'No')
+        .then((confirmed) => {
+          if (confirmed) {
+            tableGroup.controls.forEach((row: AbstractControl) => {
+              const rowArray = row as FormArray;
+              rowArray.removeAt(colIndex);
+            });
+          }
+        });
+    }
   }
   
   private hasEmptyFields(tableGroup: FormArray): boolean {
@@ -1468,7 +1473,7 @@ export class DoceditorComponent {
         // Check if the block count exceeds the threshold or it's the last item
         if (blocksProcessed > maxBlocks || i === contentListItems.length - 1) {
           //this.toast.info('Following content will move to next page')
-          console.log('pageContent',pageContent)
+          //console.log('pageContent',pageContent)
           let reqq: any;
           if (currentPage === 1) {
             reqq = {
@@ -1581,7 +1586,7 @@ export class DoceditorComponent {
       case 'Bulleted List':
         return `\\begin{itemize}${this.listData}\\end{itemize}`;
       case 'Image':
-         return `\\vspace{4\\baselineskip} \\begin{figure}[h] \\centering \\includegraphics[width=0.9\\textwidth] {${imagesFolder}/${userid}/${this.contentDataControl.value}} \\caption{${this.contentTitleControl.value}} \\end{figure}`;
+         return `\\begin{figure}[h] \\centering \\includegraphics[width=0.9\\textwidth] {${imagesFolder}/${userid}/${this.contentDataControl.value}} \\caption{${this.contentTitleControl.value}} \\end{figure}`;
       case 'Table':
         return `\\begin{center}\\begin{tabularx}{1.0\\textwidth} ${this.tableData} \\end{tabularx} \\end{center}`
       case 'Page Break':

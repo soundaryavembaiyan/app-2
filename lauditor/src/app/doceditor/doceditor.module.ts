@@ -17,18 +17,18 @@ import { NgxSpinnerModule } from 'ngx-spinner';
         NgxSpinnerModule
     ],
     declarations: [
-        DoceditorComponent,
-        LatexblockComponent,
-        LatexDialogComponent,
-        ViewDocComponent, 
-        OpendialogBoxComponent, 
-        DownloadBoxComponent,
-        SaveasBoxComponent,
-        ContentDialogComponent,
-        OverviewExpandComponent
+        // DoceditorComponent,
+        // LatexblockComponent,
+        // LatexDialogComponent,
+        // ViewDocComponent, 
+        // OpendialogBoxComponent, 
+        // DownloadBoxComponent,
+        // SaveasBoxComponent,
+        // ContentDialogComponent,
+        // OverviewExpandComponent
     ],
     exports: [
-        DoceditorComponent,
+        //DoceditorComponent,
     ],
     providers: [
         { provide: MatDialogRef, useValue: {} },

@@ -54,28 +54,37 @@ export class InvoiceComponent {
   }
 
   sendInvoice() {
-   
-
     //share API
-    let data = {
-        "add": [
-            {
-                "docid": this.invoice_data.docid,
-                "doctype": "general",
-                "matters":[]
-            }
-        ],
-        "message": "",
-        "remove": []
-
-    }
     this.invoice_data.client_id
-    //console.log('Invoice_data', this.invoice_data)
+    //console.log('Invoice data', this.invoice_data)
 
+    let data = {
+      "add": [{
+          "docid": this.invoice_data.docid,
+          "doctype": "general",
+          "matters": []
+        }],
+      "message": "",
+      "remove": []
+    }
+    //console.log('Entitydata', data)
+    let corpData = {
+      "add": [{
+          "docid": this.invoice_data.docid,
+          "doctype": "general",
+          "matters": []
+        }],
+      "message": "",
+      "remove": [],
+      "relid": this.invoice_data.rel_id,
+      
+    }
+    //console.log('corpData', corpData)
+
+    //Entity
+    if(this.invoice_data.client_type !== 'corporate'){
     this.httpservice.sendPutRequest(URLUtils.shareInvoiceDocuments(this.invoice_data.rel_id), data).subscribe((res: any) => {
       if (!res.error) {
-        //this.toast.success(res.msg)
-
         this.toast.success("Invoice Shared Successfully!!")
         this.successModel = false
         this.confirmationDialogService.confirm('Success',
@@ -83,17 +92,27 @@ export class InvoiceComponent {
           .then(() => { })
         this.event.emit('exchange-close')
       } else {
-        alert(res.msg);
-      }
-    },
-    (error: HttpErrorResponse) => {
-      if (error.status === 401 || error.status === 403) {
-        const errorMessage = error.error.msg || 'Unauthorized';
-        this.toast.error(errorMessage);
-        //console.log(error);
+        this.toast.error(res.msg);
       }
     });
-}
+  }
+    //Corporate
+    if(this.invoice_data.client_type === 'corporate'){
+    this.httpservice.sendPostRequest(URLUtils.shareRelationshipDocumentsCorp, corpData).subscribe((res: any) => {
+      if (!res.error) {
+        this.toast.success("Invoice Shared Successfully!!")
+        this.successModel = false
+        this.confirmationDialogService.confirm('Success',
+          'Congratulations!! You have successfully shared Invoice ' + this.invoice.name, false, '', '', false, "sm", false)
+          .then(() => { })
+        this.event.emit('exchange-close')
+      } else {
+        this.toast.error(res.msg);
+      }
+    })
+  }
+
+  }
 
   getProfile() {
     this.httpservice.sendGetRequest(URLUtils.profile).subscribe(

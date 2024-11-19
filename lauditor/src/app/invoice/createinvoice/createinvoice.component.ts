@@ -565,7 +565,7 @@ export class CreateinvoiceComponent {
       ([entityRes, corporateRes]: [any, any]) => {
         // Extracting entity and corporate clients
         const entityClients = entityRes?.data?.relationships;
-        const corporateClients = corporateRes?.relationships;
+        const corporateClients = corporateRes?.relationships.map((obj:any)=>({ "id": obj.id, "type": "corporate" ,"name":obj.name}));
         this.data = [...entityClients, ...corporateClients]; // Combine all clients into a single
         //console.log('Combined clientsData:', this.data);
       });

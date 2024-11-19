@@ -118,7 +118,7 @@ export class ViewEventComponent implements OnInit {
 
   onEdit() {
     this.calenderService.editEvent(this.eventInfo); //get the edit datas
-    console.log('EvInfo',this.eventInfo)
+    //console.log('EvInfo',this.eventInfo)
     this.router.navigate(['/meetings/edit'])
   }
 

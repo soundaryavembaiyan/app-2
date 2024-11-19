@@ -215,8 +215,6 @@ export class MatterInfoComponent implements OnInit {
     else {
       this.httpService.sendPostRequest(URLUtils.checkMatterUnique, body).subscribe((res: any) => {
         if(res.error){
-          // this.toast.error(res.msg);
-          // return;
           this.confirmationDialogService.confirm('Alert', res.msg, false, 'OK','Cancel', true)
           .then((confirmed) => {
             if (confirmed) {

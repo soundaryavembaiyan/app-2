@@ -117,7 +117,9 @@
       <div class="col-6" >
         <div class="form-group float-right">
           <div class="input-group court" id="search">
-            <input type="text" class="form-control textbox" placeholder="Search" [(ngModel)]="term" (input)="restricttextSpace($event)" oninput="this.value = this.value.replace(/[^A-Za-z0-9 ]|^ /g,'')"/>
+            <input type="text" class="form-control textbox" placeholder="Search" [(ngModel)]="term" (input)="restricttextSpace($event);onSearch()" oninput="this.value = this.value.replace(/[^A-Za-z0-9 ]|^ /g,'')"/>
+
+
             <img src="assets/img/search.svg" class="calimg calitem input-group-append searchimg">
           </div>
         </div>
@@ -233,7 +235,7 @@
 
 
             <td *ngIf="!isFromEmail">
-              <div class="dropdown"><!--class="dropdown"-->
+              <div class=""><!--class="dropdown"-->
                 <button type="button" class="btn btn-primary dropdown-toggle actionbtn" 
                 data-bs-toggle="dropdown" [ngClass]="{'disabled': document.isdisabled}">
                   Action

@@ -32,6 +32,7 @@ export class ViewGeneralmatterComponent implements OnInit {
   selectedOption: any;
   //matterCount:any;
   role: any;
+  updateLM:any;
   
   constructor(private httpservice: HttpService, private matterService: MatterService, 
     private router: Router, private toast: ToastrService,
@@ -117,7 +118,11 @@ export class ViewGeneralmatterComponent implements OnInit {
     });
   };
   updateGroups(legalMatter: any) {
-    this.matterService.editGeneralMatter(legalMatter);
+    this.httpservice.sendGetRequest(URLUtils.getGeneralMatterInfoDetails(legalMatter.id)).subscribe((res: any) => {
+      const legal = { ...res.matter, groups:legalMatter.groups, id:legalMatter.id };
+      this.matterService.editGeneralMatter(legal);
+    })
+    //this.matterService.editGeneralMatter(legalMatter);
     this.router.navigate(['/matter/generalmatter/updateGroups'])
   }
   loadEditMatterInfo(legalMatter: any) {
@@ -163,26 +168,31 @@ export class ViewGeneralmatterComponent implements OnInit {
     let s = status == 'Closed' ? 'close' : 'reopen';
     //let test = s + ' ' + legalMatter.title + ' matter ?';
     let test = s + ' this matter?';
+    this.httpservice.sendGetRequest(URLUtils.getGeneralMatterInfoDetails(legalMatter.id)).subscribe((res: any) => {
+      this.updateLM = { ...res.matter, groups:legalMatter.groups, id:legalMatter.id };
+      this.matterService.editGeneralMatter(this.updateLM);
+    })
+
     this.confirmationDialogService.confirm('Confirmation', 'Are you sure you want to ' + test, true, 'Yes', 'No')
       .then((confirmed) => {
         if (confirmed) {
           let obj = {
-            "title": legalMatter.title,
-            "matter_number": legalMatter.matterNumber,
-            "startdate": legalMatter.startdate && this.pipe.transform(legalMatter.startdate, 'dd-MM-yyyy'),
-            "closedate": legalMatter.closedate && this.pipe.transform(legalMatter.closedate, 'dd-MM-yyyy'),
-            "description": legalMatter.description,
-            "matter_type": legalMatter.matterType,
-            "priority": legalMatter.priority,
+            "title": this.updateLM.title,
+            "matter_number": this.updateLM.matterNumber,
+            "startdate": this.updateLM.startdate && this.pipe.transform(this.updateLM.startdate, 'dd-MM-yyyy'),
+            "closedate": this.updateLM.closedate && this.pipe.transform(this.updateLM.closedate, 'dd-MM-yyyy'),
+            "description": this.updateLM.description,
+            "matter_type": this.updateLM.matterType,
+            "priority": this.updateLM.priority,
             "status": status,
             "affidavit_isfiled": "na",
             "affidavit_filing_date": "",
-            "clients": legalMatter.clients.map((obj: any) => ({ "id": obj.id, "type": obj.type })),
-            "group_acls": legalMatter.groupAcls,
+            "clients": this.updateLM.clients.map((obj: any) => ({ "id": obj.id, "type": obj.type })),
+            "group_acls": this.updateLM.groupAcls,
             // "owner": legalMatter.owner.map((obj: any) => ({ "id": obj.id, "name": obj.name })),
-            "owner": legalMatter.owner,
-            "members": legalMatter.members.map((obj: any) => ({ "id": obj.id })),
-            "documents": legalMatter.documents.map((obj: any) => ({
+            "owner": this.updateLM.owner,
+            "members": this.updateLM.members.map((obj: any) => ({ "id": obj.id })),
+            "documents": this.updateLM.documents.map((obj: any) => ({
               "docid": obj.docid,
               "doctype": obj.doctype,
               "user_id": obj.user_id

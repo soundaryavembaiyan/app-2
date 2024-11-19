@@ -357,6 +357,14 @@ i.fa.fa-arrow-down.fa-lg.disable {
     background: #7b9bb5;
     opacity: 10;
 }
+button.btnsave:disabled {
+    color: rgb(244, 244, 246);
+    background: #7b9bb5;
+    opacity: 10;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  
 .tagModal{
     margin-top: 12px;
     margin-right: 10px;
@@ -409,8 +417,4 @@ i.fa.fa-arrow-down.fa-lg.disable {
 //     top: 100% !important;
 //     transform: translate3d(0, 0, 0); /* Avoid shifting the dropdown */
 // }
-<<<<<<< Updated upstream
   
-=======
-  
->>>>>>> Stashed changes

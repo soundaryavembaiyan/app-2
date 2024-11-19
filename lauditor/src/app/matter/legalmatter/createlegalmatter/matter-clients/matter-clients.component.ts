@@ -598,46 +598,6 @@ export class MatterClientsComponent implements OnInit {
         }
     }
 
-    // keyup() {
-    //     if (this.searchText == ' ')
-    //         this.searchText = this.searchText.replace(/\s/g, "");
-    //     this.showTempForm = false;
-    //     this.filteredData = this.clientsList.filter((item: any) => item.name.toLocaleLowerCase().includes(this.searchText));
-    //     //console.log('this.filteredData ',this.filteredData )
-    //     //debugger;
-    //     if (this.filteredData.length === 0) {
-    //         this.showTempForm = true;
-    //     }
-    //     if (this.clientsList.length === 0) {
-    //         this.showTempForm = true;
-    //     }
-    //     let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
-    //     if (checkbox != null)
-    //         checkbox.checked = false;
-    // }
-
-
-    // keyup() {
-    //     if (this.searchText == ' ') {
-    //       this.searchText = this.searchText.replace(/\s/g, '');
-    //     }
-    //     this.showTempForm = false;
-    //     this.filteredData = this.clientsList.filter((item: any) => item.name.toLocaleLowerCase().includes(this.searchText));
-    //     // Update visibility based on the filtered data
-    //     if (this.filteredData.length === 0) {
-    //         this.showTempForm = true;
-    //     }
-    //     if (this.clientsList.length === 0) {
-    //         this.showTempForm = true;
-    //     }
-    //     this.isSelectAllVisible = this.filteredData.length > 0;
-
-    //     let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
-    //     if (checkbox != null) {
-    //       checkbox.checked = false;
-    //     }
-    //   }
-
     keyup() {
         if (this.searchText.trim() === '') {
             this.searchText = this.searchText.trim();

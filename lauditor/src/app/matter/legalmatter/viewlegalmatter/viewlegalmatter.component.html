@@ -48,7 +48,7 @@
           </th>
           <th>
             <p class="thheadname"> Date of Filing</p>
-            <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('created_on')">
+            <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('date_of_filling')">
           </th>
           <th>
             <p class="thheadname"> Status</p>
@@ -72,7 +72,7 @@
           <td>{{legalMatter.title}}</td>
           <td>{{legalMatter.caseNumber}}</td>
           <td>{{legalMatter.caseType}}</td>
-          <td>{{legalMatter.created_on}}</td>
+          <td>{{legalMatter.date_of_filling}}</td>
           <td>{{legalMatter.status}}</td>
           <td *ngIf="this.selectedOption=='External Matters'">{{legalMatter.owner?.firm_name}}</td>
           <!--no dept for external-->

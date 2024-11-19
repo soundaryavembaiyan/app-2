@@ -38,6 +38,7 @@ export class ViewlegalmatterComponent implements OnInit {
   currentPage: number = 1;
   //matterCount:any;
   role: any;
+  updateLM:any;
 
   constructor(private httpservice: HttpService, private http: HttpClient, private matterService: MatterService, 
     private router: Router, private toast: ToastrService,private modalService: ModalService,
@@ -133,7 +134,11 @@ export class ViewlegalmatterComponent implements OnInit {
     });
   };
   updateGroups(legalMatter: any) {
-    this.matterService.editLegalMatter(legalMatter);
+    this.httpservice.sendGetRequest(URLUtils.getLegalMatterInfoDetails(legalMatter.id)).subscribe((res: any) => {
+      const legal = { ...res.matter, groups: legalMatter.groups, id: legalMatter.id };
+      this.matterService.editLegalMatter(legal);
+    })
+    //this.matterService.editLegalMatter(legalMatter);
     this.router.navigate(['/matter/legalmatter/updateGroups'])
   }
   loadEditMatterInfo(legalMatter: any) {
@@ -171,33 +176,38 @@ export class ViewlegalmatterComponent implements OnInit {
     let s = status == 'Closed' ? 'close' : 'reopen';
     //let test = s + ' ' + legalMatter.title + ' matter ?';
     let test = s + ' this matter?';
+    this.httpservice.sendGetRequest(URLUtils.getLegalMatterInfoDetails(legalMatter.id)).subscribe((res: any) => {
+      this.updateLM = { ...res.matter, groups:legalMatter.groups, id:legalMatter.id };
+      this.matterService.editLegalMatter(this.updateLM);
+    })
+    
     this.confirmationDialogService.confirm('Confirmation', 'Are you sure you want to ' + test , true, 'Yes', 'No')
       .then((confirmed) => {
         if (confirmed) {
           let obj = {
-            "title": legalMatter.title,
-            "case_number": legalMatter.caseNumber,
-            "date_of_filling": this.pipe.transform(legalMatter.date_of_filling, 'dd-MM-yyyy'),
-            "description": legalMatter.description,
-            "case_type": legalMatter.caseType,
-            "court_name": legalMatter.courtName,
-            "judges": legalMatter.judges,
-            "priority": legalMatter.priority,
+            "title": this.updateLM.title,
+            "case_number": this.updateLM.caseNumber,
+            "date_of_filling": this.pipe.transform(this.updateLM.date_of_filling, 'dd-MM-yyyy'),
+            "description": this.updateLM.description,
+            "case_type": this.updateLM.caseType,
+            "court_name": this.updateLM.courtName,
+            "judges": this.updateLM.judges,
+            "priority": this.updateLM.priority,
             "status": status,
             "affidavit_isfiled": "na",
             "affidavit_filing_date": "",
-            "clients": legalMatter.clients.map((obj: any) => ({ "id": obj.id, "type": obj.type })),
-            "members": legalMatter.members.map((obj: any) => ({ "id": obj.id })),
+            "clients": this.updateLM.clients.map((obj: any) => ({ "id": obj.id, "type": obj.type })),
+            "members": this.updateLM.members.map((obj: any) => ({ "id": obj.id })),
             //"owner": legalMatter.owner.map((obj: any) => ({ "id": obj.id, "name": obj.name })),
-            "owner": legalMatter.owner,
-            "tags":legalMatter.tags,
-            "documents": legalMatter.documents?.map((obj: any) => ({
+            "owner": this.updateLM.owner,
+            "tags":this.updateLM.tags,
+            "documents": this.updateLM.documents?.map((obj: any) => ({
               "docid": obj.docid,
               "doctype": obj.doctype,
               "user_id": obj.user_id
             })),
-            "group_acls": legalMatter.groupAcls,
-            "opponent_advocates": legalMatter.opponentAdvocates
+            "group_acls": this.updateLM.groupAcls,
+            "opponent_advocates": this.updateLM.opponentAdvocates
           }
         //console.log(status)
         this.httpservice.sendUpdateRequest(URLUtils.updateLegalMatter(legalMatter.id), obj).subscribe((res: any) => {

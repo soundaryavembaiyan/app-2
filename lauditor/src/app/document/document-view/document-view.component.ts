@@ -3,7 +3,7 @@ import { ConfirmationDialogService } from './../../confirmation-dialog/confirmat
 import { EmailService } from './../../email/email.service';
 import { DatePipe } from '@angular/common';
 import { Component, ElementRef, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
 import { ModalService } from 'src/app/model/model.service';
 import { HttpService } from 'src/app/services/http.service';
@@ -15,7 +15,14 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MatIconModule } from '@angular/material/icon';
- 
+function futureDateValidator(control: AbstractControl): ValidationErrors | null {
+    const selectedDate = new Date(control.value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Clear time portion for comparison
+  
+    return selectedDate < today ? { pastDate: true } : null;
+}
+
 @Component({
     selector: 'document-view',
     templateUrl: 'document-view.component.html',
@@ -85,6 +92,8 @@ export class DocumentViewComponent implements OnInit {
     doc:any;
     delApproval: any[] = [];
     getClient:any;
+    itemsPerPage: number = 10;
+    paginatedDocuments: any[] = [];
 
     constructor(private httpservice: HttpService, private toast: ToastrService,private datePipe: DatePipe,
         private router: Router, private formBuilder: FormBuilder, private modalService: ModalService, public sanitizer: DomSanitizer,
@@ -145,7 +154,7 @@ export class DocumentViewComponent implements OnInit {
         this.editDocform = this.formBuilder.group({
             name: ['', Validators.required],
             description: ['', Validators.required],
-            expiration_date: ['']
+            expiration_date: ['',futureDateValidator]
         });
         // Initialize the tag form
         this.tagDocform = this.formBuilder.group({
@@ -170,6 +179,7 @@ export class DocumentViewComponent implements OnInit {
         //console.log("checked item " + JSON.stringify(this.groupViewItems));    
         // this.term = '';
         this.getDeleteApprovalList();
+        this.updateDocuments();
     }
 
     getDeleteApprovalList(){
@@ -214,7 +224,7 @@ export class DocumentViewComponent implements OnInit {
             this.getAllDocuments();
             //Pagination doc has only 1
             if (this.documents.length === 0) {
-                this.p--;
+               // this.p--; //rem
             }
         },
         (error: HttpErrorResponse) => {
@@ -879,6 +889,8 @@ export class DocumentViewComponent implements OnInit {
     pageChanged(val: any) {
         this.fromCount = (val * 10) - 9;
         this.toCount = val * 10;
+        this.p = val;
+        this.updateDocuments();
         //console.log("page change " + val);
     }
     restrictSpaces(event: any) {
@@ -936,5 +948,38 @@ export class DocumentViewComponent implements OnInit {
             this.modalService.open('custom-modal-success-restore-22');
             this.getDeleteApprovalList();
         });
+    }
+    updateDocuments(): void {
+        if (!this.documents) {
+            this.documents = [];
+            this.paginatedDocuments = [];
+            return;
+        }
+
+        // Apply the filter
+        this.documents = this.documents.filter((doc: { name: string; description: string; uploaded_by: string; tags: string[]; }) => {
+            const searchTerm = this.term.toLowerCase();
+
+            // Check against all searchable fields
+            return (
+                (doc.name && doc.name.toLowerCase().includes(searchTerm)) ||
+                (doc.description && doc.description.toLowerCase().includes(searchTerm)) ||
+                (doc.uploaded_by && doc.uploaded_by.toLowerCase().includes(searchTerm)) ||
+                (doc.tags && doc.tags.some((tag: string) => tag.toLowerCase().includes(searchTerm)))
+            );
+        });
+
+        // Apply pagination
+        this.paginateDocuments();
+    }
+    paginateDocuments(): void {
+        const startIndex = (this.p - 1) * this.itemsPerPage;
+        this.paginatedDocuments = this.documents.slice(startIndex, startIndex + this.itemsPerPage);
+    }
+
+    // Handle search input
+    onSearch(): void {
+        this.p = 1; // Reset to the first page
+        this.updateDocuments();
     }
 }
