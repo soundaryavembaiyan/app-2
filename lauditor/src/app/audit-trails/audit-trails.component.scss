@@ -115,3 +115,50 @@ i.fa.fa-light.fa-calendar-days {
 #calo{
     margin-top: 20px;
 }
+select {
+    -webkit-appearance: listbox !important;
+}
+
+.dropdown-toggle.actionbtn {
+    width: 95%;
+    text-align: left;
+    box-shadow: none !important;
+    background: #EEEEEE 0% 0% no-repeat padding-box;
+}
+
+.custom-dropdown a {
+    height: 30px;
+    line-height: 20px;
+    display: block;
+    padding: 5px 10px;
+}
+
+.dropdown-menu {
+    width: 90% !important;
+    border-bottom: 1px solid #e3e3e3;
+    background: #eeeeee;
+}
+
+.custom-dropdown a:hover {
+    background-color: #00b3a7 !important;
+    color: white !important;
+}
+
+.btn.active,
+.btn.show,
+.btn:active {
+    color: black !important;
+    border-color: #EEEEEE !important;
+    outline: #EEEEEE !important;
+    box-shadow: #EEEEEE !important;
+}
+
+.custom-dropdown-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+  
+  
+
+  
