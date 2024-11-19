@@ -35,6 +35,7 @@ export class AuditTrailsComponent {
     isReverse: boolean = false;
     frombsValue: any;
     tobsValue: any;
+    selectedCategory: string | null = null;
 
     //for Lauditor, Content, Connect
     categoryList: any = [
@@ -49,6 +50,12 @@ export class AuditTrailsComponent {
         { name: 'General Matters', value: 'GENERAL MATTER' },
         //{ name: 'Matters', value: 'MATTERS' },
         // { name: 'Timesheets', value: '' }
+    ]
+
+    categoryListAAM: any = [
+        { name: 'Authorization', value: 'AUTH' },
+        { name: 'Groups', value: 'GROUPS' },
+        { name: 'Team Members', value: "TEAM MEMBER" },
     ]
 
     //for Corporate only
@@ -114,6 +121,10 @@ export class AuditTrailsComponent {
         if (role == 'GH') { this.role = 'Group Head' }
     }
 
+    selectCategory(item: { value: string; name: string }) {
+        this.selectedCategory = item.name;
+        this.getCategory(item.value);
+    }
 
     isCheckBox(val: any) {
         this.isChecked = val;
@@ -145,6 +156,7 @@ export class AuditTrailsComponent {
    
     getCategory(val: any) {
         let filterByCategory: any = [];
+        this.selectedCategory = val.name;
         this.auditLogs.forEach((item: any) => {
            
             if (item.name == val.value) {
