@@ -244,6 +244,7 @@ export class DoceditorComponent {
 
       const newFile = new File([file], name, { type: file.type });
       formData.append('file', newFile);
+      this.spinnerService.show();
       // console.log('newfile',newFile)
 
       // Ipload API call for the image and get the filename from the response
@@ -970,33 +971,24 @@ export class DoceditorComponent {
 
   newDoc() {
     //Without saving the document, cant able to select New.
-    const contentListItems = this.myForm.get('contentListItems') as FormArray;
+    // const contentListItems = this.myForm.get('contentListItems') as FormArray;
+    // if (contentListItems.length >= 0 && !this.documentId) {
+    //   this.toast.error('Document changes not saved. Please try again.');
+    //   return;
+    // }
+    // const link =  `/doceditor`;
+    // window.location.href = link;
 
-    if (contentListItems.length >= 0 && !this.documentId) {
-      this.toast.error('Document changes not saved. Please try again.');
-      return;
-    }
-    const link =  `/doceditor`;
-    window.location.href = link;
-
-    // this.myForm.reset(); //reset form.
-    // this.documentname = ' '
-    //window.location.reload();
-
-    //Navigated at same loc.
-    // setTimeout(() => { 
-    //   window.location.reload();
-    // }, 500);
-
-    // const preservedValues = {
-    //   // title: this.myForm.get('title').value,
-    //   // author: this.myForm.get('author').value,
-    //   // date: this.myForm.get('date').value,
-    //   title: 'New Document',
-    //   author: 'Author',
-    //   //date: new Date()
-    // };
-    // this.myForm.patchValue(preservedValues); //values back into the form
+    this.confirmationDialogService.confirm('Alert', 'Changes you made will not be saved. Do you want to save?', true, 'Yes', 'No')
+      .then((confirmed) => {
+        if (confirmed) {
+          this.saveDocument();
+        }
+        else {
+          const link = `/doceditor`;
+          window.location.href = link;
+        }
+      });
   }
 
   getDocument() {
