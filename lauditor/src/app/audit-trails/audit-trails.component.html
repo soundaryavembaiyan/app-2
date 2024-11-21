@@ -141,8 +141,8 @@
                     </div>
                 </div>
                 <div class="checkbox">
-                    <label class="lable-size">Advanced search</label> <input
-                        type="checkbox" #inputEl class="larger" name="checkBox2"
+                    <label class="lable-size">Advance Search</label> 
+                    <input type="checkbox" #inputEl class="larger" name="checkBox2"
                         (change)="isCheckBox(inputEl.checked)">
                 </div>
                 <div class="form-group nameSet " *ngIf="isChecked">
@@ -152,42 +152,23 @@
                         <div class="row">
                             <div class="col-5">
                                 <label class="lable-size">From</label><br>
-                                <input class="form-control formcalinput
-                                    calendofont caldate caldatename "
-                                    bsDatepicker id="drp" #dp1="bsDatepicker"
-                                    [bsValue]="frombsValue"
-                                    (bsValueChange)='selectFromDuration($event)'
-                                    [bsConfig]="{ dateInputFormat: 'MMM DD,YYYY', containerClass:'theme-dark-blue',showWeekNumbers:false, customTodayClass:'custom-today-class' }"
-                                    readonly>
-
-                                <span _ngcontent-syx-c6=""
-                                    class="input-group-btn">
-
-                                    <i class="fa fa-light fa-calendar-days"
-                                        (click)="dp1.show()"></i>
-
+                                <input class="form-control formcalinput calendofont caldate caldatename"
+                                    bsDatepicker id="drp" #dp1="bsDatepicker" [bsValue]="frombsValue" (bsValueChange)='selectFromDuration($event)'
+                                    [bsConfig]="{ dateInputFormat: 'MMM DD, YYYY', containerClass:'theme-dark-blue',showWeekNumbers:false, customTodayClass:'custom-today-class' }" readonly>
+                                <span _ngcontent-syx-c6="" class="input-group-btn">
+                                    <i class="fa fa-light fa-calendar-days datepik" (click)="dp1.show()"></i>
                                 </span>
                             </div>
 
                             <div class="col-2"></div>
                             <div class="col-5">
                                 <label class="lable-size">To</label><br>
-                                <input class="form-control formcalinput
-                                    calendofont caldate caldatename "
-                                    bsDatepicker id="drp" #dp2="bsDatepicker"
-                                    [bsValue]="tobsValue"
-                                    (bsValueChange)='selectToDuration($event)'
-                                    [bsConfig]="{ dateInputFormat: 'MMM DD,YYYY', containerClass:'theme-dark-blue',
-                                    showWeekNumbers:false, customTodayClass:'custom-today-class' }"
-                                    readonly>
-                                    <span _ngcontent-syx-c6=""
-                                    class="input-group-btn">
-
-                                    <i class="fa fa-light fa-calendar-days"
-                                        (click)="dp2.show()"></i>
-
+                                <input class="form-control formcalinput calendofont caldate caldatename" 
+                                    bsDatepicker id="drp" #dp2="bsDatepicker" [bsValue]="tobsValue" (bsValueChange)='selectToDuration($event)' 
+                                    [bsConfig]="{ dateInputFormat: 'MMM DD, YYYY', containerClass:'theme-dark-blue', showWeekNumbers:false, customTodayClass:'custom-today-class' }" readonly>
+                                <span _ngcontent-syx-c6="" class="input-group-btn">
+                                    <i class="fa fa-light fa-calendar-days datepik" (click)="dp2.show()"></i>
                                 </span>
-                             
                             </div>
                         </div>
                     </form>
@@ -249,4 +230,5 @@
         </div>
 
     </div>
+    <ngx-spinner size="medium" type="ball-clip-rotate"></ngx-spinner>
 </div>
