@@ -784,7 +784,7 @@
           <div class="row doco">
             <div class="col-6 docclients holeClient">
               Client Name | <b style="color:#00498E">{{ clientNamesString }}</b> 
-              <a class="viewmore" *ngIf="filteredClients.length > 1" (click)="toggleClientNames()">
+              <a class="viewmore" *ngIf="filteredClients?.length>1" (click)="toggleClientNames()">
                 {{ showAllClients ? 'View Less' : 'View More' }}
               </a>
             </div>              

@@ -405,7 +405,7 @@ export class ExternalviewdetailsComponent implements OnInit {
     //       });
     // }
     getClientsData() {
-      let grps = this.data.groups?.map((obj: any) => obj.id);
+      let grps = this.data?.groups?.map((obj: any) => obj.id);
       var payload
       if (this.product == 'corporate') {
         payload = { 'group_acls': grps, 'attachment_type': 'corporate', 'product': 'corporate' }
@@ -432,7 +432,7 @@ export class ExternalviewdetailsComponent implements OnInit {
         })
     }
     getCorporateData(){
-      let grps = this.data.groups.map((obj: any) => obj.id);
+      let grps = this.data?.groups?.map((obj: any) => obj.id);
       //console.log('grps',grps)
       this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements,
         { 'group_acls': grps, 'attachment_type': 'corporate', 'product': 'corporate' }

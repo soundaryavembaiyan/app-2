@@ -1,12 +1,12 @@
 <!--component html goes here -->
 <div class="container main width-alignment">
 	<div class="col-12 Individual createGroup">
-		<label for="select" class="lable-size-title update" *ngIf="product != 'corporate'">Groups Activity Log</label>
-		<label for="select" class="lable-size-title update" *ngIf="product == 'corporate'">Department Activity Log</label>
+		<div class="element"><label for="select" class="lable-size-title" *ngIf="product != 'corporate'">Group Activity Log</label></div>
+		<div class="element"><label for="select" class="lable-size-title" *ngIf="product == 'corporate'">Department Activity Log</label></div>
 		<form [formGroup]="logForm" (ngSubmit)="onSubmit()">
 			<div class="row">
-				<div class="col-6">
-					<div class="form-group nameSet">
+				<div class="col-6" style="margin-top: -29px;">
+					<div class="form-group nameSet padBot">
 						<label for="title" class="lable-size">Category:</label>
 						<select formControlName='category' *ngIf="product != 'corporate'" class="form-select member-name-text nameSet">
 							<option *ngFor='let cat of categoryList'>
@@ -21,7 +21,7 @@
 						</select>
 
 					</div>
-					<div class="form-group nameSet">
+					<div class="form-group nameSet padBot">
 						<label for="title" class="lable-size" *ngIf="product != 'corporate'">Client</label>
 						<label for="title" class="lable-size" *ngIf="product == 'corporate'">External Counsels</label>
 						<input type="text"
@@ -29,7 +29,7 @@
 							   class=" text-size form-control group-name-text"
 							   [ngClass]="{ 'is-invalid': submitted && f.client.errors }">
 					</div>
-					<div class="form-group nameSet">
+					<div class="form-group nameSet padBot">
 						<label for="title" class="lable-size">Team Member</label>
 						<input type="text"
 							   formControlName="tm"
@@ -38,13 +38,22 @@
 					</div>
 				</div>
 				<div class="col-6">
-					<div class="form-group nameSet">
-						<label for="comment" class="lable-size">Search</label>
-						<input type="text"
+					<!-- <div class="form-group nameSet">
+						<label for="comment" class="lable-size">Search</label> --
+						<input type="text" placeholder="Search"
 							   formControlName="search"
 							   class=" text-size form-control group-name-text"
 							   [ngClass]="{ 'is-invalid': submitted && f.tm.errors }">
+							   <img src="assets/img/search.svg" class="calimg calitem input-group-append searchimg">
+					</div> -->
+					<div class="form-group name-set">
+						<div class="input-group court" id="search">
+						  <input type="text" class="form-control textbox" placeholder="Search" formControlName="search"
+						  	[ngClass]="{ 'is-invalid': submitted && f.tm.errors }" oninput="this.value = this.value.replace(/[^A-Za-z0-9 ]|^ /g,'')" />
+						  <img src="assets/img/search.svg" class="calimg calitem input-group-append searchimg">
+						</div>
 					</div>
+
 					<div class="form-group nameSet row">
 						<label for="comment" class="lable-size">Advance Search</label>
 						<div class="col-5">

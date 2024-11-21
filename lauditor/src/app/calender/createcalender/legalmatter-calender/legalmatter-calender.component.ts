@@ -290,7 +290,7 @@ export class LegalMatterCalenderComponent implements OnInit {
           });
         });
       }
-      console.log(this.clientcorpList)
+      //console.log(this.clientcorpList)
     })
   }
   getDocuments(id: any) {
@@ -304,7 +304,7 @@ export class LegalMatterCalenderComponent implements OnInit {
       this.docsList = matter[0]?.documents;
       if (this.selectedDocs.length > 0) {
         this.docsList = this.docsList.filter((el: any) => {
-          console.log('this.doc', this.docsList)
+          //console.log('this.doc', this.docsList)
           return !this.selectedDocs.find((element: any) => {
             return element.docid === el.docid;
           });

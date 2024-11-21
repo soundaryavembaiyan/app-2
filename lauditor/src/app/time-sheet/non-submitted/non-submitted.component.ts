@@ -16,7 +16,7 @@ import { URLUtils } from 'src/app/urlUtils';
 })
 export class NonSubmittedComponent implements OnInit {
   @ViewChild('selectedData') selectedData!: ElementRef;
-  hoursform: FormGroup;
+  hoursform!: FormGroup;
   submitted = false;
   // formbsValue: Date = new Date();
   // tobsValue: Date = new Date();

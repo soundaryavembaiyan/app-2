@@ -116,12 +116,26 @@ input.form-control.textbox {
     background: #00b3a7 !important;
 }
 
+.call.active,
+.call.focus {
+    color: #fff !important;
+    background: #00b3a7 !important;
+}
+
+.activeo{
+    color: #fff !important;
+    background: #00b3a7 !important;
+}
+
 // .chatusertitle.active,
 // .chatusertitle.focus {
 //     color: #fff !important;
 //     background: #578ad6 !important;
 // }
-
+// .active {
+//     color: inherit !important;
+//     background: inherit !important;
+// }
 
 .disable {
     cursor: not-allowed;
@@ -143,7 +157,7 @@ input.form-control.textbox {
 
 .chatinpro {
     margin-top: 10px;
-    padding-top: 5px;
+    padding-top: 8px;
 }
 
 .grppro {

@@ -250,18 +250,19 @@ export class GeneralMatterCalenderComponent implements OnInit {
     //         this.entitycorpList = res?.relationships;
     //       })
     // }
-    if(this.product == 'lauditor'){
-      this.httpservice.getFeaturesdata(URLUtils.getCalenderExternal).subscribe((res: any) => {
-        //this.corpList = res?.corporate;
-        this.corpList = [];
-        this.corpList = res?.relationships;
-        //console.log('corpList',this.corpList)
-    })
-    }
+    // if(this.product == 'lauditor'){
+    //   this.httpservice.getFeaturesdata(URLUtils.getCalenderExternal).subscribe((res: any) => {
+    //     //this.corpList = res?.corporate;
+    //     this.corpList = [];
+    //     this.corpList = res?.relationships;
+    //     //console.log('corpList',this.corpList)
+    // })
+    // }
 
     if (matter?.length > 0){
       this.entityList = matter[0]?.clients.filter((rel:any) => rel.type === 'entity');
       this.conlist = matter[0]?.clients.filter((rel:any) => rel.type === 'consumer');
+      this.corpList = matter[0]?.corporate.filter((rel:any) => rel.type === 'corporate')
       //this.corplist = matter[0]?.corporate;
 
     }
@@ -278,7 +279,7 @@ export class GeneralMatterCalenderComponent implements OnInit {
     this.httpservice.sendGetRequest(URLUtils.getEntityTms(id)).subscribe((res: any) => {
       this.clientsList = [];
       this.clientsList = res?.users;
-      console.log('clientsList',this.clientsList)
+      //console.log('clientsList',this.clientsList)
       this.clientsList.map((item: any) => item.entityid = id);
       if (this.selectedClients.length > 0) {
         this.clientsList = this.clientsList.filter((el: any) => {
@@ -301,7 +302,7 @@ export class GeneralMatterCalenderComponent implements OnInit {
           });
         });
       }
-      console.log(this.clientcorpList)
+      //console.log(this.clientcorpList)
     })
   }
   getDocuments(id: any) {

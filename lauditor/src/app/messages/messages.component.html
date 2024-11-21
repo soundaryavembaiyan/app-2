@@ -92,7 +92,7 @@
             <div class="col-sm-12 messagecont msg-padding" *ngFor="let client of selectedUser | filter:clientSearch;let i=index">
             <!--selected user chat for clients-->
                 <div class="row meetingcontainer legalboxleft container msgcontainer" *ngIf="client.clientType == 'Consumer'"
-                    [ngClass]="{'active': client.isSelected}" (click)="selectChatUser(client)">
+                    [ngClass]="{'activeo': client.isSelected || activeFirm === client.id}" (click)="selectChatUser(client)">
                     <div class="col-sm-8 col-xs-8">
                         <div class="row">
                             <div class="col-sm-3 col-xs-3">
@@ -102,14 +102,15 @@
                                 </div>
                             </div>
                             <div class="col-sm-8 col-xs-9 msgalign">
-                                <p class="mname toalhours approxmeet meetone mlname"> {{client.name}} </p>
+                                <!-- <p class="mname toalhours approxmeet meetone mlname"> {{client.name}} </p> -->
+                                <p class="chatusertito"> {{client.name}} </p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="row meetingcontainer legalboxleft container msgcontainer" *ngIf="client.clientType === 'Entity'"
-                    [ngClass]="{'active': client.isSelected}">
+                    [ngClass]="{'activeo': client.isSelected || activeFirm === client.id}">
                     <div class="col-sm-8 col-xs-8">
                         <div class="row">
                             <div class="col-sm-3 col-xs-3">
@@ -119,7 +120,8 @@
                                 </div>
                             </div>
                             <div class="col-sm-8 col-xs-9 msgalign">
-                                <p class="mname toalhours approxmeet meetone mlname"> {{client.name}} </p>
+                                <!-- <p class="mname toalhours approxmeet meetone mlname"> {{client.name}} </p> -->
+                                <p class="chatusertito"> {{client.name}} </p>
                             </div>
                         </div>
                     </div>
@@ -144,8 +146,9 @@
                 <div *ngIf="client.clientType == 'Entity' && product != 'corporate'">
                     <div class="expandCollapseContent" *ngIf="hideRuleContent[i] && client.isExpand">
                         <div *ngFor="let i of entityClients;let j = index">
-                            <div class="col-sm-12 ">
-                                <div class="row meetingcontainer legalboxleft container msgcontainer" (click)="selectChatUser(i)">
+                            <div class="col-sm-12" >
+                                <div class="row meetingcontainer legalboxleft container msgcontainer call" (click)="selectChatUser(i)" 
+                                [ngClass]="{'activeo': activeClient === i.id}">
                                     <div class="col-sm-9 col-xs-9 toggleresponse">
                                         <div class="row">
                                             <div class="col-sm-2 col-xs-2">
@@ -174,7 +177,7 @@
                     <div class="expandCollapseContent" *ngIf="hideRuleContent[i] && client.isExpand">
                         <div *ngFor="let i of entityClients;let j = index">
                             <div class="col-sm-12 ">
-                                <div (click)="selectChatUser(i)" class="row meetingcontainer legalboxleft container msgcontainer">
+                                <div (click)="selectChatUser(i)" [ngClass]="{'activeo': activeClient === i.id}" class="row meetingcontainer legalboxleft container msgcontainer">
                                     <div class="col-sm-9 col-xs-9 toggleresponse">
                                         <div class="row">
                                             <div class="col-sm-2 col-xs-2">
@@ -232,7 +235,8 @@
             
             <div class="msgscroll">
             <div class="col-sm-12 messagecont" *ngFor="let result of groups |filter: teamSearch;let i = index">
-                <div class="row meetingcontainer legalboxleft container msgcontainer">
+                <div class="row meetingcontainer legalboxleft container msgcontainer"  
+                [ngClass]="{'activeo': activeTeam === result.id}">
                     <div class="col-sm-9 col-xs-9 toggleresponse">
                         <div class="row">
                             <div class="col-sm-2 col-xs-2">
@@ -258,9 +262,9 @@
                 
                 <div class="expandCollapseContent" *ngIf="hideRuleContent[i] && result.isExpand">
                     <div *ngFor="let i of result.users;let j = index">
-                        <div class="col-sm-12 ">
-                            <div (click)="selectChatUser(i)"
-                                class="row meetingcontainer legalboxleft container msgcontainer">
+                        <div class="col-sm-12">
+                            <div class="row meetingcontainer legalboxleft container msgcontainer call" 
+                            (click)="selectChatUser(i)" [ngClass]="{'activeo': activeUser === i.guid}">
                                 <div class="col-sm-9 col-xs-9 toggleresponse">
                                     <div class="row">
                                         <div class="col-sm-2 col-xs-2">

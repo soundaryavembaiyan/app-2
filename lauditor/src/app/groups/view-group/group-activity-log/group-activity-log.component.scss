@@ -41,12 +41,29 @@ text-align: center;
     margin-top: 10px;
 }
 .update{
-    color: #004d87;
-    font-weight: 800;
-    font-size: 1.5rem;
+    color: #004D87;
+    font-weight: 900;
+    font-size: 1.2rem;
   }
   .lable-size{
     font-size: 20px;
     font-weight: bold;
-    color: #437CA7;
+    color: #004D87;
 }
+.element {
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: #004D87;
+    padding-bottom: 16px;
+}
+.padBot{
+    padding-bottom: 10px;
+}
+// .searchimg{
+//     width: 18px;
+//     margin-top: -27px;
+//     margin-right: 215px;
+// }

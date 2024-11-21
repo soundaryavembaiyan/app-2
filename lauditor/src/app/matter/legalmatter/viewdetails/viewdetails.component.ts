@@ -166,6 +166,7 @@ export class ViewDetailsComponent implements OnInit {
           }
         });
       }
+      this.updateCorporateNotesVisibility();
     });
 
     this.documentDetail = this.fb.group({
@@ -178,7 +179,7 @@ export class ViewDetailsComponent implements OnInit {
     //this.gethistoryData();
     //this.onFeatureClick('T&C');
     this.getClientsData();
-    this.updateCorporateNotesVisibility();
+    // this.updateCorporateNotesVisibility();
   }
 
   updateCorporateNotesVisibility() {
@@ -186,6 +187,7 @@ export class ViewDetailsComponent implements OnInit {
       (res: any) => {
         this.selectedClients = res.clients;
         this.selectedCorp = res.corporate;
+
         // Combine selectedClients and selectedCorp into one array
         this.filteredClients = this.selectedClients.concat(this.selectedCorp);
 
@@ -568,7 +570,7 @@ export class ViewDetailsComponent implements OnInit {
   // }
 
   getClientsData() {
-    let grps = this.data.groups?.map((obj: any) => obj.id);
+    let grps = this.data?.groups?.map((obj: any) => obj.id);
     var payload
     if (this.product == 'corporate') {
       payload = { 'group_acls': grps, 'attachment_type': 'corporate', 'product': 'corporate' }
@@ -597,7 +599,7 @@ export class ViewDetailsComponent implements OnInit {
   }        
 
   getCorporateData(){
-    let grps = this.data.groups.map((obj: any) => obj.id);
+    let grps = this.data?.groups?.map((obj: any) => obj.id);
     //console.log('grps',grps)
     this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements,
       { 'group_acls': grps, 'attachment_type': 'corporate', 'product': 'corporate' }

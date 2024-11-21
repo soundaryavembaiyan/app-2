@@ -14,7 +14,7 @@
 .lable-size {
   font-size: 19px;
   font-weight: bold;
-  color: #437CA7;
+  color: #004D87;
 }
 .createGroup{
   input,textarea{
@@ -274,4 +274,13 @@ text-align: center;
 }
 .steprow{
     margin-bottom: 10px;
+}
+.element {
+  max-width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #004D87;
+  padding-bottom: 16px;
 }

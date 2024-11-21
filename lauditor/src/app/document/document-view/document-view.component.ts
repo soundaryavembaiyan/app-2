@@ -373,6 +373,7 @@ export class DocumentViewComponent implements OnInit {
               lastInput.focus(); // Focus on the last input
             }
           }, 100);
+        this.reset();
     }
 
     removeTag(index: number) {
@@ -438,6 +439,7 @@ export class DocumentViewComponent implements OnInit {
             (res: any) => {
                 if (res) {
                     this.toast.success(res.msg);
+                    this.getAllDocuments();
                 } else {
                     this.toast.error(res.msg);
                 }

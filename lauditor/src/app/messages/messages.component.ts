@@ -107,6 +107,10 @@ export class MessagesComponent implements OnInit {
   isActivediv:boolean = false;
   val:any;
   currentExpandedIndex: number | null = null; 
+  activeFirm: string | null = null;
+  activeClient: string | null = null;
+  activeTeam: string | null = null;
+  activeUser: string | null = null;
 
   constructor(
     private httpservice: HttpService,
@@ -154,6 +158,9 @@ export class MessagesComponent implements OnInit {
 
     // Update the currently expanded index
     this.currentExpandedIndex = this.hideRuleContent[index] ? index : null;
+    this.activeFirm = val.isExpand ? val.id : null;
+    this.activeTeam = val.isExpand ? val.id : null;
+    this.activeUser = null; 
 
     //this.spinnerService.show()
     // this.hideRuleContent[index] = !this.hideRuleContent[index];
@@ -615,7 +622,8 @@ export class MessagesComponent implements OnInit {
     //console.log('user val',val)
     this.messegeInput = '';
     this.term = '';
-
+    this.activeClient = val.id;
+    this.activeUser = val.guid;
     // Set focus on the inputfield
     setTimeout(() => {
       const textareas = document.querySelectorAll('.form-control.textbox.chatinput');
@@ -666,6 +674,13 @@ export class MessagesComponent implements OnInit {
     this.messages = [];
     this.restoreMessages();
     this.resetmsgcount();
+        // Optional: If you want the firm to remain active when a client is selected
+        if (val.parentFirmId) {
+          this.activeFirm = val.parentFirmId;
+      }
+      if (val.parentTeamId) {
+        this.activeTeam = val.parentTeamId;
+    }
   }
     
   selectUser(jid: any, name: any, groupName: any) {

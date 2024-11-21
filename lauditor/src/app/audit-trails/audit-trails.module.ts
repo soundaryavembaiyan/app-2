@@ -20,6 +20,7 @@ import { MatSelectModule } from '@angular/material/select';
 
 // This Module's Components
 import { AuditTrailsComponent } from './audit-trails.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
     imports: [
@@ -40,7 +41,7 @@ import { AuditTrailsComponent } from './audit-trails.component';
         MatTableModule,
         MatSelectModule,
         BsDatepickerModule.forRoot(),
-
+        NgxSpinnerModule
         ],
     declarations: [
         AuditTrailsComponent,
