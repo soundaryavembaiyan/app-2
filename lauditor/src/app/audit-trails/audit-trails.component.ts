@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { HttpService } from '../services/http.service';
 import { URLUtils } from '../urlUtils';
 import { environment } from 'src/environments/environment';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     moduleId: module.id,
@@ -97,7 +98,7 @@ export class AuditTrailsComponent {
     role: string = "GH";
 
     constructor(private httpService: HttpService,
-        private fb: FormBuilder,
+        private fb: FormBuilder, private spinnerService: NgxSpinnerService,
         private router: Router) {
         this.filterByCategory = [];
     }
@@ -144,12 +145,18 @@ export class AuditTrailsComponent {
             })
     }
     getAuditList() {
+        this.spinnerService.show();
         this.httpService.sendGetRequest(URLUtils.getAudit).subscribe(
             (res: any) => {
                 this.auditLogs = res.data.reverse();
                 //this.filterByCategory = this.auditLogs;
                 this.filterByCategory = this.auditLogs.filter((log: any) => log.name.trim() !== 'MATTER');
                 //console.log('Filtered Data:', this.filterByCategory);
+                // Use timeout to avoid UI blocking
+                setTimeout(() => {
+                    this.filterByCategory = this.auditLogs.filter((log: any) => log.name.trim() !== 'MATTER');
+                    this.spinnerService.hide();
+                }, 0);
             });
 
     }
