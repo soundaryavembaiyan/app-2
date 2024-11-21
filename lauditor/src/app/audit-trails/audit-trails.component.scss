@@ -2,7 +2,12 @@
 .nameSet {
     width: 90%;
 }
-
+span.input-group-btn {
+    background: inherit !important;
+}
+.datepik{
+    margin-left:10px;font-size: 20px;
+}
 .createGroup {
 
     select,
@@ -10,7 +15,7 @@
     textarea {
         background: #EEEEEE;
         border: none;
-        margin-right: 10px;
+        //margin-right: 10px;
     }
 
     .group-custom-align {
@@ -100,6 +105,10 @@ input.larger {
     height: 23px;
     top: -10%;
     right: -3px;
+
+    margin-top: 3px;
+    width: 12px;
+    margin-left: 12px !important;
 }
 .noData{
     display: flex;
