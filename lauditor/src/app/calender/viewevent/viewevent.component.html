@@ -12,18 +12,11 @@
                         <div class="attnd col-3">Attending</div>
                         <div class="col-9 sflex">
                         <div class="float-left" >
-                            <a href="javascript:void(0);" class="optionone
-                                compone"
-                                [class.active]="selectedValue === 'Yes'"
+                            <a href="javascript:void(0);" class="optionone compone" [class.active]="selectedValue === 'Yes'"
                                 (click)="onClickAttending('Yes')">Yes</a>
-                            <a href="javascript:void(0);" class="optiontwo
-                                comptwo"
-                                [class.active]="selectedValue === 'No'"
+                            <a href="javascript:void(0);" class="optiontwo comptwo" [class.active]="selectedValue === 'No'"
                                 (click)="onClickAttending('No')">No</a>
-                            <a href="javascript:void(0);" class="optiontwo
-                                comptwo
-                                compthree"
-                                [class.active]="selectedValue === 'Maybe'"
+                            <a href="javascript:void(0);" class="optiontwo comptwo compthree" [class.active]="selectedValue === 'Maybe'"
                                 (click)="onClickAttending('Maybe')">Maybe</a>
                         </div>
                     </div>
@@ -88,9 +81,13 @@
 
                 <div class="col-sm-6" *ngFor="let doc of eventInfo.attachments">
                     <div class="documentbox">
-                        <p class="meetingitem itemFlex">{{doc.name}}</p>
+                        <p class="meetingitem itemFlex dname">{{doc.name}}</p>
+                        <button class="viewbtn" (click)="viewDocument(doc)">
+                            <img class="imgview" src="assets/img/eyesico.svg" alt="View Document"/>
+                        </button>
                     </div>
                 </div>
+                
                 <!-- <div class="col-sm-6">
                     <p class="meetingitem affitem">Affidavits Acknowledging Paternity_RRE</p>
                 </div> -->
@@ -122,12 +119,9 @@
                     <div class="emptyrow" *ngFor="let tm of teamMembers">
                         <label class="namecircle namecirclesub">{{tm.firstChar}}</label>&nbsp;
                         <label class="usernamelist">{{tm.name}}
-                            <img *ngIf="tm.rsvp==='Yes'"
-                                src="assets/img/tick.JPG" class="tickico">
-                            <img *ngIf="tm.rsvp==='No'"
-                                src="assets/img/cross.JPG" class="tickico">
-                            <img *ngIf="tm.rsvp==='Maybe'"
-                                src="assets/img/timer.JPG" class="tickico">
+                            <img *ngIf="tm.rsvp==='Yes'" src="assets/img/timeryes.svg" class="tickico">
+                            <img *ngIf="tm.rsvp==='No'" src="assets/img/timerno.svg" class="tickico">
+                            <img *ngIf="tm.rsvp==='Maybe'" src="assets/img/timermaybe.svg" class="tickico">
                         </label>
                     </div>
                 </div>
@@ -138,44 +132,26 @@
                             <label class="namecircle namecirclesubtwo">{{client.firstCharEntity}}</label>&nbsp;
                             <label class="usernamelist" style="font-weight:
                                 bold;">{{client.entName}}
-                                <img *ngIf="client.rsvp==='Yes'"
-                                    src="assets/img/tick.JPG"
-                                    class="tickico">
-                                <img *ngIf="client.rsvp==='No'"
-                                    src="assets/img/cross.JPG"
-                                    class="tickico">
-                                <img *ngIf="client.rsvp==='Maybe'"
-                                    src="assets/img/timer.JPG"
-                                    class="tickico">
+                                <img *ngIf="client.rsvp==='Yes'" src="assets/img/timeryes.svg" class="tickico">
+                                <img *ngIf="client.rsvp==='No'" src="assets/img/timerno.svg" class="tickico">
+                                <img *ngIf="client.rsvp==='Maybe'" src="assets/img/timermaybe.svg" class="tickico">
                             </label>
                         </div>
                         <div class="timsheetsubitem"  *ngIf="client.tmId!='consumer'">
                             <label class="namecircle namecirclesubtwo">{{client.firstChar}}</label>&nbsp;
                             <label class="usernamelist" >{{client.name}}
-                                <img *ngIf="client.rsvp==='Yes'"
-                                    src="assets/img/tick.JPG"
-                                    class="tickico">
-                                <img *ngIf="client.rsvp==='No'"
-                                    src="assets/img/cross.JPG"
-                                    class="tickico">
-                                <img *ngIf="client.rsvp==='Maybe'"
-                                    src="assets/img/timer.JPG"
-                                    class="tickico">
+                                <img *ngIf="client.rsvp==='Yes'" src="assets/img/timeryes.svg" class="tickico">
+                                <img *ngIf="client.rsvp==='No'" src="assets/img/timerno.svg" class="tickico">
+                                <img *ngIf="client.rsvp==='Maybe'" src="assets/img/timermaybe.svg" class="tickico">
                             </label>
                         </div>
                         <div class="timsheetsubitem" *ngIf="client.tmId=='consumer'">
                             <label class="namecircle namecirclesubtwo">{{client.firstChar}}</label>&nbsp;
                             <label class="usernamelist" style="font-weight:
                                 bold;">{{client.name}}  
-                                <img *ngIf="client.rsvp==='Yes'"
-                                    src="assets/img/tick.JPG"
-                                    class="tickico">
-                                <img *ngIf="client.rsvp==='No'"
-                                    src="assets/img/cross.JPG"
-                                    class="tickico">
-                                <img *ngIf="client.rsvp==='Maybe'"
-                                    src="assets/img/timer.JPG"
-                                    class="tickico">
+                                <img *ngIf="client.rsvp==='Yes'" src="assets/img/timeryes.svg" class="tickico">
+                                <img *ngIf="client.rsvp==='No'" src="assets/img/timerno.svg" class="tickico">
+                                <img *ngIf="client.rsvp==='Maybe'" src="assets/img/timermaybe.svg" class="tickico">
                             </label>
                         </div>
                     </div>
