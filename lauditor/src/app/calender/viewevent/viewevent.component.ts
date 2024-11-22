@@ -37,6 +37,8 @@ export class ViewEventComponent implements OnInit {
   docapi = environment.doc2pdf;
   repeat_interval:any;
   repetition=false;
+  urlSafe: any;
+  allowedFileTypes = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/rtf','text/csv','text/rtf'];
 
   toggleContent(): void {
     this.expanded = !this.expanded;
@@ -47,8 +49,9 @@ export class ViewEventComponent implements OnInit {
     this.data = this.router.getCurrentNavigation()?.extras.state;
   }
   ngOnInit() {
-    if (this.data)
+    if (this.data){
       this.getEventData();
+    }
     //console.log('evInfo', this.eventInfo)
     //console.log('this.selectedValue',this.selectedValue)
   }
@@ -58,6 +61,30 @@ export class ViewEventComponent implements OnInit {
         if (res) {
           this.eventInfo = res.event;
           //console.log('evInfo', this.eventInfo)
+         
+          // Get user ID from localStorage
+          const userId = localStorage.getItem('user_id');
+          //console.log('userId',userId)
+
+          // Consolidate all invitees into one list
+          const allInvitees = [
+            ...this.eventInfo.invitees_internal,
+            ...this.eventInfo.invitees_external,
+            ...this.eventInfo.invitees_consumer_external,
+            ...this.eventInfo.invitees_corporate,
+          ];
+
+          // Find the user in the invitees list
+          const user = allInvitees.find((invitee: any) => invitee.id === userId || invitee.tmId === userId);
+          // console.log('get user',user)
+
+          // If user is found, set selectedValue based on RSVP
+          if (user && user.rsvp) {
+            this.selectedValue = user.rsvp.charAt(0).toUpperCase() + user.rsvp.slice(1).toLowerCase();
+          } else {
+            this.selectedValue = ''; // Default value if no RSVP is found
+          }
+          //console.log('Selected RSVP:', this.selectedValue);
 
           for (let i = 0; i < this.events.length; i++) {
             if (i == this.eventInfo.matter_type) {
@@ -79,10 +106,44 @@ export class ViewEventComponent implements OnInit {
           this.repeat_interval = this.eventInfo?.repeat_interval || '';
           this.repetition = !!this.repeat_interval;  // Set repetition to true only if repeat_interval is not empty
           //console.log('repeat_interval', this.repeat_interval);
-          
-          let teamMembersList = this.eventInfo.invitees_internal.map((person: any) => ({ "name": person.name, "rsvp": person.rsvp }));
-          this.teamMembers = [];
-          //console.log('teamMembers',this.teamMembers)
+
+          // let teamMembersList = this.eventInfo.invitees_internal.map((person: any) => ({ "name": person.name, "rsvp": person.rsvp }));
+          // this.teamMembers = [];
+          // //console.log('teamMembers',this.teamMembers)
+          // if (teamMembersList && teamMembersList.length > 0) {
+          //   for (let i = 0; i < teamMembersList.length; i++) {
+          //     let teamMem = {
+          //       firstChar: (teamMembersList[i].name.charAt(0))?.toUpperCase(),
+          //       name: teamMembersList[i].name,
+          //       rsvp: teamMembersList[i].rsvp
+          //     };
+          //     this.teamMembers.push(teamMem);
+          //   }
+          // }
+          // let external = this.eventInfo.invitees_external.concat(this.eventInfo.invitees_consumer_external, this.eventInfo.invitees_corporate)
+          // let clientsList = external.map((person: any) => ({ "entName": person.entityName, "tmName": person.tmName, "rsvp": person.rsvp, "tmId": person.tmId }));
+          // this.clients = [];
+          // //console.log('clients',this.clients)
+          // if (clientsList && clientsList.length > 0) {
+          //   for (let i = 0; i < clientsList.length; i++) {
+          //     let x = this.clients.filter((val: any) => val.entName === clientsList[i].entName)
+          //     let clientMem = {
+          //       firstChar: (clientsList[i].tmName?.charAt(0))?.toUpperCase(),
+          //       name: clientsList[i].tmName,
+          //       rsvp: clientsList[i].rsvp,
+          //       tmId: clientsList[i].tmId,
+          //       entName: x.length > 0 ? '' : clientsList[i].entName,
+          //       firstCharEntity: x.length > 0 ? '' : clientsList[i].entName?.charAt(0)?.toUpperCase(),
+          //     };
+          //     this.clients.push(clientMem);
+          //   }
+          // }
+          // //console.log(this.clients)
+          let teamMembersList = this.eventInfo.invitees_internal.map((person: any) => ({
+            name: person.name,
+            rsvp: person.rsvp ? person.rsvp.charAt(0).toUpperCase() + person.rsvp.slice(1).toLowerCase() : ""
+          }));
+          this.teamMembers = []; // Initialize the array
           if (teamMembersList && teamMembersList.length > 0) {
             for (let i = 0; i < teamMembersList.length; i++) {
               let teamMem = {
@@ -93,13 +154,21 @@ export class ViewEventComponent implements OnInit {
               this.teamMembers.push(teamMem);
             }
           }
-          let external = this.eventInfo.invitees_external.concat(this.eventInfo.invitees_consumer_external, this.eventInfo.invitees_corporate)
-          let clientsList = external.map((person: any) => ({ "entName": person.entityName, "tmName": person.tmName, "rsvp": person.rsvp, "tmId": person.tmId }));
+
+          let external = this.eventInfo.invitees_external.concat(
+            this.eventInfo.invitees_consumer_external,
+            this.eventInfo.invitees_corporate
+          );
+          let clientsList = external.map((person: any) => ({
+            entName: person.entityName,
+            tmName: person.tmName,
+            rsvp: person.rsvp ? person.rsvp.charAt(0).toUpperCase() + person.rsvp.slice(1).toLowerCase() : "",
+            tmId: person.tmId
+          }));
           this.clients = [];
-          //console.log('clients',this.clients)
           if (clientsList && clientsList.length > 0) {
             for (let i = 0; i < clientsList.length; i++) {
-              let x = this.clients.filter((val: any) => val.entName === clientsList[i].entName)
+              let x = this.clients.filter((val: any) => val.entName === clientsList[i].entName);
               let clientMem = {
                 firstChar: (clientsList[i].tmName?.charAt(0))?.toUpperCase(),
                 name: clientsList[i].tmName,
@@ -111,7 +180,6 @@ export class ViewEventComponent implements OnInit {
               this.clients.push(clientMem);
             }
           }
-          //console.log(this.clients)
         }
       });
   }
@@ -176,4 +244,86 @@ export class ViewEventComponent implements OnInit {
   closeModal(id: string) {
     this.modalService.close(id);
   }
+  // viewDocument(item: any) {
+  //   console.log(item)
+  //   let id = { 'id': item.docid }
+  //   this.httpservice.sendGetRequest(URLUtils.viewDocuments(id)).subscribe((res: any) => {
+  //     if (res && res.data && !res.error) {
+  //       this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(res.data.url);
+  //       let obj = {
+  //         'isIframe': true,
+  //         'url': this.urlSafe
+  //       }
+  //       this.confirmationDialogService.confirm('View', obj, true, "Ok", "Close", false, "lg");
+  //     }
+  //   });
+  // }
+
+  viewDocument(item: any) {
+    console.log(item)
+    if (item.added_encryption) {
+      var body = new FormData();
+      body.append('docid', item.docid)
+      body.append('shared_doc', true.toString())
+      let url = environment.apiUrl + URLUtils.decryptFile
+      this.httpservice.sendPostDecryptRequest(url, body).subscribe((res: any) => {
+        const blob = new Blob([res], { type: item.contentType });
+        const url = URL.createObjectURL(blob);
+        if (this.allowedFileTypes.includes(item.contentType)) {
+          let fdata = new FormData();
+          fdata.append('file', blob);
+          this.httpservice.sendPostDecryptRequest(environment.DOC2FILE, fdata).subscribe((ans: any) => {
+            const ansBlob = new Blob([ans], { type: 'application/pdf' });
+            const ansUrl = URL.createObjectURL(ansBlob);
+            this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(ansUrl)
+            let obj = {
+              'isIframe': true,
+              'url': this.urlSafe
+            }
+            this.confirmationDialogService.confirm('View', obj, true, "Ok", "Close", false, "lg");
+          })
+        } else {
+          this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+          let obj = {
+            'isIframe': true,
+            'url': this.urlSafe
+          }
+          this.confirmationDialogService.confirm('View', obj, true, "Ok", "Close", false, "lg");
+        }
+      })
+    }
+    if (item.added_encryption == false) {
+      let id = { 'id': item.docid }
+
+      this.httpservice.sendGetRequest(URLUtils.viewDocuments(id)).subscribe((res: any) => {
+        if (this.allowedFileTypes.includes(item.contentType)) {
+          this.httpservice.sendPostDocRequest(this.docapi, { 'url': res.data.url }).subscribe((ans: any) => {
+            const blob = new Blob([ans], { type: 'application/pdf' });
+            // Create a URL for the Blob
+            const url = URL.createObjectURL(blob);
+            this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(url)
+            let obj = {
+              'isIframe': true,
+              'url': this.urlSafe
+            }
+            this.confirmationDialogService.confirm('View', obj, true, "Ok", "Close", false, "lg");
+          })
+        } 
+        else {
+          if (res && res.data && !res.error) {
+            this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(res.data.url);
+            let obj = {
+              'isIframe': true,
+              'url': this.urlSafe
+            }
+            this.confirmationDialogService.confirm('View', obj, true, "Ok", "Close", false, "lg");
+          }
+          else {
+            alert(res.msg)
+          }
+        }
+      });
+    }
+  }
+
 }
