@@ -16,7 +16,6 @@
     box-shadow: 0px 3px 3px #00000033;
     color: #fff;
     border-radius: 5px;
-
 }
 
 .casestudy1 {
@@ -24,16 +23,13 @@
     font-size: 20px;
     font-weight: 800;
     padding: 10px 10px 0px 8px;
-
     display: flex;
     flex-flow: wrap;
     width: auto;
     justify-content: space-between;
     overflow: hidden !important;
-    text-overflow: ellipsis; 
+    text-overflow: ellipsis;
     overflow-wrap: break-word;
-    
-
 }
 
 .custlist {
@@ -46,7 +42,6 @@
     padding-left: 1px;
     padding-right: 16px;
     cursor: pointer;
-
 }
 
 .teamclient {
@@ -74,9 +69,9 @@
     color: #000;
 }
 
-.itemFlex{
-    overflow: hidden; 
-    text-overflow: ellipsis; 
+.itemFlex {
+    overflow: hidden;
+    text-overflow: ellipsis;
     overflow-wrap: break-word;
 }
 
@@ -191,45 +186,69 @@
     font-size: 20px;
     padding-right: 8px;
 }
-.invite span{
-float:right;
+
+.invite span {
+    float: right;
 }
-.invite{
+
+.invite {
     padding: 10px;
 }
 
-.sflex{
+.sflex {
     flex: 0 0 auto;
     width: auto;
 }
 
 .read-more-content {
-    max-height: 200px; /* Adjust as needed */
+    max-height: 200px;
+    /* Adjust as needed */
     overflow: hidden;
     max-width: auto;
-  }
-  
-  .expanded {
+}
+
+.expanded {
     max-height: none;
-  }
-  .underline{
+}
+
+.underline {
     color: #004D87;
     font-weight: 900;
-  }
+}
 
-  .containercont {
+.containercont {
     font-size: 16px;
     line-height: 16px;
     height: 32px;
     overflow: hidden;
 }
+
 .show {
     overflow: visible;
     height: auto;
 }
-.joinmeet{
+
+.joinmeet {
     text-decoration-line: underline;
     color: #291cd0;
     font-size: 16px;
     cursor: pointer;
+}
+.documentbox{
+    display: flex; 
+    align-items: center;
+}
+.dname{
+    margin-right: 10px;
+}
+.viewbtn{
+    background:none; 
+    border:none; 
+    padding:0;
+    margin-top: -18px;
+    cursor:pointer;
+}
+.imgview{
+    width: 25px;
+    height:25px
 }
