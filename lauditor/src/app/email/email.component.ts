@@ -123,7 +123,7 @@ export class EmailComponent implements OnInit, AfterViewInit {
   // var emailauthurloutlook='';
 
   emailAuthentication(type:any) {
-    console.log(type)
+    //console.log(type)
     const validationDone = localStorage.getItem('validationDone');
     const token = localStorage.getItem('TOKEN');
     const emailAuthUrls: { [key: string]: string } = {
@@ -210,7 +210,6 @@ export class EmailComponent implements OnInit, AfterViewInit {
       if(result){
         this.type=result
         this.emailAuthentication(result)
-       
       }           
       
       // Check if the popup window is closed or not
@@ -806,8 +805,8 @@ handleNextPageClick() {
 
    <h1 mat-dialog-title class="mailoption">Choose a Mail account provider…</h1>
       <mat-radio-group aria-label="Select an option" [(ngModel)]="selectedOption">
-        <mat-radio-button value="outlook"><img class="gImg" src="assets/img/outlook.svg"/></mat-radio-button>
-        <mat-radio-button value="gmail"><img class="oImg" src="assets/img/google.svg"/></mat-radio-button>
+        <mat-radio-button value="outlook"></mat-radio-button><img class="gImg" src="assets/img/outlook.svg"/>
+        <mat-radio-button value="gmail"></mat-radio-button><img class="oImg" src="assets/img/google.svg"/>
       </mat-radio-group>
       <div mat-dialog-actions class="overviewSave savefilenameBtn">
           <button type="reset" class="btn btn-default btncancel btnfont" (click)="onCloseDialog()">Cancel</button> 
@@ -829,6 +828,7 @@ export class ConfirmationDialogComponent {
 
   ngOnInit() {
       //console.log('selectedOption',this.selectedOption)
+      //localStorage.removeItem('validationDone');
   }
 
   continue() {
