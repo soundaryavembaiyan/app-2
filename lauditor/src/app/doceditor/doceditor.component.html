@@ -202,7 +202,7 @@
                 <!-- Table Block -->
                 <div class="container" *ngIf="item.value.content === 'Table'" class="form-group">
                   <label for="title" class="lableTitle">{{item.value.content}}</label>
-                  <i class="fa fa-times close secclose" aria-hidden="true" (click)="removeItem(i)"></i>
+                  <i class="fa fa-times close secclose" aria-hidden="true" (click)="removeTableItem(i)"></i>
               
                   <div class="table-container" formArrayName="tableRows">
                       <div class="table-row" *ngFor="let row of item.get('tableRows').controls; let j = index" [formArrayName]="j">
@@ -320,7 +320,6 @@
     </jw-modal>
 
     <ngx-spinner size="medium" type="ball-clip-rotate"></ngx-spinner>
-  
 </div> 
 
 <router-outlet></router-outlet>

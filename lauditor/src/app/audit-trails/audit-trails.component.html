@@ -8,7 +8,7 @@
             <div class="col-6">
                 
                  <!-- For Lauditor, Content, Connect product - except GH-role-->
-                <div class="form-group" *ngIf="(product != 'corporate' && product != 'content' && product != 'connect') && (roleId != 'GH' && roleId != 'AAM')">
+                <div class="form-group" *ngIf="(product != 'corporate' && product != 'content' && product != 'connect') && (roleId != 'GH')">
                     <label for="title" class="lable-size"> Category <span class="mandate">*</span> </label>
                     <!--Category for Groups-->
                      <!-- <select class="form-select form-control textbox calendofont nameSet" (change)="getCategory($event.target)" placeholder="Choose">
@@ -146,7 +146,6 @@
                         (change)="isCheckBox(inputEl.checked)">
                 </div>
                 <div class="form-group nameSet " *ngIf="isChecked">
-
                     <!-- <label for="comment" class="lable-size advance">Advance Search</label> -->
                     <form [formGroup]="logForm" (ngSubmit)="onSubmit()">
                         <div class="row">
@@ -184,7 +183,7 @@
         </div>
 
     </div>
-    <div *ngIf="filterByCategory.length==0" class="noData"> Data Not Available
+    <div *ngIf="filterByCategory.length==0" class="noData"> Data Not Available!!
     </div>
     <div *ngIf="filterByCategory.length>0" class="col-12 Individual gridtable"
         style="margin-top:20px;">

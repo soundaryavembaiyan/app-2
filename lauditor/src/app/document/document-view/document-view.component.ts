@@ -378,11 +378,12 @@ export class DocumentViewComponent implements OnInit {
 
     removeTag(index: number) {
         this.tagsFormArray.removeAt(index);
-        //console.log('in',index)
-        // if(index === 0){
-        //     this.addTag();
-        //     return;
-        // }
+        // console.log('in',index)
+        // console.log('this.tagsFormArray',this.tagsFormArray.length)
+        if(this.tagsFormArray.length === 0 && index === 0){
+            this.addTag();
+            return;
+        }
     }
 
     onSubmit() {

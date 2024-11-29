@@ -466,6 +466,34 @@ export class DocumentUploadComponent implements OnInit {
         this.editMetaFlag = data == "editMeta" ? true : false;
 
     }
+    // checkedItem(val: any, obj: any) {
+    //     console.log("val:", val);
+    //     console.log("obj:", obj);
+    
+    //     this.uploadDocs.forEach((item: any) => {
+    //         console.log('item:', item);
+    //         if (item.name == obj.name) {
+    //             item.checked = val;
+    //         }
+    //     });
+    
+    //     console.log("values before:", this.values);
+    //     this.noOfDocs = this.uploadDocs.filter((value: any) => value.checked).length;
+    //     this.allCheck = this.uploadDocs.every((v: any) => v.checked === true);
+    //     console.log("allCheck:", this.allCheck);
+    
+    //     if (val === true && this.allCheck === false) {
+    //         // Hide all previously entered values
+    //         this.values.forEach((value: { hidden: any; }) => {
+    //             value.hidden = true;
+    //         });
+    
+    //         // Add a new value
+    //         this.values.push({ tagtype: "", tag: "", hidden: false });
+    //         console.log("values after:", this.values);
+    //         return;
+    //     }
+    // }
     checkedItem(val: any, obj: any) {
         //console.log("val" + val);
         this.uploadDocs.forEach((item: any) => {
@@ -483,6 +511,7 @@ export class DocumentUploadComponent implements OnInit {
         let checkList: boolean = this.uploadDocs.every((v: any) => v.checked === true);
         this.allCheck = checkList;
     }
+
     // docEnable(item: any) {
     //     this.downloadDisabled = item == "enable" ? false : true;
     //     this.uploadDocs.forEach((item: any) => {

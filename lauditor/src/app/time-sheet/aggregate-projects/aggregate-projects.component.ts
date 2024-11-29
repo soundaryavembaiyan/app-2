@@ -22,6 +22,8 @@ export class AggregateProjectsComponent implements OnInit {
     grandTotal:any;
     searchTeam:any;
     product = environment.product;
+    fromDate:any;
+    toDate:any;
     
     constructor(private httpService: HttpService) {
 
@@ -48,15 +50,29 @@ export class AggregateProjectsComponent implements OnInit {
         return html
     
       }
+    formateDate() {
+      const startDate = new Date(this.projectsMember?.dates?.start);
+      const endDate = new Date(this.projectsMember?.dates?.end);
+      // Define arrays for days and months
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      // Format the start and end dates
+      const startDayFormatted = `${days[startDate.getDay()]}, ${months[startDate.getMonth()]} ${startDate.getDate()}, ${startDate.getFullYear()}`;
+      const endDayFormatted = `${days[endDate.getDay()]}, ${months[endDate.getMonth()]} ${endDate.getDate()}, ${endDate.getFullYear()}`;
+
+      // Assign to component properties for binding to the template
+      this.fromDate = `${startDayFormatted}`;
+      this.toDate = `${endDayFormatted}`;
+    }
     weekView() {
         this.httpService.sendGetRequest(URLUtils.aggregateProjects).subscribe((res: any) => {
             this.projectsMember = res;
             this.list = res.timesheets.data;
             this.calendarDates = res.dates;
             this.grandTotal=res.timesheets.grandTotal;
+            this.formateDate();
             // //console.log(" list"  +JSON.stringify(this.list));
         })
-
     }
     monthView(){
         this.httpService.sendGetRequest(URLUtils.aggregateProjectMounthView).subscribe((res: any) => {
@@ -64,6 +80,7 @@ export class AggregateProjectsComponent implements OnInit {
             this.list = res.timesheets?.data;
             this.calendarDates = res.dates;
             this.grandTotal=res.timesheets.grandTotal;
+            this.formateDate();
             //console.log(" list"  +JSON.stringify(this.list));
         })
     }
@@ -74,8 +91,8 @@ export class AggregateProjectsComponent implements OnInit {
             this.list = res?.timesheets?.data;
             this.calendarDates = res.dates;
             this.grandTotal=res.timesheets.grandTotal;
+            this.formateDate();
             // //console.log(" list"  +JSON.stringify(this.list));
-            
         });
 
     }
@@ -85,8 +102,8 @@ export class AggregateProjectsComponent implements OnInit {
             this.list = res?.timesheets?.data;
             this.calendarDates = res.dates;
             this.grandTotal=res.timesheets.grandTotal;
+            this.formateDate();
             // //console.log(" list"  +JSON.stringify(this.list));
-            
         });
 
     }

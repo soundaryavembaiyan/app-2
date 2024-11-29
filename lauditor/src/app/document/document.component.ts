@@ -18,6 +18,7 @@ export class DocumentComponent implements OnInit {
   product = environment.product;
   isFromEmail:boolean=false;
   role:any;
+  filter: any;
 
   constructor(private httpservice: HttpService, private router: Router, private aroute: ActivatedRoute,
     private emailService:EmailService) {
@@ -101,4 +102,17 @@ export class DocumentComponent implements OnInit {
     this.getButtonActive(this.activeParentBtn);
     this.getButton(this.activeChildBtn);
   }
+  reload(){
+    let filter = window.location.pathname.split("/").splice(-2)[1];
+    //console.log('fil',filter)
+    // this.filter = localStorage.getItem('filter');
+    // if(this.filter ==='login' || this.filter === undefined){
+    //   this.filter = 'client';
+    //   this.filter = localStorage.setItem('filter',filter);
+    // }
+    
+    const link = 'documents/mergepdf/' + filter;
+    window.location.href = link;
+  }
+  
 }

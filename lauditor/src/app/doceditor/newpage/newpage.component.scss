@@ -1,0 +1,21 @@
+.yesBtn {
+    background-color: #00498e;
+    border: none;
+    color: white !important;
+    padding: 15px;
+    text-align: center;
+    /* font-family: 'gill'; */
+    /* font-weight: 600; */
+    text-decoration: none;
+    /* display: inline-block; */
+    font-size: 18px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.noBtn {
+    background-color: white;
+    color: black;
+    width: 80px !important;
+    border: 2px solid #555555;
+}

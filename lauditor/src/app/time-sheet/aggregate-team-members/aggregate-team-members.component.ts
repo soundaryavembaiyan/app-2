@@ -22,6 +22,10 @@ export class AggregateTeamMembersComponent implements OnInit {
     searchTeam: any;
     isReverse: boolean = false;
     csvOptions: any;
+    formattedDates: { [key: string]: string } = {};
+    fromDate:any;
+    toDate:any;
+
     constructor(private httpService: HttpService) {
 
     }
@@ -34,22 +38,53 @@ export class AggregateTeamMembersComponent implements OnInit {
         let val = el.value.replace(/\s/g, "");
         //console.log("val "+val);
     }
+    tmWeekFormat(){
+        const startDate = new Date(this.teamMemberData?.dates?.start);
+        const endDate = new Date(this.teamMemberData?.dates?.end);
+        // Define arrays for days and months
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        // Format the start and end dates
+        const startDayFormatted = `${days[startDate.getDay()]}, ${months[startDate.getMonth()]} ${startDate.getDate()}, ${startDate.getFullYear()}`;
+        const endDayFormatted = `${days[endDate.getDay()]}, ${months[endDate.getMonth()]} ${endDate.getDate()}, ${endDate.getFullYear()}`;
+    
+        // Assign to component properties for binding to the template
+        this.fromDate = `${startDayFormatted}`;
+        this.toDate = `${endDayFormatted}`;
+    }
+    tmMonthFormat(){
+        const startDate = new Date(this.teamMonthView?.dates?.start);
+        const endDate = new Date(this.teamMonthView?.dates?.end);
+        // Define arrays for days and months
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        // Format the start and end dates
+        const startDayFormatted = `${days[startDate.getDay()]}, ${months[startDate.getMonth()]} ${startDate.getDate()}, ${startDate.getFullYear()}`;
+        const endDayFormatted = `${days[endDate.getDay()]}, ${months[endDate.getMonth()]} ${endDate.getDate()}, ${endDate.getFullYear()}`;
+    
+        // Assign to component properties for binding to the template
+        this.fromDate = `${startDayFormatted}`;
+        this.toDate = `${endDayFormatted}`;
+    }
     weekView() {
         this.teamMonthView = [];
         this.httpService.sendGetRequest(URLUtils.aggregateTeamMembers).subscribe((res: any) => {
             this.teamMemberData = res;
-        });
+            this.tmWeekFormat();
+        });        
     }
     preAndNextWeek(data: any) {
         this.teamMonthView = [];
         this.httpService.sendGetRequest(URLUtils.aggregateTeamDataWeekByWeek(data)).subscribe((res: any) => {
             this.teamMemberData = res;
+            this.tmWeekFormat();
         })
     }
     monthView() {
         this.teamMemberData = [];
         this.httpService.sendGetRequest(URLUtils.aggregateTeamMembersMounthView).subscribe((res: any) => {
             this.teamMonthView = res;
+            this.tmMonthFormat();
             //console.log("response  " + JSON.stringify(this.teamMonthView));
         })
     }
@@ -58,6 +93,7 @@ export class AggregateTeamMembersComponent implements OnInit {
         this.teamMemberData = [];
         this.httpService.sendGetRequest(URLUtils.aggregateTeamDataWeekByMonth(data)).subscribe((res: any) => {
             this.teamMonthView = res;
+            this.tmMonthFormat();
         })
 
     }

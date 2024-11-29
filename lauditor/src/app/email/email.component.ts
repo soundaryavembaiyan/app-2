@@ -135,22 +135,22 @@ export class EmailComponent implements OnInit, AfterViewInit {
       const emailAuthUrl = emailAuthUrls[type];
 
       if (emailAuthUrl) {
-          this.httpservice.sendGetEmailRequest(emailAuthUrl).subscribe(
-              (res: any) => {
-                  if (!res.error && res.url) {
-                      
-                      localStorage.setItem('validationDone', 'true');
-                      if (!localStorage.getItem('popupOpened')) {
-                          console.log(res.url);
-                          window.open(res.url, 'coffergoogleAuthWin', "height=450px, width=750px");
-                      }
-                      localStorage.setItem('popupOpened', 'true');
-                  }
-              });
+        this.httpservice.sendGetEmailRequest(emailAuthUrl).subscribe(
+          (res: any) => {
+            if (!res.error && res.url) {
+              localStorage.setItem('validationDone', 'true');
+              if (!localStorage.getItem('popupOpened')) {
+                console.log(res.url);
+                window.open(res.url, 'coffergoogleAuthWin', "height=450px, width=750px");
+              }
+              localStorage.setItem('popupOpened', 'true');
+            }
+          });
       }
-  } else {
-     this.handleMessageCountClick();
-  }
+
+    } else {
+      this.handleMessageCountClick();
+    }
   }
 
   getMessageCount() {
@@ -162,14 +162,19 @@ export class EmailComponent implements OnInit, AfterViewInit {
           this.getMessages();
         }
       },
-      (error: any) => {
+      (error: HttpErrorResponse) => {
         //setInterval(function () {
         localStorage.removeItem('validationDone');
+        // if (error.status === 401 || error.status === 403) {
+        //   const errorMessage = error || 'Unauthorized';
+        //   //this.toast.error(errorMessage);
+        //   localStorage.removeItem('validationDone');
+        //   localStorage.removeItem('popupOpened');
+        // }
         this.isAuthenticated = false;
         globalVar.emailAuthentication(this.type);
         this.autoRefresh()
         //}, 10000);
-
       });
   }
 
@@ -183,7 +188,7 @@ export class EmailComponent implements OnInit, AfterViewInit {
           this.getOutlookMessages();
         }
       },
-      (error: any) => {
+      (error: HttpErrorResponse) => {
         //setInterval(function () {
         localStorage.removeItem('validationDone');
         this.isAuthenticated = false;
@@ -205,7 +210,7 @@ export class EmailComponent implements OnInit, AfterViewInit {
 
    dialogRef.afterClosed().subscribe(result => {
     if (result) {
-      console.log(result)
+      //console.log(result)
       // Open the authentication window
       if(result){
         this.type=result
@@ -268,7 +273,6 @@ handleNextPageClick() {
 
   getOutlookMessages() {
     var globalVar = this;
-    console.log("ee")
     this.httpservice.sendGetEmailRequest(URLUtils.OutllokemailMessages({ "token": localStorage.getItem('TOKEN'), "rows": 10 ,"labelid": 'INBOX'})).subscribe(
       async (res: any) => {
         if (!res.error) {
@@ -288,7 +292,7 @@ handleNextPageClick() {
                 message.attachments = await this.fetchAttachments(message.id);
             }
         }));
-        console.log(this.messages)
+        //console.log(this.messages)
           // this.messages.forEach((element: any) => {
           //   element.fromName = element.from.emailAddress.name;
           // });
@@ -389,30 +393,28 @@ handleNextPageClick() {
   }
   onKeydown(event: any) {
     if (event.key === "Enter" || event.type === "click") {
-      this.httpservice.sendGetEmailRequest(URLUtils.searchMessages({"type":this.type, "token": localStorage.getItem('TOKEN'), "rows": 10, "search": this.searchText , "labelid":"INBOX" })).subscribe(
-       async (res: any) => {
-          if(this.type=='outlook'){
+      this.httpservice.sendGetEmailRequest(URLUtils.searchMessages({ "type": this.type, "token": localStorage.getItem('TOKEN'), "rows": 10, "search": this.searchText, "labelid": "INBOX" })).subscribe(
+        async (res: any) => {
+          if (this.type == 'outlook') {
             this.nextToken = res['@odata.nextLink'];
             this.messages = res.value;
             this.messagesMap.set(this.pageNumber, res);
-        // Fetch attachments for messages that have them
-          await Promise.all(this.messages.map(async (message: any) => {
-            message.fromName = message.from.emailAddress.name;
-            message.msgId = message.id
-            if (message.hasAttachments) {
+            // Fetch attachments for messages that have them
+            await Promise.all(this.messages.map(async (message: any) => {
+              message.fromName = message.from.emailAddress.name;
+              message.msgId = message.id
+              if (message.hasAttachments) {
                 message.attachments = await this.fetchAttachments(message.id);
-            }
-        }));
-
-          } else {
+              }
+            }));
+          } 
+          else {
             this.messages = res.messages;
-          this.nextToken = res.nextPageToken;
-          this.messages.forEach((element: any) => {
-            element.fromName = element.from.split("<")[0];
-          });
-
+            this.nextToken = res.nextPageToken;
+            this.messages.forEach((element: any) => {
+              element.fromName = element.from.split("<")[0];
+            });
           }
-          
         })
     }
   }
@@ -431,9 +433,7 @@ handleNextPageClick() {
     } else {
       this.nextToken = data?.nextPageToken;
     this.messages = data?.messages;
-
     }
-    
   }
   documentClick(msgid: any, partid: any) {
     console.log(msgid,partid)
@@ -515,8 +515,6 @@ handleNextPageClick() {
       "groupids": this.selectedGroupItems.map((obj: any) => obj.id),
       "enableDownload": true
     }
-
-    console.log('obj',this.type)
     var req;
     if(this.type=='gmail'){
       req = URLUtils.MessageDocUpload({ "token": localStorage.getItem('TOKEN'), "msgid": this.msgAndpartId.msgId, "partid": this.msgAndpartId.partId })

@@ -20,8 +20,8 @@
 
 .casestudy1 {
     display: inline-block;
-    font-size: 20px;
-    font-weight: 800;
+    font-size: 23px;
+    font-weight: 900;
     padding: 10px 10px 0px 8px;
     display: flex;
     flex-flow: wrap;
@@ -30,6 +30,15 @@
     overflow: hidden !important;
     text-overflow: ellipsis;
     overflow-wrap: break-word;
+<<<<<<< Updated upstream
+=======
+    margin-top: 10px;
+    margin-left: 10px;
+}
+.atten{
+    margin-top: 10px;
+    margin-left: 10px;
+>>>>>>> Stashed changes
 }
 
 .custlist {
@@ -57,8 +66,8 @@
 }
 
 .monthtitle {
-    font-size: 18px;
-    font-weight: 600;
+    font-size: 1.2rem;
+    font-weight: 900;
     margin-bottom: 0px;
     color: #000;
 }
@@ -90,6 +99,7 @@
     padding-right: 5px;
     width: 30px;
     height: 25px;
+    margin-top: -8px;
 }
 
 .belldate {
@@ -141,6 +151,7 @@
     font-weight: 600;
     margin-top: -5px;
     margin-bottom: -4px;
+    margin-left: 8px;
 }
 
 .horzline {
@@ -148,12 +159,13 @@
     height: 71px;
     position: absolute;
     display: block;
-    margin-left: -40px;
+    //margin-left: -40px;
 }
 
 .timsheetsubitem {
     //padding-top: 15px;
     padding-bottom: 15px;
+    width: 300px;
 }
 
 .usernamelist {
@@ -185,6 +197,7 @@
     font-weight: bold;
     font-size: 20px;
     padding-right: 8px;
+    margin-top: 5px;
 }
 
 .invite span {
@@ -252,3 +265,10 @@
     width: 25px;
     height:25px
 }
+<<<<<<< Updated upstream
+=======
+.organizer{
+    font-size: 1rem;
+    font-weight: 900;
+}
+>>>>>>> Stashed changes

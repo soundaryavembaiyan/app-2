@@ -106,6 +106,7 @@ import { PaymentComponent } from './payment/payment.component';
 import { ViewDocumentComponent } from './view-document/view-document.component';
 import { DoceditorComponent, ViewDocComponent, OpendialogBoxComponent, DownloadBoxComponent, SaveasBoxComponent, ContentDialogComponent, OverviewExpandComponent } from './doceditor/doceditor.component';
 import { LatexblockComponent, LatexDialogComponent } from './doceditor/latexblock/latexblock.component';
+import { NewpageComponent } from './doceditor/newpage/newpage.component';
 
 
 @NgModule({
@@ -143,7 +144,8 @@ import { LatexblockComponent, LatexDialogComponent } from './doceditor/latexbloc
       OverviewExpandComponent,
 
       LatexblockComponent, 
-      LatexDialogComponent
+      LatexDialogComponent,
+      NewpageComponent
            
    ],
   imports: [

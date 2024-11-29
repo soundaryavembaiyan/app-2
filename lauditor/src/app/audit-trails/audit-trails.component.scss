@@ -105,7 +105,7 @@ input.larger {
     height: 23px;
     top: -10%;
     right: -3px;
-
+    cursor: pointer;
     margin-top: 3px;
     width: 12px;
     margin-left: 12px !important;
@@ -114,6 +114,14 @@ input.larger {
     display: flex;
     justify-content: center;
     padding: 10px 0;
+    
+    margin: 0 auto;
+    line-height: 40px;
+    border-radius: 5px;
+    opacity: 1;
+    text-align: center;
+    color: #ff0000;
+    font-size: 18px;
 }
 i.fa.fa-light.fa-calendar-days {
     font-size: 25px;
@@ -170,8 +178,4 @@ select {
   
   
 
-<<<<<<< Updated upstream
   
-=======
-  
->>>>>>> Stashed changes

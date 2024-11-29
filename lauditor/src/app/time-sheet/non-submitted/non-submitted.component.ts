@@ -54,6 +54,19 @@ export class NonSubmittedComponent implements OnInit {
   addEmptyTask: boolean = false;
   minDate: any = new Date();
   maxDate: any;
+  formattedDates: { [key: string]: string } = {};
+  fromDate:any;
+  toDate:any;
+  flagSub:any;
+  isEditing: boolean = false; 
+  getDate:any;
+  isReverse: boolean = false;
+  sortOrder: { [key: string]: 'asc' | 'desc' } = {
+    matterName: 'asc',
+    taskName: 'asc',
+    billing: 'asc'
+  };
+
   constructor(
     private httpservice: HttpService,
     private formBuilder: FormBuilder,
@@ -71,7 +84,10 @@ export class NonSubmittedComponent implements OnInit {
     });
     this.httpservice
       .getFeaturesdata(URLUtils.getTimeSheets)
-      .subscribe((res: any) => {
+      .subscribe((res: any) => {  
+        //console.log('res',res)      
+        this.flagSub = res.timesheetList.weekTotal.wTotal
+        //console.log('flagSub1',this.flagSub)
         this.isFrozen = res?.dates?.isFrozen;
         this.project = res?.timesheetList?.matters;
         this.currentWeek = res?.dates?.currentWeek;
@@ -79,11 +95,29 @@ export class NonSubmittedComponent implements OnInit {
         this.minDate = new Date(this.prevWeek);
         this.nextWeek = res?.dates?.nextWeek;
         this.timeSheetData = res?.timesheetList;
+        this.getDate = res
         this.convertMinutes();
         this.getDatesList(this.currentWeek);
+        this.formatDate();
         // this.getTimeSheet(this.currentWeek);
         //console.log(" this.timeSheetData  " + JSON.stringify(this.timeSheetData));
       });
+  }
+  formatDate(){
+    const headers = this.timeSheetData?.headers;
+    if (headers) {
+      this.formattedDates = Object.keys(headers).reduce((acc: { [key: string]: string }, day: string) => {
+        const date = headers[day];
+        acc[day] = `${day}, ${date}`; // Combine day with date
+        return acc;
+      }, {} as { [key: string]: string });
+      //console.log("formattedDates:",this.formattedDates);
+      const fromDate = "Mon";
+      this.fromDate = this.formattedDates?.[fromDate];
+      const toDate = "Sun";
+      this.toDate = this.formattedDates?.[toDate];
+      //console.log(`${day} Value:`, this.fromDate);
+    }
   }
   getDatesList(date: any) {
     let currentDate = date?.split('-');
@@ -152,10 +186,13 @@ export class NonSubmittedComponent implements OnInit {
     this.httpservice
       .getFeaturesdata(URLUtils.getCurrentWeekDetails(val))
       .subscribe((res: any) => {
+        this.flagSub = res.timesheetList.weekTotal.wTotal
+        //console.log('flagSub2',this.flagSub)
         this.isFrozen = res?.dates?.isFrozen;
         this.project = res?.timesheetList?.matters;
         this.timeSheetData = res?.timesheetList;
         this.currentWeek = res?.dates?.currentWeek;
+        this.formatDate();
         this.convertMinutes();
         this.prevWeek = res?.dates?.prevWeek;
         this.nextWeek = res?.dates?.nextWeek;
@@ -163,11 +200,26 @@ export class NonSubmittedComponent implements OnInit {
       });
 
   }
+  
+  // onChange(val: any) {
+  //   this.selectedProject(val.value);
+  //   //console.log("test  "+JSON.stringify(val));
+  //   // this.hoursform.value.title = '';
+  // }
   onChange(val: any) {
     this.selectedProject(val.value);
-    //console.log("test  "+JSON.stringify(val));
-    // this.hoursform.value.title = '';
+    const currentDate = this.hoursform.get('date')?.value; // Get the current date value
+
+    this.hoursform.reset({
+      matter_type: val.value,
+      title: '',
+      billing: '',
+      duration_minutes: '00',
+      duration_hours: '00',
+      date: currentDate
+    }, { emitEvent: true }); // Emit change event to update bindings    
   }
+  
   onChangetask(val: any) {
     // this.taskName = val.value;
   }
@@ -268,6 +320,7 @@ export class NonSubmittedComponent implements OnInit {
   }
   onReset() {
     this.submitted = false;
+    this.addEmptyTask = false;
     this.hoursModel.duration_minutes = '00';
     this.hoursModel.duration_hours = '00';
     this.hoursModel.title = '';
@@ -311,6 +364,9 @@ export class NonSubmittedComponent implements OnInit {
     _taskName: any,
     item: any
   ) {
+    // Reset editing mode
+    this.isEditing = false;
+    this.taskId = null; // Clear task ID for new entry 
     this.selectedProject(item.matterName);
     this.addEmptyTask = true;
     this.hoursModel.billing = this.timeSheetData['matters'][matterIndex]['tasks'][taskIndex]['billing'];
@@ -333,8 +389,8 @@ export class NonSubmittedComponent implements OnInit {
     item: any
   ) {
     this.btnText = "Update";
+    this.isEditing = true;
     this.selectedProject(item.matterName);
-
     this.hoursModel.billing = this.timeSheetData['matters'][matterIndex]['tasks'][taskIndex]['billing'];
     let selectedDetails = { day: day };
     this.hoursModel.duration_hours = this.timeSheetData['matters'][matterIndex]['tasks'][taskIndex][day]['hours'];
@@ -347,8 +403,9 @@ export class NonSubmittedComponent implements OnInit {
     );
     this.hoursform.controls['date'].setValue(this.bsValue);
     //console.log('hoursform ' + JSON.stringify(this.hoursform.value));
-    console.log('Update!!', this.hoursform)
+    //console.log('Update!!', this.hoursform)
   }
+
   selectedProject(value: any) {
     if (value == 'Others' || value == 'Overhead') {
       this.matterType = value == 'Others' ? 'others' : 'overhead';
@@ -405,4 +462,29 @@ export class NonSubmittedComponent implements OnInit {
       return data;
     }
   }
+
+sortingFile(column: string) {
+  // Toggle sort order
+  this.sortOrder[column] = this.sortOrder[column] === 'asc' ? 'desc' : 'asc';
+  const orderMultiplier = this.sortOrder[column] === 'asc' ? 1 : -1;
+
+  if (column === 'matterName') {
+    this.timeSheetData.matters.sort((a: any, b: any) => {
+      if (a[column] < b[column]) return -1 * orderMultiplier;
+      if (a[column] > b[column]) return 1 * orderMultiplier;
+      return 0;
+    });
+  } else {
+    // Sort the tasks for each matter
+    this.timeSheetData.matters = this.timeSheetData.matters.map((matter: any) => {
+      matter.tasks.sort((a: any, b: any) => {
+        if (a[column] < b[column]) return -1 * orderMultiplier;
+        if (a[column] > b[column]) return 1 * orderMultiplier;
+        return 0;
+      });
+      return matter;
+    });
+  }
+}
+
 }

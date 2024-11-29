@@ -7,7 +7,7 @@
                 </div>
                 <div class="col-5 invite">
 
-                    <div class="row" *ngIf="!eventInfo.owner">
+                    <div class="row atten" *ngIf="!eventInfo.owner">
                         <!--<div class="col-3"></div>-->
                         <div class="attnd col-3">Attending</div>
                         <div class="col-9 sflex">
@@ -87,6 +87,13 @@
                         </button>
                     </div>
                 </div>
+<<<<<<< Updated upstream
+=======
+                
+                <!-- <div class="col-sm-6">
+                    <p class="meetingitem affitem">Affidavits Acknowledging Paternity_RRE</p>
+                </div> -->
+>>>>>>> Stashed changes
             </div>
 
 
@@ -109,7 +116,7 @@
                 <div class="col-xs-12 col-sm-6">
                     <div>
                         <label class="namecircle">{{OrganizerFirstLetter}}</label>&nbsp;
-                        <label class="usernamelist">{{eventInfo.owner_name}}</label>
+                        <label class="usernamelist organizer">{{eventInfo.owner_name}}</label>
                         <p class="lblorg">(organizer)</p>
                     </div>
                     <div class="emptyrow" *ngFor="let tm of teamMembers">

@@ -318,6 +318,7 @@ export class RemindersCalenderComponent implements OnInit {
     // Set values to display
     this.selectedHours = diffHours.toString();
     this.selectedMinutes = diffMinutes.toString();
+    return `${diffHours} : ${diffMinutes}`; // Return formatted duration
   }
   hrsData() {
     for (let i = 0; i <= 23; i++) {

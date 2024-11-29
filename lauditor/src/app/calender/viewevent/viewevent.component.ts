@@ -82,7 +82,11 @@ export class ViewEventComponent implements OnInit {
           if (user && user.rsvp) {
             this.selectedValue = user.rsvp.charAt(0).toUpperCase() + user.rsvp.slice(1).toLowerCase();
           } else {
+<<<<<<< Updated upstream
             this.selectedValue = ''; // Default value if no RSVP is found
+=======
+            this.selectedValue = 'Yes'; // Default value if no RSVP is found
+>>>>>>> Stashed changes
           }
           //console.log('Selected RSVP:', this.selectedValue);
 
@@ -102,7 +106,14 @@ export class ViewEventComponent implements OnInit {
             this.remainingNotications = this.eventInfo?.notifications.slice(1).map((notification: string) => notification.replace('-', ' '));
           }
           this.OrganizerFirstLetter = this.eventInfo.owner_name.charAt(0)?.toUpperCase();
-          this.scheduledDate = this.eventInfo.allday ? new Date(this.eventInfo?.from_ts).toDateString() + ' : All Day' : new Date(this.eventInfo?.from_ts).toDateString() + ' : ' + this.pipe.transform(this.eventInfo?.from_ts, 'h:mm a') + ' - ' + this.pipe.transform(this.eventInfo?.to_ts, 'h:mm a');
+          //this.scheduledDate = this.eventInfo.allday ? new Date(this.eventInfo?.from_ts).toDateString() + ' : All Day' : new Date(this.eventInfo?.from_ts).toDateString() + ' : ' + this.pipe.transform(this.eventInfo?.from_ts, 'h:mm a') + ' - ' + this.pipe.transform(this.eventInfo?.to_ts, 'h:mm a');
+          this.scheduledDate = this.eventInfo.allday 
+          ? this.pipe.transform(this.eventInfo?.from_ts, 'EEEE, MMMM d yyyy') + ' : All Day' 
+          : this.pipe.transform(this.eventInfo?.from_ts, 'EEEE, MMMM d yyyy') + ' : ' +
+            this.pipe.transform(this.eventInfo?.from_ts, 'h:mm a') + ' - ' +
+            this.pipe.transform(this.eventInfo?.to_ts, 'h:mm a');
+          //console.log('date', this.scheduledDate);
+
           this.repeat_interval = this.eventInfo?.repeat_interval || '';
           this.repetition = !!this.repeat_interval;  // Set repetition to true only if repeat_interval is not empty
           //console.log('repeat_interval', this.repeat_interval);
@@ -222,9 +233,7 @@ export class ViewEventComponent implements OnInit {
     this.selectedValue = val;
     //console.log('this.selectedValue', this.selectedValue)
     this.httpservice.sendPutRequest(URLUtils.updateRSVP({ event_id: this.eventInfo.id }), { rsvp_response: this.selectedValue }).subscribe((res: any) => {
-      if (res.error == false) {
         this.toaster.success(res.msg);
-      }
     },
       (error: HttpErrorResponse) => {
         if (error.status === 401 || error.status === 403) {
@@ -244,6 +253,7 @@ export class ViewEventComponent implements OnInit {
   closeModal(id: string) {
     this.modalService.close(id);
   }
+<<<<<<< Updated upstream
   // viewDocument(item: any) {
   //   console.log(item)
   //   let id = { 'id': item.docid }
@@ -326,4 +336,88 @@ export class ViewEventComponent implements OnInit {
     }
   }
 
+=======
+  viewDocument(item: any) {
+    console.log(item)
+    let id = { 'id': item.docid }
+    this.httpservice.sendGetRequest(URLUtils.viewDocuments(id)).subscribe((res: any) => {
+      if (res && res.data && !res.error) {
+        this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(res.data.url);
+        let obj = {
+          'isIframe': true,
+          'url': this.urlSafe
+        }
+        this.confirmationDialogService.confirm('View', obj, true, "Ok", "Close", false, "lg");
+      }
+    });
+  }
+
+  // viewDocument(item: any) {
+  //   console.log(item)
+  //   if (item.added_encryption) {
+  //     var body = new FormData();
+  //     body.append('docid', item.docid)
+  //     body.append('shared_doc', true.toString())
+  //     let url = environment.apiUrl + URLUtils.decryptFile
+  //     this.httpservice.sendPostDecryptRequest(url, body).subscribe((res: any) => {
+  //       const blob = new Blob([res], { type: item.contentType });
+  //       const url = URL.createObjectURL(blob);
+  //       if (this.allowedFileTypes.includes(item.contentType)) {
+  //         let fdata = new FormData();
+  //         fdata.append('file', blob);
+  //         this.httpservice.sendPostDecryptRequest(environment.DOC2FILE, fdata).subscribe((ans: any) => {
+  //           const ansBlob = new Blob([ans], { type: 'application/pdf' });
+  //           const ansUrl = URL.createObjectURL(ansBlob);
+  //           this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(ansUrl)
+  //           let obj = {
+  //             'isIframe': true,
+  //             'url': this.urlSafe
+  //           }
+  //           this.confirmationDialogService.confirm('View', obj, true, "Ok", "Close", false, "lg");
+  //         })
+  //       } else {
+  //         this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  //         let obj = {
+  //           'isIframe': true,
+  //           'url': this.urlSafe
+  //         }
+  //         this.confirmationDialogService.confirm('View', obj, true, "Ok", "Close", false, "lg");
+  //       }
+  //     })
+  //   }
+  //   if (item.added_encryption == false) {
+  //     let id = { 'id': item.docid }
+
+  //     this.httpservice.sendGetRequest(URLUtils.viewDocuments(id)).subscribe((res: any) => {
+  //       if (this.allowedFileTypes.includes(item.contentType)) {
+  //         this.httpservice.sendPostDocRequest(this.docapi, { 'url': res.data.url }).subscribe((ans: any) => {
+  //           const blob = new Blob([ans], { type: 'application/pdf' });
+  //           // Create a URL for the Blob
+  //           const url = URL.createObjectURL(blob);
+  //           this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(url)
+  //           let obj = {
+  //             'isIframe': true,
+  //             'url': this.urlSafe
+  //           }
+  //           this.confirmationDialogService.confirm('View', obj, true, "Ok", "Close", false, "lg");
+  //         })
+  //       } 
+  //       else {
+  //         if (res && res.data && !res.error) {
+  //           this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(res.data.url);
+  //           let obj = {
+  //             'isIframe': true,
+  //             'url': this.urlSafe
+  //           }
+  //           this.confirmationDialogService.confirm('View', obj, true, "Ok", "Close", false, "lg");
+  //         }
+  //         else {
+  //           alert(res.msg)
+  //         }
+  //       }
+  //     });
+  //   }
+  // }
+
+>>>>>>> Stashed changes
 }

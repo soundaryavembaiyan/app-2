@@ -8,9 +8,9 @@
                     <div class="col-2">
                         <label for="title" class="fontbold"> From</label>
                         <div class="input-group dates">
+                            {{ fromDate }}
                             <!-- <input type="text" class="disable calendorselect" [(ngModel)]="minDate" disabled="true"> -->
-                           
-                            {{timeSheetData?.headers?.Mon}}
+                            <!-- {{timeSheetData?.headers?.Mon}} -->
                             <!-- <input class="form-control" bsDatepicker id="drp" #dp="bsDatepicker" [(ngModel)]="minDate"
                                 [bsValue]="minDate" (bsValueChange)='selectFromDuration($event)'
                                 [bsConfig]="{ dateInputFormat: 'MMM DD, YYYY', containerClass:'theme-dark-blue', showWeekNumbers:false, customTodayClass: 'custom-today-class' }"
@@ -20,7 +20,8 @@
                     <div class="col-2">
                         <label for="title" class="fontbold"> To</label>
                         <div class="input-group dates">
-                            {{timeSheetData?.headers?.Sun}}
+                            {{ toDate }}
+                            <!-- {{timeSheetData?.headers?.Sun}} -->
                             <!-- <input type="text" class="disable calendorselect" [(ngModel)]="maxDate" disabled="true"> -->
                             <!-- <input class="form-control" bsDatepicker id="drp" #dp="bsDatepicker" [(ngModel)]="maxDate"
                                 [bsValue]="maxDate" (bsValueChange)='selectToDuration($event)'
@@ -236,9 +237,9 @@
         <thead>
             <tr>
                 <!-- <th *ngFor="let item of timesheetList.headers" class="tHeader">{{item}}<br>{{item}}</th> -->
-                <th class="projectName" style="vertical-align: middle;">{{timeSheetData['headers'].header1}}</th>
-                <th class="taskname" style="vertical-align: middle;">{{timeSheetData['headers'].header2}}</th>
-                <th class="Status" style="vertical-align: middle; width:100px">Status</th>
+                <th class="projectName" style="vertical-align: middle;">{{timeSheetData['headers'].header1}} &nbsp;<img class="sorto" (click)="sortingFile('matterName')" src="assets/img/sort_b.svg"/></th>
+                <th class="taskname" style="vertical-align: middle;">{{timeSheetData['headers'].header2}} &nbsp;<img class="sorto" (click)="sortingFile('taskName')" src="assets/img/sort_b.svg"/></th>
+                <th class="Status" style="vertical-align: middle; width:100px">Status &nbsp;<img class="sorto" (click)="sortingFile('billing')" src="assets/img/sort_b.svg"/></th>
                 <th class="date">Mon <br>{{timeSheetData['headers'].Mon}}</th>
                 <th class="date">Tue <br>{{timeSheetData['headers'].Tue}}</th>
                 <th class="date">Wed <br>{{timeSheetData['headers'].Wed}}</th>
@@ -512,7 +513,10 @@
     </table>
 
     <div *ngIf="!isFrozen">
-        <button class="btn btn-primary float-right"  (click)="weekSubmit()">Submit</button>
+        <button class="btn btn-primary float-right"
+        [disabled]="flagSub === '0:0'" 
+        [ngClass]="{'disabled': flagSub === '0:0'}" 
+        (click)="weekSubmit()">Submit</button>
     </div>
 </div>
 <jw-modal id="success" class="alert-box">

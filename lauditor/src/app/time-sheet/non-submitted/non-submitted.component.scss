@@ -22,6 +22,8 @@
 
 .cdate {
     text-align: left;
+    font-weight: 900;
+    margin-left: 5px;
 }
 
 .row.hours-text .row {
@@ -70,6 +72,7 @@ select.textbox {
 
 .thheadname {
     color: #fff;
+    margin-left: 15px;
 }
 
 .bcolor {
@@ -149,6 +152,7 @@ table.tsheet-table {
         height: 40px;
         background: #eeeeee;
         border: 2px solid #fff;
+        cursor: pointer;
     }
 
     .invalid-feedback {
@@ -208,4 +212,15 @@ input#drp {
     justify-content: center;
     background: #EEEEEE;
     height:35px;
+    // border: 1px solid #EEEEEE;
+    // padding-top: 8px;
+    // display: flex;
+    // justify-content: center;
+    // background: #EEEEEE;
+    // height: 35px;
+    // text-align: start;
+    // font-size: 15px;
+}
+.sorto{
+    cursor:pointer;
 }

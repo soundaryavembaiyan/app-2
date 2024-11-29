@@ -37,6 +37,7 @@ export class AuditTrailsComponent {
     frombsValue: any;
     tobsValue: any;
     selectedCategory: string | null = null;
+    getcat:any;
 
     //for Lauditor, Content, Connect
     categoryList: any = [
@@ -129,6 +130,15 @@ export class AuditTrailsComponent {
 
     isCheckBox(val: any) {
         this.isChecked = val;
+        if (!val) {
+            this.frombsValue = null;
+            this.tobsValue = null;
+            this.logForm.reset();
+            this.filterByCategory = [...this.auditLogs];
+            this.p = 1;
+            this.pageChanged(1);
+            this.selectedData();
+        }
     }
     get f() { return this.logForm.controls; }
 
@@ -162,20 +172,20 @@ export class AuditTrailsComponent {
     }
    
     getCategory(val: any) {
+        //console.log('val',val)
+        this.getcat=val.value
         let filterByCategory: any = [];
         this.selectedCategory = val.name;
         this.auditLogs.forEach((item: any) => {
-           
             if (item.name == val.value) {
                 filterByCategory.push(item);
-               
             }
         });
 
         this.filterByCategory = filterByCategory;
         this.p=1;
         this.pageChanged(1);
-        
+        this.selectedData(); 
     }
      pageChanged(val: any) {
          this.fromCount = (val * 10) - 9;
@@ -201,19 +211,47 @@ export class AuditTrailsComponent {
         this.tobsValue = val;
         this.selectedData();
     }
-    selectedData(){
+    // selectedData(){
+    //     let timeFilter: any = [];
+    //     if (this.frombsValue && this.tobsValue) {
+    //         this.filterByCategory.forEach((item: any) => {
+    //             if (new Date(item.timestamp) >= this.frombsValue && new Date(item.timestamp) <= this.tobsValue) {
+    //                 timeFilter.push(item)
+    //             }
+    //         })
+    //         this.filterByCategory = timeFilter;
+    //         this.pageChanged(1);
+    //         this.p=1;
+    //     }
+    // }
+
+    selectedData() {
         let timeFilter: any = [];
+        
+        // get filter by category (getcat)
+        this.auditLogs.forEach((item: any) => {
+            if (item.name === this.getcat) {
+                timeFilter.push(item);
+            }
+        });
+    
         if (this.frombsValue && this.tobsValue) {
-            this.filterByCategory.forEach((item: any) => {
-                if (new Date(item.timestamp) >= this.frombsValue && new Date(item.timestamp) <= this.tobsValue) {
-                    timeFilter.push(item)
-                }
-            })
-            this.filterByCategory = timeFilter;
-            this.pageChanged(1);
-            this.p=1;
+            const fromDate = new Date(this.frombsValue);
+            const toDate = new Date(this.tobsValue);
+
+            timeFilter = timeFilter.filter((item: any) => {
+                const logDate = new Date(item.timestamp); // Convert the timestamp to a Date object
+                return logDate >= fromDate && logDate <= toDate;
+            });
         }
+    
+        // Update filterByCategory with final filters
+        this.filterByCategory = timeFilter;
+        //console.log('Filtered Logs:', this.filterByCategory);
+        this.p = 1; // Reset pagination
+        this.pageChanged(1);
     }
+    
     ngAfterViewInit() {
 
     }

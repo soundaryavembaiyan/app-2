@@ -19,8 +19,8 @@ export class SubmittedComponent implements OnInit{
     bsValue = new Date();
     maxDate: any;
     minDate: any;
-    fromDate = new Date();
-    toDate = new Date();
+    // fromDate = new Date();
+    // toDate = new Date();
     tasks: any;
     project: any;
     hours: any = [{ "name": "Bilable", "returnValue": "bilable" }, { "name": "Non Bilable", "returnValue": "nonBilable" }];
@@ -40,6 +40,15 @@ export class SubmittedComponent implements OnInit{
     //   hoursModel:HoursModel;  
     timeSheetData: any;
     isFrozen: boolean = false;
+    formattedDates: { [key: string]: string } = {};
+    fromDate:any;
+    toDate:any;
+    sortOrder: { [key: string]: 'asc' | 'desc' } = {
+        matterName: 'asc',
+        taskName: 'asc',
+        billing: 'asc'
+    };
+
     constructor(private httpservice: HttpService, private toast: ToastrService) {
 
     }
@@ -54,8 +63,24 @@ export class SubmittedComponent implements OnInit{
             this.timeSheetData = res?.timesheetList;
             this.getDatesList(this.currentWeek);
             this.getTimeSheet(this.currentWeek);
+            this.formatDate();
         });
-
+    }
+    formatDate(){
+        const headers = this.timeSheetData?.headers;
+        if (headers) {
+          this.formattedDates = Object.keys(headers).reduce((acc: { [key: string]: string }, day: string) => {
+            const date = headers[day];
+            acc[day] = `${day}, ${date}`; // Combine day with date
+            return acc;
+          }, {} as { [key: string]: string });
+          //console.log("formattedDates:",this.formattedDates);
+          const fromDate = "Mon";
+          this.fromDate = this.formattedDates?.[fromDate];
+          const toDate = "Sun";
+          this.toDate = this.formattedDates?.[toDate];
+          //console.log(`${day} Value:`, this.fromDate);
+        }
     }
     getDatesList(date: any) {
         let currentDate = date?.split('-');
@@ -115,6 +140,7 @@ export class SubmittedComponent implements OnInit{
             this.isFrozen = res?.dates?.isFrozen;
             this.project = res?.timesheetList?.matters;            
             this.timeSheetData = res?.timesheetList;
+            this.formatDate();
             this.currentWeek = res?.dates?.currentWeek;
             this.prevWeek = res?.dates?.prevWeek;
             this.nextWeek = res?.dates?.nextWeek;
@@ -160,5 +186,28 @@ let obj={};
           console.log(error);
         }
       })
+}
+sortingFile(column: string) {
+    // Toggle sort order
+    this.sortOrder[column] = this.sortOrder[column] === 'asc' ? 'desc' : 'asc';
+    const orderMultiplier = this.sortOrder[column] === 'asc' ? 1 : -1;
+  
+    if (column === 'matterName') {
+      this.timeSheetData.matters.sort((a: any, b: any) => {
+        if (a[column] < b[column]) return -1 * orderMultiplier;
+        if (a[column] > b[column]) return 1 * orderMultiplier;
+        return 0;
+      });
+    } else {
+      // Sort the tasks for each matter
+      this.timeSheetData.matters = this.timeSheetData.matters.map((matter: any) => {
+        matter.tasks.sort((a: any, b: any) => {
+          if (a[column] < b[column]) return -1 * orderMultiplier;
+          if (a[column] > b[column]) return 1 * orderMultiplier;
+          return 0;
+        });
+        return matter;
+      });
+    }
 }
 }

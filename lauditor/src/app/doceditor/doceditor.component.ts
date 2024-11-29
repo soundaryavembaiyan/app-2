@@ -20,6 +20,7 @@ import { debug } from 'strophe';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { get } from 'jquery';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { NewpageComponent } from './newpage/newpage.component';
 //import { DatePipe } from '@angular/common';
 //import jsPDF from 'jspdf';
 
@@ -884,6 +885,16 @@ export class DoceditorComponent {
     // }
     contentListItems.removeAt(i);
   }  
+  removeTableItem(i: number) {
+    this.confirmationDialogService.confirm('Confirmation', 'Are you sure you want to remove the Table?', true, 'Yes', 'No')
+    .then((confirmed) => {
+      if (confirmed) {
+        const contentListItems = this.myForm.get('contentListItems') as FormArray;
+        contentListItems.removeAt(i);
+      }
+    });
+
+  }  
   
   //OpenDialog boxes for all sections!!!
   opencontentDialog(item: any, itemIndex: any) {
@@ -971,7 +982,10 @@ export class DoceditorComponent {
 
   newDoc() {
     //Without saving the document, cant able to select New.
-    // const contentListItems = this.myForm.get('contentListItems') as FormArray;
+    const contentListItems = this.myForm.get('contentListItems') as FormArray;
+    //console.log('form',contentListItems)
+    //console.log('sid',this.sId)
+
     // if (contentListItems.length >= 0 && !this.documentId) {
     //   this.toast.error('Document changes not saved. Please try again.');
     //   return;
@@ -979,16 +993,36 @@ export class DoceditorComponent {
     // const link =  `/doceditor`;
     // window.location.href = link;
 
-    this.confirmationDialogService.confirm('Alert', 'Changes you made will not be saved. Do you want to save?', true, 'Yes', 'No')
-      .then((confirmed) => {
-        if (confirmed) {
-          this.saveDocument();
-        }
-        else {
-          const link = `/doceditor`;
-          window.location.href = link;
+    // this.confirmationDialogService.confirm('Alert', 'Changes you made will not be saved. Do you want to save?', true, 'Yes', 'No')
+    //   .then((confirmed) => {
+    //     if (confirmed) {
+    //       this.saveDocument();
+    //     }
+    //     else {
+    //       const link = `/doceditor`;
+    //       window.location.href = link;
+    //     }
+    //   });
+    if (contentListItems.value?.length === 0) {
+      this.toast.error('Please add atleast one segment from the "Insert" menu to create the document.');
+      return
+    }
+    else if (contentListItems.value?.length > 0 && (this.sId === '' || this.sId === undefined)) {
+      this.dialog.open(NewpageComponent, {
+        width: '350px', 
+        height: '200px',
+        hasBackdrop: true,
+        panelClass: 'hello',
+        disableClose: true,
+        data: {
+          saveDocument: () => this.saveDocument() // Pass the function reference
         }
       });
+    }
+    else{
+      const link = `/doceditor`;
+      window.location.href = link;
+    }
   }
 
   getDocument() {
@@ -2386,7 +2420,7 @@ export class ViewDocComponent {
       if (document) {
         let url = this.latexdoc + URLUtils.getPreview(document.docid);
         this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-         console.log(this.pdfSrc);
+        // console.log(this.pdfSrc);
       } else {
         this.toast.error('Document not found!');
       }

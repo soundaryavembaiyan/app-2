@@ -186,6 +186,9 @@ input.form-control.textbox {
     color: black;
     font-size: 16px;
     font-weight: 900;
+    height: 51px;
+    border-radius: 30px !important;
+    background: white;
 }
 
 /* For better browser compatibility, add vendor prefixes */
@@ -208,6 +211,12 @@ input::placeholder {
     color: #aaaaaa;
     font-size: 14px;
 }
+textarea::placeholder {
+    color: #aaaaaa;
+    font-size: 14px;
+    line-height: 2.3;
+    resize: none; 
+}
 
 .chatusernameCls {
     font-weight: 900;
@@ -215,7 +224,7 @@ input::placeholder {
     margin-left: 5px;
     margin-top: 23px;
     font-size: 19px;
-    width: 200px;
+    width: 300px;
 }
 
 .leftpara {
@@ -269,6 +278,7 @@ input::placeholder {
     padding-top: 15px;
     word-break: break-all;
     font-size: 19px;
+    width: 300px;
     //color: #fff !important;
   }
 .adminTeam{
@@ -287,3 +297,8 @@ input::placeholder {
 .chatuser {
     padding-top: 8px;
 }
+.chattxt {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+  

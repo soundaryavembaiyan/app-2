@@ -260,9 +260,9 @@
                 </small>
               </div>
            </td>
-           <!-- Rate -->
 
-           <td style="padding: 25px;">
+           <!-- Rate -->
+           <!-- <td style="padding: 25px;">
             <div class="form-group input-group">
                  <input maxlength="10" (input)="onInput($event);restrictFirstPosition($event)" formControlName="unitPrice" class="form-control textbox txtS" 
                  placeholder="Rate" style="width: 100px;" oninput="this.value = this.value.replace(/[^A-Za-z0-9]|^ /g,'')" required/> 
@@ -273,26 +273,22 @@
               <small *ngIf="createinvoiceForm.get('invoice_items').controls[i].get('unitPrice').errors.minlength || createinvoiceForm.get('invoice_items').controls[i].get('unitPrice').errors.maxlength">Accepts only 10-digits</small>
               <small *ngIf="createinvoiceForm.get('invoice_items').controls[i].get('unitPrice').errors.noZeroStart">Unit price cannot start with 0</small>
             </div>
-          </td>
-          <!-- <td style="padding: 25px;">
-            <div class="form-group input-group">
-                 <input type="number"  min="0" max="10000000000" (keypress)="validateInput($event)" step="any" pattern="^[1-9][0-9]{0,9}$"  (input)="onInput($event)" formControlName="unitPrice" class="form-control textbox txtS" placeholder="Rate" style="width: 100px;" required/> 
-            </div>
-            <div *ngIf="submitted && createinvoiceForm.get('invoice_items').controls[i].get('unitPrice').invalid" style="height: 0px;">
-              <small class="errorStyle" *ngIf="submitted && createinvoiceForm.get('invoice_items').controls[i].get('unitPrice').errors.required">
-                Rate is required.
-              </small>
-             <small class="errorStyle" *ngIf="createinvoiceForm.get('invoice_items').controls[i].get('unitPrice').errors.max">
-                Accepts only 10-digits.
-              </small>
-               <small class="errorStyle" *ngIf="createinvoiceForm.get('invoice_items').controls[i].get('unitPrice').errors.pattern && !createinvoiceForm.get('invoice_items').controls[i].get('unitPrice').errors.max">
-                Can't accept Zero.
-              </small>
-            </div>
           </td> -->
+          <td style="padding: 25px;">
+            <div class="form-group input-group">
+              <input maxlength="10" (input)="onInput($event, 'unitPrice', i, item); restrictFirstPosition($event)" 
+              formControlName="unitPrice" class="form-control textbox txtS" placeholder="Rate" style="width: 100px;" required />
+            </div>
+            <div *ngIf="submitted && createinvoiceForm.get('invoice_items').controls[i].get('unitPrice').invalid" class="errorStyle" style="height: 0px;">
+              <small *ngIf="createinvoiceForm.get('invoice_items').controls[i].get('unitPrice').errors.required">This field is required</small>
+              <small *ngIf="createinvoiceForm.get('invoice_items').controls[i].get('unitPrice').errors.pattern">Enter valid number</small>
+              <small *ngIf="createinvoiceForm.get('invoice_items').controls[i].get('unitPrice').errors.minlength || createinvoiceForm.get('invoice_items').controls[i].get('unitPrice').errors.maxlength">Accepts only 10-digits</small>
+              <small *ngIf="createinvoiceForm.get('invoice_items').controls[i].get('unitPrice').errors.noZeroStart">Unit price cannot start with 0</small>
+            </div>
+          </td>
 
           <!-- Quantity -->
-          <td style="padding: 25px;">
+          <!-- <td style="padding: 25px;">
             <div class="form-group input-group">
                  <input maxlength="10" (input)="onInput($event);restrictFirstPosition($event)" formControlName="quantity" class="form-control textbox txtS" 
                  placeholder="Quantity" style="width: 100px;" oninput="this.value = this.value.replace(/[^A-Za-z0-9]|^ /g,'')" required/> 
@@ -302,23 +298,18 @@
               <small *ngIf="createinvoiceForm.get('invoice_items').controls[i].get('quantity').errors.pattern">Enter valid number</small>
               <small *ngIf="createinvoiceForm.get('invoice_items').controls[i].get('quantity').errors.minlength || createinvoiceForm.get('invoice_items').controls[i].get('quantity').errors.maxlength">Accepts only 10-digits</small>
             </div>
-          </td>
-          <!-- <td style="padding: 25px;">
-            <div class="form-group input-group">
-                 <input type="number"  min="0" max="10000000000" (keypress)="validateInput($event)" step="any" pattern="^[1-9][0-9]{0,9}$"  (input)="onInput($event)" formControlName="quantity" style="width: 100px;" class="form-control textbox txtS" placeholder="Quantity" required/>
-            </div>
-            <div *ngIf="submitted && createinvoiceForm.get('invoice_items').controls[i].get('quantity').invalid" style="height: 0px;">
-              <small class="errorStyle" *ngIf="submitted && createinvoiceForm.get('invoice_items').controls[i].get('quantity').errors.required">
-                Quantity is required.
-              </small>
-             <small class="errorStyle" *ngIf="createinvoiceForm.get('invoice_items').controls[i].get('quantity').errors.max">
-               Accepts only 10-digits.
-              </small>
-               <small class="errorStyle" *ngIf="createinvoiceForm.get('invoice_items').controls[i].get('quantity').errors.pattern && !createinvoiceForm.get('invoice_items').controls[i].get('quantity').errors.max">
-                Can't accept Zero.
-              </small>
-            </div>
           </td> -->
+          <td style="padding: 25px;">
+            <div class="form-group input-group">
+              <input maxlength="10" (input)="onInput($event, 'quantity', i, item); restrictFirstPosition($event)" 
+               formControlName="quantity" class="form-control textbox txtS" placeholder="Quantity" style="width: 100px;" required />
+            </div>
+            <div *ngIf="submitted && createinvoiceForm.get('invoice_items').controls[i].get('quantity').invalid" class="errorStyle" style="height: 0px;">
+              <small *ngIf="createinvoiceForm.get('invoice_items').controls[i].get('quantity').errors.required">This field is required</small>
+              <small *ngIf="createinvoiceForm.get('invoice_items').controls[i].get('quantity').errors.pattern">Enter valid number</small>
+              <small *ngIf="createinvoiceForm.get('invoice_items').controls[i].get('quantity').errors.minlength || createinvoiceForm.get('invoice_items').controls[i].get('quantity').errors.maxlength">Accepts only 10-digits</small>
+            </div>
+          </td>
 
             <!-- Total Amount -->
             <td style="width:200px">&dollar; {{calculateAmount(item)}} </td>

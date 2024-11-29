@@ -13,8 +13,8 @@
             <a href="javascript:void(0);" class="docOption doc-option upload" routerLink="/documents/upload/client" *ngIf="product == 'content' || product == 'lauditor'">Upload</a>
             <a href="javascript:void(0);" class="docOption doc-option upload" routerLink="/documents/upload/firm" *ngIf="product == 'corporate'">Upload</a>
             <!--//////////////-->
-            <a href="javascript:void(0);" class="docOption doc-option mergepdf pdfmergedoc" routerLink="/documents/mergepdf/client" *ngIf="product != 'connect' && product != 'corporate'">Merge PDF</a>
-            <a href="javascript:void(0);" class="docOption doc-option mergepdf pdfmergedoc" routerLink="/documents/mergepdf/firm" *ngIf="product == 'corporate'">Merge PDF</a>
+            <a href="javascript:void(0);" class="docOption doc-option mergepdf pdfmergedoc" routerLink="/documents/mergepdf/client" (click)="reload()" *ngIf="product != 'connect' && product != 'corporate'">Merge PDF</a>
+            <a href="javascript:void(0);" class="docOption doc-option mergepdf pdfmergedoc" routerLink="/documents/mergepdf/firm" (click)="reload()" *ngIf="product == 'corporate'">Merge PDF</a>
           </div>
 
           <div class="switch  cswitch cswitchtwo">

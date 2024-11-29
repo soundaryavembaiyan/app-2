@@ -523,6 +523,7 @@ export class OthersCalenderComponent implements OnInit {
     // Set values to display
     this.selectedHours = diffHours.toString();
     this.selectedMinutes = diffMinutes.toString();
+    return `${diffHours} : ${diffMinutes}`; // Return formatted duration
   }
   hrsData() {
     for (let i = 0; i <= 23; i++) {
@@ -677,10 +678,11 @@ export class OthersCalenderComponent implements OnInit {
       if (this.CalenderForm.value.addtimesheet) {
 
         if(this.CalenderForm.value.allday){
-          let duration = { hours: 24, minutes: 0 }
+          //let duration = { hours: 24, minutes: 0 }
+          const duration = this.diff(this.CalenderForm.value.from_ts, this.CalenderForm.value.to_ts);
           let timesheets = [{
             'date': this.pipe.transform(this.CalenderForm.value.date, 'yyyy-MM-dd'),
-            'duration':  `${duration['hours']} : ${duration['minutes']}`,
+            'duration':  duration,
             'eventtitle': this.CalenderForm?.value?.title,
             'matter_id': 'Others',
             'matter_type':'others',

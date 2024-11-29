@@ -6,7 +6,7 @@ import {
   OnInit,
   QueryList,
   ViewChild,
-  ViewChildren,
+  ViewChildren, Renderer2,
 } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -114,7 +114,7 @@ export class MessagesComponent implements OnInit {
 
   constructor(
     private httpservice: HttpService,
-    private router: Router,
+    private router: Router,private renderer: Renderer2, private el: ElementRef,
     private toastr: ToastrService, private spinnerService: NgxSpinnerService
   ) {
     this.router.events.subscribe((val) => {
@@ -234,6 +234,15 @@ export class MessagesComponent implements OnInit {
 
     if ((this.product == 'corporate' || this.product == 'lauditor' || this.product == 'connect' || this.product == 'content') && this.userRole === 'AAM') {
       this.isActiveTeam('teams'); // Call isActiveTeam function with 'teams' as initial value
+    }
+  }
+
+  goBack(){
+    if (this.selectedValue === 'clients') {
+      this.isActive('clients');
+    }
+    if (this.selectedValue === 'teams') {
+      this.isActive('teams');
     }
   }
 
@@ -441,8 +450,17 @@ export class MessagesComponent implements OnInit {
   // }
 
   // Handle Enter key to send msg.
+  // onKeyDown(event: KeyboardEvent) {
+  //   if (event.key === 'Enter') {
+  //     this.sendMessage(this.messegeInput);
+  //   }
+  // }
   onKeyDown(event: KeyboardEvent) {
-    if (event.key === 'Enter') {
+    if (event.key === 'Enter' && event.shiftKey) { // Allow new line if Shift + Enter pressed
+      return;
+    }
+    if (event.key === 'Enter') { // Enter to send a message
+      event.preventDefault();
       this.sendMessage(this.messegeInput);
     }
   }
@@ -618,6 +636,7 @@ export class MessagesComponent implements OnInit {
   //     }
   //   )
   // }
+
   selectChatUser(val: any) {
     //console.log('user val',val)
     this.messegeInput = '';
@@ -671,17 +690,35 @@ export class MessagesComponent implements OnInit {
           this.resetmsgcount();
         });
     }
+    if (val.clientType == 'Consumer') {
+      this.hideRuleContent[this.userIndex] = !this.hideRuleContent[this.userIndex];
+      val.isExpand = this.hideRuleContent[this.userIndex];
+
+      // Update the currently expanded index
+      this.currentExpandedIndex = this.hideRuleContent[this.userIndex] ? this.userIndex : null;
+
+      this.resetActiveElements();
+      //this.selectChatUser(val);
+
+      console.log('hideRuleContent[index]', this.hideRuleContent[this.userIndex])
+      console.log('val.isExpand:', val.isExpand);
+      console.log('currentExpandedIndex', this.currentExpandedIndex)
+    }
+    
+    this.enableActiveClass();
     this.messages = [];
     this.restoreMessages();
     this.resetmsgcount();
-        // Optional: If you want the firm to remain active when a client is selected
-        if (val.parentFirmId) {
-          this.activeFirm = val.parentFirmId;
-      }
-      if (val.parentTeamId) {
-        this.activeTeam = val.parentTeamId;
+    // Optional: If you want the firm to remain active when a client is selected
+    if (val.parentFirmId) {
+      this.activeFirm = val.parentFirmId;
+    }
+    if (val.parentTeamId) {
+      this.activeTeam = val.parentTeamId;
     }
   }
+
+
     
   selectUser(jid: any, name: any, groupName: any) {
     // (<HTMLInputElement>document.getElementById("btn_send")).disabled = false;
@@ -764,8 +801,9 @@ export class MessagesComponent implements OnInit {
       }
     });
   }
-  
+
   isActive(value: string) {
+    this.selectChatUser(value);
     this.clientSearch = '';
     this.teamSearch = '';
     this.messegeInput = '';
@@ -775,6 +813,7 @@ export class MessagesComponent implements OnInit {
   }
 
   isActiveTeam(value: string): void {
+    this.selectChatUser(value);
     this.clientSearch = '';
     this.teamSearch = '';
     this.messegeInput = '';
@@ -791,6 +830,19 @@ export class MessagesComponent implements OnInit {
     return;
   }
 
+  resetActiveElements(): void {
+    const activeElements = this.el.nativeElement.querySelectorAll('.activeo');
+    activeElements.forEach((element: HTMLElement) => {
+      this.renderer.removeClass(element, 'activeo'); // Remove class
+    });
+  }
+  
+  enableActiveClass(): void {
+    const elementsToActivate = this.el.nativeElement.querySelectorAll('.activeo'); // Replace '.some-selector' with your target elements
+    elementsToActivate.forEach((element: HTMLElement) => {
+      this.renderer.addClass(element, 'activeo'); // Add class
+    });
+ }
 }
 
 //     constructor(private router:Router){

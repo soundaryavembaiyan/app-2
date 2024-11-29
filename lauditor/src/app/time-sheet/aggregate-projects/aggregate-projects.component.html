@@ -23,8 +23,8 @@
                <div class="col-2">
                   <label for="title" class="fontbold"> From</label>
                   <div class="input-group dates">
-                     <span *ngIf="viewMode=='week'">{{projectsMember?.dates?.start}}</span>
-                     <span *ngIf="viewMode=='month'">{{projectsMember?.dates?.start}}</span>
+                     <span *ngIf="viewMode=='week'">{{fromDate}}</span>
+                     <span *ngIf="viewMode=='month'">{{fromDate}}</span>
                   </div>
 
                </div>
@@ -32,8 +32,8 @@
                   <label for="title" class="fontbold"> To</label>
 
                   <div class="input-group dates">
-                     <span *ngIf="viewMode=='week'"> {{projectsMember?.dates?.end}}</span>
-                     <span *ngIf="viewMode=='month'"> {{projectsMember?.dates?.end}}</span>
+                     <span *ngIf="viewMode=='week'"> {{toDate}}</span>
+                     <span *ngIf="viewMode=='month'"> {{toDate}}</span>
                   </div>
                </div>
                <div class="col-1 fa-icon">
@@ -57,7 +57,7 @@
                         <div class="input-group group-custom-align court" id="search">
                           <input type="text"
                                  class="form-control textbox"
-                                 placeholder="Search.."
+                                 placeholder="Search"
                                  [(ngModel)]="searchTeam" />
                           <img src="assets/img/search.svg"
                                class="calimg calitem input-group-append searchimg">

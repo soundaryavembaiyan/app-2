@@ -95,6 +95,7 @@ export class CreateinvoiceComponent {
   minDate:any;
   maxDate:any;
   shown = false;
+  validAmounts: { [key: number]: number } = {};
 
   constructor(
     private router: Router, 
@@ -477,7 +478,7 @@ export class CreateinvoiceComponent {
     const roundedAmount = Number(totalAmount.toFixed(2));
     return roundedAmount;
   }
-  
+
   calculateTotalAmount(): number {
     const invoiceItems = this.createinvoiceForm.get('invoice_items') as FormArray;
     let totalAmount = 0;
@@ -584,40 +585,8 @@ export class CreateinvoiceComponent {
     // this.imgGet = false
     //this.errorMessage = this.imageToShow
     //this.files = ''
-
-    // console.log('imgtoshow',this.imageToShow)
-    // console.log('imgdisp',this.imgDisplay)
-    // console.log('imgget',this.imgGet)
-    // console.log('error',this.errorMessage)
-
   }
   
-  // onInput(event: Event) {
-  //   // const inputElement = event.target as HTMLInputElement;
-  //   // if (!inputElement.value.match(/^(?!0$)\d+(\.\d{0,2})?$/)) {
-  //   //   inputElement.value = '';
-  //   // }
-  //  const inputwholeElement = event.target as HTMLInputElement;
-  //  if (!inputwholeElement.value.match(/^[1-9][0-9]{0,9}$/)) {
-  //   inputwholeElement.value = '';
-  //   }
-
-  //   //Hide the placeholder text in Firefox
-  //   const inputElement = event.target as HTMLInputElement;
-  //   if (inputElement.value) {
-  //     inputElement.classList.add('has-value');
-  //   } else {
-  //     inputElement.classList.remove('has-value');
-  //   }
-  // }
-
-  // totalVal(event: Event){
-  //   const inputElement = event.target as HTMLInputElement;
-  //   if (!inputElement.value.match(/^(?!0$)\d+(\.\d{0,2})?$/))  //Accept 0=/^\d+(\.\d{0,2})?$/
-  //   {
-  //     inputElement.value = '';
-  //   }
-  // }
   discountVal(event: Event) {
     const inputElement = event.target as HTMLInputElement;
     const trimmedValue = inputElement.value.trim();
@@ -682,23 +651,62 @@ restrictSpaces(event: any) {
 //     event.target.value = input.substring(1);
 //   }
 // }
-onInput(event: Event) {
+// onInput(event: Event) {
+//   const inputElement = event.target as HTMLInputElement;
+  
+//   // Only allow numbers and spaces, and remove other invalid characters
+//   inputElement.value = inputElement.value.replace(/[^0-9 ]/g, '');
+  
+//   // If the first character is still zero, remove it
+//   this.restrictFirstPosition(event);
+  
+//   // Add 'has-value' class if the input is not empty (for visual purposes)
+//   if (inputElement.value) {
+//     inputElement.classList.add('has-value');
+//   } else {
+//     inputElement.classList.remove('has-value');
+//   }
+// }
+onInput(event: Event, field: string, index: number, item: FormGroup): void {
   const inputElement = event.target as HTMLInputElement;
-  
-  // Only allow numbers and spaces, and remove other invalid characters
-  inputElement.value = inputElement.value.replace(/[^0-9 ]/g, '');
-  
+
+  // Remove invalid characters (allow only numbers)
+  inputElement.value = inputElement.value.replace(/[^0-9]/g, '');
+
+  // Prevent leading zeroes
+  if (inputElement.value.startsWith('0')) {
+    inputElement.value = inputElement.value.substring(1);
+  }
+
   // If the first character is still zero, remove it
   this.restrictFirstPosition(event);
-  
   // Add 'has-value' class if the input is not empty (for visual purposes)
   if (inputElement.value) {
     inputElement.classList.add('has-value');
   } else {
     inputElement.classList.remove('has-value');
   }
+
+  // Update the form control value
+  item.get(field)?.setValue(inputElement.value);
+
+  // Recalculate the total amount for the current item
+  this.updateTotalAmount(index, item);
 }
 
+updateTotalAmount(index: number, item: FormGroup): void {
+  const quantity = parseFloat(item.get('quantity')?.value || '0');
+  const unitPrice = parseFloat(item.get('unitPrice')?.value || '0');
+
+  // Validate and calculate only if both are valid numbers
+  if (!isNaN(quantity) && !isNaN(unitPrice) && quantity > 0 && unitPrice > 0) {
+    const totalAmount = quantity * unitPrice;
+    this.validAmounts[index] = parseFloat(totalAmount.toFixed(2)); // Store the valid total
+  } else {
+    // Preserve the last valid total amount
+    this.validAmounts[index] = this.validAmounts[index] || 0;
+  }
+}
 restrictFirstPosition(event: any): void {
   const input = event.target.value;
   if (input && input[0] === '0') {
