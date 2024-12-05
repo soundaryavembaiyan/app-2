@@ -673,19 +673,21 @@
       <div class="alertbox">
         <div class="close-x float-right" (click)="closeModal('custom-modal-1');">X</div>
         <div class="alertpara">
-          <p class="alertparatxt">Success</p>
+          <p class="alertparatxt" *ngIf="role === 'SU'">Success</p>
+          <p class="alertparatxt" *ngIf="role === 'TM' || role === 'GH'">Alert</p>
         </div>
-        <div *ngIf="editmetadata" class="alertext">Congratulations!! You have successfully updated document information.
+        <div *ngIf="editmetadata" class="alertext">Congratulations!! <br> You have successfully updated document information.
         </div>
-        <div *ngIf="isDelete" class="alertext">Congratulations!! You have successfully deleted
+        <div *ngIf="isDelete" class="alertext">
+          <p *ngIf="role === 'SU'">Congratulations!! <br> You have successfully deleted the document.</p>
+          <p *ngIf="role === 'TM' || role === 'GH'">Document deletion awaiting for Super User approval.</p>
           <!--<b> {{ editDoc.name.length > 50 ? editDoc.name.substring(0, 50) + '... ' : editDoc.name }}</b> -->
-          the document.
         </div>
-        <div *ngIf="isEncypted" class="alertext">Congratulations!! You have successfully encrypted <b>{{editDoc.name}}</b>
-          document.
+        <div *ngIf="isEncypted" class="alertext">Congratulations!! <br> You have successfully encrypted the document.
+          <!-- <b>{{editDoc.name}}</b> -->
         </div>
-        <div *ngIf="isDecrypted" class="alertext">Congratulations!! You have successfully decrypted <b>{{editDoc.name}}</b>
-          document.
+        <div *ngIf="isDecrypted" class="alertext">Congratulations!! <br> You have successfully decrypted the document.
+          <!-- <b>{{editDoc.name}}</b> -->
         </div>
         <div class="center">
           <button class="btn btn-primary okbtn" (click)="closeModal('custom-modal-1')">OK</button>
@@ -705,11 +707,10 @@
             <p class="alertparatxt alertpad">Alert</p>
           </div>
           <div class="alertext">This action cannot be undone.<br>
-            Are you sure you want to delete<br>
+            Are you sure you want to delete document?
             <!--<strong style="font-weight: 900;">
               {{ editDoc.name.length > 50 ? editDoc.name.substring(0, 50) + '... ' : editDoc.name }}
             </strong> -->
-            document?
           </div>
         </div>
         <div class="alertbutton delBtn">
@@ -728,12 +729,11 @@
         <div class="">
           <div class="iconclose" (click)="closeModal('custom-modal-2');">X</div>
           <div class="alertpara">
-            <p class="alertparatxt"> Alert </p>
+            <p class="alertparatxt"> Confirmation </p>
           </div>
           <div class="alertext">
-            Are you sure you want to delete<br>
+            Are you sure you want to delete document?
           <!-- <b>{{editDoc.name}}</b> -->
-            document?
           </div>
         </div>
         <div class="alertbutton">
@@ -756,8 +756,8 @@
             <p class="alertparatxt"> Alert </p>
           </div>
           <div class="alertext">
-            Are you sure you want to {{tabsel}}<br>
-            <b>{{editDoc.name}}</b> document ?
+            Are you sure you want to {{tabsel}} document?
+            <!-- <b>{{editDoc.name}}</b>  -->
           </div>
         </div>
         <div class="alertbutton">
@@ -792,9 +792,9 @@
           <div class="alertpara">
             <p class="alertparatxt">Success</p>
           </div>
-          <div class="alertext">Congratulations!! <br> You have successfully downloaded 
+          <div class="alertext">Congratulations!! <br> You have successfully downloaded the document.
              <!-- <strong>{{editDoc?.name}}</strong> -->
-              <br>the document.</div>
+          </div>
           <!-- <div class="center">
             <button class="btn btn-primary okbtn" (click)="closeModal('doc-download-success')">OK</button>
           </div> -->
@@ -815,8 +815,8 @@
             <p class="alertparatxt"> Alert </p>
           </div>
           <div class="alertexto">
-             Are you sure to permenantly delete<br>
-            <strong>{{editDoc.name}}</strong> document?
+             Are you sure to permenantly delete document?
+            <!-- <strong>{{editDoc.name}}</strong>  -->
           </div>
         </div>
         <div class="alertbutton bot">
@@ -838,7 +838,9 @@
           <p class="alertparatxt">Success</p>
         </div>
 
-        <div class="alertexto"><strong>{{editDoc.name}}</strong> deleted successfully.</div>
+        <div class="alertexto">Document deleted successfully.
+          <!-- <strong>{{editDoc.name}}</strong>  -->
+        </div>
         <div class="center">
           <button class="btn btn-primary okbtn" (click)="closeModal('custom-modal-success-22')">OK</button>
         </div>
@@ -857,8 +859,8 @@
             <p class="alertparatxt"> Alert </p>
           </div>
           <div class="alertexto">
-             Are you sure to restore<br>
-            <strong>{{editDoc.name}}</strong> document?
+             Are you sure to restore document?
+            <!-- <strong>{{editDoc.name}}</strong>  -->
           </div>
         </div>
         <div class="alertbutton bot">
@@ -880,7 +882,9 @@
           <p class="alertparatxt">Success</p>
         </div>
 
-        <div class="alertexto"><strong>{{editDoc.name}}</strong> restored successfully.</div>
+        <div class="alertexto">Document restored successfully.
+          <!-- <strong>{{editDoc.name}}</strong>  -->
+        </div>
         <div class="center">
           <button class="btn btn-primary okbtn" (click)="closeModal('custom-modal-success-restore-22')">OK</button>
         </div>
