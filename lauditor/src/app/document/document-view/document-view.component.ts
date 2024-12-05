@@ -15,6 +15,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MatIconModule } from '@angular/material/icon';
+import { HostListener } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
+
 function futureDateValidator(control: AbstractControl): ValidationErrors | null {
     const selectedDate = new Date(control.value);
     const today = new Date();
@@ -94,8 +97,24 @@ export class DocumentViewComponent implements OnInit {
     getClient:any;
     itemsPerPage: number = 10;
     paginatedDocuments: any[] = [];
+    role:any;
 
-    constructor(private httpservice: HttpService, private toast: ToastrService,private datePipe: DatePipe,
+    @HostListener('document:mouseleave', ['$event']) // Listen to the mouseleave event
+    onMouseLeave(event: MouseEvent) {
+        this.isSelectGroup = false;
+        this.cdr.detectChanges();
+    }
+    
+    @HostListener('document:mouseenter', ['$event']) // Listen to mouse enter
+    onMouseEnter(event: MouseEvent) { }
+
+    @HostListener('window:blur')
+    onWindowBlur() { this.isSelectGroup = false }
+    
+    @HostListener('window:focus')
+    onWindowFocus() { }
+
+    constructor(private httpservice: HttpService, private cdr: ChangeDetectorRef, private toast: ToastrService,private datePipe: DatePipe,
         private router: Router, private formBuilder: FormBuilder, private modalService: ModalService, public sanitizer: DomSanitizer,
         private documentService: DocumentService, private emailService: EmailService,
         private confirmationDialogService: ConfirmationDialogService,private spinnerService: NgxSpinnerService) {
@@ -117,6 +136,7 @@ export class DocumentViewComponent implements OnInit {
 
     }
     ngOnInit(): void {
+        this.role= localStorage.getItem("role")
         this.get_all_matters(this.selectedmatterType)
         this.emailService.emailObservable.subscribe((result: any) => {
             if (result) {
@@ -601,6 +621,8 @@ export class DocumentViewComponent implements OnInit {
         // do something when input is focused
     }
     viewDocument(item: any) {
+        console.log('viewitem',item)
+        console.log('documents1',this.documents)
         this.pdfSrc = ''
         if(item.added_encryption){
            
@@ -910,16 +932,68 @@ export class DocumentViewComponent implements OnInit {
         return;
     }
 
-    viewApprovalDocument(item:any){
+    // viewApprovalDocument(item:any){
+    //     let documentId: any = {
+    //         docid: item.id,
+    //         doctype: item.doctype
+    //     };
+
+    //     this.httpservice.sendPostRequest(URLUtils.deleteApprovalView, documentId).subscribe((res: any) => {
+    //         this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(res.data.url);
+    //     });
+    //     this.pdfSrc = item.filename;
+    // }
+    viewApprovalDocument(item: any) {
+        //console.log('item', item)
+        this.pdfSrc = ''
         let documentId: any = {
             docid: item.id,
             doctype: item.doctype
         };
-
-        this.httpservice.sendPostRequest(URLUtils.deleteApprovalView, documentId).subscribe((res: any) => {
-            this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(res.data.url);
-        });
-        this.pdfSrc = item.filename;
+        if (item.added_encryption) {
+            var body = new FormData();
+            body.append('docid', item.id)
+            let url = environment.apiUrl + URLUtils.decryptFile
+            this.spinnerService.show()
+            this.httpservice.sendPostDecryptRequest(url, body).subscribe((res: any) => {
+                const blob = new Blob([res], { type: item.content_type });
+                const url = URL.createObjectURL(blob);
+                if (this.allowedFileTypes.includes(item.content_type)) {
+                    let fdata = new FormData();
+                    fdata.append('file', blob);
+                    this.httpservice.sendPostDecryptRequest(environment.DOC2FILE, fdata).subscribe((ans: any) => {
+                        const ansBlob = new Blob([ans], { type: 'application/pdf' });
+                        const ansUrl = URL.createObjectURL(ansBlob);
+                        this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(ansUrl)
+                        this.spinnerService.hide()
+                    })
+                }
+                else {
+                    this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url)
+                    this.spinnerService.hide()
+                }
+                //console.log(this.pdfSrc)
+            })
+            this.spinnerService.hide()
+        }
+        if (item.added_encryption == false) {
+            this.httpservice.sendPostRequest(URLUtils.deleteApprovalView, documentId).subscribe((res: any) => {
+                if (this.allowedFileTypes.includes(item.content_type)) {
+                    this.spinnerService.show()
+                    this.httpservice.sendPostDocRequest(this.docapi, { 'url': res.data.url }).subscribe((ans: any) => {
+                        const blob = new Blob([ans], { type: 'application/pdf' });
+                        // Create a URL for the Blob
+                        const url = URL.createObjectURL(blob);
+                        this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url)
+                        this.spinnerService.hide()
+                    })
+                }
+                else {
+                    this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(res.data.url);
+                }
+            });
+            this.pdfSrc = item.filename;
+        }
     }
     deleteApprovalDocument(val: any) {
         // let selectedId: any = [];
