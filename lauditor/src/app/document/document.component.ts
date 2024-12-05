@@ -110,7 +110,11 @@ export class DocumentComponent implements OnInit {
     //   this.filter = 'client';
     //   this.filter = localStorage.setItem('filter',filter);
     // }
-    
+    if(filter === 'delete'){
+      const delink = 'documents/mergepdf/client';
+      window.location.href = delink;
+      return 
+    }
     const link = 'documents/mergepdf/' + filter;
     window.location.href = link;
   }
