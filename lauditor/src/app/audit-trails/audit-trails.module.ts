@@ -17,8 +17,6 @@ import { DocumentRoutingModule } from '../document/document.routing.module';
 import { SharedModule } from '../shared/shared.module';
 import { AuditRoutingModule } from './audit-routing.module';
 import { MatSelectModule } from '@angular/material/select';
-
-// This Module's Components
 import { AuditTrailsComponent } from './audit-trails.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
