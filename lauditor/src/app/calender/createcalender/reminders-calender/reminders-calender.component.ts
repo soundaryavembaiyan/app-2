@@ -463,6 +463,7 @@ export class RemindersCalenderComponent implements OnInit {
     }
   }
   onKey(event: any, index: any, type: any) {
+    this.isEditPage = false;
     let value = event.target.value
     value = value.replace(/[^0-9]/g, '');// Remove non-numeric characters
     this.notificationItems[index][type] = value;
@@ -619,9 +620,9 @@ export class RemindersCalenderComponent implements OnInit {
  }
   onSubmit() {
     this.isSubmitted = true;
-    if(this.isValidNotification){
-      return
-    }
+    // if(this.isValidNotification){
+    //   return
+    // }
     if (!this.CalenderForm.valid) {
       //console.log('error');
     } else {

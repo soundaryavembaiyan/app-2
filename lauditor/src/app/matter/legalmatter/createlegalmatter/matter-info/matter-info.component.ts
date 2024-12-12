@@ -36,6 +36,7 @@ export class MatterInfoComponent implements OnInit {
   editeMatterInfo: any;
   Documents: any;
   isAddDisable: boolean = false;
+  matterid:any;
   readonly NoWhitespaceRegExp: RegExp = new RegExp("\\S");
   //minDate:any=new Date();
   constructor(private fb: FormBuilder, private oa: FormBuilder, private matterService: MatterService, private toast: ToastrService,
@@ -73,6 +74,8 @@ export class MatterInfoComponent implements OnInit {
       this.matterService.editLegalMatterObservable.subscribe((result: any) => {
         if (result) {
           this.editeMatterInfo = result;
+          this.matterid = result.id;
+          //console.log('editMatter',this.editeMatterInfo)
           this.isEdit = true;
 
           let transformedTags = '';
@@ -158,7 +161,10 @@ export class MatterInfoComponent implements OnInit {
     }
     this.caseRegister.value.opponent_advocates = this.advicates;
     let matter = this.caseRegister.value
+
     let body = {"title":matter.title, "case_number": matter.case_number, "type": "legal"} 
+    let editbody = {"title":matter.title, "case_number": matter.case_number, "matter_id": this.matterid, "type": "legal"}
+
     // this.caseRegister.value.status = 'Active'
     // this.caseRegister.value.priority = 'High'
     //this.caseRegister.value.status =this.caseRegister.status=="INVALID" || this.caseRegister.status=="VALID" ?"Active":this.caseRegister.status;
@@ -190,27 +196,34 @@ export class MatterInfoComponent implements OnInit {
           "user_id": obj.user_id
         }))
       }
-      //console.log('data',data) 
+     // console.log('data',data) 
 
-      this.httpService.sendPutRequest(URLUtils.updateLegalMatter(this.editeMatterInfo.id), data).subscribe((res: any) => {
-        //console.log('up',res);
-        if(!res.error){
-          this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully updated the matter information.',false,'View Matter List','Cancel',true)
-          .then((confirmed) => {
-            if (confirmed) {
-              this.router.navigate(['/matter/legalmatter/view']);
+      this.httpService.sendPostRequest(URLUtils.checkMatterUnique, editbody).subscribe((res: any) => {
+        if (res.error) {
+          this.confirmationDialogService.confirm('Alert', res.msg, false, 'OK', 'Cancel', true)
+            .then((confirmed) => {
+              if (confirmed) {
+              }
+            })
+        }
+        else {
+          this.httpService.sendPutRequest(URLUtils.updateLegalMatter(this.editeMatterInfo.id), data).subscribe((res: any) => {
+            if (!res.error) {
+              this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully updated the matter information.', false, 'View Matter List', 'Cancel', true)
+                .then((confirmed) => {
+                  if (confirmed) {
+                    this.router.navigate(['/matter/legalmatter/view']);
+                  }
+                })
             }
-          })
-        }
-      },
-      (error: HttpErrorResponse) => {
-        if (error.status === 401 || error.status === 403) {
-          const errorMessage = error.error.msg || 'Unauthorized';
-          this.toast.error(errorMessage);
-          //console.log(error);
-        }
-      }
-      )
+          },(error: HttpErrorResponse) => {
+              if (error.status === 401 || error.status === 403) {
+                const errorMessage = error.error.msg || 'Unauthorized';
+                this.toast.error(errorMessage);
+              }
+            }
+          )}
+      })
     }
     else {
       this.httpService.sendPostRequest(URLUtils.checkMatterUnique, body).subscribe((res: any) => {
@@ -230,7 +243,6 @@ export class MatterInfoComponent implements OnInit {
     // this.isGroups=true;
     // console.log('submit form',this.caseRegister.value)
   }
-
 
   addEvent(type: string, event: any) {
     this.events.push(`${type}: ${event.value}`);

@@ -90,10 +90,20 @@ export class MatterDocumentsComponent {
     getDocuments() {
         this.groupName = this.groups.map((obj: any) => obj.name);;
         //console.log('grp',this.groupName)
-        var cli = []
+        //var cli = []
         let grps = this.groups.map((obj: any) => obj.id);
-        cli = this.clients.map((obj: any) => obj.id);
+        let cli = this.clients.map((obj: any) => obj.id);
         cli.push(this.corporate)
+        // console.log('cli',cli)
+        // console.log('clients:', this.clients);
+        // console.log('corporate:', this.corporate);
+        // if (Array.isArray(this.corporate)) {
+        //     cli.push(...this.corporate); // Add elements from the array
+        // } else if (this.corporate) {
+        //     cli.push(this.corporate); // Add single value
+        // }
+        // Remove empty arrays or falsy values
+        // cli = cli.filter((item: any) => item && !(Array.isArray(item) && item.length === 0));
 
         this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements,
             { 'group_acls': grps, 'attachment_type': 'documents', 'clients': cli }).subscribe(

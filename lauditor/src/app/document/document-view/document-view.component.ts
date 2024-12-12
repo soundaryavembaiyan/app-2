@@ -3,8 +3,8 @@ import { ConfirmationDialogService } from './../../confirmation-dialog/confirmat
 import { EmailService } from './../../email/email.service';
 import { DatePipe } from '@angular/common';
 import { Component, ElementRef, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { NavigationEnd, Router } from '@angular/router';
+import { FormArray, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { ModalService } from 'src/app/model/model.service';
 import { HttpService } from 'src/app/services/http.service';
 import { URLUtils } from 'src/app/urlUtils';
@@ -25,6 +25,21 @@ function futureDateValidator(control: AbstractControl): ValidationErrors | null 
   
     return selectedDate < today ? { pastDate: true } : null;
 }
+function pastDateValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      if (!value) {
+        return null; // Allow empty value as the field is optional
+      }
+      const selectedDate = new Date(value);
+      const currentDate = new Date();
+      currentDate.setHours(0, 0, 0, 0); // Ignore time for validation
+      if (selectedDate < currentDate) {
+        return { pastDate: true }; // Invalid if the date is in the past
+      }
+      return null; // Valid date
+    };
+  }
 
 @Component({
     selector: 'document-view',
@@ -48,7 +63,7 @@ export class DocumentViewComponent implements OnInit {
     viewer: string = "google";
     editDocform: any = FormGroup;
     tagDocform: any = FormGroup;
-    submitted: any;
+    submitted = true;
     editDoc: any;
     tagDoc:any;
     isDelete: boolean = false;
@@ -99,6 +114,7 @@ export class DocumentViewComponent implements OnInit {
     paginatedDocuments: any[] = [];
     role:any;
 
+<<<<<<< Updated upstream
     @HostListener('document:mouseleave', ['$event']) // Listen to the mouseleave event
     onMouseLeave(event: MouseEvent) {
         this.isSelectGroup = false;
@@ -114,6 +130,8 @@ export class DocumentViewComponent implements OnInit {
     @HostListener('window:focus')
     onWindowFocus() { }
 
+=======
+>>>>>>> Stashed changes
     constructor(private httpservice: HttpService, private cdr: ChangeDetectorRef, private toast: ToastrService,private datePipe: DatePipe,
         private router: Router, private formBuilder: FormBuilder, private modalService: ModalService, public sanitizer: DomSanitizer,
         private documentService: DocumentService, private emailService: EmailService,
@@ -133,6 +151,11 @@ export class DocumentViewComponent implements OnInit {
                 })
             }
         })
+        this.router.events.subscribe(event => {
+            if (event instanceof NavigationStart) {
+                this.isSelectGroup = false;
+            }
+        });
 
     }
     ngOnInit(): void {
@@ -174,7 +197,7 @@ export class DocumentViewComponent implements OnInit {
         this.editDocform = this.formBuilder.group({
             name: ['', Validators.required],
             description: ['', Validators.required],
-            expiration_date: ['',futureDateValidator]
+            expiration_date: ['', pastDateValidator()]
         });
         // Initialize the tag form
         this.tagDocform = this.formBuilder.group({
@@ -205,10 +228,14 @@ export class DocumentViewComponent implements OnInit {
     getDeleteApprovalList(){
         this.httpservice.sendGetRequest(URLUtils.deleteApprovalGetLists).subscribe((res: any) => {
             this.delApproval = res.documents;
-            this.sortDocumentsByDeletedOn()
+            this.sortDocumentsByDeletedOn();
             //console.log('d',this.delApproval);
         })
     }
+    capitalizeFirstLetter(value: string): string {
+        if (!value) return '';
+        return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+    }      
     sortDocumentsByDeletedOn() {
         this.delApproval.sort((a, b) => {
           const dateA = a.deletedOn ? new Date(a.deletedOn) : null;
@@ -242,6 +269,7 @@ export class DocumentViewComponent implements OnInit {
             this.isDecrypted = false;
             this.isEncypted = false;
             this.getAllDocuments();
+            this.getDeleteApprovalList(); 
             //Pagination doc has only 1
             if (this.documents.length === 0) {
                // this.p--; //rem
@@ -253,18 +281,22 @@ export class DocumentViewComponent implements OnInit {
               this.toast.error(errorMessage);
               console.log(error);
             }
-          });
+        });
     }
     selectGroup(val: boolean) {
         this.isSelectGroup = val;
-        if (val) {
-          this.groupViewItems = this.groupViewItems.filter(item =>
-            !this.selectedGroupItems.some(selectedItem => selectedItem.id === item.id)
-          );
-        } else {
-          this.get_all_matters(this.selectedmatterType);
-          this.getAllDocuments();
+        if (!val) {
+            this.get_all_matters(this.selectedmatterType)
+            this.getAllDocuments();
         }
+        // if (val) {
+        //   this.groupViewItems = this.groupViewItems.filter(item =>
+        //     !this.selectedGroupItems.some(selectedItem => selectedItem.id === item.id)
+        //   );
+        // } else {
+        //   this.get_all_matters(this.selectedmatterType);
+        //   this.getAllDocuments();
+        // }
       } 
     // selectGroup(val: boolean) {
     //     this.isSelectGroup = val;
@@ -343,26 +375,45 @@ export class DocumentViewComponent implements OnInit {
     }
       
 
+    // editDocInfox(doc: any, tabsel?: any) {
+    //     this.editDoc = JSON.parse(JSON.stringify(doc));
+    //     // Convert the expiration date to a Date object
+    //     if (this.editDoc.expiration_date) {
+    //       const dateObj = new Date(this.editDoc.expiration_date);
+    //       this.editDoc.expiration_date = this.datePipe.transform(dateObj, 'MMM dd, yyyy'); // Format as "Oct 10, 2024"
+    //       this.editDocform.patchValue({ expiration_date: dateObj }); // Set the Date object for the date picker
+    //     }
+    //     if (tabsel == 'encrypt') {
+    //         this.tabsel = 'encrypt'
+    //     } else if (tabsel == 'decrypt') {
+    //         this.tabsel = 'decrypt'
+    //     }
+    //     //console.log("edit data " + JSON.stringify(this.editDoc));
+    // }
+
     editDocInfo(doc: any, tabsel?: any) {
         this.editDoc = JSON.parse(JSON.stringify(doc));
-        // console.log('form', this.editDocform)
-        // console.log("editDoc data", this.editDoc)
+        // console.log('form', this.editDocform);
+        // console.log("editDoc", this.editDoc);
 
-        // Convert the expiration date to a Date object
-        if (this.editDoc.expiration_date) {
-          const dateObj = new Date(this.editDoc.expiration_date);
-          this.editDoc.expiration_date = this.datePipe.transform(dateObj, 'MMM dd, yyyy'); // Format as "Oct 10, 2024"
-          this.editDocform.patchValue({ expiration_date: dateObj }); // Set the Date object for the date picker
+        const today = new Date();
+        if (this.editDoc.expiration_date && this.editDoc.expiration_date !== 'NA' && this.editDoc.expiration_date !== null) {
+            const dateObj = new Date(this.editDoc.expiration_date);
+            this.editDoc.expiration_date = this.datePipe.transform(dateObj, 'MMM dd, yyyy');
+            this.editDocform.patchValue({ expiration_date: dateObj });
+            this.editDoc.isExpired = dateObj < today;
+        } else {
+            this.editDocform.patchValue({ expiration_date: null });
+            this.editDoc.isExpired = false;
         }
 
-        if (tabsel == 'encrypt') {
-            this.tabsel = 'encrypt'
-        } else if (tabsel == 'decrypt') {
-            this.tabsel = 'decrypt'
+        if (tabsel === 'encrypt') {
+            this.tabsel = 'encrypt';
+        } else if (tabsel === 'decrypt') {
+            this.tabsel = 'decrypt';
         }
-        //console.log("edit data " + JSON.stringify(this.editDoc));
     }
-
+    
     //View Tag Functionalitys
     updateTagInfo(doc: any, tabsel?: any) {
         this.doc = doc;
@@ -407,10 +458,11 @@ export class DocumentViewComponent implements OnInit {
     }
 
     onSubmit() {
-        this.submitted = true;
-        // if (this.editDocform.invalid) {
-        //     return;
-        // }
+         this.submitted = false;
+        if (this.editDocform.invalid) {
+            this.submitted = true;
+            return;
+        }
 
         this.editDocform.value.expiration_date = this.bsValue ? this.pipe.transform(this.bsValue, 'dd-MM-yyyy') : '';
         let item = this.editDocform.value;
@@ -418,7 +470,11 @@ export class DocumentViewComponent implements OnInit {
         //console.log("date  " + JSON.stringify(item));
         this.httpservice.sendPutRequest(URLUtils.editDocuments(this.editDoc), item).subscribe((res: any) => {
             //console.log("res---edir" + JSON.stringify(res));
-            if (res.error == false) {
+            if(res.error == true){
+                this.toast.error(res.msg);
+                return;
+            }
+            else{
                 this.isDelete = false;
                 this.isDecrypted = false;
                 this.isEncypted = false;
@@ -444,17 +500,17 @@ export class DocumentViewComponent implements OnInit {
         // Transform the tags into an object format
         let transformedTags: { [key: string]: string } = {};
         this.tagDocform.value.tags.forEach((tag: { key: string, value: string }) => {
-            if (tag.key && tag.value) {
-                transformedTags[tag.key] = tag.value;
+            if ((tag.key && tag.value) || (tag.key !== undefined)) {
+                transformedTags[tag.key] = tag.value || '';
             }
-        });
+        });   
 
         let name = this.doc.name;
         let payload = {
             tags: transformedTags,
             name: name
         };
-    
+
         // Send the PUT request with the constructed payload
         this.httpservice.sendPutRequest(URLUtils.editTags(this.tagDoc), payload).subscribe(
             (res: any) => {
@@ -540,14 +596,20 @@ export class DocumentViewComponent implements OnInit {
                     this.documents = res?.data?.reverse();
                 else
                     this.documents = res?.data?.items?.reverse();
+
                 this.documents.forEach((item: any) => {
                     item.expiration_date=item.expiration_date=='NA'?null:new Date(item.expiration_date);
-                    
-                    item.tags = Object.entries(item.tags);
+                    //item.tags = Object.entries(item.tags);
+                    item.tags = Object.entries(item.tags)
+                    .filter(([key, value]) => key && value)  // Filter out empty keys or values
+                    .map(([key, value]) => {
+                        // Sanitize the value (only if it's a string)
+                        const sanitizedValue = typeof value === 'string' ? value.replace(/[^a-zA-Z0-9\s]/g, '').trim() : '';
+                        return [key, sanitizedValue];
+                    }); //removing ui ,issue                   
                     item.isChecked = false;
                     if (this.viewItemsList && this.viewItemsList.length > 0) {
                         this.viewItemsList?.forEach((val: any) => {
-
                             if (item.name == val.name) {
                                 item.isChecked = true;
                             }
@@ -555,6 +617,7 @@ export class DocumentViewComponent implements OnInit {
                     }
                 })
                 this.errorMsg = this.documents.length == 0 ? true : false;
+                // console.log('documents',this.documents)
             },
             (error: HttpErrorResponse) => {
                 if (error.status === 401 || error.status === 403) {
@@ -795,7 +858,8 @@ export class DocumentViewComponent implements OnInit {
             //console.log("res" + res);
             this.modalService.open('custom-modal-1');
             this.isDelete = true;
-            this.getAllDocuments();            
+            this.getAllDocuments();  
+            this.getDeleteApprovalList();          
             //Pagination doc has only 1
             if (this.documents.length === 0) {
                 this.p--;
@@ -808,7 +872,6 @@ export class DocumentViewComponent implements OnInit {
               console.log(error);
             }
           });
-
     }
     addShortText(doc: any) {
         this.dataToService(doc);
@@ -883,6 +946,27 @@ export class DocumentViewComponent implements OnInit {
             this.delApproval = this.delApproval?.sort((p1: any, p2: any) => (p1[val] > p2[val]) ? 1 : (p1[val] < p2[val]) ? -1 : 0);
         }
     }
+    sortDocumentsDA(val: any) { // for Delete Approval
+        this.isReverse = !this.isReverse;
+      
+        const sortDate = (a: any, b: any) => {
+          const dateA = new Date(a[val]);
+          const dateB = new Date(b[val]);
+          return dateA > dateB ? 1 : dateA < dateB ? -1 : 0;
+        };
+      
+        const sortDefault = (a: any, b: any) => {
+          if (a[val] < b[val]) return -1;
+          if (a[val] > b[val]) return 1;
+          return 0;
+        };
+      
+        if (val === 'created' || val === 'deletedOn') {
+          this.delApproval = [...this.delApproval.sort((a, b) => this.isReverse ? sortDate(b, a) : sortDate(a, b))];
+        } else {
+          this.delApproval = [...this.delApproval.sort((a, b) => this.isReverse ? sortDefault(b, a) : sortDefault(a, b))];
+        }
+    }      
 
     reset() {
         this.getAllDocuments();
@@ -896,6 +980,7 @@ export class DocumentViewComponent implements OnInit {
         if (val == true) {
             let obj = {
                 "filename": doc.filename,
+                "name": doc.name,
                 "id": doc.id
             }
             this.selectedAttachments.push(obj);

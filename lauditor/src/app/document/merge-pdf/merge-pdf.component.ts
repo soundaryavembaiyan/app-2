@@ -1,6 +1,6 @@
 import { Component, OnInit, Renderer2 } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { idLocale } from 'ngx-bootstrap';
 import { ModalService } from 'src/app/model/model.service';
 import { HttpService } from 'src/app/services/http.service';
@@ -10,6 +10,8 @@ import { DocumentService } from '../document.service';
 import { environment } from 'src/environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { HostListener } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
     selector: 'merge-pdf',
@@ -53,7 +55,7 @@ export class MergePdfComponent implements OnInit {
     getClient: any;
     
     public selectedValue: any;
-    constructor(private httpservice: HttpService,
+    constructor(private httpservice: HttpService, private cdr: ChangeDetectorRef,
         private router: Router, private formBuilder: FormBuilder,
         private modalService: ModalService, private docService: DocumentService, private renderer: Renderer2, private spinnerService: NgxSpinnerService) {
         this.router.events.subscribe((val) => {
@@ -79,7 +81,11 @@ export class MergePdfComponent implements OnInit {
                 //     this.get_all_matters(this.selectedmatterType)
                 // }
         });
-
+        this.router.events.subscribe(event => {
+            if (event instanceof NavigationStart) {
+                this.isSelectGroup = false;
+            }
+        });
     }
 
     ngOnInit(): void {
@@ -113,7 +119,6 @@ export class MergePdfComponent implements OnInit {
 
         this.filter = window.location.pathname.split("/").splice(-2)[1];
         localStorage.setItem('filter', this.filter);
-        
     }
     get_all_matters(type:any,event?:any){
         this.spinnerService.show()

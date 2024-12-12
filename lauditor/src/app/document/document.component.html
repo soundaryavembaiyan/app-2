@@ -23,10 +23,10 @@
             <a href="javascript:void(0);" class="details doc-option client " (click)="gotoDetail('client')" *ngIf="product == 'content'">Customer</a>
             <!-- <a href="javascript:void(0);" class="details doc-option  client " (click)="gotoDetail('client')" *ngIf="product == 'corporate'">Internal</a> -->
 
-            <a href="javascript:void(0);" class=" details doc-option firm" [ngClass]="{'delFirm': docCategory === 'view' && role==='SU' && (product!=='corporate' && product!=='content')}" (click)="gotoDetail('firm')" *ngIf="product != 'corporate'">Firm</a>
+            <a href="javascript:void(0);" class=" details doc-option firm" [ngClass]="{'delFirm': docCategory === 'view' && role==='SU' && (product!=='corporate' && product!=='content') && isFromEmail === false}" (click)="gotoDetail('firm')" *ngIf="product != 'corporate'">Firm</a>
             <!-- <a href="javascript:void(0);" class=" details doc-option  firm" (click)="gotoDetail('firm')" *ngIf="product == 'corporate'">Internal</a> -->
 
-            <a href="javascript:void(0);" class=" details doc-option delete delDelete" (click)="gotoDetail('delete')" *ngIf="(product != 'corporate' && product != 'content' && product != 'connect') && docCategory === 'view' && role==='SU'">Deleted</a>
+            <a href="javascript:void(0);" class=" details doc-option delete delDelete" (click)="gotoDetail('delete')" *ngIf="(product != 'corporate' && product != 'content' && product != 'connect') && docCategory === 'view' && role==='SU' && isFromEmail === false">Deleted</a>
             <!-- Product condition for label ends here..-->
           </div>
         </div>

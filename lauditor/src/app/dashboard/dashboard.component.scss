@@ -54,3 +54,7 @@ label {
     padding-top: 12px;
     padding-bottom: 14px;
 }
+
+.left-menu-icon.active img {
+    filter: brightness(0) invert(1); /* Highlight the image */
+}

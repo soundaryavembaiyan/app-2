@@ -4,7 +4,8 @@
             <div class="col-2">
                 <div class="input-group court seogroup" id="search">
                     <button type="button" class="btn btn-primary actionbtn
-                        btnaddevent" (click)="onCompose()" [ngClass]="isAuthenticated? '' :'disable' "><b>+</b> Compose
+                        btnaddevent" (click)="onCompose()" [ngClass]="isAuthenticated? '' :
+                        'disable' "><b>+</b> Compose
                     </button>
                 </div>
             </div>
@@ -113,8 +114,8 @@
                         </div>
                         <div class="pdf-list" style="cursor: pointer;" *ngIf="selectedAttachments?.length>0">
                             <div class="pdf-data" *ngFor="let attachment of selectedAttachments">
-                                <div><i class="fa-regular fa-file-pdf"></i></div>
-                                <div>{{attachment.filename}}</div>
+                                <div class="clsnp"><i class="fa-regular fa-file-pdf"></i></div>
+                                <div class="clsnp">{{attachment.name}}</div>
                                 <span (click)="onRemoveAttachment(attachment)"><i aria-hidden="true"
                                         class="fa fa-regular fa-circle-xmark crosscss"></i></span>
                             </div>
@@ -122,8 +123,8 @@
                         <div class="bootom submit">
                             <div>
                                 <i class="fa fa-paperclip" aria-hidden="true" (click)="onAttach()"></i>
-                                <input type="submit" class="btn btn-primary sendbtn" value="Send"
-                                    [disabled]="!composeForm.valid">
+                                <input type="submit" class="btn btn-primary sendbtn" value="Send" 
+                                [ngClass]="{'btn-disabled': !composeForm.valid}" [disabled]="!composeForm.valid">
                             </div>
                         </div>
                     </div>

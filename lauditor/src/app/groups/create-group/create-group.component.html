@@ -49,8 +49,8 @@
       <div class="row">
         <div class="col-6">
           <div class="form-group nameSet">
-            <label for="title" class="lable-size" *ngIf="product != 'corporate'">Group Name:</label>
-            <label for="title" class="lable-size" *ngIf="product == 'corporate'">Department Name:</label>
+            <label for="title" class="lable-size gname" *ngIf="product != 'corporate'">Group Name:</label>
+            <label for="title" class="lable-size gname" *ngIf="product == 'corporate'">Department Name:</label>
             <input type="text"
                    formControlName="name"
                    class=" text-size form-control group-name-text"
@@ -76,7 +76,7 @@
         </div>
         <div class="col-6">
           <div class="form-group nameSet">
-            <label for="comment" class="lable-size">Description:</label>
+            <label for="comment" class="lable-size gname">Description:</label>
             <textarea formControlName="description" (input)="restricttextSpace($event)"
                       class="form-control text-size text-area-height"
                       [ngClass]="{ 'is-invalid': submitted && f.description.errors }"

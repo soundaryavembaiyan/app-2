@@ -9,7 +9,7 @@ import { type } from 'jquery';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { HttpErrorResponse } from '@angular/common/http';
-
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 @Component({
@@ -47,7 +47,7 @@ export class ViewRelationshipComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private activeRoute: ActivatedRoute,
                 private modal: ModalService,
-                private cd: ChangeDetectorRef,
+                private cd: ChangeDetectorRef,private spinnerService: NgxSpinnerService,
                 private toastr: ToastrService) {
     }
 
@@ -74,10 +74,12 @@ export class ViewRelationshipComponent implements OnInit, OnDestroy {
     
     loadData(){
         let url:any;
+        this.spinnerService.show();
         if(this.activeTab=='temporary'){
             url  = URLUtils.relationshipTemporary;
             this.relationshipSubscribe = this.httpservice.getFeaturesdata(url).subscribe(
                 (res: any) => {
+                    this.spinnerService.hide();
                     //this.relationshipList = res?.data?.relationships;
                     //this.relationshipList = res?.data;
                     this.relationshipList = res.data.map((rel: any) => {
@@ -93,6 +95,7 @@ export class ViewRelationshipComponent implements OnInit, OnDestroy {
             url  = URLUtils.getcorporateRelationship;
             this.relationshipSubscribe = this.httpservice.getFeaturesdata(url).subscribe(
                 (res: any) => {
+                    this.spinnerService.hide();
                     //this.relationshipList = res?.relationships;
                     this.relationshipList = res.relationships.map((rel: any) => {
                         return {
@@ -107,6 +110,7 @@ export class ViewRelationshipComponent implements OnInit, OnDestroy {
         url  = URLUtils.getRelationshipFiltered(this.activeTab)
         this.relationshipSubscribe = this.httpservice.getFeaturesdata(url).subscribe(
             (res: any) => {
+                this.spinnerService.hide();
                 //this.relationshipList = res?.data?.relationships;
                 this.relationshipList = res.data.relationships.map((rel: any) => {
                     return {
@@ -121,7 +125,6 @@ export class ViewRelationshipComponent implements OnInit, OnDestroy {
     //acceptRelationshipCorp - corp accept
 
     accept(rel: any) {
-       
         if(this.activeTab=='business' && environment.product != 'corporate'){
             this.httpservice.sendPostRequest(URLUtils.acceptRelationship(rel),
                 {}).subscribe((res: any) => {
@@ -139,9 +142,8 @@ export class ViewRelationshipComponent implements OnInit, OnDestroy {
                   }
                
             )
-            }
-            
-          else{  
+        }
+        else{  
             let payload = {
                 "response":"yes"
             }
@@ -157,7 +159,7 @@ export class ViewRelationshipComponent implements OnInit, OnDestroy {
                     }
                   })
         
-       console.log('activeTab', this.activeTab)
+        //console.log('activeTab', this.activeTab)
         //console.log('payload', this.payload)
     }
 }

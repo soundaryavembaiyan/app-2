@@ -147,15 +147,23 @@ export class OthersCalenderComponent implements OnInit {
     invitees_consumer_external: [''],
     notifications: [''],
     timesheets: this.fb.array([]),
-    addtimesheet: [true],
+    addtimesheet: [false],
     recurrent_edit_choice: null
   })
   get f() {
     return this.CalenderForm.controls;
   }
-  shouldHideAddToTimesheet() {
+  // shouldHideAddToTimesheet() {
+  //   const repeatInterval = this.CalenderForm.get('repeat_interval')?.value;
+  //   return repeatInterval && repeatInterval !== '';
+  // }
+  shouldHideAddToTimesheet(): boolean {
     const repeatInterval = this.CalenderForm.get('repeat_interval')?.value;
-    return repeatInterval && repeatInterval !== '';
+    if (repeatInterval && repeatInterval !== '') {
+      this.CalenderForm.controls['addtimesheet'].setValue(false); // Set value
+      return true; // Indicate that add to timesheet should be hidden
+    }
+    return false; // Otherwise, do not hide
   }
   onChangeMatter(event:any){
     if (!this.editInfo){
@@ -309,6 +317,7 @@ export class OthersCalenderComponent implements OnInit {
     }
   }
   onKey(event: any, index: any, type: any) {
+    this.isEditPage = false;
     let value = event.target.value
     value = value.replace(/[^0-9]/g, '');// Remove non-numeric characters
     this.notificationItems[index][type] = value;
@@ -669,9 +678,9 @@ export class OthersCalenderComponent implements OnInit {
   }
   onSubmit() {
     this.isSubmitted = true;
-    if(this.isValidNotification){
-      return
-    }
+    // if(this.isValidNotification){
+    //   return
+    // }
     if (!this.CalenderForm.valid) {
       //console.log('error');
     } else {

@@ -149,13 +149,22 @@ export class OverheadCalenderComponent implements OnInit {
     invitees_internal: [''],
     notifications: [''],
     timesheets: this.fb.array([]),
-    addtimesheet: [true],
+    addtimesheet: [false],
     recurrent_edit_choice: null
   })
-  shouldHideAddToTimesheet() {
+  // shouldHideAddToTimesheet() {
+  //   const repeatInterval = this.CalenderForm.get('repeat_interval')?.value;
+  //   return repeatInterval && repeatInterval !== '';
+  // }
+  shouldHideAddToTimesheet(): boolean {
     const repeatInterval = this.CalenderForm.get('repeat_interval')?.value;
-    return repeatInterval && repeatInterval !== '';
+    if (repeatInterval && repeatInterval !== '') {
+      this.CalenderForm.controls['addtimesheet'].setValue(false); // Set value
+      return true; // Indicate that add to timesheet should be hidden
+    }
+    return false; // Otherwise, do not hide
   }
+  
   onChangeMatter(event:any){
     if (!this.editInfo){
       this.selectedClients = []
@@ -517,6 +526,7 @@ export class OverheadCalenderComponent implements OnInit {
     }
   }
   onKey(event: any, index: any, type: any) {
+    this.isEditPage = false;
     let value = event.target.value
     value = value.replace(/[^0-9]/g, '');// Remove non-numeric characters
     this.notificationItems[index][type] = value;
@@ -675,9 +685,9 @@ export class OverheadCalenderComponent implements OnInit {
  }
   onSubmit() {
     this.isSubmitted = true;
-    if(this.isValidNotification){
-      return;
-    }
+    // if(this.isValidNotification){
+    //   return;
+    // }
     if (!this.CalenderForm.valid) {
       //console.log('error');
     } 

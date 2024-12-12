@@ -189,6 +189,7 @@ input.form-control.textbox {
     height: 51px;
     border-radius: 30px !important;
     background: white;
+    padding-top: 10px;
 }
 
 /* For better browser compatibility, add vendor prefixes */
@@ -242,8 +243,10 @@ textarea::placeholder {
     font-size: 30px;
 }
 .teamtwo{
-     border-top-right-radius: 0px; 
-     border-bottom-right-radius: 0px;
+     border-top-right-radius: 5px; 
+     border-bottom-right-radius: 5px;
+     border-top-left-radius: 5px;
+     border-bottom-left-radius: 5px;
 }
 .scroller {
     overflow: auto;
@@ -300,5 +303,6 @@ textarea::placeholder {
 .chattxt {
     white-space: pre-wrap;
     word-wrap: break-word;
+    margin-bottom: 5px;
 }
   

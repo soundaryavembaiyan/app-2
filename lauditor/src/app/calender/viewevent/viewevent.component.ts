@@ -11,6 +11,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { ModalService } from 'src/app/model/model.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-viewevent',
@@ -44,7 +45,7 @@ export class ViewEventComponent implements OnInit {
     this.expanded = !this.expanded;
   }
 
-  constructor(private httpservice: HttpService, private router: Router, private toaster: ToastrService,
+  constructor(private httpservice: HttpService, private router: Router, private toaster: ToastrService,private spinnerService: NgxSpinnerService,
     private calenderService: CalenderService, public sanitizer: DomSanitizer, private modalService: ModalService, private confirmationDialogService: ConfirmationDialogService) {
     this.data = this.router.getCurrentNavigation()?.extras.state;
   }
@@ -82,11 +83,7 @@ export class ViewEventComponent implements OnInit {
           if (user && user.rsvp) {
             this.selectedValue = user.rsvp.charAt(0).toUpperCase() + user.rsvp.slice(1).toLowerCase();
           } else {
-<<<<<<< Updated upstream
-            this.selectedValue = ''; // Default value if no RSVP is found
-=======
             this.selectedValue = 'Yes'; // Default value if no RSVP is found
->>>>>>> Stashed changes
           }
           //console.log('Selected RSVP:', this.selectedValue);
 
@@ -253,92 +250,8 @@ export class ViewEventComponent implements OnInit {
   closeModal(id: string) {
     this.modalService.close(id);
   }
-<<<<<<< Updated upstream
-  // viewDocument(item: any) {
-  //   console.log(item)
-  //   let id = { 'id': item.docid }
-  //   this.httpservice.sendGetRequest(URLUtils.viewDocuments(id)).subscribe((res: any) => {
-  //     if (res && res.data && !res.error) {
-  //       this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(res.data.url);
-  //       let obj = {
-  //         'isIframe': true,
-  //         'url': this.urlSafe
-  //       }
-  //       this.confirmationDialogService.confirm('View', obj, true, "Ok", "Close", false, "lg");
-  //     }
-  //   });
-  // }
-
   viewDocument(item: any) {
-    console.log(item)
-    if (item.added_encryption) {
-      var body = new FormData();
-      body.append('docid', item.docid)
-      body.append('shared_doc', true.toString())
-      let url = environment.apiUrl + URLUtils.decryptFile
-      this.httpservice.sendPostDecryptRequest(url, body).subscribe((res: any) => {
-        const blob = new Blob([res], { type: item.contentType });
-        const url = URL.createObjectURL(blob);
-        if (this.allowedFileTypes.includes(item.contentType)) {
-          let fdata = new FormData();
-          fdata.append('file', blob);
-          this.httpservice.sendPostDecryptRequest(environment.DOC2FILE, fdata).subscribe((ans: any) => {
-            const ansBlob = new Blob([ans], { type: 'application/pdf' });
-            const ansUrl = URL.createObjectURL(ansBlob);
-            this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(ansUrl)
-            let obj = {
-              'isIframe': true,
-              'url': this.urlSafe
-            }
-            this.confirmationDialogService.confirm('View', obj, true, "Ok", "Close", false, "lg");
-          })
-        } else {
-          this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-          let obj = {
-            'isIframe': true,
-            'url': this.urlSafe
-          }
-          this.confirmationDialogService.confirm('View', obj, true, "Ok", "Close", false, "lg");
-        }
-      })
-    }
-    if (item.added_encryption == false) {
-      let id = { 'id': item.docid }
-
-      this.httpservice.sendGetRequest(URLUtils.viewDocuments(id)).subscribe((res: any) => {
-        if (this.allowedFileTypes.includes(item.contentType)) {
-          this.httpservice.sendPostDocRequest(this.docapi, { 'url': res.data.url }).subscribe((ans: any) => {
-            const blob = new Blob([ans], { type: 'application/pdf' });
-            // Create a URL for the Blob
-            const url = URL.createObjectURL(blob);
-            this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(url)
-            let obj = {
-              'isIframe': true,
-              'url': this.urlSafe
-            }
-            this.confirmationDialogService.confirm('View', obj, true, "Ok", "Close", false, "lg");
-          })
-        } 
-        else {
-          if (res && res.data && !res.error) {
-            this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(res.data.url);
-            let obj = {
-              'isIframe': true,
-              'url': this.urlSafe
-            }
-            this.confirmationDialogService.confirm('View', obj, true, "Ok", "Close", false, "lg");
-          }
-          else {
-            alert(res.msg)
-          }
-        }
-      });
-    }
-  }
-
-=======
-  viewDocument(item: any) {
-    console.log(item)
+    console.log('item',item)
     let id = { 'id': item.docid }
     this.httpservice.sendGetRequest(URLUtils.viewDocuments(id)).subscribe((res: any) => {
       if (res && res.data && !res.error) {
@@ -352,8 +265,65 @@ export class ViewEventComponent implements OnInit {
     });
   }
 
+//   viewApprovalDocument(item: any) {
+//     //console.log('item', item)
+//     this.pdfSrc = ''
+//     let documentId: any = {
+//         docid: item.id,
+//         doctype: item.doctype
+//     };
+//     if (item.added_encryption) {
+//         var body = new FormData();
+//         body.append('docid', item.id)
+//         let url = environment.apiUrl + URLUtils.decryptFile
+//         this.spinnerService.show()
+//         this.httpservice.sendPostDecryptRequest(url, body).subscribe((res: any) => {
+//             const blob = new Blob([res], { type: item.content_type });
+//             const url = URL.createObjectURL(blob);
+//             if (this.allowedFileTypes.includes(item.content_type)) {
+//                 let fdata = new FormData();
+//                 fdata.append('file', blob);
+//                 this.httpservice.sendPostDecryptRequest(environment.DOC2FILE, fdata).subscribe((ans: any) => {
+//                     const ansBlob = new Blob([ans], { type: 'application/pdf' });
+//                     const ansUrl = URL.createObjectURL(ansBlob);
+//                     this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(ansUrl)
+//                     this.spinnerService.hide()
+//                 })
+//             }
+//             else {
+//                 this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url)
+//                 this.spinnerService.hide()
+//             }
+//             //console.log(this.pdfSrc)
+//         })
+//         this.spinnerService.hide()
+//     }
+//     if (item.added_encryption == false) {
+//         this.httpservice.sendPostRequest(URLUtils.deleteApprovalView, documentId).subscribe((res: any) => {
+//             if (this.allowedFileTypes.includes(item.content_type)) {
+//                 this.spinnerService.show()
+//                 this.httpservice.sendPostDocRequest(this.docapi, { 'url': res.data.url }).subscribe((ans: any) => {
+//                     const blob = new Blob([ans], { type: 'application/pdf' });
+//                     // Create a URL for the Blob
+//                     const url = URL.createObjectURL(blob);
+//                     this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(url)
+//                     this.spinnerService.hide()
+//                 })
+//             }
+//             else {
+//                 this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(res.data.url);
+//             }
+//         });
+//         this.pdfSrc = item.filename;
+//     }
+// }
+
+get(){
+
+}
+
   // viewDocument(item: any) {
-  //   console.log(item)
+  //   console.log('item',item)
   //   if (item.added_encryption) {
   //     var body = new FormData();
   //     body.append('docid', item.docid)
@@ -419,5 +389,4 @@ export class ViewEventComponent implements OnInit {
   //   }
   // }
 
->>>>>>> Stashed changes
 }

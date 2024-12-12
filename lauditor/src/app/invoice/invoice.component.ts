@@ -138,13 +138,18 @@ export class InvoiceComponent {
     this.spinnerService.show()
     this.httpservice.sendGetRequest(URLUtils.Invoice).subscribe((res: any) => {
       this.spinnerService.hide()
-      this.invoicelist = res?.data
+      if (!res.error) {
+        this.invoicelist = res?.data
 
-      //if not inovices throw error msg.
-      this.errorMsg = this.invoicelist.length == 0 ? true : false;
-      // console.log('invoicelist', this.invoicelist)
-      // console.log('errorMsg', this.errorMsg)
-    })
+        //if not inovices throw error msg.
+        this.errorMsg = this.invoicelist.length == 0 ? true : false;
+        // console.log('invoicelist', this.invoicelist)
+        // console.log('errorMsg', this.errorMsg)
+      }
+      else {
+        this.toast.error(res.msg);
+      }
+     })
   }
 
   isActive(value: string) {

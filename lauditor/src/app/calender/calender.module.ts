@@ -44,7 +44,6 @@ import { MatSelectModule } from '@angular/material/select';
       useFactory: adapterFactory,
     })
 ],
-providers: [BsDatepickerConfig];
-  
+providers: [BsDatepickerConfig]
 })
 export class CalenderModule { }

@@ -59,13 +59,20 @@ export class MatterTeamMembersComponent {
                         this.teammembersList.splice(index, 1); //to remove the owner name in 1st index
                     }
                     if (this.teammembers && this.teammembers.length > 0) {
-                        this.selectedTeammembers = [...this.teammembers];
-                        let res = this.teammembersList.filter((el: any) => {
-                            return !this.selectedTeammembers.find((element: any) => {
-                                return element.id === el.id;
-                            });
-                        });
-                        this.teammembersList = res
+                        // this.selectedTeammembers = [...this.teammembers];
+                        // let res = this.teammembersList.filter((el: any) => {
+                        //     return !this.selectedTeammembers.find((element: any) => {
+                        //         return element.id === el.id;
+                        //     });
+                        // });
+                        // this.teammembersList = res
+                        this.selectedTeammembers = this.groups.filter((group: any) =>
+                            this.teammembersList.some((g: any) => g.id === group.id)
+                        );
+                        //console.log('Updated teammembersList:', this.selectedTeammembers);
+                        this.teammembersList = this.teammembersList.filter(
+                            (group: any) => !this.selectedTeammembers.some((selected: any) => selected.id === group.id)
+                        );
                     }
                     if (this.selectedTeammembers.length == 0) {
                         let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;

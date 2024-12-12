@@ -287,13 +287,20 @@ export class MatterGroupsComponent implements OnInit {
           this.groupsList = res?.groups.filter((group: any) => group.name !== 'AAM' && group.name !== 'SuperUser');
           //console.log('g-groupsList', this.groupsList)
           if (this.groups && this.groups.length > 0) {
-            this.selectedGroups = [...this.groups];
-            let res = this.groupsList.filter((el: any) => {
-              return !this.selectedGroups.find((element: any) => {
-                return element.id === el.id;
-              });
-            });
-            this.groupsList = res
+            // this.selectedGroups = [...this.groups];
+            // let res = this.groupsList.filter((el: any) => {
+            //   return !this.selectedGroups.find((element: any) => {
+            //     return element.id === el.id;
+            //   });
+            // });
+            // this.groupsList = res
+            this.selectedGroups = this.groups.filter((group: any) =>
+              this.groupsList.some((g: any) => g.id === group.id)
+            );
+            //console.log('Updated selectedGroups:', this.selectedGroups);
+            this.groupsList = this.groupsList.filter(
+              (group: any) => !this.selectedGroups.some((selected: any) => selected.id === group.id)
+            );
           }
           // console.log('groupsList',this.groupsList)
           // console.log('selectedGroups',this.selectedGroups)

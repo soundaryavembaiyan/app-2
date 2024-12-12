@@ -144,39 +144,46 @@
 
                         <td>
                             <div *ngIf="number.Mon['hours']!=0 || number.Mon['minutes']!=0">
-                                {{number.Mon['hours']}}:{{number.Mon['minutes']}}
+                                <!-- {{number.Mon['hours']}}:{{number.Mon['minutes']}} -->
+                                {{ convertTime(number.Mon['hours'], number.Mon['minutes']) }}
                             </div>
                         </td>
 
                         <td>
                             <div *ngIf="number.Tue['hours']!=0 || number.Tue['minutes']!=0">
-                            {{number.Tue['hours']}}:{{number.Tue['minutes']}}
+                            <!-- {{number.Tue['hours']}}:{{number.Tue['minutes']}} -->
+                            {{ convertTime(number.Tue['hours'], number.Tue['minutes']) }}
                                     </div>
                         </td>
                         <td>
                             <div *ngIf="number.Wed['hours']!=0 || number.Wed['minutes']!=0">
-                            {{number.Wed['hours']}}:{{number.Wed['minutes']}}
+                            <!-- {{number.Wed['hours']}}:{{number.Wed['minutes']}} -->
+                            {{ convertTime(number.Wed['hours'], number.Wed['minutes']) }}
                                 </div>
                                 </td>
                                 
                         <td>
                             <div *ngIf="number.Thu['hours']!=0 || number.Thu['minutes']!=0">
-                            {{number.Thu['hours']}}:{{number.Thu['minutes']}}
+                            <!-- {{number.Thu['hours']}}:{{number.Thu['minutes']}} -->
+                            {{ convertTime(number.Thu['hours'], number.Thu['minutes']) }}
                             </div>
                                 </td>
                         <td>
                             <div *ngIf="number.Fri['hours']!=0|| number.Fri['minutes']!=0">
-                            {{number.Fri['hours']}}:{{number.Fri['minutes']}}
+                            <!-- {{number.Fri['hours']}}:{{number.Fri['minutes']}} -->
+                            {{ convertTime(number.Fri['hours'], number.Fri['minutes']) }}
                             </div>
                                 </td>
                         <td>
                             <div *ngIf="number.Sat['hours']!=0|| number.Sat['minutes']!=0">
-                            {{number.Sat['hours']}}:{{number.Sat['minutes']}}
+                            <!-- {{number.Sat['hours']}}:{{number.Sat['minutes']}} -->
+                            {{ convertTime(number.Sat['hours'], number.Sat['minutes']) }}
                                     </div>
                                 </td>
                         <td>
                             <div *ngIf="number.Sun['hours']!=0|| number.Sun['minutes']!=0">
-                            {{number.Sun['hours']}}:{{number.Sun['minutes']}}
+                            <!-- {{number.Sun['hours']}}:{{number.Sun['minutes']}} -->
+                            {{ convertTime(number.Sun['hours'], number.Sun['minutes']) }}
                                 </div>
                                 </td>
                                 

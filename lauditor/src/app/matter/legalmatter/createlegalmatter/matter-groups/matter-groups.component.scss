@@ -201,3 +201,14 @@ button.grpBtn:disabled {
     text-align: right;
     float: right;
 }
+.selectprior{
+    margin-top: 0px;
+}
+.selectedone{
+    margin-top:86px !important;
+}
+.selectedone .input-group:not(.has-validation) > .dropdown-toggle:nth-last-child(n+3),
+.selectedone .input-group:not(.has-validation) > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu) {
+    border-top-right-radius: 5px !important;
+    border-bottom-right-radius: 5px !important;
+}

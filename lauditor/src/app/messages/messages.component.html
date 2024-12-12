@@ -92,7 +92,7 @@
             <div class="col-sm-12 messagecont msg-padding" *ngFor="let client of selectedUser | filter:clientSearch;let i=index">
             <!--selected user chat for clients-->
                 <div class="row meetingcontainer legalboxleft container msgcontainer" *ngIf="client.clientType == 'Consumer'"
-                    [ngClass]="{'activeo': client.isSelected || activeFirm === client.id}" (click)="selectChatUser(client)">
+                    [ngClass]="{'activeo': client.isSelected}" (click)="selectChatUser(client)">
                     <div class="col-sm-8 col-xs-8">
                         <div class="row">
                             <div class="col-sm-3 col-xs-3">
@@ -403,7 +403,7 @@
                                                 <label class="chattxttime">
                                                     <!-- <p [class]="msg['action'] == 'SENT' ? 'coffer-time-me' : 'coffer-time-you'"> {{msg.timestamp}} </p> -->
                                                     <!-- <p> {{msg.timestamp}} </p> -->
-                                                    <p> {{msg.timestamp | date :"h:mm a,  dd MMM yyyy"}} </p>
+                                                     {{msg.timestamp | date :"h:mm a,  dd MMM yyyy"}} 
                                                 </label>
                                             </div>
                                         </div>
@@ -422,7 +422,8 @@
                                             <div class="chatpara rytwid">
                                                 <p class="chattxt">{{msg?.text}}</p>
                                                 <label class="chattxttime">
-                                                    <p> {{msg.timestamp | date :"dd MMM, yyyy h:mm a"}} </p>
+                                                    <!-- <p> {{msg.timestamp | date :"dd MMM, yyyy h:mm a"}} </p> -->
+                                                    {{msg.timestamp | date :"h:mm a,  dd MMM yyyy"}} 
                                                 </label>
                                             </div>
                                         </div>

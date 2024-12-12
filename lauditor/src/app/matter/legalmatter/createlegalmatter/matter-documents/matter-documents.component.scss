@@ -161,7 +161,7 @@ button:focus {
 }
 
 .matterpadding{
-    padding-top: 20px;
+    //padding-top: 20px;
 }
 .optionhigh2{
     border-radius: 5px 5px 5px 5px;
@@ -244,4 +244,15 @@ button:focus {
     display: inline-block;
     text-align: right;
     float: right;
+}
+.selectprior{
+    margin-top: 0px;
+}
+.selectedone{
+    margin-top:148px !important;
+}
+.selectedone .input-group:not(.has-validation) > .dropdown-toggle:nth-last-child(n+3),
+.selectedone .input-group:not(.has-validation) > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu) {
+    border-top-right-radius: 5px !important;
+    border-bottom-right-radius: 5px !important;
 }

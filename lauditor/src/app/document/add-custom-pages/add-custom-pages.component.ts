@@ -36,6 +36,8 @@ export class AddCustomPagesComponent implements OnInit {
     isError:boolean=false;
     product = environment.product;
     saveDoc = false
+    selectedPageOption: 'standard' | 'custom' = 'standard';
+
     positions: any = [{ 'name': 'Bottom Left', 'value': 'left' }, { 'name': 'Bottom Right', 'value': 'right' }, { 'name': 'Bottom Center', 'value': 'center' },
     { 'name': 'Top Left', 'value': 'topleft' }, { 'name': 'Top Right', 'value': 'topright' }, { 'name': 'Top Center', 'value': 'topcenter' }];
     // fonts
@@ -218,48 +220,64 @@ export class AddCustomPagesComponent implements OnInit {
         return this.isError
     }
 
-    onPagesSubmit() {
-        //this.saveDoc = true;
-        if (this.myForm.invalid) {
-            //this.toast.error('Please check all data')
-            return;
-        }
+    // onPagesSubmit() {
+    //     //this.saveDoc = true;
+    //     if (this.myForm.invalid) {
+    //         //this.toast.error('Please check all data')
+    //         return;
+    //     }
         
-        this.submitted = true;
-        this.isSubmitted = true;
+    //     this.submitted = true;
+    //     this.isSubmitted = true;
 
-        if (this.isCustomTemplate) {
-            //this.toast.error('Please provide a value for required field')
-            if (this.validateUploadDocuments()) {
-                //console.log("test" + (this.validateUploadDocuments() && !this.customPage.valid))
-                return
-            }
-            else {
-                if (!this.customPage.valid) {
-                    return
-                }
-                else {
-                    var index = 0
-                    for (var item of this.paginationData) {
-                        let list_item: any = {}
-                        var page_template = item.page_template
-                        var page_range_start = item.page_range_starts
-                        var page_range_ends = item.page_range_ends
-                        var starting_page_num = item.page_starts_from
-                        list_item['pagenumtemplate'] = page_template
-                        list_item['pages'] = page_range_start + "-" + page_range_ends
-                        list_item['pagenumrangestart'] = starting_page_num
-                        this.doclist[index] = list_item;
-                        index++
-                    }
+    //     if (this.isCustomTemplate) {
+    //         //this.toast.error('Please provide a value for required field')
+    //         if (this.validateUploadDocuments()) {
+    //             //console.log("test" + (this.validateUploadDocuments() && !this.customPage.valid))
+    //             return
+    //         }
+    //         else {
+    //             if (!this.customPage.valid) {
+    //                 return
+    //             }
+    //             else {
+    //                 var index = 0
+    //                 for (var item of this.paginationData) {
+    //                     let list_item: any = {}
+    //                     var page_template = item.page_template
+    //                     var page_range_start = item.page_range_starts
+    //                     var page_range_ends = item.page_range_ends
+    //                     var starting_page_num = item.page_starts_from
+    //                     list_item['pagenumtemplate'] = page_template
+    //                     list_item['pages'] = page_range_start + "-" + page_range_ends
+    //                     list_item['pagenumrangestart'] = starting_page_num
+    //                     this.doclist[index] = list_item;
+    //                     index++
+    //                 }
                    
-                    this.modalService.open("doc-del-pages");
-                // this.postAddPages(obj);
-                }
-            }
-        }
-    }
+    //                 this.modalService.open("doc-del-pages");
+    //             // this.postAddPages(obj);
+    //             }
+    //         }
+    //     }
+    // }
 
+    onPagesSubmit() {
+        var index = 0
+        for (var item of this.paginationData) {
+            let list_item: any = {}
+            var page_template = item.page_template
+            var page_range_start = item.page_range_starts
+            var page_range_ends = item.page_range_ends
+            var starting_page_num = item.page_starts_from
+            list_item['pagenumtemplate'] = page_template
+            list_item['pages'] = page_range_start + "-" + page_range_ends
+            list_item['pagenumrangestart'] = starting_page_num
+            this.doclist[index] = list_item;
+            index++
+        }
+        this.modalService.open("doc-del-pages");
+    }
     postAddPages(){
         let obj = {
             "docid": this.data.id,

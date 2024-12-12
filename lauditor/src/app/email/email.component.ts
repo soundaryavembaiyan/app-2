@@ -100,7 +100,7 @@ export class EmailComponent implements OnInit, AfterViewInit {
     let docs = localStorage.getItem('docs');
     if (docs && docs.length > 0) {
       this.selectedAttachments = JSON.parse(docs);
-      this.selectedAttachments = this.selectedAttachments.map((obj: any) => ({ "filename": obj.filename, "path": obj.path }));
+      this.selectedAttachments = this.selectedAttachments.map((obj: any) => ({ "filename": obj.filename, "path": obj.path, "name": obj.name }));
       this.composeForm.controls['documents'].setValue(this.selectedAttachments);
       localStorage.removeItem("docs");
     }
@@ -608,7 +608,7 @@ handleNextPageClick() {
     }
   }
   onRemoveAttachment(attachment: any) {
-    this.selectedAttachments = this.selectedAttachments.filter((item: any) => item.filename !== attachment.filename);
+    this.selectedAttachments = this.selectedAttachments.filter((item: any) => item.name !== attachment.name);
   }
 
   getAllDocuments() {
@@ -703,9 +703,9 @@ handleNextPageClick() {
 
   onSubmit() {
     this.spinnerService.show();
-    if (!this.composeForm.valid) {
-      return;
-    }
+    // if (!this.composeForm.valid) {
+    //   return;
+    // }
     this.httpservice.sendPostEmailRequest(URLUtils.sendMessage({ "token": localStorage.getItem('TOKEN'),"type":localStorage.getItem('type') }), this.composeForm.value).subscribe((res: any) => {
       if (res) {
         this.spinnerService.hide();

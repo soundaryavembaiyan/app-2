@@ -11,6 +11,8 @@ import { environment } from 'src/environments/environment';
 import { DocumentService } from '../document.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { HostListener } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
     selector: 'document-upload',
@@ -75,10 +77,10 @@ export class DocumentUploadComponent implements OnInit {
     grpclientData:any;
     isReadOnly = true
     // myInputVariable!: ElementRef;
-
     isDisableDoc: boolean = true;
+    
     constructor(private httpservice: HttpService,
-        private fb: FormBuilder,
+        private fb: FormBuilder,private cdr: ChangeDetectorRef,
         private router: Router,
         private toastr: ToastrService, private modalService: ModalService, private documentService: DocumentService , private spinnerService: NgxSpinnerService) {
         this.filter = this.router.url.split("/").splice(-2)[1];
@@ -106,6 +108,11 @@ export class DocumentUploadComponent implements OnInit {
         if(this.selectedGroupItems.length > 0){
             this.get_all_matters(this.selectedmatterType)
         }
+        this.router.events.subscribe(event => {
+            if (event instanceof NavigationStart) {
+                this.isFirmSelectGroup = false;
+            }
+        });
     }
 
     ngOnInit(): void {

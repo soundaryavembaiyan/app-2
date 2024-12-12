@@ -60,7 +60,7 @@
           <h5 *ngIf="product != 'corporate'" class="float-left grpFont">Selected Client(s)</h5>
           <h5 *ngIf="product == 'corporate'" class="float-left grpFont">Selected External Counsel(s)</h5>
           
-          <div>
+          <div class="selectedone">
             <div class="form-group group-custom-align" *ngFor="let client of selectedClients">
               <div class="input-group multicheck court" id="selectedgroup">
                 <div class="form-control textbox textAl" [innerHtml]="client.name"></div>
@@ -259,7 +259,7 @@
           <span class="warn">Please fill in the details below to add {{searchText}} as client</span>
 
           <div clas="form-group">
-            <label for="clienttype" class="fontbold alignleft">Client Type </label>
+            <label for="clienttype" class="fontbold alignleft ctype">Client Type </label>
              <!--<ul class="nav nav-pills mb-3 btnaction float-left " id="pills-tab"
               role="tablist">
               <li class="nav-item">

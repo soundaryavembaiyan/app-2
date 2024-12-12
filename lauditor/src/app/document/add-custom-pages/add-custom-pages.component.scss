@@ -51,9 +51,12 @@ hr {
 .tags a {
     width: 50%;
 }
-.optionlow{
-    border-radius: 5px 5px 5px 5px
+
+.optionlow {
+    //border-radius: 5px 5px 5px 5px
+    font-weight: 900;
 }
+
 .add-pages .col-5 {
     padding-right: 25px;
 }
@@ -75,11 +78,15 @@ hr {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
-.btnAdd{
+
+.btnAdd {
     background: #004D87;
     color: white;
+    height: 35px;
+    width: 70px;
 }
-.delIcon{
+
+.delIcon {
     color: black;
 }
 
@@ -89,30 +96,42 @@ hr {
     padding: 8px 20px 10px 20px;
     color: #000;
     font-size: 16px;
+    font-weight: 900;
     display: inline-block;
     margin-top: 10px;
-  }
-  .disabled {
+}
+
+.selectpriorstand.active,
+.optionhigh.active {
+    color: #fff;
+}
+
+.disabled {
     background: #a0bbd0;
     color: #fff;
 }
-.text-danger{
+
+.text-danger {
     --bs-text-opacity: 1;
     color: #ff1100 !important;
 }
 
-label{
+label {
     font-weight: 900;
 }
-.alertpad{
+
+.alertpad {
     padding: 0px;
 }
-.alertext{
+
+.alertext {
     font-weight: 900;
 }
-.okbtn{
+
+.okbtn {
     background-color: #004D87;
 }
-.center{
+
+.center {
     margin-top: 22px;
 }

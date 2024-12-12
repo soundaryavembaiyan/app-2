@@ -22,10 +22,15 @@
 .round-icon {
     text-align:center;
 }
+.compswitch{
+    padding-top: 20px;
+}
 .stepone{
-text-align: center;
+    text-align: center;
     margin: 0 auto;
     padding-bottom: 0px;
+    width: 35px;
+    height: 35px;
     //background-color: aqua;
 }
 .steprow{
@@ -48,10 +53,15 @@ label {
     margin-top: 10px;
     margin-left: 460px;
 }
-.invalid-feedback{
-    color:#ff0019;
-    font-size:15px;
-  }
-  .ptext{
+.invalid-feedback {
+    color: #ff0019;
+    font-size: 15px;
+}
+.ptext {
     font-weight: 900;
-  }
+}
+.gname {
+    font-size: 20px;
+    font-weight: 900;
+    padding-bottom: 5px;
+}

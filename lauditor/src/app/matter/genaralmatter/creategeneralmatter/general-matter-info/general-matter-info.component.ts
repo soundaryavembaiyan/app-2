@@ -37,6 +37,7 @@ export class GeneralMatterInfoComponent implements OnInit {
   minDateEnd: any = new Date();
   Documents: any;
   isAddDisable: boolean = false;
+  matterid:any;
   readonly NoWhitespaceRegExp: RegExp = new RegExp("\\S");
 
   constructor(private fb: FormBuilder, private oa: FormBuilder, private matterService: MatterService,private toast: ToastrService,
@@ -75,6 +76,7 @@ export class GeneralMatterInfoComponent implements OnInit {
       this.matterService.editGeneralMatterObservable.subscribe((result: any) => {
         if (result) {
           this.editeMatterInfo = result;
+          this.matterid = result.id;
           //console.log('editeMatterInfo',this.editeMatterInfo)
           this.isEdit = true;
           this.generalForm.patchValue(this.editeMatterInfo);
@@ -130,6 +132,8 @@ export class GeneralMatterInfoComponent implements OnInit {
     }
     let matter = this.generalForm.value
     let body = {"title":matter.title, "matter_number": matter.matterNumber, "type": "general"} 
+    let editbody = {"title":matter.title, "matter_number": matter.matterNumber, "matter_id": this.matterid, "type": "general"}
+
     // if(!this.isEdit){
     // this.generalForm.value.startdate = this.pipe.transform(this.generalForm.value.startdate, 'dd-MM-yyyy');
     // this.generalForm.value.closedate = this.pipe.transform(this.generalForm.value.closedate, 'dd-MM-yyyy');
@@ -160,24 +164,32 @@ export class GeneralMatterInfoComponent implements OnInit {
       }
       //console.log(data)
 
-      this.httpService.sendPutRequest(URLUtils.updateGeneralMatter(this.editeMatterInfo.id), data).subscribe((res: any) => {
-        if (!res.error) {
-          this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully updated the matter information.',false, 'View Matter List', 'Cancel', true)
-            .then((confirmed) => {
-              if (confirmed) {
-                this.router.navigate(['/matter/generalmatter/view']);
-              }
-            })
+      this.httpService.sendPostRequest(URLUtils.checkMatterUnique, editbody).subscribe((res: any) => {
+        if(res.error){
+          this.confirmationDialogService.confirm('Alert', res.msg, false, 'OK','Cancel', true)
+          .then((confirmed) => {
+            if (confirmed) {
+            }
+          })
         }
-      },
-      (error: HttpErrorResponse) => {
-        if (error.status === 401 || error.status === 403) {
-          const errorMessage = error.error.msg || 'Unauthorized';
-          this.toast.error(errorMessage);
-          //console.log(error);
+        else{
+          this.httpService.sendPutRequest(URLUtils.updateGeneralMatter(this.editeMatterInfo.id), data).subscribe((res: any) => {
+            if (!res.error) {
+              this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully updated the matter information.',false, 'View Matter List', 'Cancel', true)
+                .then((confirmed) => {
+                  if (confirmed) {
+                    this.router.navigate(['/matter/generalmatter/view']);
+                  }
+                })
+            }
+          },(error: HttpErrorResponse) => {
+            if (error.status === 401 || error.status === 403) {
+              const errorMessage = error.error.msg || 'Unauthorized';
+              this.toast.error(errorMessage);
+            }
+          })
         }
-      }
-      )
+      })
     }
     else {
       this.httpService.sendPostRequest(URLUtils.checkMatterUnique, body).subscribe((res: any) => {

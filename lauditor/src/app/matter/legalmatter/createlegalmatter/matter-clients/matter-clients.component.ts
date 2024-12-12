@@ -72,6 +72,7 @@ export class MatterClientsComponent implements OnInit {
     pathName: string = "legalmatter";
     groupName:any;
     showAllItems = false;
+    originalClientsList:any[]=[];
 
     constructor(private httpservice: HttpService, private fb: FormBuilder,
         private confirmationDialogService: ConfirmationDialogService,
@@ -206,6 +207,7 @@ export class MatterClientsComponent implements OnInit {
             }
             // Final update of combined clients list
             this.clients = [...this.clientsList, ...this.corporateList];
+            this.originalClientsList = [...this.clientsList];
 
             if (this.selectedClients.length == 0) {
                 let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
@@ -598,6 +600,30 @@ export class MatterClientsComponent implements OnInit {
         }
     }
 
+    // keyup() {
+    //     if (this.searchText.trim() === '') {
+    //         this.searchText = this.searchText.trim();
+    //     }
+    //     this.showTempForm = false;
+    //     this.onReset();
+    //     this.onResetentity();
+    //     // Convert search text to lowercase for case-insensitive search
+    //     const searchLower = this.searchText.toLowerCase();
+    //     this.filteredData = this.clientsList.filter((item: any) => item.name.toLowerCase().includes(searchLower));
+
+    //     // Update visibility based on the filtered data
+    //     if (this.filteredData.length === 0) {
+    //         this.showTempForm = true;
+    //     }
+
+    //     this.isSelectAllVisible = this.filteredData.length > 0;
+
+    //     const checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
+    //     if (checkbox) {
+    //         checkbox.checked = false;
+    //     }
+    // }
+
     keyup() {
         if (this.searchText.trim() === '') {
             this.searchText = this.searchText.trim();
@@ -605,23 +631,29 @@ export class MatterClientsComponent implements OnInit {
         this.showTempForm = false;
         this.onReset();
         this.onResetentity();
-        // Convert search text to lowercase for case-insensitive search
-        const searchLower = this.searchText.toLowerCase();
-        this.filteredData = this.clientsList.filter((item: any) => item.name.toLowerCase().includes(searchLower));
 
-        // Update visibility based on the filtered data
-        if (this.filteredData.length === 0) {
-            this.showTempForm = true;
+        if (this.searchText === '') {
+            this.clientsList = this.originalClientsList.filter((client: any) =>
+                !this.selectedClients.includes(client)
+            );
+            this.showTempForm = false; // Hide the temporary form
+        } else {
+            // Filter the clients list based on the search text, excluding selected clients
+            this.clientsList = this.originalClientsList.filter((item: any) =>
+                item.name.toLocaleLowerCase().includes(this.searchText.toLocaleLowerCase()) &&
+                !this.selectedClients.includes(item)
+            );
+            this.showTempForm = this.clientsList.length === 0; // if no clients match
         }
 
-        this.isSelectAllVisible = this.filteredData.length > 0;
+        this.isSelectAllVisible = this.clientsList.length > 0; // Update "Select All" visibility
 
-        const checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
+        let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
         if (checkbox) {
             checkbox.checked = false;
         }
     }
-
+    
     //if form is incomplete
     isFormIncomplete(): boolean {
         return (

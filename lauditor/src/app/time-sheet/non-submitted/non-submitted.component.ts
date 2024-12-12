@@ -103,6 +103,22 @@ export class NonSubmittedComponent implements OnInit {
         //console.log(" this.timeSheetData  " + JSON.stringify(this.timeSheetData));
       });
   }
+  
+  // convertTime(hours: number, minutes: number): string {
+  //   const additionalHours = Math.floor(minutes / 60); // Convert extra minutes to hours
+  //   const remainingMinutes = minutes % 60; // Get remaining minutes after converting to hours
+  //   const totalHours = hours + additionalHours; // Total hours
+  //   return `${totalHours}:${remainingMinutes.toString().padStart(2, '0')}`;
+  // }
+  convertTime(hours: number, minutes: number): string {
+    const absoluteHours = Math.abs(hours); // Remove negative sign from hours
+    const absoluteMinutes = Math.abs(minutes); // Remove negative sign from minutes
+    const additionalHours = Math.floor(absoluteMinutes / 60); // Convert extra minutes to hours
+    const remainingMinutes = absoluteMinutes % 60; // Get remaining minutes after converting to hours
+    const totalHours = absoluteHours + additionalHours; // Total hours after adding converted minutes
+    return `${totalHours}:${remainingMinutes.toString().padStart(2, '0')}`;
+  }
+  
   formatDate(){
     const headers = this.timeSheetData?.headers;
     if (headers) {
@@ -167,7 +183,7 @@ export class NonSubmittedComponent implements OnInit {
       .subscribe((res: any) => {
         this.taskId = '';
         this.onReset();
-
+        this. successOk(); //refresh data
         this.resMessage = res.msg;
         this.modalService.open('success');
       },
@@ -177,10 +193,27 @@ export class NonSubmittedComponent implements OnInit {
           this.toastr.error(errorMessage);
           console.log(error);
         }
-      }
-        );
+      });
     this.getTimeSheet(this.currentWeek);
     this.convertMinutes();
+  }
+  successOk(){
+    this.httpservice
+    .getFeaturesdata(URLUtils.getTimeSheets)
+    .subscribe((res: any) => {     
+      this.flagSub = res.timesheetList.weekTotal.wTotal;
+      this.isFrozen = res?.dates?.isFrozen;
+      this.project = res?.timesheetList?.matters;
+      this.currentWeek = res?.dates?.currentWeek;
+      this.prevWeek = res?.dates?.prevWeek;
+      this.minDate = new Date(this.prevWeek);
+      this.nextWeek = res?.dates?.nextWeek;
+      this.timeSheetData = res?.timesheetList;
+      this.getDate = res;
+      this.convertMinutes();
+      this.getDatesList(this.currentWeek);
+      this.formatDate();
+    });
   }
   getTimeSheet(val: any) {
     this.httpservice
@@ -209,6 +242,8 @@ export class NonSubmittedComponent implements OnInit {
   onChange(val: any) {
     this.selectedProject(val.value);
     const currentDate = this.hoursform.get('date')?.value; // Get the current date value
+    const mDate = this.timeSheetData?.headers?.Mon;
+    const formattedDate = new Date(mDate); // Convert string to Date object
 
     this.hoursform.reset({
       matter_type: val.value,
@@ -216,8 +251,8 @@ export class NonSubmittedComponent implements OnInit {
       billing: '',
       duration_minutes: '00',
       duration_hours: '00',
-      date: currentDate
-    }, { emitEvent: true }); // Emit change event to update bindings    
+      date: formattedDate
+    }); // Emit change event to update bindings    
   }
   
   onChangetask(val: any) {
@@ -470,21 +505,27 @@ sortingFile(column: string) {
 
   if (column === 'matterName') {
     this.timeSheetData.matters.sort((a: any, b: any) => {
-      if (a[column] < b[column]) return -1 * orderMultiplier;
-      if (a[column] > b[column]) return 1 * orderMultiplier;
+      // Normalize case and handle nullish values
+      const aValue = a[column]?.toLowerCase() || '';
+      const bValue = b[column]?.toLowerCase() || '';
+      if (aValue < bValue) return -1 * orderMultiplier;
+      if (aValue > bValue) return 1 * orderMultiplier;
       return 0;
     });
   } else {
     // Sort the tasks for each matter
     this.timeSheetData.matters = this.timeSheetData.matters.map((matter: any) => {
       matter.tasks.sort((a: any, b: any) => {
-        if (a[column] < b[column]) return -1 * orderMultiplier;
-        if (a[column] > b[column]) return 1 * orderMultiplier;
+        const aValue = a[column]?.toLowerCase() || '';
+        const bValue = b[column]?.toLowerCase() || '';
+        if (aValue < bValue) return -1 * orderMultiplier;
+        if (aValue > bValue) return 1 * orderMultiplier;
         return 0;
       });
       return matter;
     });
   }
 }
+
 
 }

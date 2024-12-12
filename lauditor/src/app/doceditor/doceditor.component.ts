@@ -184,7 +184,7 @@ export class DoceditorComponent {
     private toast: ToastrService, private documentService: DocumentService, private cdr: ChangeDetectorRef,
     private renderer: Renderer2, private modalService: ModalService, private spinnerService: NgxSpinnerService, private confirmationDialogService: ConfirmationDialogService,
     public sanitizer: DomSanitizer, public dialog: MatDialog) {
-     this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(this.url);
+     // this.pdfSrc = this.sanitizer.bypassSecurityTrustResourceUrl(this.url);
   }
 
   ngOnInit() {
@@ -1538,8 +1538,13 @@ export class DoceditorComponent {
                 this.toast.success('Document saved successfully.');
                 currentPage++; // Increment page number for the next page
                 pageContent = ''; // Reset pageContent for the next page
-              }
-            );
+              },
+              (error: HttpErrorResponse) => {
+                if (error.status === 400 || error.status === 401 || error.status === 403 || error.status === 500) {
+                  const errorMessage = error.error.message;
+                  this.toast.error(errorMessage);
+                }
+              })
           }
           else{
             this.httpservice.sendPatchLatexRequest(URLUtils.updateDoc(this.pageId), reqq).subscribe(
@@ -1548,8 +1553,14 @@ export class DoceditorComponent {
                 //this.openId = this.pageId
                 //console.log('this.openId',this.pageId)
                 this.toast.success('Document updated successfully.');
-              })
-          }
+              },     
+              (error: HttpErrorResponse) => {
+                if (error.status === 400 || error.status === 401 || error.status === 403 || error.status === 500) {
+                  const errorMessage = error.error.message;
+                  this.toast.error(errorMessage);
+                }
+              }
+              )}
           // else {
           //   // Check if the current page number exists in the pageNumber array
           //   // console.log('pageId', this.pageId)
@@ -1613,6 +1624,7 @@ export class DoceditorComponent {
         return `\\begin{itemize}${this.listData}\\end{itemize}`;
       case 'Image':
          return `\\begin{figure}[h] \\centering \\includegraphics[width=0.9\\textwidth] {${imagesFolder}/${userid}/${this.contentDataControl.value}} \\caption{${this.contentTitleControl.value}} \\end{figure}`;
+         //return `\\begin{figure}[h] \\centering \\includegraphics[width=0.9\\textwidth, height=18cm] {${imagesFolder}/${userid}/${this.contentDataControl.value}} \\caption{${this.contentTitleControl.value}} \\end{figure}`;
       case 'Table':
         return `\\begin{center}\\begin{tabularx}{1.0\\textwidth} ${this.tableData} \\end{tabularx} \\end{center}`
       case 'Page Break':

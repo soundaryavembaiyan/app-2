@@ -207,3 +207,18 @@ button.corpBtn:disabled {
     margin-top: 10px !important;
     text-decoration: underline;
 }
+.selectprior{
+    margin-top: 0px;
+}
+.selectedone{
+    margin-top:153px !important;
+}
+.selectedone .input-group:not(.has-validation) > .dropdown-toggle:nth-last-child(n+3),
+.selectedone .input-group:not(.has-validation) > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu) {
+    border-top-right-radius: 5px !important;
+    border-bottom-right-radius: 5px !important;
+}
+.ctype{
+    margin-top: 10px;
+    margin-bottom: 20px;
+}

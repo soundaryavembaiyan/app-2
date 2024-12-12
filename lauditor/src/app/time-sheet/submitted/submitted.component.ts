@@ -210,4 +210,10 @@ sortingFile(column: string) {
       });
     }
 }
+convertTime(hours: number, minutes: number): string {
+    const additionalHours = Math.floor(minutes / 60); // Convert extra minutes to hours
+    const remainingMinutes = minutes % 60; // Get remaining minutes after converting to hours
+    const totalHours = hours + additionalHours; // Total hours
+    return `${totalHours}:${remainingMinutes.toString().padStart(2, '0')}`;
+}  
 }

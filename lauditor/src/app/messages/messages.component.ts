@@ -107,10 +107,10 @@ export class MessagesComponent implements OnInit {
   isActivediv:boolean = false;
   val:any;
   currentExpandedIndex: number | null = null; 
-  activeFirm: string | null = null;
-  activeClient: string | null = null;
-  activeTeam: string | null = null;
-  activeUser: string | null = null;
+  activeFirm: any;
+  activeClient: any;
+  activeTeam: any;
+  activeUser: any;
 
   constructor(
     private httpservice: HttpService,
@@ -161,7 +161,6 @@ export class MessagesComponent implements OnInit {
     this.activeFirm = val.isExpand ? val.id : null;
     this.activeTeam = val.isExpand ? val.id : null;
     this.activeUser = null; 
-
     //this.spinnerService.show()
     // this.hideRuleContent[index] = !this.hideRuleContent[index];
     // val.isExpand = this.hideRuleContent[index];
@@ -691,18 +690,18 @@ export class MessagesComponent implements OnInit {
         });
     }
     if (val.clientType == 'Consumer') {
-      this.hideRuleContent[this.userIndex] = !this.hideRuleContent[this.userIndex];
-      val.isExpand = this.hideRuleContent[this.userIndex];
-
-      // Update the currently expanded index
-      this.currentExpandedIndex = this.hideRuleContent[this.userIndex] ? this.userIndex : null;
+      this.hideRuleContent[this.userIndex] = false;
+      val.isExpand = false;
+      this.activeFirm = null;
+      // this.hideRuleContent[this.userIndex] = !this.hideRuleContent[this.userIndex];
+      // val.isExpand = this.hideRuleContent[this.userIndex];
+      // this.currentExpandedIndex = this.hideRuleContent[this.userIndex] ? this.userIndex : null;  // Update the currently expanded index
 
       this.resetActiveElements();
       //this.selectChatUser(val);
-
-      console.log('hideRuleContent[index]', this.hideRuleContent[this.userIndex])
-      console.log('val.isExpand:', val.isExpand);
-      console.log('currentExpandedIndex', this.currentExpandedIndex)
+      // console.log('hideRuleContent[index]', this.hideRuleContent[this.userIndex])
+      // console.log('val.isExpand:', val.isExpand);
+      // console.log('currentExpandedIndex', this.currentExpandedIndex)
     }
     
     this.enableActiveClass();
@@ -717,8 +716,6 @@ export class MessagesComponent implements OnInit {
       this.activeTeam = val.parentTeamId;
     }
   }
-
-
     
   selectUser(jid: any, name: any, groupName: any) {
     // (<HTMLInputElement>document.getElementById("btn_send")).disabled = false;
@@ -804,6 +801,9 @@ export class MessagesComponent implements OnInit {
 
   isActive(value: string) {
     this.selectChatUser(value);
+    this.hideRuleContent[this.userIndex] = false; //close the toggle
+    this.activeFirm = null;
+
     this.clientSearch = '';
     this.teamSearch = '';
     this.messegeInput = '';
@@ -813,7 +813,7 @@ export class MessagesComponent implements OnInit {
   }
 
   isActiveTeam(value: string): void {
-    this.selectChatUser(value);
+    //this.selectChatUser(value);
     this.clientSearch = '';
     this.teamSearch = '';
     this.messegeInput = '';

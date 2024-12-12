@@ -147,7 +147,7 @@
                                 <option class="textbox" *ngFor="let i of dates "value="{{i}}">
                                     {{i| date}}
                                 </option>
-                            </select>
+                                 </select>
                                 <!-- <input class="form-control formcalinput calendofont caldate caldatename "
                                     formControlName="date" bsDatepicker id="drp" #dp1="bsDatepicker"                                   
                                     [(ngModel)]="hoursModel.date" [bsValue]="bsValue"
@@ -254,7 +254,7 @@
 
             <ng-container *ngFor="let item of timeSheetData['matters']; let pIndex = index">
                 <tr class="task-name" *ngIf="item.tasks[0]?.total">
-                    <td class="project" [attr.rowspan]="item.tasks.length">{{item.matterName}}<span *ngIf="item?.matterType">- {{item.matterType}} </span> 
+                    <td class="project" [attr.rowspan]="item.tasks.length">{{item.matterName}}<span *ngIf="item?.matterType"> - {{item.matterType}}</span> 
                     </td>
                     <td class="tasks">{{item.tasks[0].taskName}}<span *ngIf="item.tasks[0].taskName != ''"> </span>
                     </td>
@@ -278,7 +278,9 @@
                         </td>
                         <td *ngIf="item.tasks[0].Mon['taskId']">
                             <div *ngIf="item.tasks[0].Mon['hours']!=0 || item.tasks[0].Mon['minutes']!=0">
-                                {{item.tasks[0].Mon['hours']}}:{{item.tasks[0].Mon['minutes']}}<span *ngIf="!isFrozen">
+                                <!-- {{item.tasks[0].Mon['hours']}}:{{item.tasks[0].Mon['minutes']}} -->
+                                {{ convertTime(item.tasks[0].Mon['hours'], item.tasks[0].Mon['minutes']) }}
+                                <span *ngIf="!isFrozen">
                                     <i class="fa fa-regular fa-circle-xmark"
                                         (click)="deleteTimeSheetEvent(item.tasks[0].Mon['taskId'])"></i> <i
                                         class="fa fa-pencil"
@@ -293,7 +295,9 @@
                         </td>
                         <td *ngIf="item.tasks[0].Tue['taskId']">
                             <div *ngIf="item.tasks[0].Tue['hours']!=0 || item.tasks[0].Tue['minutes']!=0">
-                                {{item.tasks[0].Tue['hours']}}:{{item.tasks[0].Tue['minutes']}}<span *ngIf="!isFrozen">
+                                <!-- {{item.tasks[0].Tue['hours']}}:{{item.tasks[0].Tue['minutes']}} -->
+                                {{ convertTime(item.tasks[0].Tue['hours'], item.tasks[0].Tue['minutes']) }}
+                                <span *ngIf="!isFrozen">
                                     <i class="fa fa-regular fa-circle-xmark"
                                         (click)="deleteTimeSheetEvent(item.tasks[0].Tue['taskId'])"></i> <i
                                         class="fa fa-pencil"
@@ -309,7 +313,9 @@
                         </td>
                         <td *ngIf="item.tasks[0].Wed['taskId']"> 
                             <div *ngIf="item.tasks[0].Wed['hours']!=0 || item.tasks[0].Wed['minutes']!=0">
-                                {{item.tasks[0].Wed['hours']}}:{{item.tasks[0].Wed['minutes']}}<span *ngIf="!isFrozen">
+                                <!-- {{item.tasks[0].Wed['hours']}}:{{item.tasks[0].Wed['minutes']}} -->
+                                {{ convertTime(item.tasks[0].Wed['hours'], item.tasks[0].Wed['minutes']) }}
+                                <span *ngIf="!isFrozen">
                                     <i class="fa fa-regular fa-circle-xmark"
                                         (click)="deleteTimeSheetEvent(item.tasks[0].Wed['taskId'])"></i> <i
                                         class="fa fa-pencil"
@@ -324,7 +330,9 @@
                         </td>
                         <td *ngIf="item.tasks[0].Thu['taskId']">
                             <div *ngIf="item.tasks[0].Thu['hours']!=0 || item.tasks[0].Thu['minutes']!=0">
-                                {{item.tasks[0].Thu['hours']}}:{{item.tasks[0].Thu['minutes']}}<span *ngIf="!isFrozen">
+                                <!-- {{item.tasks[0].Thu['hours']}}:{{item.tasks[0].Thu['minutes']}} -->
+                                {{ convertTime(item.tasks[0].Thu['hours'], item.tasks[0].Thu['minutes']) }}
+                                <span *ngIf="!isFrozen">
                                     <i class="fa fa-regular fa-circle-xmark"
                                         (click)="deleteTimeSheetEvent(item.tasks[0].Thu['taskId'])"></i> <i
                                         class="fa fa-pencil"
@@ -339,7 +347,9 @@
                         </td>
                         <td *ngIf="item.tasks[0].Fri['taskId']">
                             <div *ngIf="item.tasks[0].Fri['hours']!=0 || item.tasks[0].Fri['minutes']!=0">
-                                {{item.tasks[0].Fri['hours']}}:{{item.tasks[0].Fri['minutes']}}<span *ngIf="!isFrozen">
+                                <!-- {{item.tasks[0].Fri['hours']}}:{{item.tasks[0].Fri['minutes']}} -->
+                                {{ convertTime(item.tasks[0].Fri['hours'], item.tasks[0].Fri['minutes']) }}
+                                <span *ngIf="!isFrozen">
                                     <i class="fa fa-regular fa-circle-xmark"
                                         (click)="deleteTimeSheetEvent(item.tasks[0].Fri['taskId'])"></i> <i
                                         class="fa fa-pencil"
@@ -354,7 +364,9 @@
                         </td>
                         <td *ngIf="item.tasks[0].Sat['taskId']">
                             <div *ngIf="item.tasks[0].Sat['hours']!=0 || item.tasks[0].Sat['minutes']!=0">
-                                {{item.tasks[0].Sat['hours']}}:{{item.tasks[0].Sat['minutes']}}<span *ngIf="!isFrozen">
+                                <!-- {{item.tasks[0].Sat['hours']}}:{{item.tasks[0].Sat['minutes']}} -->
+                                {{ convertTime(item.tasks[0].Sat['hours'], item.tasks[0].Sat['minutes']) }}
+                                <span *ngIf="!isFrozen">
                                     <i class="fa fa-regular fa-circle-xmark"
                                         (click)="deleteTimeSheetEvent(item.tasks[0].Sat['taskId'])"></i> <i
                                         class="fa fa-pencil"
@@ -369,7 +381,9 @@
                         </td>
                         <td *ngIf="item.tasks[0].Sun['taskId']">
                             <div *ngIf="item.tasks[0].Sun['hours']!=0 || item.tasks[0].Sun['minutes']!=0">
-                                {{item.tasks[0].Sun['hours']}}:{{item.tasks[0].Sun['minutes']}}<span *ngIf="!isFrozen">
+                                <!-- {{item.tasks[0].Sun['hours']}}:{{item.tasks[0].Sun['minutes']}} -->
+                                {{ convertTime(item.tasks[0].Sun['hours'], item.tasks[0].Sun['minutes']) }}
+                                <span *ngIf="!isFrozen">
                                     <i class="fa fa-regular fa-circle-xmark"
                                         (click)="deleteTimeSheetEvent(item.tasks[0].Sun['taskId'])"></i> <i
                                         class="fa fa-pencil"
@@ -393,7 +407,9 @@
 
                         <td *ngIf="item.tasks[tIndex].Mon['taskId']">
                             <div *ngIf="tdata.Mon['hours']!=0 || tdata.Mon['minutes']!=0">
-                                {{tdata.Mon['hours']}}:{{tdata.Mon['minutes']}}<span *ngIf="!isFrozen"> <i
+                                <!-- {{tdata.Mon['hours']}}:{{tdata.Mon['minutes']}} -->
+                                {{ convertTime(tdata.Mon['hours'], tdata.Mon['minutes']) }}
+                                <span *ngIf="!isFrozen"> <i
                                         class="fa fa-regular fa-circle-xmark"
                                         (click)="deleteTimeSheetEvent(item.tasks[0].Mon['taskId'])"></i> <i
                                         class="fa fa-pencil"
@@ -408,7 +424,9 @@
                         </td>
                         <td   *ngIf="item.tasks[tIndex].Tue['taskId']">
                             <div *ngIf="tdata.Tue['hours']!=0 || tdata.Tue['minutes']!=0">
-                                {{tdata.Tue['hours']}}:{{tdata.Tue['minutes']}}<span *ngIf="!isFrozen"> <i
+                                <!-- {{tdata.Tue['hours']}}:{{tdata.Tue['minutes']}} -->
+                                {{ convertTime(tdata.Tue['hours'], tdata.Tue['minutes']) }}
+                                <span *ngIf="!isFrozen"> <i
                                         class="fa fa-regular fa-circle-xmark"
                                         (click)="deleteTimeSheetEvent(item.tasks[0].Tue['taskId'])"></i> <i
                                         class="fa fa-pencil"
@@ -424,7 +442,9 @@
                         </td>
                         <td  *ngIf="item.tasks[tIndex].Wed['taskId']">
                             <div *ngIf="tdata.Wed['hours']!=0 || tdata.Wed['minutes']!=0">
-                                {{tdata.Wed['hours']}}:{{tdata.Wed['minutes']}}<span *ngIf="!isFrozen"> <i
+                                <!-- {{tdata.Wed['hours']}}:{{tdata.Wed['minutes']}} -->
+                                {{ convertTime(tdata.Wed['hours'], tdata.Wed['minutes']) }}
+                                <span *ngIf="!isFrozen"> <i
                                         class="fa fa-regular fa-circle-xmark"
                                         (click)="deleteTimeSheetEvent(item.tasks[0].Wed['taskId'])"></i> <i
                                         class="fa fa-pencil"
@@ -440,7 +460,9 @@
 
                         <td *ngIf="item.tasks[tIndex].Thu['taskId']">
                             <div *ngIf="tdata.Thu['hours']!=0 || tdata.Thu['minutes']!=0 ">
-                                {{tdata.Thu['hours']}}:{{tdata.Thu['minutes']}}<span *ngIf="!isFrozen"> <i
+                                <!-- {{tdata.Thu['hours']}}:{{tdata.Thu['minutes']}} -->
+                                {{ convertTime(tdata.Thu['hours'], tdata.Thu['minutes']) }}
+                                <span *ngIf="!isFrozen"> <i
                                         class="fa fa-regular fa-circle-xmark"
                                         (click)="deleteTimeSheetEvent(item.tasks[0].Thu['taskId'])"></i> <i
                                         class="fa fa-pencil"
@@ -457,7 +479,9 @@
 
                         <td *ngIf="item.tasks[tIndex].Fri['taskId']">
                             <div *ngIf="tdata.Fri['hours']!=0 || tdata.Fri['minutes']!=0">
-                                {{tdata.Fri['hours']}}:{{tdata.Fri['minutes']}}<span *ngIf="!isFrozen"> <i
+                                <!-- {{tdata.Fri['hours']}}:{{tdata.Fri['minutes']}} -->
+                                {{ convertTime(tdata.Fri['hours'], tdata.Fri['minutes']) }}
+                                <span *ngIf="!isFrozen"> <i
                                         class="fa fa-regular fa-circle-xmark"
                                         (click)="deleteTimeSheetEvent(item.tasks[0].Fri['taskId'])"></i> <i
                                         class="fa fa-pencil"
@@ -473,7 +497,9 @@
                         </td>
                         <td  *ngIf="item.tasks[tIndex].Sat['taskId']">
                             <div *ngIf="tdata.Sat['hours']!=0 || tdata.Sat['minutes']!=0">
-                                {{tdata.Sat['hours']}}:{{tdata.Sat['minutes']}}<span *ngIf="!isFrozen"> <i
+                                <!-- {{tdata.Sat['hours']}}:{{tdata.Sat['minutes']}} -->
+                                {{ convertTime(tdata.Sat['hours'], tdata.Sat['minutes']) }}
+                                <span *ngIf="!isFrozen"> <i
                                         class="fa fa-regular fa-circle-xmark"
                                         (click)="deleteTimeSheetEvent(item.tasks[0].Sat['taskId'])"></i> <i
                                         class="fa fa-pencil"
@@ -488,7 +514,9 @@
                         </td>
                         <td *ngIf="item.tasks[tIndex].Sun['taskId']">
                             <div *ngIf="tdata.Sun['hours']!=0 || tdata.Sun['minutes']!=0">
-                                {{tdata.Sun['hours']}}:{{tdata.Sun['minutes']}}<span *ngIf="!isFrozen"> <i
+                                <!-- {{tdata.Sun['hours']}}:{{tdata.Sun['minutes']}} -->
+                                {{ convertTime(tdata.Sun['hours'], tdata.Sun['minutes']) }}
+                                <span *ngIf="!isFrozen"> <i
                                         class="fa fa-regular fa-circle-xmark"
                                         (click)="deleteTimeSheetEvent(item.tasks[0].Sun['taskId'])"></i> <i
                                         class="fa fa-pencil"
@@ -532,7 +560,7 @@
                 </div>
             </div>
             <div class="center">
-                <button class="btn btn-primary  " (click)="closeModal('success')">OK</button>
+                <button class="btn btn-primary  " (click)="closeModal('success');">OK</button>
             </div>
         </div>
     </div>
@@ -545,7 +573,7 @@
                 <div class="alertpara">
                     <p class="alertparatxt"> Confirmation</p>
                 </div>
-                <div class="alertext">Are you sure you want to delete Task ?</div>
+                <div class="alertext">Are you sure you want to delete the Task?</div>
                 <div class="alertbutton">
                     <button class="btn btn-default  alertbtn alertbtnno"
                         (click)="closeModal('delete-Alert');onReset()">No</button>

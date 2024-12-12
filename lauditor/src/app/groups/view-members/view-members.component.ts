@@ -92,8 +92,8 @@ export class ViewMembersComponent implements OnInit {
     this.httpService.sendGetRequest(URLUtils.getMembers).subscribe((res:any)=>{
         this.viewMembers = res.data.users;
         this.memberCount = res.data
-        console.log('count',this.memberCount?.count)
-        console.log('total',this.memberCount?.total)
+        // console.log('count',this.memberCount?.count)
+        // console.log('total',this.memberCount?.total)
     })
   }
 

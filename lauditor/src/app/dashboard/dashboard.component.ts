@@ -19,6 +19,7 @@ export class DashboardComponent implements OnInit, OnChanges {
   product = environment.product;
   key:any;
   activeItemId: string | null = null;
+  selectedItem: string | null = null;
 
   navItem = [
     {
@@ -382,6 +383,7 @@ export class DashboardComponent implements OnInit, OnChanges {
   getCategory(category: string): void {
     this.categoryName = category;
     //console.log("categoryName", this.categoryName);
+    this.selectedItem = category; // Set the selected item
     localStorage.setItem('categoryName', this.categoryName);
     localStorage.setItem('activeNavItem', category);
     // const categoryList = document.getElementsByClassName("left-menu-icon");

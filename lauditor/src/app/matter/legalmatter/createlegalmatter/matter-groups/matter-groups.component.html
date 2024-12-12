@@ -18,7 +18,7 @@
       <div class="col-6 matterpadding">
         <h5 class="float-left grpFont" *ngIf ="product !='corporate'">Selected Group(s)</h5>
         <h5 class="float-left grpFont" *ngIf ="product =='corporate'">Selected Department(s)</h5>
-        <div>
+        <div class="selectedone">
           <div class="form-group group-custom-align" *ngFor="let group of selectedGroups">
             <div class="input-group multicheck court" id="selectedgroup">
               <div class="form-control textbox textAl" [innerHtml]="group.name"></div>

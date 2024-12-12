@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ConfirmationDialogService } from 'src/app/confirmation-dialog/confirmation-dialog.service';
  
 
 @Component({
@@ -22,7 +23,7 @@ export class GroupAccessComponent implements OnInit {
   groupList: any[] = [];
   selectedIds: string[] = [];
 
-  constructor(private formBuilder: FormBuilder, private toast: ToastrService, 
+  constructor(private formBuilder: FormBuilder, private toast: ToastrService, private confirmationDialogService: ConfirmationDialogService,
               private httpService: HttpService) { }
   
   ngOnInit(){
@@ -44,6 +45,7 @@ export class GroupAccessComponent implements OnInit {
     var payload = {"groups": this.selectedIds}
     this.httpService.sendPatchRequest(URLUtils.updateMember(this.memData),
         payload).subscribe((res: any) => {
+          this.toast.success(res.msg);
           this.event.emit('group-access-done')
     },
     (error: HttpErrorResponse) => {
