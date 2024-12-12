@@ -106,32 +106,32 @@
       </div>
     </div>
     <!--Corporate Relationship Search box ends here..-->
-
-
+    <!-- <div class="norel" *ngIf="relationshipList.length===0">There are no relationships under this category</div> -->
+     <div>
       <table class="table table-borderless tblgrid">
         <thead>
           <tr class="theader">
             <th>
-              <p class="thheadname"> Name</p>
+              <p class="thheadname">Name</p>
               <img src="assets/img/SORT.PNG" class="sortico" (click)="sortingFile('name')"> 
             </th>
             <th *ngIf="product != 'corporate'">
-              <p class="thheadname"> Type</p>
+              <p class="thheadname">Type</p>
               <img src="assets/img/SORT.PNG" class="sortico" (click)="sortingFile('clientType')">
             </th>
             <th>
-              <p class="thheadname"> Created On</p>
+              <p class="thheadname">Created On</p>
               <img src="assets/img/SORT.PNG" class="sortico" (click)="sortingFile('created')">
             </th>
 
             <th *ngIf="activeTab != 'temporary'">
-              <p class="thheadname"> Status</p>
+              <p class="thheadname">Status</p>
               <img src="assets/img/SORT.PNG" class="sortico" (click)="sortingFile('isAccepted')">
             </th>
             
             <th>
-              <p class="thheadname" *ngIf="product != 'corporate'"> Groups</p>
-              <p class="thheadname" *ngIf="product == 'corporate'"> Departments</p>
+              <p class="thheadname" *ngIf="product != 'corporate'">Groups</p>
+              <p class="thheadname" *ngIf="product == 'corporate'">Departments</p>
               <img src="assets/img/SORT.PNG" class="sortico" (click)="sortingFile('groups')">
             </th>
             <th></th>
@@ -212,6 +212,7 @@
           </tr>
         </tbody>
       </table>
+     </div>
     </div>
   </div>
 
@@ -301,3 +302,5 @@
       </div>
   </div>
 </div>
+
+<ngx-spinner  size="medium" type="ball-clip-rotate"></ngx-spinner>
