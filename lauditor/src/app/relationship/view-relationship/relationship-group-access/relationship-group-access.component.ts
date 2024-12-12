@@ -119,7 +119,22 @@ export class RelationshipGroupAccessComponent implements OnInit {
   
   cancel() {
     //this.event.emit('group-access-close')
-    this.event.emit(this.showModifyForm)
+    // this.event.emit(this.showModifyForm) //before
+
+    if (this.selId || (this.memData && this.memData.id)) {
+      this.confirmationDialogService.confirm('Alert', 'Changes you made will not be saved. Do you want to save?', true, 'Yes', 'No')
+        .then((confirmed) => {
+          if (confirmed) {
+            this.save();
+          }
+          else {
+            this.event.emit(this.showModifyForm)
+          }
+        });
+    }
+    else {
+      this.event.emit(this.showModifyForm)
+    }
   }
 
   confirmSave() {
@@ -339,6 +354,19 @@ export class RelationshipGroupAccessComponent implements OnInit {
       }  
     });
   }
+
+  // removeGroup(group:any){
+  //   this.isSaveEnable = true;
+  //   let index = this.selectedGroups.findIndex((d: any) => d.id === group.id); //find index in your array
+  //   if (index > -1) {
+  //     this.selectedGroups.splice(index, 1);
+  //     this.filteredData.push(group);
+  //   }
+  //   if (this.selectedGroups.length == 0 || this.filteredData.length == 1) {
+  //     let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
+  //     if (checkbox != null) checkbox.checked = false;
+  //   }
+  // }
 
   removeGroup(group: any) {
     this.memData = group;
