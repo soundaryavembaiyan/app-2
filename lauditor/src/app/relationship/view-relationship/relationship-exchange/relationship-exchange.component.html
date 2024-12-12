@@ -29,8 +29,8 @@
     <div class="row">
         <div class="col-6">
             <div class="update-group">
-                <label for="select" class="lable-size">
-                    <h1 class="excahnge">Exchange Information</h1>
+                <label for="select" class="lable-sized">
+                    <h1 class="exchange">Exchange Information</h1>
                 </label>
             </div>
         </div>
@@ -56,13 +56,13 @@
     </div>
     <div class="row" *ngIf=" profileInfo && currentTab=='profile'">
         <div class="col-6" *ngIf="reldata.clientType == 'Entity'">
-            <h3>Profile - {{profileInfo.fullname}}</h3>
+            <h3 class="profile">Profile - {{profileInfo.fullname}}</h3>
         </div>
         <div class="col-6" *ngIf="reldata.clientType == 'Consumer'">
-            <h3>Profile - {{profileInfo.first_name}} {{profileInfo.last_name}}</h3>
+            <h3 class="profile">Profile - {{profileInfo.first_name}} {{profileInfo.last_name}}</h3>
         </div>
         <div class="col-6" *ngIf="reldata.clientType == 'Consumer'">
-            <h3>Citizenship</h3>
+            <h3 class="citizen">Citizenship</h3>
         </div>
     </div>
     <div class="row" *ngIf="currentTab=='profile' && profileInfo && isEntityProfile">
@@ -90,11 +90,11 @@
                 <input type="text" [(ngModel)]="profileInfo.country" class="text-size form-control group-name-text"
                     disabled name="country">
             </div>
-            <div class="form-group nameSet">
+            <!-- <div class="form-group nameSet">
                 <label for="phonenumber" class="lable-size">Phone Number</label>
                 <input type="text" [(ngModel)]="profileInfo.contact_phone"
                     class="text-size form-control group-name-text" disabled name="phonenumber">
-            </div>
+            </div> -->
         </div>
         <div class="col-2"></div>
     </div>
@@ -130,11 +130,11 @@
                 <input type="text" [(ngModel)]="profileInfo.citizen[0].country" class="text-size form-control group-name-text"
                     disabled name="country">
             </div>
-            <div class="form-group nameSet">
+            <!-- <div class="form-group nameSet">
                 <label for="phonenumber" class="lable-size">Phone Number</label>
                 <input type="text" [(ngModel)]="profileInfo.mobile"
                     class="text-size form-control group-name-text" disabled name="phonenumber">
-            </div>
+            </div> -->
         </div>
         
         <div class="col-2"></div>
@@ -191,10 +191,10 @@
                 </div>
                 <div class="row">
                     <div class="col-6" *ngIf="reldata.clientType == 'Entity'">
-                        <h3 class="docName">Documents shared with us - {{profileInfo.fullname}}</h3>
+                        <h3 class="docName">Documents Shared with us - {{profileInfo.fullname}}</h3>
                     </div>
                     <div class="col-6" *ngIf="reldata.clientType == 'Consumer'">
-                        <h3 class="docName" >Documents shared with us - {{profileInfo.first_name}} {{profileInfo.last_name}}</h3>
+                        <h3 class="docName" >Documents Shared with us - {{profileInfo.first_name}} {{profileInfo.last_name}}</h3>
                     </div>
                     <div class="col-6"></div>
                 </div>
@@ -205,7 +205,7 @@
                             <th>
                                 <p class="thheadname">Document Name</p>
                                 <img src="assets/img/SORT.PNG" class="sortico"
-                                    (click)="sort('docname',docsSharedwithus)">
+                                    (click)="sort('name',docsSharedwithus)">
                             </th>
                             <th>
                                 <p class="thheadname">Shared On</p>
@@ -225,7 +225,7 @@
                                 <div *ngIf="doc?.matter_details.length!=0"><b class="conf">Confidential:</b> {{ getMatterNames(doc) }}</div>
                             </td>
                             <td>{{doc.sharedOn}}</td>
-                            <td>{{doc.description}}</td>
+                            <td style="width:30%;">{{doc.description}}</td>
                             <td *ngIf="activeTab != 'corporate'">
                                 <!-- <button type="button" *ngIf="!doc.added_encryption" class="btn btn-default btnsave savecls actionbtn"
                                     (click)="copyWithmeDoc(doc)">Copy</button> -->
@@ -258,10 +258,10 @@
                 </div>
                 <div class="row">
                     <div class="col-6" *ngIf="reldata.clientType == 'Entity'">
-                        <h3 class="docName">Documents shared by us - {{profileInfo.fullname}}</h3>
+                        <h3 class="docName">Documents Shared by us - {{profileInfo.fullname}}</h3>
                     </div>
                     <div class="col-6" *ngIf="reldata.clientType == 'Consumer'">
-                        <h3 class="docName">Documents shared by us - {{profileInfo.first_name}} {{profileInfo.last_name}}</h3>
+                        <h3 class="docName">Documents Shared by us - {{profileInfo.first_name}} {{profileInfo.last_name}}</h3>
                     </div>
                     <div class="col-6"></div>
                 </div>
@@ -288,7 +288,7 @@
                         <tr class="theader">
                             <th>
                                 <p class="thheadname">Document Name</p>
-                                <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('docname',docsSharedbyus)">
+                                <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('name',docsSharedbyus)">
                             </th>
                             <th>
                                 <p class="thheadname">Shared On</p>
@@ -311,10 +311,10 @@
                                 <!-- <div *ngIf="doc?.matter_details.length!=0">Confidential: {{ getMatterNames(doc) }}</div> -->
                             </td>
                             <td>{{doc.sharedOn}}</td>
-                            <td>{{doc.description}}</td>
+                            <td style="width:30%;">{{doc.description}}</td>
                             <td style="width:25%;">
                                 <button type="button" class="btn btn-default btnsave savecls actionbtn" 
-                                        (click)="unShare(doc,'client')">Unshare</button>
+                                        (click)="unShare(doc,doc.category)">Unshare</button>
                                 <button type="button" class="btn btn-default btnsave savecls actionbtn"
                                         data-toggle="modal"
                                         data-target="#viewWithmeModal"
@@ -356,7 +356,7 @@
                 <div class="row">
                     <div class="col-6">
 
-                        <div class="switch relationship-tabs cswitch" *ngIf="product != 'corporate'">
+                        <div class="switch relationship-tabs cswitch clf" *ngIf="product != 'corporate'">
                             <span class="relSubTab individuals"
                                 (click)="viewClientDocuments=true;viewFirmDocuments=false;">
                                 <a href="javascript: void(0)" [ngClass]="{'active' : viewClientDocuments==true}"
@@ -408,7 +408,7 @@
                                 <div *ngIf="doc?.matter_details.length!=0"><b class="conf">Confidential:</b> {{doc?.matter_details[0].name}}</div>
                             </td>
                             <td>{{doc.created}}</td>
-                            <td>{{doc.description}}</td>
+                            <td style="width:30%;">{{doc.description}}</td>
                             <td style="width:25%;">
                                 <button type="button" class="btn btn-default btnsave savecls actionbtn"
                                     (click)="share(doc,'client')">Share</button>
@@ -446,7 +446,7 @@
                             [class.active]="doc.highlight">
                             <td>{{doc.name}}</td>
                             <td>{{doc.created}}</td>
-                            <td>{{doc.description}}</td>
+                            <td style="width:30%;">{{doc.description}}</td>
                             <td style="width:25%;">
                                 <button type="button" class="btn btn-default btnsave savecls actionbtn"
                                     (click)="share(doc,'firm')">Share</button>
@@ -488,7 +488,7 @@
                 <div *ngIf="doc?.matter_details.length!=0"><b class="conf">Confidential:</b> {{doc?.matter_details[0].name}}</div>
             </td>
             <td>{{doc.created}}</td>
-            <td>{{doc.description}}</td>
+            <td style="width:30%;">{{doc.description}}</td>
             <td style="width:25%;">
                 <button type="button" class="btn btn-default btnsave savecls actionbtn"
                     (click)="share(doc,'firm')">Share</button>
