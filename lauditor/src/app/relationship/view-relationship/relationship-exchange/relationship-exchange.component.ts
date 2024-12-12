@@ -109,6 +109,9 @@ export class RelationshipExchangeComponent implements OnInit {
                         this.docsSharedwithus = identity.concat(personal)
                     }
                 }
+                else {
+                    this.toast.error(res.msg);
+                }
             });
 
         } else {
@@ -126,6 +129,9 @@ export class RelationshipExchangeComponent implements OnInit {
                         this.docsSharedwithus = identity.concat(personal)
                     }
                 }
+                else {
+                    this.toast.error(res.msg);
+                }
             });
 
         }
@@ -138,6 +144,9 @@ export class RelationshipExchangeComponent implements OnInit {
             this.httpService.sendGetRequest(URLUtils.relationshipDocsSharedbyusCorp(this.reldata)).subscribe((res: any) => {
                 if (res && res.documents){
                     this.docsSharedbyus = res?.documents?.general;
+                }
+                else {
+                    this.toast.error(res.msg);
                 }
             });
     
@@ -186,8 +195,11 @@ export class RelationshipExchangeComponent implements OnInit {
 
         } else {
             this.httpService.sendGetRequest(URLUtils.relationshipDocsSharedbyus(this.reldata)).subscribe((res: any) => {
-                if (res && res.documents){
+                if (res && res.documents && !res.error){
                     this.docsSharedbyus = res?.documents?.general;
+                }
+                else {
+                    this.toast.error(res.msg);
                 }
             });
     
