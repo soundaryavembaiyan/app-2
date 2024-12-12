@@ -180,16 +180,57 @@ opacity: 1;
     font-weight: 900;
     font-size: 1.1rem;
 }
-.conf{
+.conf {
     font-weight: 900;
 }
-.immigrationtxt {
-    display: flex; /* or display: grid; */
-    align-items: center; /* Align items vertically in the center */
-  }
-  
-  .matter-details {
+
+.immigrationtxt{
+    display: flex;
+    /* or display: grid; */
+    align-items: center;
+    /* Align items vertically in the center */
+}
+
+.matter-details{
     margin-left: 10px;
     margin-bottom: 1px;
-  }
-  
+}
+
+.cswitch{
+    //float: inherit !important;
+    text-align: start;
+}
+.sortico{
+    margin-left: 6px;
+}
+.exchange {
+    text-align: left;
+    //font: normal normal normal 32px/50px Gill Sans;
+    letter-spacing: 0px;
+    color: #00498E;
+    font-weight: 900;
+    font-size: 1.3rem;
+    margin-top: 30px;
+}
+.profile {
+    font-weight: 900;
+    font-size: 1.2rem;
+    color: #00b3a7 !important;
+    //font-size: 1.2rem;
+    //font-family: Gill Sans;
+    //font: normal normal normal 20px Gill Sans;
+}
+.lable-size{
+    color: #004D87;
+    font-size: 16px;
+    font-weight: 900;
+}
+.citizen{
+    letter-spacing: 0px;
+    color: #00498E;
+    font-weight: 900;
+    font-size: 1.3rem;
+}
+.clf{
+    float: left;
+}
