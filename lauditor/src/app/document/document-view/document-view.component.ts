@@ -114,24 +114,6 @@ export class DocumentViewComponent implements OnInit {
     paginatedDocuments: any[] = [];
     role:any;
 
-<<<<<<< Updated upstream
-    @HostListener('document:mouseleave', ['$event']) // Listen to the mouseleave event
-    onMouseLeave(event: MouseEvent) {
-        this.isSelectGroup = false;
-        this.cdr.detectChanges();
-    }
-    
-    @HostListener('document:mouseenter', ['$event']) // Listen to mouse enter
-    onMouseEnter(event: MouseEvent) { }
-
-    @HostListener('window:blur')
-    onWindowBlur() { this.isSelectGroup = false }
-    
-    @HostListener('window:focus')
-    onWindowFocus() { }
-
-=======
->>>>>>> Stashed changes
     constructor(private httpservice: HttpService, private cdr: ChangeDetectorRef, private toast: ToastrService,private datePipe: DatePipe,
         private router: Router, private formBuilder: FormBuilder, private modalService: ModalService, public sanitizer: DomSanitizer,
         private documentService: DocumentService, private emailService: EmailService,
@@ -684,8 +666,6 @@ export class DocumentViewComponent implements OnInit {
         // do something when input is focused
     }
     viewDocument(item: any) {
-        console.log('viewitem',item)
-        console.log('documents1',this.documents)
         this.pdfSrc = ''
         if(item.added_encryption){
            
@@ -744,7 +724,10 @@ export class DocumentViewComponent implements OnInit {
         this.httpservice.sendGetRequest(URLUtils.viewDocuments(item)).subscribe((res: any) => {
             this.selectedAttachments[index].path = res?.data?.url;
             if (index == this.selectedAttachments.length - 1) {
-                localStorage.setItem("docs", JSON.stringify(this.selectedAttachments));
+                const existingDocs = JSON.parse(localStorage.getItem("docs") || "[]");
+                const updatedDocs = [...existingDocs, ...this.selectedAttachments];
+                localStorage.setItem("docs", JSON.stringify(updatedDocs));
+                //localStorage.setItem("docs", JSON.stringify(this.selectedAttachments));
                 this.router.navigate(['/emails']);
             }
         });
@@ -785,7 +768,6 @@ export class DocumentViewComponent implements OnInit {
         //console.log(category.value);
         let filterItem = this.options.filter((item: any) => item.name == category.value);
         this.viewMode = filterItem[0]?.value;
-        //console.log(this.viewMode);
         this.getAllDocuments();
     }
     //<----------merge document functions---------------->
@@ -1029,13 +1011,13 @@ export class DocumentViewComponent implements OnInit {
     //     this.pdfSrc = item.filename;
     // }
     viewApprovalDocument(item: any) {
-        //console.log('item', item)
+        console.log('item', item)
         this.pdfSrc = ''
         let documentId: any = {
             docid: item.id,
             doctype: item.doctype
         };
-        if (item.added_encryption) {
+        if (item.added_encryption == true) {
             var body = new FormData();
             body.append('docid', item.id)
             let url = environment.apiUrl + URLUtils.decryptFile

@@ -168,13 +168,11 @@
 
         <td class="document"><i class="fa fa-download" aria-hidden="true"></i></td>
         <td class="document" *ngIf="document.is_encrypted">
-
           <i class="fa fa-exclamation-circle" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="This document connot be merged"></i>
-
         </td>
         <td class="document" *ngIf="!document.is_encrypted">
           <input *ngIf="!document.is_password" type="checkbox" class="form-check-input custcheck cusCheckbox" id="check3" name="option1" value="something">
-          <input  *ngIf="!document.is_password" type="checkbox" #inputEl class="larger" name="checkBox2" (change)="checkItem(inputEl.checked,document)" [checked]="document.isChecked">
+          <input  style="cursor:pointer" *ngIf="!document.is_password" type="checkbox" #inputEl class="larger" name="checkBox2" (change)="checkItem(inputEl.checked,document)" [checked]="document.isChecked">
           <!-- <i *ngIf="document.is_password" matTooltip="This document cannot be merged as it is encrypted / password protected." class="fa fa-info-circle" style="font-size: 35px;color:#85858593" aria-hidden="true"></i> -->
           <img *ngIf="document.is_password" src="assets/img/pwdinfo.svg" matTooltip="This document cannot be merged as it is encrypted / password protected." class="pwdinfo">
         </td>

@@ -33,6 +33,7 @@ export class MatterTeamMembersComponent {
     showAllItems = false;
     pathName: string = "legalmatter";
     product = environment.product;
+    originalClientsList:any[]=[];
     
     constructor(private httpservice: HttpService,private dialog: MatDialog, private router: Router,) { }
 
@@ -54,6 +55,7 @@ export class MatterTeamMembersComponent {
             (res: any) => {
                 if (!res['error'] && res['members']?.length > 0){
                     this.teammembersList = res['members'];
+                    this.originalClientsList = this.teammembersList;
                     let index = this.teammembersList.findIndex((d: any) => d.name === this.ownerName); //find index in your array
                     if (index > -1) {
                         this.teammembersList.splice(index, 1); //to remove the owner name in 1st index
@@ -73,6 +75,7 @@ export class MatterTeamMembersComponent {
                         this.teammembersList = this.teammembersList.filter(
                             (group: any) => !this.selectedTeammembers.some((selected: any) => selected.id === group.id)
                         );
+                        this.originalClientsList = [...this.teammembersList];
                     }
                     if (this.selectedTeammembers.length == 0) {
                         let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
@@ -97,6 +100,7 @@ export class MatterTeamMembersComponent {
 
                 this.selectedTeammembers = [];
                 this.teammembersList = res['members'];
+                this.originalClientsList = this.teammembersList;
                 let index = this.teammembersList.findIndex((d: any) => d.name === this.ownerName); //find index in your array
                 if (index > -1) {
                     this.teammembersList.splice(index, 1); //to remove the owner name in 1st index
@@ -213,7 +217,11 @@ export class MatterTeamMembersComponent {
         }
         // this.filteredData = this.teammembersList.filter((item: any) => item.name.toLocaleLowerCase().includes(this.searchText));
         const searchLower = this.searchText.toLowerCase();
-        this.filteredData = this.teammembersList.filter((item: any) => item.name.toLowerCase().includes(searchLower));
+       // this.filteredData = this.teammembersList.filter((item: any) => item.name.toLowerCase().includes(searchLower));
+        this.teammembersList = this.originalClientsList.filter((item: any) =>
+            item.name.toLocaleLowerCase().includes(this.searchText.toLocaleLowerCase()) &&
+            !this.selectedTeammembers.includes(item)
+        );
 
         // Update visibility based on the filtered data
         this.isSelectAllVisible = this.filteredData.length > 0;

@@ -89,7 +89,7 @@ export class EmailComponent implements OnInit, AfterViewInit {
       toEmail: ['', [Validators.required, Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)]],
       subject: ['', Validators.required],
       body: [''],
-      documents: [[], Validators.required]
+      documents: [Validators.required]
     });
     let controls: any = localStorage.getItem('inputs');
     this.controls = JSON.parse(controls);
@@ -98,11 +98,13 @@ export class EmailComponent implements OnInit, AfterViewInit {
       localStorage.removeItem("inputs");
     }
     let docs = localStorage.getItem('docs');
+    console.log('docs',docs)
     if (docs && docs.length > 0) {
       this.selectedAttachments = JSON.parse(docs);
+      console.log('selectedAttachments',this.selectedAttachments)
       this.selectedAttachments = this.selectedAttachments.map((obj: any) => ({ "filename": obj.filename, "path": obj.path, "name": obj.name }));
       this.composeForm.controls['documents'].setValue(this.selectedAttachments);
-      localStorage.removeItem("docs");
+     // localStorage.removeItem("docs");
     }
     // this.getMessageCount(); //dialog
     if (!localStorage.getItem('validationDone')) {
@@ -589,12 +591,11 @@ handleNextPageClick() {
   close() {
     this.modalService.close('compose-email');
     this.composeForm.reset();
-    this.selectedAttachments = [];
-
+    this.selectedAttachments = [];	  
+    localStorage.removeItem("docs"); //remove the selected docs
     setTimeout(() => {
       window.location.reload();
     }, 500);
-
   }
   onAttach() {
     localStorage.setItem('inputs', JSON.stringify(this.composeForm.value));
@@ -713,6 +714,7 @@ handleNextPageClick() {
         this.isDocument = false;
         this.composeForm.reset();
         this.selectedAttachments = [];
+        localStorage.removeItem("docs"); //remove the selected docs
         this.modalService.close('compose-email');
       }
     },

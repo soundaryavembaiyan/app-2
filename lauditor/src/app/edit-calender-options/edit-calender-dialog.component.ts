@@ -27,6 +27,9 @@ export class EditCalenderDialogComponent implements OnInit {
   }
 
   public submit() {
+    // if (this.form.value.editcalenderevent === "forward") {
+    //   this.form.controls['editcalenderevent'].setValue('');
+    // }
     this.emitService.next(this.form.value);
     this.activeModal.close('');
   }

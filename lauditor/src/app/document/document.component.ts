@@ -48,6 +48,7 @@ export class DocumentComponent implements OnInit {
       this.isFromEmail=false;
     });
     this.role = localStorage.getItem("role")
+
   }
   onActivate(event:any) {
     // window.scroll(0,0);
@@ -90,6 +91,7 @@ export class DocumentComponent implements OnInit {
     // console.log('item',item)
     // console.log('docCategory',this.docCategory)
     this.router.navigate(['documents/' + this.docCategory, item]);
+    localStorage.setItem('filter', item);
     // if(item === 'client'){
     //   const link='/documents/mergepdf/'+ item
     //   window.location.href = link

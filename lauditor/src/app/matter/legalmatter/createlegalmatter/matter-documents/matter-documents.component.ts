@@ -50,6 +50,7 @@ export class MatterDocumentsComponent {
     showAllItems = false;
     pathName: string = "legalmatter";
     product = environment.product;
+    originalClientsList:any[]=[];
 
     constructor(private httpservice: HttpService,
         private fb: FormBuilder,private dialog: MatDialog, private router: Router,
@@ -111,6 +112,7 @@ export class MatterDocumentsComponent {
                     //console.log('res',res)
                     if (!res['error'] && res['documents']?.length > 0) {
                         this.documentsList = res['documents'];
+                        this.originalClientsList = this.documentsList;
                     }
                 })
         if (this.documentsList.length === 0) {
@@ -363,7 +365,11 @@ export class MatterDocumentsComponent {
         if (this.searchText == ' ') {
           this.searchText = this.searchText.replace(/\s/g, '');
         }
-        this.filteredData = this.documentsList.filter((item: any) => item.name.toLocaleLowerCase().includes(this.searchText));
+        //this.filteredData = this.documentsList.filter((item: any) => item.name.toLocaleLowerCase().includes(this.searchText));
+        this.documentsList = this.originalClientsList.filter((item: any) =>
+        item.name.toLocaleLowerCase().includes(this.searchText.toLocaleLowerCase()) &&
+        !this.selectedDocuments.includes(item)
+    );
         // Update visibility based on the filtered data
         this.isSelectAllVisible = this.filteredData.length > 0;
     

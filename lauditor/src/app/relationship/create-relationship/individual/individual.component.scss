@@ -47,7 +47,8 @@
 }
 
 .hide {
-    opacity: 0.2
+    opacity: 0.2;
+    pointer-events: none;
 }
 
 .invalid-feedback {

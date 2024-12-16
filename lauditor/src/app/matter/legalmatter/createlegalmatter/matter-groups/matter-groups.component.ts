@@ -72,7 +72,7 @@ export class MatterGroupsComponent implements OnInit {
   selId: any;
   canDelete:any;
   isSelectAllChecked: boolean = false;
-
+  originalClientsList:any[]=[];
 
   constructor(private httpservice: HttpService,
     private matterService: MatterService,
@@ -107,7 +107,7 @@ export class MatterGroupsComponent implements OnInit {
             if (result) {
               this.selectedGroups = result?.groups?.map((g: any) => g);
               if (result.clients.length > 0) {
-                this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, { "attachment_type": "groups", "clients": clientIds }).subscribe(
+                this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, { "attachment_type": "groups", "clients": clientIds, "mode":"edit" }).subscribe(
                   (res: any) => {
                     //this.groupsList = res?.groups?.map((client: any) => client);
                     this.groupsList = res?.groups.filter((group: any) => group.name !== 'AAM' && group.name !== 'SuperUser');
@@ -115,7 +115,7 @@ export class MatterGroupsComponent implements OnInit {
                   }
                 );
               } else if (result.corporate.length > 0) {
-                this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, { "attachment_type": "groups", "clients": corpIds }).subscribe(
+                this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, { "attachment_type": "groups", "clients": corpIds, "mode":"edit" }).subscribe(
                   (res: any) => {
                     //this.groupsList = res?.groups?.map((client: any) => client);
                     this.groupsList = res?.groups.filter((group: any) => group.name !== 'AAM' && group.name !== 'SuperUser');
@@ -124,14 +124,14 @@ export class MatterGroupsComponent implements OnInit {
                 );
               }
               else if (clientIds && corpIds) {
-                this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, { "attachment_type": "groups", "clients": corpIds }).subscribe(
+                this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, { "attachment_type": "groups", "clients": corpIds, "mode":"edit" }).subscribe(
                   (res: any) => {
                     //this.groupsList = res?.groups?.map((client: any) => client);
                     this.groupsList = res?.groups.filter((group: any) => group.name !== 'AAM' && group.name !== 'SuperUser');
                     this.filterGroupsList();
                   }
                 );
-                this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, { "attachment_type": "groups", "clients": clientIds }).subscribe(
+                this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, { "attachment_type": "groups", "clients": clientIds, "mode":"edit" }).subscribe(
                   (res: any) => {
                     //this.groupsList = res?.groups?.map((client: any) => client);
                     this.groupsList = res?.groups.filter((group: any) => group.name !== 'AAM' && group.name !== 'SuperUser');
@@ -173,7 +173,7 @@ export class MatterGroupsComponent implements OnInit {
             if (result) {
               this.selectedGroups = result?.groups?.map((g: any) => g);
               if (result.clients.length > 0) {
-                this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, { "attachment_type": "groups", "clients": clientIds }).subscribe(
+                this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, { "attachment_type": "groups", "clients": clientIds, "mode":"edit" }).subscribe(
                   (res: any) => {
                     //this.groupsList = res?.groups?.map((client: any) => client);
                     this.groupsList = res?.groups.filter((group: any) => group.name !== 'AAM' && group.name !== 'SuperUser');
@@ -181,7 +181,7 @@ export class MatterGroupsComponent implements OnInit {
                   }
                 );
               } else if (result.corporate.length > 0) {
-                this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, { "attachment_type": "groups", "clients": corpIds }).subscribe(
+                this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, { "attachment_type": "groups", "clients": corpIds, "mode":"edit" }).subscribe(
                   (res: any) => {
                     //this.groupsList = res?.groups?.map((client: any) => client);
                     this.groupsList = res?.groups.filter((group: any) => group.name !== 'AAM' && group.name !== 'SuperUser');
@@ -190,14 +190,14 @@ export class MatterGroupsComponent implements OnInit {
                 );
               }
               else if (clientIds && corpIds) {
-                this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, { "attachment_type": "groups", "clients": corpIds }).subscribe(
+                this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, { "attachment_type": "groups", "clients": corpIds, "mode":"edit" }).subscribe(
                   (res: any) => {
                     //this.groupsList = res?.groups?.map((client: any) => client);
                     this.groupsList = res?.groups.filter((group: any) => group.name !== 'AAM' && group.name !== 'SuperUser');
                     this.filterGroupsList();
                   }
                 );
-                this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, { "attachment_type": "groups", "clients": clientIds }).subscribe(
+                this.httpservice.sendPutRequest(URLUtils.getFilterTypeAttachements, { "attachment_type": "groups", "clients": clientIds, "mode":"edit" }).subscribe(
                   (res: any) => {
                     //this.groupsList = res?.groups?.map((client: any) => client);
                     this.groupsList = res?.groups.filter((group: any) => group.name !== 'AAM' && group.name !== 'SuperUser');
@@ -277,6 +277,7 @@ export class MatterGroupsComponent implements OnInit {
 
       let clientData = {
         "attachment_type": "groups",
+        "mode":"create",
         "clients": this.client
       };
 
@@ -285,6 +286,7 @@ export class MatterGroupsComponent implements OnInit {
           //console.log('g-res', res)
           //this.groupsList = res?.groups?.map((client: any) => client);
           this.groupsList = res?.groups.filter((group: any) => group.name !== 'AAM' && group.name !== 'SuperUser');
+          this.originalClientsList = this.groupsList;
           //console.log('g-groupsList', this.groupsList)
           if (this.groups && this.groups.length > 0) {
             // this.selectedGroups = [...this.groups];
@@ -301,6 +303,7 @@ export class MatterGroupsComponent implements OnInit {
             this.groupsList = this.groupsList.filter(
               (group: any) => !this.selectedGroups.some((selected: any) => selected.id === group.id)
             );
+            this.originalClientsList = [...this.groupsList];
           }
           // console.log('groupsList',this.groupsList)
           // console.log('selectedGroups',this.selectedGroups)
@@ -384,6 +387,7 @@ export class MatterGroupsComponent implements OnInit {
       if (res && res['data'] && res['data']?.length > 0)
         //this.groupsList = res['data'];
         this.groupsList = res['data'].filter((group: any) => group.name !== 'AAM' && group.name !== 'SuperUser');
+        this.originalClientsList = this.groupsList;
       if (this.editGroupIds && this.editGroupIds.length > 0) {
         this.groups = this.editGroupIds;
         // this.groups = this.groupsList.filter((item: any) => this.editGroupIds.indexOf(item.id) > -1);
@@ -413,6 +417,7 @@ export class MatterGroupsComponent implements OnInit {
         //this.groupsList = res['data'];
         this.groupsList = res['data'].filter((group: any) => group.name !== 'AAM' && group.name !== 'SuperUser');
         //console.log('getGroups', this.groupsList);
+        this.originalClientsList = this.groupsList;
   
         if (this.editGroupIds && this.editGroupIds.length > 0) {
           this.groups = this.editGroupIds;
@@ -760,7 +765,12 @@ export class MatterGroupsComponent implements OnInit {
       this.isEdit = false;
       this.searchText = this.searchText.replace(/\s/g, '');
     }
-    this.filteredData = this.groupsList.filter((item: any) => item.name.toLocaleLowerCase().includes(this.searchText));
+    //this.filteredData = this.groupsList.filter((item: any) => item.name.toLocaleLowerCase().includes(this.searchText));
+    this.groupsList = this.originalClientsList.filter((item: any) =>
+      item.name.toLocaleLowerCase().includes(this.searchText.toLocaleLowerCase()) &&
+      !this.selectedClients.includes(item)
+    );
+
     // Update visibility based on the filtered data
     this.isSelectAllVisible = this.filteredData.length > 0;
 

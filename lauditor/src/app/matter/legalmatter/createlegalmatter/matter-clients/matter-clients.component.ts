@@ -113,7 +113,6 @@ export class MatterClientsComponent implements OnInit {
         }, { validator: this.emailMatchValidator() });
 
         //this.getClientsData(); //doc. list clients
-
         if (this.product == 'corporate') {
             this.getClients();
         }
@@ -172,6 +171,7 @@ export class MatterClientsComponent implements OnInit {
     getClientsData() {
         this.relationshipSubscribe = this.httpservice.getFeaturesdata(URLUtils.getAllRelationship).subscribe((res: any) => {
             this.clientsList = res?.data?.relationships;
+            this.originalClientsList = this.clientsList;
 
             this.httpservice.getFeaturesdata(URLUtils.getCalenderExternal).subscribe((res: any) => {
                 this.corporateList = res?.relationships.map((obj: any) => ({ "id": obj.id, "type": "corporate", "name": obj.name }));
@@ -782,6 +782,7 @@ export class MatterClientsComponent implements OnInit {
                     this.toastr.success('Temporary client added successfully.')
                     this.onResetentity();
                     this.OnFormCancel();
+                    this.getClientsData();
                     // this.confirmationDialogService.confirm('Success for Entity', `Congratulations! You have successfully created Entity  ${this.tempClient.value.name} to  ${this.data.Title}`, false, 'Add Team Members', 'Cancel', true)
                     //     .then((confirmed) => {
                     //         this.onResetentity();
@@ -808,12 +809,11 @@ export class MatterClientsComponent implements OnInit {
                     }
                 }
             )
-
         }
         //this.onResetentity();
     }
     onindividualSubmit(submitType: string) {
-        console.log('confirmemail',this.tempClient.value)
+        //console.log('confirmemail',this.tempClient.value)
         this.inputsubmit = submitType; 
         this.isSaveEnable = true;
         this.submitted = true;
@@ -845,6 +845,7 @@ export class MatterClientsComponent implements OnInit {
                     this.toastr.success('Temporary client added successfully.')
                     this.onReset();
                     this.OnFormCancel();
+                    this.getClientsData();
                     // this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully sent relationship request ', false, 'Add Team Members', 'Cancel', true)
                     //     .then((confirmed) => {
                     //         this.onReset();

@@ -129,7 +129,9 @@
           <img src="assets/img/" class="calimg calitem input-group-append searchimg">
         <--  </div>
         </div> -->
-        <div class="form-group float-right" *ngIf="!isFromEmail && filterKey !== 'delete'">
+        <div class="form-group float-right" *ngIf="!isFromEmail"
+        [ngStyle]="{ display: filterKey === 'delete' ? 'none' : 'block' }"
+        >
           <div class="dropdown-select filter" *ngIf="product !='connect'">
             <select (change)="onChange($event.target)">
               <option [selected]="i.value ==value" *ngFor="let i of options">{{i.name}}</option>
@@ -143,8 +145,8 @@
             </select>
              <!-- <i class="fa fa-chevron-down"></i>  -->
           </div>
-
         </div>
+
         <!-- <ul class="nav nav-pills">
           <li [class.active]="viewMode=='map'"><a (click)="viewMode='map'">Map View</a></li>
           <li [class.active]="viewMode=='list'"><a (click)="viewMode='list'">List View</a></li>
@@ -445,7 +447,7 @@
               </th>
               <th>
                 <p class="thheadname">Document Type</p>
-                <img src="assets/img/SORT.PNG" class="sortico" (click)="sortDocumentsDA('doctype')">
+                <img src="assets/img/SORT.PNG" class="sortico" (click)="sortDocumentsDA('category')">
               </th>
             </tr>
           </thead>
@@ -676,14 +678,14 @@
       <div class="alertbox">
         <div class="close-x float-right" (click)="closeModal('custom-modal-1');">X</div>
         <div class="alertpara">
-          <p class="alertparatxt" *ngIf="role === 'SU'">Success</p>
-          <p class="alertparatxt" *ngIf="role === 'TM' || role === 'GH'">Alert</p>
+          <!-- <p class="alertparatxt" *ngIf="role === 'SU'">Success</p> -->
+          <p class="alertparatxt">Alert</p>
         </div>
         <div *ngIf="editmetadata" class="alertext">Congratulations!! <br> You have successfully updated document information.
         </div>
         <div *ngIf="isDelete" class="alertext">
-          <p *ngIf="role === 'SU'">Congratulations!! <br> You have successfully deleted the document.</p>
-          <p *ngIf="role === 'TM' || role === 'GH'">Document deletion awaiting for Super User approval.</p>
+          <!-- <p *ngIf="role === 'SU'">Congratulations!! <br> You have successfully deleted the document.</p> -->
+          <p>Document deletion awaiting for Super User approval.</p>
           <!--<b> {{ editDoc.name.length > 50 ? editDoc.name.substring(0, 50) + '... ' : editDoc.name }}</b> -->
         </div>
         <div *ngIf="isEncypted" class="alertext">Congratulations!! <br> You have successfully encrypted the document.

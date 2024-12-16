@@ -10,7 +10,7 @@ export const environment = {
     DOC2FILE :'https://dev.utils.doc2pdf.digicoffer.com/api/v1/docfile2pdf',
     AVChat:'https://staging.avchat.digicoffer.com/',
     chatops:' https://dev.utils.chat.digicoffer.com',
-    xmppDomain: 'chat.vitacape.com',
+    xmppDomain: 'devchat@vitacape.com',
     lateXAPI: ' https://stagingapi.latex.digicoffer.com',
     latexImageFolder: '/home/ubuntu/latekeditor_api_python/uploads',
     product: 'connect',

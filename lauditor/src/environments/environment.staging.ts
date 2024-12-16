@@ -8,7 +8,7 @@ export const environment = {
   latexImageFolder: '/home/ubuntu/latekeditor_api_python/uploads',
   AVChat:'https://staging.avchat.digicoffer.com/',
   paymentgatway:"https://staging.payment.digicoffer.com/",
-  xmppDomain: 'chat.vitacape.com',
+  xmppDomain: 'devchat.vitacape.com',
   product: 'lauditor',
   production: true,
 };

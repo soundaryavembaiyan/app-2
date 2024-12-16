@@ -100,6 +100,7 @@ export class OverheadCalenderComponent implements OnInit {
           this.selectedQuantity = this.editInfo.from_ts.split("T")[1].split(":")[0]+':'+this.editInfo.from_ts.split("T")[1].split(":")[1];
           this.CalenderForm.controls['to_ts'].setValue(this.editInfo.to_ts.split("T")[1].split(":")[0]+':'+this.editInfo.to_ts.split("T")[1].split(":")[1]);
           this.ToSelectedQuantity = this.editInfo.to_ts.split("T")[1].split(":")[0]+':'+this.editInfo.to_ts.split("T")[1].split(":")[1];
+
           this.CalenderForm.controls['invitees_internal'].setValue('');
           this.CalenderForm.controls['invitees_consumer_external'].setValue('');
           this.CalenderForm.controls['invitees_external'].setValue('');
@@ -603,7 +604,7 @@ export class OverheadCalenderComponent implements OnInit {
   }
 
   onChangeCorp(event: any) {
-    console.log("ss",event.target.value);
+    // console.log("ss",event.target.value);
     this.getCorpClients(event.target.value)
   }
   addClient() {
@@ -769,6 +770,7 @@ export class OverheadCalenderComponent implements OnInit {
         this.CalenderForm.value.to_ts = this.increaseTodate ? this.pipe.transform(new_date, 'yyyy-MM-dd') + 'T' + this.CalenderForm?.value?.to_ts + ':00' : this.pipe.transform(this.CalenderForm?.value?.date, 'yyyy-MM-dd') + 'T' + this.CalenderForm?.value?.to_ts + ':00';
       }
 
+
       this.CalenderForm.value.timezone_offset = 0 - Number(this.CalenderForm?.value?.timezone_location?.split(',')[0]);
       this.CalenderForm.value.timezone_location = this.CalenderForm?.value?.timezone_location?.split(',')[1];
       this.CalenderForm.value.notifications = this.notificationItems.map((obj: any) => (obj.time + '-' + obj.type));
@@ -809,7 +811,7 @@ export class OverheadCalenderComponent implements OnInit {
         // });  
                 
         const validIntervals = ['weekly', 'daily', 'biweekly', 'monthly', 'yearly'];
-        //Event reccurring dialog
+        //Event reccurring dialog       
         if (this.editInfo?.repeat_interval && validIntervals.includes(this.editInfo.repeat_interval.toLowerCase())) {
           this.editCalenderDialogService.open();
           this.editCalenderDialogService.editCalObservable.subscribe((data: any) => {
@@ -855,11 +857,23 @@ export class OverheadCalenderComponent implements OnInit {
   }
 
   sendUpdateRequest() {
+    // const from = this.editInfo.from_ts.split("T")[0] + "T" + this.editInfo.from_ts.split("T")[1].split(":").slice(0, 2).join(":") + ":00";
+    // const to = this.editInfo.to_ts.split("T")[0] + "T" + this.editInfo.to_ts.split("T")[1].split(":").slice(0, 2).join(":") + ":00";
+    this.CalenderForm.controls["from_ts"].setValue(this.editInfo.from_ts);
+    this.CalenderForm.controls["to_ts"].setValue(this.editInfo.to);
+
+    console.log('editInfo',this.editInfo) 
+    console.log('CalenderForm', this.CalenderForm.value)
+
     this.httpservice.sendPutRequest(
       URLUtils.updateEvent({ 'eventId': this.editInfo?.id, 'offset': this.editInfo?.timezone_offset }),
       this.CalenderForm.value
     ).subscribe(
       (res: any) => {
+        this.CalenderForm.controls['from_ts'].setValue(this.editInfo.from_ts.split("T")[1].split(":")[0]+':'+this.editInfo.from_ts.split("T")[1].split(":")[1]);
+        this.selectedQuantity = this.editInfo.from_ts.split("T")[1].split(":")[0]+':'+this.editInfo.from_ts.split("T")[1].split(":")[1];
+        this.CalenderForm.controls['to_ts'].setValue(this.editInfo.to_ts.split("T")[1].split(":")[0]+':'+this.editInfo.to_ts.split("T")[1].split(":")[1]);
+        this.ToSelectedQuantity = this.editInfo.to_ts.split("T")[1].split(":")[0]+':'+this.editInfo.to_ts.split("T")[1].split(":")[1];
         if (!res.error) {
           this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully modified the event', false, 'View Changes', 'Cancel', true)
             .then((confirmed) => {
@@ -878,10 +892,10 @@ export class OverheadCalenderComponent implements OnInit {
         if (error.status === 401 || error.status === 403) {
           const errorMessage = error.error.msg || 'Unauthorized';
           this.toast.error(errorMessage);
-          console.log(error);
         }
       }
     );
+    return;
   }
   
   onReset(){

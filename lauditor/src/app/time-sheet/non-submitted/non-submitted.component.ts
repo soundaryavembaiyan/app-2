@@ -183,7 +183,7 @@ export class NonSubmittedComponent implements OnInit {
       .subscribe((res: any) => {
         this.taskId = '';
         this.onReset();
-        this. successOk(); //refresh data
+        // this. successOk(); //refresh data
         this.resMessage = res.msg;
         this.modalService.open('success');
       },

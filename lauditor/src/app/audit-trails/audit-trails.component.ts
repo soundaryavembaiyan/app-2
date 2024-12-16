@@ -106,6 +106,10 @@ export class AuditTrailsComponent {
 
     ngOnInit(): void {
         this.logForm = this.fb.group({
+            // category: ['Authorization', Validators.required],
+            // client: ['', Validators.required],
+            // tm: ['', Validators.required],
+            // search: [''],
             fromDate: [''],
             toDate: ['']
         });
