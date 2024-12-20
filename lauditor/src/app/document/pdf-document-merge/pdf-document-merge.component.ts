@@ -248,9 +248,18 @@ export class PdfDocumentMergeComponent implements OnInit, AfterViewInit, OnDestr
     customPage(bool: boolean) {
         this.iscustomPage = bool ? true : false;
     }
-    addDocDetails(doc: any) {
+    addDocDetailsx(doc: any) {
         this.docDetailsData = doc;
         //console.log("data additional doc   " + JSON.stringify(this.docDetailsData));
+    }
+    addDocDetails(doc: any) {
+        this.dcSubmitted = false;
+        this.docDetailsData = { ...doc }; // Clone the document object to avoid binding issues
+        this.docDetails.setValue({
+            header: doc.header || '',
+            body: doc.body || '',
+            bookmark: doc.bookmark || doc.name, // Set initial bookmark to document name
+        });
     }
     removeDocument(doc: any) {
         let index = this.CollectedDocs.findIndex((d: any) => d.id === doc.id); //find index in your array
@@ -273,11 +282,9 @@ export class PdfDocumentMergeComponent implements OnInit, AfterViewInit, OnDestr
 
     closeModal(id: string) {
         this.modalService.close(id);
-        
         // if(this.product == 'corporate'){
         //     this.router.navigate(['documents/view/firm']);
         // }
-
     }
     onReset() {
         this.submitted = false;
@@ -320,8 +327,10 @@ export class PdfDocumentMergeComponent implements OnInit, AfterViewInit, OnDestr
         // localStorage.removeItem('clientDetail');
     }
     clearTest(){
-        this.docDetails.controls['header'].setValue('');
-        this.docDetails.controls['body'].setValue('');
+        // this.docDetails.controls['header'].setValue('');
+        // this.docDetails.controls['body'].setValue('');
+        this.dcSubmitted = false;
+        this.docDetails.reset();
     }
     ngOnDestroy() {
 

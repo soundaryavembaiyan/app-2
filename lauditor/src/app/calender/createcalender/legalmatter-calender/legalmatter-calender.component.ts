@@ -71,7 +71,7 @@ export class LegalMatterCalenderComponent implements OnInit {
   public editInfo: any = undefined;
   public editTitle: any;
   isEditPage = false;
-
+  status:any;
   
   constructor(private httpservice: HttpService,
     public fb: FormBuilder, private toast: ToastrService, 
@@ -187,7 +187,7 @@ export class LegalMatterCalenderComponent implements OnInit {
   getLegalMatters() {
     this.httpservice.sendGetRequest(URLUtils.getLegalMatterEventList).subscribe((res: any) => {
       this.matterList = [];
-      this.matterList = res?.matters;      
+      this.matterList = res?.matters;     
       //this.matterList = this.matterList.filter((matter:any) => matter.status !== 'Closed'); //Matter status=closed
       if (this.editInfo)
         this.onChangeMatter(null);
@@ -330,6 +330,14 @@ export class LegalMatterCalenderComponent implements OnInit {
     return false; // Otherwise, do not hide
   }
   onChangeMatter(event: any) {
+    const selectedMatterId = event.target.value;
+    const selectedMatter = this.matterList.find((matter:any) => matter.id === selectedMatterId);
+    if (selectedMatter) {
+        if (selectedMatter.status === 'Closed') {
+          this.status = selectedMatter.status; // matter in closed state
+        }
+    }
+
     if (!this.editInfo){
       this.selectedMatterId = event.target.value;
       this.selectedDocs=[]
@@ -359,7 +367,6 @@ export class LegalMatterCalenderComponent implements OnInit {
     this.getTms(this.selectedMatterId);
     this.getDocuments(this.selectedMatterId);
     this.getEntities(this.selectedMatterId);
-    
   }
   addtoTimesheet(event: any) {
     //console.log(event.target.checked);

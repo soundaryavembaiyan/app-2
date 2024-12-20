@@ -128,7 +128,7 @@ export class MessagesComponent implements OnInit {
     });
   }
   ngOnDestroy(): void {
-    // //console.log("disconnecting")
+    //console.log("disconnecting")
     Strophe.ui.conn.disconnect();
   }
 
@@ -182,9 +182,7 @@ export class MessagesComponent implements OnInit {
   }
 
   ngOnInit() {
-
     //this.router.navigate(['/messages/clients']);
-  
     var role = localStorage.getItem("role");
     // console.log('role',role)
     if(role != null){
@@ -219,7 +217,7 @@ export class MessagesComponent implements OnInit {
     connection.connect(this.USERNAME, this.PASSWORD, this.onConnect);
     Strophe.ui = this;
     Strophe.ui.conn = connection;
-    this.toasterAlert();
+    // this.toasterAlert();
 
     if (this.product == 'corporate') {
       this.getcorpRelationships();
@@ -230,7 +228,6 @@ export class MessagesComponent implements OnInit {
     }
 
     //this.scrollToBottom();
-
     if ((this.product == 'corporate' || this.product == 'lauditor' || this.product == 'connect' || this.product == 'content') && this.userRole === 'AAM') {
       this.isActiveTeam('teams'); // Call isActiveTeam function with 'teams' as initial value
     }
@@ -265,8 +262,6 @@ export class MessagesComponent implements OnInit {
       window.onpopstate = function() {
           history.go(1);
       };
-
-  
   }
   stanzaHandler(msg: any) {
     // Strophe.ui.conn.addHandler(Strophe.ui.stanzaHandler, null, "message")
@@ -384,9 +379,12 @@ export class MessagesComponent implements OnInit {
   //   )
   // }
   getRelationships() {
+    this.spinnerService.show();
     this.httpservice
       .getFeaturesdata(URLUtils.getChatRelationship)
       .subscribe((res: any) => {
+        this.spinnerService.hide(); //hide spinner
+        this.toasterAlert(); // connection established
         this.usersList = res?.data?.relationships;
         //console.log('usersList',this.usersList)
         this.usersList.forEach((item: any) => {
@@ -403,9 +401,11 @@ export class MessagesComponent implements OnInit {
 
   //Corporate Client list
   getcorpRelationships() {
+    this.spinnerService.show();
     this.httpservice
       .getFeaturesdata(URLUtils.getcorporateRelationship)
       .subscribe((res: any) => {
+        this.spinnerService.hide(); //hide spinner
         this.usersList = res?.relationships;
         this.usersList.forEach((item: any) => {
           if (item.isAccepted) {
@@ -468,7 +468,7 @@ export class MessagesComponent implements OnInit {
     // console.log('msg',message)
     // console.log('messages',this.messages)
     // console.log('this.chatUserName',this.chatUserName)
-    //console.log('this.orgUser',this.orgUser)
+    // console.log('this.orgUser',this.orgUser)
 
     // Set focus on the inputfield
     setTimeout(() => {
@@ -529,7 +529,6 @@ export class MessagesComponent implements OnInit {
 
   restoreMessages() {
     this.messages = [];
-
     var query = $iq({ type: 'set', id: this.toJID })
       .c('query', { xmlns: 'urn:xmpp:mam:2' })
       .c('x', { xmlns: 'jabber:x:data', type: 'submit' })
@@ -800,7 +799,7 @@ export class MessagesComponent implements OnInit {
   }
 
   isActive(value: string) {
-    this.selectChatUser(value);
+    //this.selectChatUser(value);
     this.hideRuleContent[this.userIndex] = false; //close the toggle
     this.activeFirm = null;
 

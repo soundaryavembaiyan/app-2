@@ -590,6 +590,10 @@ export class MatterClientsComponent implements OnInit {
         this.submitted = false;
         this.entitysubmitted = false;
         //this.clientsList = this.clientsList.concat(this.selectedClients);
+        this.clientsList = this.originalClientsList.filter((client: any) =>
+                !this.selectedClients.includes(client)
+        ); // get back the client list
+        this.showTempForm = false;
         //this.selectedClients;
         //this.getClients();
         //this.getClientsData();

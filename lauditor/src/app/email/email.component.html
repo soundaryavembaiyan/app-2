@@ -3,9 +3,8 @@
         <div class="row">
             <div class="col-2">
                 <div class="input-group court seogroup" id="search">
-                    <button type="button" class="btn btn-primary actionbtn
-                        btnaddevent" (click)="onCompose()" [ngClass]="isAuthenticated? '' :
-                        'disable' "><b>+</b> Compose
+                    <button type="button" class="btn btn-primary actionbtn btnaddevent" (click)="onCompose()" 
+                        [ngClass]="isAuthenticated? '' :'disable' "><b>+</b> Compose
                     </button>
                 </div>
             </div>
@@ -112,7 +111,7 @@
                             <textarea style="font-size: 14px;font-family: sans-serif;padding-left: 26px;" name="" id=""
                                 cols="30" rows="10" formControlName="body"></textarea>
                         </div>
-                        <div class="pdf-list" style="cursor: pointer;" *ngIf="selectedAttachments?.length>0">
+                        <div class="pdf-list" style="cursor: pointer" *ngIf="selectedAttachments?.length>0">
                             <div class="pdf-data" *ngFor="let attachment of selectedAttachments">
                                 <div class="clsnp"><i class="fa-regular fa-file-pdf"></i></div>
                                 <div class="clsnp">{{attachment.name}}</div>

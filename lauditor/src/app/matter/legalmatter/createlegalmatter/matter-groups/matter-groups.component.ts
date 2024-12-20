@@ -768,7 +768,7 @@ export class MatterGroupsComponent implements OnInit {
     //this.filteredData = this.groupsList.filter((item: any) => item.name.toLocaleLowerCase().includes(this.searchText));
     this.groupsList = this.originalClientsList.filter((item: any) =>
       item.name.toLocaleLowerCase().includes(this.searchText.toLocaleLowerCase()) &&
-      !this.selectedClients.includes(item)
+      !this.selectedGroups.includes(item)
     );
 
     // Update visibility based on the filtered data

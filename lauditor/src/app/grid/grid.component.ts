@@ -95,6 +95,7 @@ export class GridComponent implements OnInit {
               }
 
   ngOnInit(): void {
+    this.getChatlist();
     this.getLayout()
     this.getMeetingdata();
     this.getChatrel();
@@ -111,11 +112,9 @@ export class GridComponent implements OnInit {
     this.getExternal();
     this.getRelationships();
     this.getNotify();
-    this.getChatlist();
     if(this.product=='corporate'){
       this.getExternalMatters();
     }
-    
     
     var role = localStorage.getItem("role");
     if(role != null){
@@ -124,9 +123,7 @@ export class GridComponent implements OnInit {
 
     this.intervalId = setInterval(() => {
       this.time = new Date();
-    }, 1000);
-
-    
+    }, 1000);    
 
   this.sendUser = localStorage.getItem('name');
   this.messages = [];

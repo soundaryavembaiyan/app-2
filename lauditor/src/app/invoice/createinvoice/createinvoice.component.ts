@@ -151,6 +151,8 @@ export class CreateinvoiceComponent {
       (res: any) => {
         if (res.error == false) {
           this.imageToShow = res?.data?.url;
+          this.imageUrl  = res?.data?.url;
+          this.shown = true;
           //console.log('img',this.imageToShow)
         } 
       }

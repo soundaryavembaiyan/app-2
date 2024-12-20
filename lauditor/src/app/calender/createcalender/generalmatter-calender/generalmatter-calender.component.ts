@@ -72,6 +72,7 @@ export class GeneralMatterCalenderComponent implements OnInit {
   corpList: any = [];
   selectedCorp:any =[];
   isEditPage = false;
+  status:any;
   
   constructor(private httpservice: HttpService,
     public fb: FormBuilder, private toast: ToastrService, 
@@ -164,7 +165,7 @@ export class GeneralMatterCalenderComponent implements OnInit {
     invitees_corporate: [''],
     attachments: [''],
     notifications: [''],
-    addtimesheet: [this.product === 'corporate' ? false : false],
+    addtimesheet: [this.product === 'corporate' ? false : true],
     recurrent_edit_choice: null
 
   })
@@ -341,6 +342,14 @@ export class GeneralMatterCalenderComponent implements OnInit {
     return false; // Otherwise, do not hide
   }
   onChangeMatter(event: any) {
+    const selectedMatterId = event.target.value;
+    const selectedMatter = this.matterList.find((matter:any) => matter.id === selectedMatterId);
+    if (selectedMatter) {
+        if (selectedMatter.status === 'Closed') {
+          this.status = selectedMatter.status; // matter in closed state
+        }
+    }
+    
     if (!this.editInfo){
       this.selectedMatterId = event.target.value;
       this.selectedDocs=[]

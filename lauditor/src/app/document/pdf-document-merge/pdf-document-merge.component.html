@@ -241,13 +241,13 @@
                             <label for="docDetails" class="fontbold bo"> Document Name </label>
                         </div>
                         <div>
-                            <label for="docDetails" class="fontbold"> {{docDetailsData.name}} </label>
+                            <label for="docDetails" class="fontdoc"> {{docDetailsData.name}} </label>
                         </div>
                         <div class="form-group name-set">
-                            <label for="docDetails" class="fontbold"> Bookmark Title
+                            <label for="docDetails" class="fontbold bo"> Bookmark Title
                             </label>
                             <input type="text" class="form-control textbox" id="docDetails" name="docDetails"
-                                formControlName="bookmark" [(ngModel)]="docDetailsData.name"
+                                formControlName="bookmark" 
                                 [ngClass]="{'is-invalid':dcSubmitted && dc.bookmark.errors}">
                             <div *ngIf="dcSubmitted && dc.bookmark.errors" class="invalid-feedback">
                                 <div *ngIf="dc.bookmark.errors.required"> bookmark is required</div>
@@ -256,7 +256,7 @@
                     </div>
                     <div class="col-6">
                         <div class="form-group name-set">
-                            <label for="header" class="fontbold">Title</label>
+                            <label for="header" class="fontbold bo">Title</label>
                             <input type="text" class="form-control textbox" id="header" name="header"
                                 formControlName="header"  [(ngModel)]="docDetailsData.header">
                             <div *ngIf="dcSubmitted && dc.header.errors" class="invalid-feedback">
@@ -264,7 +264,7 @@
                             </div>
                         </div>
                         <div class="form-group name-set align-top">
-                            <label for="body" class="fontbold">Text</label>
+                            <label for="body" class="fontbold bo">Text</label>
                             <textarea rows="4" cols="50" class="form-control textbox areaht" name="body" 
                                 formControlName="body" [(ngModel)]="docDetailsData.body"></textarea>
                             <div *ngIf="dcSubmitted && dc.body.errors" class="invalid-feedback">

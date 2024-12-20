@@ -150,7 +150,7 @@ export class OverheadCalenderComponent implements OnInit {
     invitees_internal: [''],
     notifications: [''],
     timesheets: this.fb.array([]),
-    addtimesheet: [false],
+    addtimesheet: [true],
     recurrent_edit_choice: null
   })
   // shouldHideAddToTimesheet() {
@@ -859,21 +859,20 @@ export class OverheadCalenderComponent implements OnInit {
   sendUpdateRequest() {
     // const from = this.editInfo.from_ts.split("T")[0] + "T" + this.editInfo.from_ts.split("T")[1].split(":").slice(0, 2).join(":") + ":00";
     // const to = this.editInfo.to_ts.split("T")[0] + "T" + this.editInfo.to_ts.split("T")[1].split(":").slice(0, 2).join(":") + ":00";
-    this.CalenderForm.controls["from_ts"].setValue(this.editInfo.from_ts);
-    this.CalenderForm.controls["to_ts"].setValue(this.editInfo.to);
-
-    console.log('editInfo',this.editInfo) 
-    console.log('CalenderForm', this.CalenderForm.value)
+    // this.CalenderForm.controls["from_ts"].setValue(this.editInfo.from_ts);
+    // this.CalenderForm.controls["to_ts"].setValue(this.editInfo.to);
+    // console.log('editInfo',this.editInfo) 
+    // console.log('CalenderForm', this.CalenderForm.value)
 
     this.httpservice.sendPutRequest(
       URLUtils.updateEvent({ 'eventId': this.editInfo?.id, 'offset': this.editInfo?.timezone_offset }),
       this.CalenderForm.value
     ).subscribe(
       (res: any) => {
-        this.CalenderForm.controls['from_ts'].setValue(this.editInfo.from_ts.split("T")[1].split(":")[0]+':'+this.editInfo.from_ts.split("T")[1].split(":")[1]);
-        this.selectedQuantity = this.editInfo.from_ts.split("T")[1].split(":")[0]+':'+this.editInfo.from_ts.split("T")[1].split(":")[1];
-        this.CalenderForm.controls['to_ts'].setValue(this.editInfo.to_ts.split("T")[1].split(":")[0]+':'+this.editInfo.to_ts.split("T")[1].split(":")[1]);
-        this.ToSelectedQuantity = this.editInfo.to_ts.split("T")[1].split(":")[0]+':'+this.editInfo.to_ts.split("T")[1].split(":")[1];
+        // this.CalenderForm.controls['from_ts'].setValue(this.editInfo.from_ts.split("T")[1].split(":")[0]+':'+this.editInfo.from_ts.split("T")[1].split(":")[1]);
+        // this.selectedQuantity = this.editInfo.from_ts.split("T")[1].split(":")[0]+':'+this.editInfo.from_ts.split("T")[1].split(":")[1];
+        // this.CalenderForm.controls['to_ts'].setValue(this.editInfo.to_ts.split("T")[1].split(":")[0]+':'+this.editInfo.to_ts.split("T")[1].split(":")[1]);
+        // this.ToSelectedQuantity = this.editInfo.to_ts.split("T")[1].split(":")[0]+':'+this.editInfo.to_ts.split("T")[1].split(":")[1];
         if (!res.error) {
           this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully modified the event', false, 'View Changes', 'Cancel', true)
             .then((confirmed) => {

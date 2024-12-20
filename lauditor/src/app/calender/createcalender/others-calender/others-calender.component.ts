@@ -147,7 +147,7 @@ export class OthersCalenderComponent implements OnInit {
     invitees_consumer_external: [''],
     notifications: [''],
     timesheets: this.fb.array([]),
-    addtimesheet: [false],
+    addtimesheet: [true],
     recurrent_edit_choice: null
   })
   get f() {

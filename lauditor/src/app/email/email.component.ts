@@ -97,15 +97,17 @@ export class EmailComponent implements OnInit, AfterViewInit {
       this.composeForm.patchValue(this.controls);
       localStorage.removeItem("inputs");
     }
-    let docs = localStorage.getItem('docs');
-    console.log('docs',docs)
-    if (docs && docs.length > 0) {
-      this.selectedAttachments = JSON.parse(docs);
-      console.log('selectedAttachments',this.selectedAttachments)
-      this.selectedAttachments = this.selectedAttachments.map((obj: any) => ({ "filename": obj.filename, "path": obj.path, "name": obj.name }));
-      this.composeForm.controls['documents'].setValue(this.selectedAttachments);
-     // localStorage.removeItem("docs");
+
+    const docs = localStorage.getItem('docs');
+    if (docs) {
+        const parsedDocs = JSON.parse(docs);
+        // Filter out invalid or undefined entries
+        this.selectedAttachments = parsedDocs.filter(
+            (doc: any) => doc.filename && doc.name && doc.path
+        );
+        this.composeForm.controls['documents'].setValue(this.selectedAttachments);
     }
+
     // this.getMessageCount(); //dialog
     if (!localStorage.getItem('validationDone')) {
       this.openDialog()
@@ -186,7 +188,7 @@ export class EmailComponent implements OnInit, AfterViewInit {
       (res: any) => {
         if (!res.error) {
           this.count = res?.totalItemCount;
-          console.log("herer")
+          //console.log("herer")
           this.getOutlookMessages();
         }
       },
@@ -586,6 +588,8 @@ handleNextPageClick() {
   }
 
   onCompose() {
+    this.selectedAttachments = [];	
+    localStorage.removeItem("docs"); //remove the selected docs
     this.modalService.open('compose-email');
   }
   close() {
@@ -608,8 +612,27 @@ handleNextPageClick() {
       this.router.navigate(['/documents/view/client']);
     }
   }
+  // onRemoveAttachment(attachment: any) {
+  //   this.selectedAttachments = this.selectedAttachments.filter((item: any) => item.name !== attachment.name);
+  // }
+
   onRemoveAttachment(attachment: any) {
+    // Remove the attachment from the selectedAttachments array
     this.selectedAttachments = this.selectedAttachments.filter((item: any) => item.name !== attachment.name);
+    //console.log('rem selectedAttachments', this.selectedAttachments);
+
+    // Get the current 'docs' from localStorage
+    const storedDocs = localStorage.getItem('docs');
+    let docsArray = storedDocs ? JSON.parse(storedDocs) : [];
+
+    // Filter out the specific string ID if it's not present in any nested attributes
+    docsArray = docsArray.filter((doc:any) => 
+        (typeof doc === 'string' && doc !== attachment.id) || 
+        (typeof doc !== 'string' && (doc.id === attachment.id && (doc.filename || doc.id || doc.name)))
+    );
+
+    //console.log('docsArray', docsArray);
+    localStorage.setItem('docs', JSON.stringify(docsArray)); // Update the localStorage with the filtered array
   }
 
   getAllDocuments() {

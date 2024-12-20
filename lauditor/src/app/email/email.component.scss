@@ -114,6 +114,9 @@
 
 .pdf-list {
     padding-left: 5%;
+    overflow-y: scroll;
+    height: 180px;
+    resize: none;
 }
 
 .pdf-list-inbox {

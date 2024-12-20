@@ -113,6 +113,9 @@ export class DocumentViewComponent implements OnInit {
     itemsPerPage: number = 10;
     paginatedDocuments: any[] = [];
     role:any;
+    isCheck = false;
+    selectedDocIds:any;
+    isAttachButtonEnabled: boolean = false;
 
     constructor(private httpservice: HttpService, private cdr: ChangeDetectorRef, private toast: ToastrService,private datePipe: DatePipe,
         private router: Router, private formBuilder: FormBuilder, private modalService: ModalService, public sanitizer: DomSanitizer,
@@ -580,8 +583,12 @@ export class DocumentViewComponent implements OnInit {
                     this.documents = res?.data?.items?.reverse();
 
                 this.documents.forEach((item: any) => {
-                    item.expiration_date=item.expiration_date=='NA'?null:new Date(item.expiration_date);
+                    item.expiration_date = item.expiration_date == 'NA' ? null : new Date(item.expiration_date);
                     //item.tags = Object.entries(item.tags);
+                    let selectedDocs = localStorage.getItem('docs'); // Get previously selected document IDs from localStorage
+                    this.selectedDocIds = selectedDocs ? JSON.parse(selectedDocs) : [];
+                    item.isCheck = this.selectedDocIds.includes(item.id);
+
                     item.tags = Object.entries(item.tags)
                     .filter(([key, value]) => key && value)  // Filter out empty keys or values
                     .map(([key, value]) => {
@@ -642,7 +649,7 @@ export class DocumentViewComponent implements OnInit {
         }
          this.getAllDocuments();
     }
-    
+
     // filter out duplicate matters based on 'id' or 'type'
     filterUniqueMatters(matterList: any[]): any[] {
         const uniqueMattersById = new Map(); // ensure uniqueness based on 'id'
@@ -666,9 +673,9 @@ export class DocumentViewComponent implements OnInit {
         // do something when input is focused
     }
     viewDocument(item: any) {
+        //console.log(item)
         this.pdfSrc = ''
         if(item.added_encryption){
-           
             var body = new FormData();
             body.append('docid', item.id)
             let url = environment.apiUrl + URLUtils.decryptFile
@@ -958,19 +965,62 @@ export class DocumentViewComponent implements OnInit {
             this.relationshipSubscribe.unsubscribe();
         }
     }
+
+    enableAttachButton() {
+        this.isAttachButtonEnabled = true;
+    }
+
+    disableAttachButton() {
+        this.isAttachButtonEnabled = false;
+    }
+
+    // selectDoc(doc: any, val: any) {
+    //     if (val == true) {
+    //         let obj = {
+    //             "filename": doc.filename,
+    //             "name": doc.name,
+    //             "id": doc.id
+    //         }
+    //         this.selectedAttachments.push(obj);
+    //     } else {
+    //         this.selectedAttachments = this.selectedAttachments.filter((item: any) => item.id !== doc.id);
+    //     }
+    // }
+
     selectDoc(doc: any, val: any) {
-        if (val == true) {
-            let obj = {
-                "filename": doc.filename,
-                "name": doc.name,
-                "id": doc.id
-            }
-            this.selectedAttachments.push(obj);
+        doc.isCheck = val; // isCheck be true if doc
+        if (val === true) {
+                let obj = {
+                    "filename": doc.filename,
+                    "name": doc.name,
+                    "id": doc.id
+                };
+                this.selectedAttachments.push(obj);
         } else {
+            // Remove the document from the selectedAttachments list
             this.selectedAttachments = this.selectedAttachments.filter((item: any) => item.id !== doc.id);
         }
+    
+        // Update localStorage
+        let selectedDocs = localStorage.getItem('docs');
+        let selectedDocIds = selectedDocs ? JSON.parse(selectedDocs) : [];
+    
+        if (val) {
+            // Add the document ID to the selected list if not already present
+            if (!selectedDocIds.includes(doc.id)) {
+                selectedDocIds.push(doc.id);
+            }
+        } else {
+            // Remove the document ID from the selected list
+            selectedDocIds = selectedDocIds.filter((id: any) => id !== doc.id);
+        }
+        localStorage.setItem('docs', JSON.stringify(selectedDocIds)); // Save updated list
+        //console.log('..selectedAttachments',this.selectedAttachments)
+        this.enableAttachButton();
     }
+    
     saveAttachments() {
+         //console.log('..selectedAttachments',this.selectedAttachments)
         this.selectedAttachments.forEach((item: any, index: number) => {
             this.viewDocumentAttachment(item, index);
         });
