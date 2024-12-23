@@ -171,3 +171,23 @@ button.btn.btn-secondary.dropdown-toggle {
     margin-top:0px;
     color:#004d87;
 }
+
+//view table style
+.tabclass {
+    border: 2px solid #eeeeee;
+}
+
+tr.veiw-items:hover .tabclass {
+    border: none !important;
+}
+
+tr.veiw-items:hover {
+    background: #003A5C;
+    color: #fff;
+
+    .actionbtn {
+        background: #fff !important;
+        color: #111;
+        border: none;
+    }
+}

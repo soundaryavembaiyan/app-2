@@ -637,13 +637,15 @@ export class MatterClientsComponent implements OnInit {
         this.onResetentity();
 
         if (this.searchText === '') {
-            this.clientsList = this.originalClientsList.filter((client: any) =>
+            this.filteredData = this.clientsList.filter((item: any) => item.name.toLocaleLowerCase().includes(this.searchText));
+            this.filteredData = this.originalClientsList.filter((client: any) =>
                 !this.selectedClients.includes(client)
             );
             this.showTempForm = false; // Hide the temporary form
         } else {
             // Filter the clients list based on the search text, excluding selected clients
-            this.clientsList = this.originalClientsList.filter((item: any) =>
+            this.filteredData = this.clientsList.filter((item: any) => item.name.toLocaleLowerCase().includes(this.searchText));
+            this.filteredData = this.originalClientsList.filter((item: any) =>
                 item.name.toLocaleLowerCase().includes(this.searchText.toLocaleLowerCase()) &&
                 !this.selectedClients.includes(item)
             );
@@ -742,6 +744,9 @@ export class MatterClientsComponent implements OnInit {
             this.submitted = false;
             this.entitysubmitted = false;
             this.childButtonEvent.emit(this.clients);
+            this.clientsList = this.originalClientsList.filter((client: any) =>
+                    !this.selectedClients.includes(client)
+            ); // get back the client list
         }
     }
     nokeyResp(action: string) {

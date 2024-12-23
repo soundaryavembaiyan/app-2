@@ -141,13 +141,13 @@
           <tr class="rone veiw-items"
               *ngFor="let rel of relationshipList | filter:searchText"
               [class.active]="highlight == rel.id">
-            <td>{{rel.name}}</td>
-            <td *ngIf="product != 'corporate'">{{rel.clientType}}</td>
-            <td *ngIf="rel.created">{{rel.created}}</td>
-            <td *ngIf="rel.created_on">{{rel.created_on}}</td>
+            <td class="tabclass">{{rel.name}}</td>
+            <td class="tabclass" *ngIf="product != 'corporate'">{{rel.clientType}}</td>
+            <td class="tabclass" *ngIf="rel.created">{{rel.created}}</td>
+            <td class="tabclass" *ngIf="rel.created_on">{{rel.created_on}}</td>
             <!--<td *ngIf="activeTab == 'temporary'">{{rel.created_by}}</td>-->
            
-            <td *ngIf="activeTab != 'temporary'">
+            <td class="tabclass" *ngIf="activeTab != 'temporary'">
               <div *ngIf="!rel.canAccept">
                 <div *ngIf="rel.isAccepted"> Active </div>
                 <div *ngIf="!rel.isAccepted"> Pending</div>
@@ -157,8 +157,7 @@
                       [ngClass]="{'disabled': rel.isDisabled}"
                       *ngIf=rel.canAccept>Accept</button>
             </td>
-
-            <td>
+            <td class="tabclass">
                 <ul>
                   <li *ngFor='let g of rel.filteredGroups'>{{g.name}}</li>
                 </ul>
@@ -166,7 +165,7 @@
                   <li *ngFor='let g of rel.groups'>{{g.name}}</li>
                 </ul> -->
             </td>
-            <td >
+            <td class="tabclass">
               <div class="dropdown">
                 <!-- Product based conditions for ActionBtn-->
                 <button type="button" *ngIf="role === 'SU' && activeTab !== 'temporary' && (product === 'lauditor' || product === 'corporate')"

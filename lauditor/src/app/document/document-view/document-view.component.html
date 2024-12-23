@@ -214,29 +214,27 @@
           <tr class="rone veiw-items" [ngClass]="{'active': document.isChecked}"
             *ngFor="let document of documents | filter:term | paginate: { itemsPerPage: 10,
               currentPage: p } ">
-            <td style="text-decoration: underline;">{{document.name}}</td>
-            <td>{{document.description}}</td>
-            <td>{{document.created| date:'MMM d, y'}}</td>
-            <td>{{document.uploaded_by}}</td>
-            <td *ngIf="document && document.tags">
+            <td class="tabclass" style="text-decoration: underline;">{{document.name}}</td>
+            <td class="tabclass">{{document.description}}</td>
+            <td class="tabclass">{{document.created| date:'MMM d, y'}}</td>
+            <td class="tabclass">{{document.uploaded_by}}</td>
+            <td class="tabclass" *ngIf="document && document.tags">
               <div *ngFor="let tag of document.tags">{{tag}}</div>
             </td>
             <!-- <i class="fa-light fa-arrow-down-to-line"></i> -->
-            <td *ngIf="document.added_encryption" >
+            <td class="tabclass" *ngIf="document.added_encryption" >
               <button class="lock" mat-icon-button (click)="editDocInfo(document,'decrypt');openModal('custom-modal-encrypt')"  matTooltip="Click To Decrypt Document">
                 <mat-icon>lock</mat-icon>
               </button>
             </td>
-            <td *ngIf="!document.added_encryption" >
+            <td class="tabclass" *ngIf="!document.added_encryption" >
               <button class="lock"mat-icon-button (click)="editDocInfo(document,'encrypt');openModal('custom-modal-encrypt')"  matTooltip="Click To Encrypt Document">
                 <mat-icon>lock_open</mat-icon>
               </button>
             </td>
-            <td><i class="fa-solid fa-arrow-down" aria-hidden="true" [class.disable]="!document.is_disabled"></i></td>
+            <td class="tabclass"><i class="fa-solid fa-arrow-down" aria-hidden="true" [class.disable]="!document.is_disabled"></i></td>
 
-
-
-            <td *ngIf="!isFromEmail">
+            <td class="tabclass" *ngIf="!isFromEmail">
               <div class=""><!--class="dropdown"-->
                 <button type="button" class="btn btn-primary dropdown-toggle actionbtn" 
                 data-bs-toggle="dropdown" [ngClass]="{'disabled': document.isdisabled}">
@@ -271,7 +269,7 @@
               </div>
             </td>
 
-            <td *ngIf="isFromEmail">
+            <td class="tabclass" *ngIf="isFromEmail">
               <input type="checkbox" style="cursor: pointer" #inputE2 (change)="selectDoc(document,inputE2.checked)" 
               [checked]="document.isCheck" [disabled]="document.isCheck" >
             </td>
@@ -350,16 +348,16 @@
             *ngFor="let document of documents | filter:term | paginate: { itemsPerPage: 10,
               currentPage: p } ">
 
-            <td style="text-decoration: underline">{{document.name}}</td>
+            <td class="tabclass" style="text-decoration: underline">{{document.name}}</td>
             <!-- <td>{{document.status}}</td>-->
-            <td>{{document.status === 'finished' ? 'Completed' : document.status === 'failed' ? 'Failed' : document.status}}</td>
-            <td>{{document.created | date:'MMM d, y'}}</td>
-            <td>{{document.createdby}}</td>
-            <td>
+            <td class="tabclass">{{document.status === 'finished' ? 'Completed' : document.status === 'failed' ? 'Failed' : document.status}}</td>
+            <td class="tabclass">{{document.created | date:'MMM d, y'}}</td>
+            <td class="tabclass">{{document.createdby}}</td>
+            <td class="tabclass">
               <div *ngFor="let tag of document.tags">{{tag}}</div>
             </td>
-            <td><i class="fa-solid fa-arrow-down"></i></td>
-            <td>
+            <td class="tabclass"><i class="fa-solid fa-arrow-down"></i></td>
+            <td class="tabclass">
               <div class="dropdown"><!--class="dropdown"-->
                 <button type="button" class="btn btn-primary  dropdown-toggle actionbtn" 
                 [ngClass]="{'disabled': document.isdisabled}" data-bs-toggle="dropdown">

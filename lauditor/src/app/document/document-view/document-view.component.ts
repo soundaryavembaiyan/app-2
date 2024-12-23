@@ -1020,10 +1020,11 @@ export class DocumentViewComponent implements OnInit {
     }
     
     saveAttachments() {
-         //console.log('..selectedAttachments',this.selectedAttachments)
+         console.log('..selectedAttachments',this.selectedAttachments)
         this.selectedAttachments.forEach((item: any, index: number) => {
             this.viewDocumentAttachment(item, index);
         });
+        document.body.classList.add("cdk-global-scrollblock"); //stops bg scrolling when dialog is open
     }
     cancelAttachments() {
         this.router.navigate(['/emails']);

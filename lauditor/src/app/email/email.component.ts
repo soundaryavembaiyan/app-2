@@ -611,6 +611,7 @@ handleNextPageClick() {
     else {
       this.router.navigate(['/documents/view/client']);
     }
+    document.body.classList.remove("cdk-global-scrollblock"); //closes the bg scrolling when dialog is open
   }
   // onRemoveAttachment(attachment: any) {
   //   this.selectedAttachments = this.selectedAttachments.filter((item: any) => item.name !== attachment.name);
@@ -620,20 +621,30 @@ handleNextPageClick() {
     // Remove the attachment from the selectedAttachments array
     this.selectedAttachments = this.selectedAttachments.filter((item: any) => item.name !== attachment.name);
     //console.log('rem selectedAttachments', this.selectedAttachments);
-
+  
     // Get the current 'docs' from localStorage
     const storedDocs = localStorage.getItem('docs');
+    //console.log('storedDocs', storedDocs);
+  
+    // Parse the stored docs from localStorage or set an empty array if null
     let docsArray = storedDocs ? JSON.parse(storedDocs) : [];
-
-    // Filter out the specific string ID if it's not present in any nested attributes
-    docsArray = docsArray.filter((doc:any) => 
-        (typeof doc === 'string' && doc !== attachment.id) || 
-        (typeof doc !== 'string' && (doc.id === attachment.id && (doc.filename || doc.id || doc.name)))
-    );
-
-    //console.log('docsArray', docsArray);
-    localStorage.setItem('docs', JSON.stringify(docsArray)); // Update the localStorage with the filtered array
+  
+    // Filter out the specific string ID and the matching object
+    docsArray = docsArray.filter((doc: any) => {
+      if (typeof doc === 'string') {
+        // Keep the string IDs that do not match the attachment ID
+        return doc !== attachment.id;
+      } else if (typeof doc === 'object') {
+        // Keep objects that do not match the attachment details
+        return doc.id !== attachment.id;
+      }
+      return true;
+    });
+  
+    //console.log('Updated docsArray', docsArray);
+    localStorage.setItem('docs', JSON.stringify(docsArray)); // Update the 'docs' in localStorage
   }
+  
 
   getAllDocuments() {
     //console.log('get.documents',this.documents)

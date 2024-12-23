@@ -69,27 +69,27 @@
       </thead>
       <tbody>
         <tr class="rone veiw-items scrollMat" *ngFor="let legalMatter of legalMatters |filter:searchText">
-          <td>{{legalMatter.title}}</td>
-          <td>{{legalMatter.caseNumber}}</td>
-          <td>{{legalMatter.caseType}}</td>
-          <td>{{legalMatter.date_of_filling}}</td>
-          <td>{{legalMatter.status}}</td>
-          <td *ngIf="this.selectedOption=='External Matters'">{{legalMatter.owner?.firm_name}}</td>
+          <td class="tabclass">{{legalMatter.title}}</td>
+          <td class="tabclass">{{legalMatter.caseNumber}}</td>
+          <td class="tabclass">{{legalMatter.caseType}}</td>
+          <td class="tabclass">{{legalMatter.date_of_filling}}</td>
+          <td class="tabclass">{{legalMatter.status}}</td>
+          <td class="tabclass" *ngIf="this.selectedOption=='External Matters'">{{legalMatter.owner?.firm_name}}</td>
           <!--no dept for external-->
-          <td *ngIf = "this.selectedOption != 'External Matters'" (mouseover)="onMouseOver(legalMatter?.groups)" [matTooltip]="hoveredGroups">
+          <td class="tabclass" *ngIf = "this.selectedOption != 'External Matters'" (mouseover)="onMouseOver(legalMatter?.groups)" [matTooltip]="hoveredGroups">
             {{legalMatter?.groups[0]?.name}} <br/> {{legalMatter?.groups[1]?.name}}
           </td>
           <!-- <td *ngIf = "this.selectedOption == 'External Matters'"></td> -->
           <!--need to get back once we get group info-->
 
-          <td *ngIf="this.selectedOption == 'External Matters'">
+          <td class="tabclass" *ngIf="this.selectedOption == 'External Matters'">
             <div class="dropdown">
               <button class="btn btn-primary actionbtn dropdown" aria-expanded="false" [ngClass]="{'disabled': legalMatter.isdisabled}"
                 (click)="loadViewDetails(legalMatter,'external')">More Details</button>
             </div>
           </td>
             
-          <td *ngIf="this.selectedOption != 'External Matters'">
+          <td class="tabclass" *ngIf="this.selectedOption != 'External Matters'">
             <div class="dropdown"><!--class="dropdown"-->
               <!-- <button class="btn btn-primary dropdown-toggle actionbtn" data-bs-toggle="dropdown" aria-expanded="false" 
                 [ngClass]="{'disabled': legalMatter.isdisabled || !legalMatter.is_editable}">Action</button>
@@ -133,7 +133,6 @@
               </mat-menu>
     
             </div>
-
           </td>
         </tr>
       </tbody>

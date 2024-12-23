@@ -481,24 +481,49 @@ export class MatterGroupsComponent implements OnInit {
     this.searchText = '';
   }
 
-  selectGroup(group: any, value?: any) {
+  // selectGroup(group: any, value?: any) {
+  //   this.isSaveEnable = true;
+  //   this.selId = group.id;
+  //   //console.log('selid', this.selId)
+  //   this.selectedGroups.push(group);
+  //   let index = this.groupsList.findIndex((d: any) => d.id === group.id); //find index in your array
+  //   this.groupsList.splice(index, 1);
+  //   if (this.groupsList.length == 0) {
+  //     let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
+  //     if (checkbox != null)
+  //       checkbox.checked = true;
+  //   }
+  //   //this.searchText = '';
+  // }
+  selectGroup(client: any, isChecked?: any) {
     this.isSaveEnable = true;
-    this.selId = group.id;
-    //console.log('selid', this.selId)
-    this.selectedGroups.push(group);
-    let index = this.groupsList.findIndex((d: any) => d.id === group.id); //find index in your array
-    this.groupsList.splice(index, 1);
+
+    if (isChecked) {
+      this.selectedGroups.push(client);
+      let index = this.groupsList.findIndex((d: any) => d.id === client.id); // Find index in your array
+      if (index !== -1) {
+        this.groupsList.splice(index, 1);
+      }
+    } else {
+      // Handle unselecting a single client
+      let index = this.selectedGroups.findIndex((d: any) => d.id === client.id);
+      if (index !== -1) {
+        this.selectedGroups.splice(index, 1);
+        this.groupsList.push(client);
+      }
+    }
+
     if (this.groupsList.length == 0) {
       let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
-      if (checkbox != null)
+      if (checkbox != null) {
         checkbox.checked = true;
+      }
     }
-    //this.searchText = '';
   }
 
   selecttoUpdateGroup(group: any, value?: any) {
     this.isSaveEnable = true;
-    
+
     group.canDelete = this.canDelete; //Assign conditions
     this.selectedtoupdateGroups.push(group);
     let index = this.groupsList.findIndex((d: any) => d.id === group.id); //find index in your array
@@ -765,8 +790,9 @@ export class MatterGroupsComponent implements OnInit {
       this.isEdit = false;
       this.searchText = this.searchText.replace(/\s/g, '');
     }
-    //this.filteredData = this.groupsList.filter((item: any) => item.name.toLocaleLowerCase().includes(this.searchText));
-    this.groupsList = this.originalClientsList.filter((item: any) =>
+
+    this.filteredData = this.groupsList.filter((item: any) => item.name.toLocaleLowerCase().includes(this.searchText));
+    this.filteredData = this.originalClientsList.filter((item: any) =>
       item.name.toLocaleLowerCase().includes(this.searchText.toLocaleLowerCase()) &&
       !this.selectedGroups.includes(item)
     );

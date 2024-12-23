@@ -392,10 +392,12 @@
         border: none;
         &:hover,:focus ,.show{
             background: #00B3A7 !important;
+            color:#fff;
         }
     }
     .actionbtn.show{
         background: #00B3A7 !important;
+        color:#fff;
     }
 }
 tr.veiw-items {
@@ -423,4 +425,51 @@ tr.veiw-items {
 }
 .alertbutton{
     padding-bottom: 10px;
+}
+//view table style
+.tabclass {
+    border: 2px solid #eeeeee;
+    position: relative;
+    padding: 10px;
+    text-align: left;
+}
+/* added vertical dashed line to all td */
+.tabclass:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 15%;
+    bottom: 15%;
+    right: 0;
+    width: 0.5px;
+    background: repeating-linear-gradient(
+      to bottom,
+      #2b2b2b, /* Line color */
+      #2b2b2b 4px,
+      transparent 4px,
+      transparent 8px
+    ); /* Dashed effect */
+}
+  
+tr.veiw-items:hover .tabclass {
+    border: none !important;
+}
+tr.veiw-items:hover .tabclass:not(:last-child)::after {
+    background: repeating-linear-gradient(
+      to bottom,
+      #fff, /* Hover Line color */
+      #fff 4px,
+      transparent 4px,
+      transparent 8px
+    );
+}
+
+tr.veiw-items:hover {
+    background: #003A5C;
+    color: #fff;
+
+    .actionbtn {
+        background: #fff !important;
+        color: #111;
+        border: none;
+    }
 }

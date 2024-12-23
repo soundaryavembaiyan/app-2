@@ -68,7 +68,7 @@ export class MatterTeamMembersComponent {
                         //     });
                         // });
                         // this.teammembersList = res
-                        this.selectedTeammembers = this.groups.filter((group: any) =>
+                        this.selectedTeammembers = this.teammembers.filter((group: any) =>
                             this.teammembersList.some((g: any) => g.id === group.id)
                         );
                         //console.log('Updated teammembersList:', this.selectedTeammembers);
@@ -147,17 +147,43 @@ export class MatterTeamMembersComponent {
         }
         this.searchText = '';
     }
-    selectTeammember(group: any, value?: any) {
-        this.selectedTeammembers.push(group);
-        let index = this.teammembersList.findIndex((d: any) => d.id === group.id); //find index in your array
-        this.teammembersList.splice(index, 1);
-        if (this.teammembersList.length==0) {
-            let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
-            if (checkbox != null)
-              checkbox.checked = true;
+    // selectTeammember(group: any, value?: any) {
+    //     this.selectedTeammembers.push(group);
+    //     let index = this.teammembersList.findIndex((d: any) => d.id === group.id); //find index in your array
+    //     this.teammembersList.splice(index, 1);
+    //     if (this.teammembersList.length==0) {
+    //         let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
+    //         if (checkbox != null)
+    //           checkbox.checked = true;
+    //       }
+    //     //this.searchText = '';
+    // }
+
+    selectTeammember(client: any, isChecked?: any) {  
+        this.isSelectAllVisible = true;  
+        
+        if (isChecked) {
+          this.selectedTeammembers.push(client);
+          let index = this.teammembersList.findIndex((d: any) => d.id === client.id); // Find index in your array
+          if (index !== -1) {
+            this.teammembersList.splice(index, 1);
           }
-        //this.searchText = '';
-    }
+        } else {
+          // Handle unselecting a single client
+          let index = this.selectedTeammembers.findIndex((d: any) => d.id === client.id);
+          if (index !== -1) {
+            this.selectedTeammembers.splice(index, 1);
+            this.teammembersList.push(client);
+          }
+        }
+    
+        if (this.teammembersList.length == 0) {
+          let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
+          if (checkbox != null) {
+            checkbox.checked = true;
+          }
+        }
+      }
     removeTeammember(group: any) {
         let index = this.selectedTeammembers.findIndex((d: any) => d.id === group.id); //find index in your array
         this.selectedTeammembers.splice(index, 1);
@@ -217,14 +243,14 @@ export class MatterTeamMembersComponent {
         }
         // this.filteredData = this.teammembersList.filter((item: any) => item.name.toLocaleLowerCase().includes(this.searchText));
         const searchLower = this.searchText.toLowerCase();
-       // this.filteredData = this.teammembersList.filter((item: any) => item.name.toLowerCase().includes(searchLower));
-        this.teammembersList = this.originalClientsList.filter((item: any) =>
+        this.filteredData = this.teammembersList.filter((item: any) => item.name.toLowerCase().includes(searchLower));
+        this.filteredData = this.originalClientsList.filter((item: any) =>
             item.name.toLocaleLowerCase().includes(this.searchText.toLocaleLowerCase()) &&
             !this.selectedTeammembers.includes(item)
         );
 
         // Update visibility based on the filtered data
-        this.isSelectAllVisible = this.filteredData.length > 0;
+        this.isSelectAllVisible = this.teammembersList.length > 0;
 
         let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
         if (checkbox != null) {

@@ -54,14 +54,14 @@
         </thead>
         <tbody>
           <tr class="rone veiw-items" *ngFor="let team of viewMembers | filter:searchText">
-            <td>{{team.name}}<br>{{team.email}}</td>
-            <td>{{team.designation}}</td>
-            <td>
-                <span *ngFor="let g of team.groups">{{g.name}}<br/></span>
+            <td class="tabclass">{{team.name}}<br>{{team.email}}</td>
+            <td class="tabclass">&nbsp;{{team.designation}}</td>
+            <td class="tabclass">
+                <span *ngFor="let g of team.groups">&nbsp;{{g.name}}<br/></span>
             </td>
-            <td>{{team.lastLogin}}</td>
-            <td >{{team.defaultRate}}</td>
-            <td>
+            <td class="tabclass">&nbsp;{{team.lastLogin}}</td>
+            <td class="tabclass" style="font-size: 1.8rem">&nbsp;{{team.defaultRate}}</td>
+            <td class="tabclass">
               <div class="dropdown">
                 <button type="button"
                         class="btn btn-primary  dropdown-toggle actionbtn"

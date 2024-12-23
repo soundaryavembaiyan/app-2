@@ -83,13 +83,12 @@
       </thead>
       <tbody>
         <tr class="rone veiw-items" *ngFor="let i of invoicelist | filter:searchText">
-            
-          <td>{{ i.invoice_no }}</td>
-          <td>{{ i.name }}</td>
-          <td>{{ i.created }}</td>
-          <td>{{ i.dueDate }}</td>
-          <td>{{ i.createdby }}</td>
-          <td>
+          <td class="tabclass">{{ i.invoice_no }}</td>
+          <td class="tabclass">{{ i.name }}</td>
+          <td class="tabclass">{{ i.created }}</td>
+          <td class="tabclass">{{ i.dueDate }}</td>
+          <td class="tabclass">{{ i.createdby }}</td>
+          <td class="tabclass">
             <div class="dropdown">
               <button class="btn btn-primary dropdown-toggle actionbtn" data-bs-toggle="dropdown" aria-expanded="false"
               [ngClass]="{'disabled': i.isdisabled}"> Action </button>

@@ -115,7 +115,7 @@
 .pdf-list {
     padding-left: 5%;
     overflow-y: scroll;
-    height: 180px;
+    height: 150px;
     resize: none;
 }
 
@@ -124,7 +124,10 @@
     cursor: pointer;
     padding-top: 5px;
 }
-
+.modal-open {
+    overflow: hidden;
+  }
+  
 i.fa-regular.fa-file-pdf {
     padding: 0 10px;
     color: red;

@@ -66,18 +66,18 @@
       </thead>
       <tbody>
         <tr class="rone veiw-items" *ngFor="let generalMatter of generalMatters |filter:searchText">
-          <td>{{generalMatter.title}}</td>
-          <td>{{generalMatter.matterNumber}}</td>
-          <td>{{generalMatter.matterType}}</td>
-          <td>{{generalMatter.status}}</td>
-          <td *ngIf="this.selectedOption == 'External Matters'">{{generalMatter.owner?.firm_name}}</td>
+          <td class="tabclass">{{generalMatter.title}}</td>
+          <td class="tabclass">{{generalMatter.matterNumber}}</td>
+          <td class="tabclass">{{generalMatter.matterType}}</td>
+          <td class="tabclass">{{generalMatter.status}}</td>
+          <td class="tabclass" *ngIf="this.selectedOption == 'External Matters'">{{generalMatter.owner?.firm_name}}</td>
           <!--no dept for external-->
-          <td *ngIf = "this.selectedOption != 'External Matters'" (mouseover)="onMouseOver(generalMatter?.groups)" [matTooltip]="hoveredGroups">
+          <td class="tabclass" *ngIf = "this.selectedOption != 'External Matters'" (mouseover)="onMouseOver(generalMatter?.groups)" [matTooltip]="hoveredGroups">
             {{generalMatter?.groups[0]?.name}} <br/> {{generalMatter?.groups[1]?.name}}
           </td>
           <!-- <td *ngIf = "this.selectedOption == 'External Matters'"></td> -->
           <!--need to get back once we get group info-->
-          <td *ngIf="this.selectedOption == 'External Matters'">
+          <td class="tabclass" *ngIf="this.selectedOption == 'External Matters'">
             <div class="dropdown" >
               <button class="btn btn-primary actionbtn" aria-expanded="false" 
                 [ngClass]="{'disabled': generalMatter.isdisabled}"
@@ -85,7 +85,7 @@
             </div>
           </td>
 
-          <td *ngIf="this.selectedOption != 'External Matters'">
+          <td class="tabclass" *ngIf="this.selectedOption != 'External Matters'">
             <div class="dropdown"><!--class="dropdown"-->
               <!-- <button type="button" class="btn btn-primary dropdown-toggle actionbtn" 
               data-bs-toggle="dropdown" aria-expanded="false"  

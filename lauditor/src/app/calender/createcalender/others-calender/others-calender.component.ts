@@ -713,39 +713,6 @@ export class OthersCalenderComponent implements OnInit {
           }];
           this.CalenderForm.value.timesheets = timesheets;
         }
-        // Ensure all notifications have default values if empty
-        this.notificationItems = this.notificationItems.map((item: { time: any; type: any; }) => {
-          // Handle empty time values
-          if (!item.time || item.time.trim() === "") {
-            // If the time is empty, keep the existing type but set default time
-            if (item.type === "minutes") {
-              return { time: "10", type: "minutes" };
-            } else if (item.type === "hours") {
-              return { time: "1", type: "hours" };
-            } else if (item.type === "weeks") {
-              return { time: "1", type: "weeks" };
-            } else if (item.type === "days") {
-              return { time: "1", type: "days" };
-            }
-          }
-          // Handle specific cases for "-minutes", "-hours", "-weeks", and "-months"
-          if (item.time.trim() === "-minutes") {
-            return { time: "10", type: "minutes" };  // Default to 10-minutes
-          }
-          if (item.time.trim() === "-hours") {
-            return { time: "1", type: "hours" };  // Default to 1-hour
-          }
-          if (item.time.trim() === "-weeks") {
-            return { time: "1", type: "weeks" };  // Default to 1-week
-          }
-          if (item.time.trim() === "-days") {
-            return { time: "1", type: "days" };  // Default to 1-month
-          }
-
-          return item;  // Return the item if no changes are needed
-        });
-        // Update notifications field in the form
-        this.CalenderForm.value.notifications = this.notificationItems.map((item: { time: any; type: any; }) => `${item.time}-${item.type}`);
       }
       this.diff(this.CalenderForm?.value?.from_ts, this.CalenderForm?.value?.to_ts);
       let given_date = new Date();
@@ -758,6 +725,40 @@ export class OthersCalenderComponent implements OnInit {
         this.CalenderForm.value.from_ts = this.pipe.transform(this.CalenderForm?.value?.date, 'yyyy-MM-dd') + 'T' + this.CalenderForm?.value?.from_ts + ':00';
         this.CalenderForm.value.to_ts = this.increaseTodate ? this.pipe.transform(new_date, 'yyyy-MM-dd') + 'T' + this.CalenderForm?.value?.to_ts + ':00' : this.pipe.transform(this.CalenderForm?.value?.date, 'yyyy-MM-dd') + 'T' + this.CalenderForm?.value?.to_ts + ':00';
       }
+
+      // Ensure all notifications have default values if empty
+      this.notificationItems = this.notificationItems.map((item: { time: any; type: any; }) => {
+        // Handle empty time values
+        if (!item.time || item.time.trim() === "") {
+          // If the time is empty, keep the existing type but set default time
+          if (item.type === "minutes") {
+            return { time: "10", type: "minutes" };
+          } else if (item.type === "hours") {
+            return { time: "1", type: "hours" };
+          } else if (item.type === "weeks") {
+            return { time: "1", type: "weeks" };
+          } else if (item.type === "days") {
+            return { time: "1", type: "days" };
+          }
+        }
+        // Handle specific cases for "-minutes", "-hours", "-weeks", and "-months"
+        if (item.time.trim() === "-minutes") {
+          return { time: "10", type: "minutes" };  // Default to 10-minutes
+        }
+        if (item.time.trim() === "-hours") {
+          return { time: "1", type: "hours" };  // Default to 1-hour
+        }
+        if (item.time.trim() === "-weeks") {
+          return { time: "1", type: "weeks" };  // Default to 1-week
+        }
+        if (item.time.trim() === "-days") {
+          return { time: "1", type: "days" };  // Default to 1-month
+        }
+
+        return item;  // Return the item if no changes are needed
+      });
+      // Update notifications field in the form
+      this.CalenderForm.value.notifications = this.notificationItems.map((item: { time: any; type: any; }) => `${item.time}-${item.type}`);
 
       this.CalenderForm.value.timezone_offset = 0 - Number(this.CalenderForm?.value?.timezone_location?.split(',')[0]);
       this.CalenderForm.value.timezone_location = this.CalenderForm?.value?.timezone_location?.split(',')[1];
