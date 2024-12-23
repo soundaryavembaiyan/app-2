@@ -28,6 +28,7 @@ export class EmailComponent implements OnInit, AfterViewInit {
     private spinnerService: NgxSpinnerService, private modalService: ModalService,
     private formBuilder: FormBuilder, private emailService: EmailService, private toast: ToastrService,
     private router: Router, private dialog: MatDialog) { }
+  
   messagesMap: Map<number, any> = new Map<number, any>();
   pageTokenMap: Map<number, string> = new Map<number, any>();  
   messages: any;
