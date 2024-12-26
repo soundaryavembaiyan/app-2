@@ -22,18 +22,19 @@
                 </a>
               </div>
               <div>
-                <p class="ptext" *ngIf="product != 'corporate'">Assign to Group</p> 
-                <p class="ptext" *ngIf="product == 'corporate'">Assign to Department</p> 
+                <p class="ptext" *ngIf="product != 'corporate'">Assign to Groups</p> 
+                <p class="ptext" *ngIf="product == 'corporate'">Assign to Departments</p> 
              </div>
             </div>
             <div class="col-sm-3 col-xs-3"> </div>
         </div>
-        <h5>&nbsp;</h5>
+        <!-- <h5>&nbsp;</h5> -->
+        <div class="subalert" *ngIf="error">{{error}}</div>
         <form [formGroup]="createMemberForm" (ngSubmit)="onSubmit()">
             <div class="row" *ngIf='showForm'>
                 <div class="col-6">
                     <div class="form-group errorMsg nameSet ">
-                        <label for="title" class="lable-size">Name:</label>
+                        <label for="title" class="lable-size">Name <span class="mandate">*</span></label>
                         <input type="text" (input)="restricttextSpace($event)"
                                formControlName="name"
                                class=" text-size form-control member-name-text"
@@ -46,7 +47,7 @@
                         </div>
                     </div>
                     <div class="form-group errorMsg nameSet">
-                        <label for="comment" class="lable-size">Designation:</label>
+                        <label for="comment" class="lable-size">Designation <span class="mandate">*</span></label>
                         <input type="text" (input)="restricttextSpace($event)"
                                formControlName="designation"
                                class=" text-size form-control member-name-text"
@@ -62,8 +63,8 @@
                     <div class="form-group errorMsg nameSet">
                         <div class="row">
                             <div class="col-6 ">
-                                <label for="select" class="lable-size">Default Currency</label>
-                                <select formControlName="currency"
+                                <label for="select" class="lable-size">Default Currency <span class="mandate">*</span></label>
+                                <select formControlName="currency" style="background-color: #EEEEEE;cursor:pointer"
                                         class="form-select member-name-text nameSet"
                                         aria-label="Default select example"
                                         [ngClass]="{ 'is-invalid':submitted && f.currency.errors }"
@@ -77,13 +78,12 @@
                                 </div>
                             </div>
                             <div class="col-6 ">
-                                <label for="title" class="lable-size">Default Rate:</label>
+                                <label for="title" class="lable-size">Default Rate <span class="mandate">*</span></label>
                                 <input type="text" (input)="restricttextSpace($event)"
                                        formControlName="defaultRate"
-                                       class="nameSet text-size form-control member-name-text"
+                                       class="nameSet text-size form-control member-name-text drate"
                                        [ngClass]="{ 'is-invalid': submitted && f.defaultRate.errors }"
-                                       id="caseTitle"
-                                       name="defaultRate">
+                                       id="caseTitle" name="defaultRate">
                                 <div *ngIf="submitted && f.defaultRate.errors" class="invalid-feedback ">
                                     <div *ngIf="f.defaultRate.errors.required">
                                         Hourly rate is required
@@ -95,7 +95,7 @@
                 </div>
                 <div class="col-6">
                     <div class=" form-group errorMsg  nameSet">
-                        <label for="exampleInputEmail1" class="form-label lable-size">Email</label>
+                        <label for="exampleInputEmail1" class="form-label lable-size">Email <span class="mandate">*</span></label>
                         <input type="email" (input)="restricttextSpace($event)"
                                formControlName="email"
                                class="form-control member-name-text"
@@ -114,7 +114,7 @@
                     </div>
 
                     <div class=" form-group errorMsg nameSet">
-                        <label for="exampleInputEmail2" class="form-label lable-size"> Confirm Email</label>
+                        <label for="exampleInputEmail2" class="form-label lable-size">Confirm Email <span class="mandate">*</span></label>
                         <input type="email" (input)="restricttextSpace($event)"
                                formControlName="emailConfirm"
                                placeholder=""
@@ -132,27 +132,34 @@
                         </div>
                     </div>
                     <div class="form-group nameSet">
-                        <div class="input-group court" (click)="selMembers()">
-                            <div class="form-control textbox" *ngIf="product != 'corporate'">Assign Group</div>
-                            <div class="form-control textbox" *ngIf="product == 'corporate'">Assign Department</div>
-                            <i class="fa fa-solid fa-plus calimg calitem input-group-append sgroup"
-                                aria-hidden="true"></i>
+                        <div class="input-group court assignGrp" (click)="selMembers()">
+                            <div class="form-control textbox assg" *ngIf="product != 'corporate'">Assign to Groups</div>
+                            <div class="form-control textbox assg" *ngIf="product == 'corporate'">Assign to Departments</div>
+                            <i class="fa fa-solid fa-plus calimg calitem input-group-append sgroup" aria-hidden="true"></i>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="row" *ngIf="showMemlist">
+                <!-- <label for="select" class="lable-size update" *ngIf="product != 'corporate'">Select Groups</label>
+                <label for="select" class="lable-size update" *ngIf="product == 'corporate'">Select Departments</label> -->
                   <div class="form-group" style="margin-bottom:10px;">
                   <div class="input-group group-custom-align court" id="search">
                     <input type="text" (input)="restricttextSpace($event)"
                            class="form-control textbox"
                            (keyup)="onSearch($event)"
-                           placeholder="Search Members"
+                           placeholder="Search Groups"
                            value="{{searchText}}" />
                     <img src="assets/img/search.svg"
                          class="calimg calitem input-group-append searchimg">
                   </div>
                 </div>
+
+                <div class="assdiv">
+                    <p class="ptext" *ngIf="product != 'corporate'">Assign to Groups</p>&nbsp;<p style="margin-left: auto;" *ngIf="product != 'corporate'"><i class="fa fa-minus" aria-hidden="true"></i></p> 
+                    <p class="ptext" *ngIf="product == 'corporate'">Assign to Departments</p>&nbsp;<p style="margin-left: auto;" *ngIf="product == 'corporate'"><i class="fa fa-minus" aria-hidden="true"></i></p> 
+                </div>
+
                 <div class="form-group " id="selectbx">
                   <div class="input-group group-custom-align court"
                        *ngFor="let grp of groupList | LockFilter: searchText ">
@@ -168,7 +175,7 @@
                   </div>
                 </div>
             </div>
-            <div class="btnbox row">
+            <div class="btnbox btncs row">
               <div class="col-4" *ngIf="!showMemlist"></div>
               <div class="col-3" *ngIf='showMemlist'></div>
               <div class="col-2" *ngIf='showMemlist'>
@@ -179,42 +186,39 @@
               <div class="col-2">
                 <button type="button"
                         class="btn btn-default btncancel"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modalCancel">Cancel</button>
+                        (click)="cancel()">Cancel</button>
               </div>
-              <div class="col-1">
-                <button type="submit" class="btn btn-default btnsave">Save</button>
-                </div>
+              <div class="col-1" *ngIf='showMemlist'>
+                <button type="submit" class="btn btn-default btnsave" 
+                [disabled]="isSaveDisabled">Done</button>
+               </div>
+              <div class="col-1" *ngIf='!showMemlist'>
+                <button type="submit" class="btn btn-default btnsave" 
+                [disabled]="createMemberForm.pristine || createMemberForm.invalid">Save</button>
+               </div>
             </div>
         </form>
     </div>
 </div>
-<div class="modal fade"
-     id="modalCancel"
-     tabindex="-1"
-     aria-labelledby="modalCancelLabel"
-     aria-hidden="true">
+
+<!-- Confirmation Modal -->
+<div class="modal fade" id="modalCancel" tabindex="-1" aria-labelledby="modalCancelLabel" aria-hidden="true">
   <div class="modal-dialog">
       <div class="modal-content">
-              <button type="button" class="btn-close remBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close remBtn" data-bs-dismiss="modal" aria-label="Close"></button>
           <div class="modal-body">
-              <div class="alertpara">
-                  <p class="alertparatxt"> Confirmation</p>
-                </div>
+              <div class="alertpara"><p class="alertparatxt">Alert</p></div>
           </div>
-          <div class="alertext">Changes you made will not be saved. Do you want to continue?</div>
+          <div class="alertext conf">Changes you made will not be saved. <br>Do you want to continue?</div>
           <div class="alertbutton">
-              <button class="btn btn-default  alertbtn alertbtnno"
-                      data-bs-dismiss="modal"
-                      aria-label="Close">No</button>
-              <button class="btn btn-default alertbtn alertbtnyes"
-                      data-bs-dismiss="modal"
-                      aria-label="Close"
-                      (click)="onReset()" >Yes</button>
+              <button class="btn btn-default  alertbtn alertbtnno" data-bs-dismiss="modal" aria-label="Close">No</button>
+              <button class="btn btn-default alertbtn alertbtnyes" data-bs-dismiss="modal" aria-label="Close" (click)="onReset()" >Yes</button>
           </div>
       </div>
   </div>
 </div>
+
+<!-- Success Modal -->
 <div class="modal"
      id="successModal"
      tabindex="-1"
@@ -226,18 +230,19 @@
       <div class="modal-content">
           <div class="modal-body">
                         <!-- <div class="iconclose">X</div> -->
+                        <button type="button" class="btn-close remBtn" (click)="closeModal()" data-bs-dismiss="modal" aria-label="Close"></button>
                         <div class="alertpara">
-                          <p class="alertparatxt"> Success</p>
+                          <p class="alertparatxt">Success</p>
                         </div>
-                        <div class="alertext" *ngIf="product != 'corporate'">Congratulations!! 
-                          You have successfully added {{successMemName}} and assigned to {{successGrpCount}} Groups.
+                        <div class="alertext cong" *ngIf="product != 'corporate'">Congratulations!!<br> 
+                        You have successfully added <b>{{successMemName}}</b> and assigned to <b>{{successGrpCount}}</b> Groups.
                        </div>
-                       <div class="alertext" *ngIf="product == 'corporate'">Congratulations!! 
-                        You have successfully added {{successMemName}} and assigned to {{successGrpCount}} Department.
+                       <div class="alertext cong" *ngIf="product == 'corporate'">Congratulations!! <br>
+                        You have successfully added <b>{{successMemName}}</b> and assigned to <b>{{successGrpCount}}</b> Department.
                       </div>
                         <div class="alertbutton">
-                          <button class="btn btn-default alertbtn" (click)="successResp('add')">Add Members</button>
-                          <button class="btn btn-default alertbtn" (click)="successResp('view')">View Changes</button>
+                          <button class="btn btn-default alertbtn btnbtn" (click)="successResp('add')">Add Members</button>
+                          <button class="btn btn-default alertbtn btnbtn" (click)="successResp('view')">View Changes</button>
                         </div>
           </div>
       </div>

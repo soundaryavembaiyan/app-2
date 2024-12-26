@@ -7,7 +7,7 @@ import { URLUtils } from './../../urlUtils';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { HttpErrorResponse } from '@angular/common/http';
-
+declare var bootstrap: any; // Import Bootstrap for modal triggering
 
 @Component({
   selector: 'app-create-group',
@@ -39,6 +39,7 @@ export class CreateGroupComponent implements OnInit {
   successGrpName: string = "";
   showMemList: boolean = true;
   showSelMem: boolean = false;  
+  isCancel: boolean = false;  
   error:string = '';
   
   constructor(private formBuilder: FormBuilder,
@@ -206,5 +207,21 @@ export class CreateGroupComponent implements OnInit {
     inputValue = inputValue.replace(/\s{2,}/g, ' ');
     event.target.value = inputValue;
     return;
+  }
+  closeModal(): void {
+    this.successModel = false;
+  }
+
+  cancel() {
+    const formValues = this.registerForm.value;
+    const hasValues = Object.values(formValues).some(value => value !== null && value !== '');
+
+    if (hasValues) {
+      const modalElement = document.getElementById('modalCancel');
+      const modalInstance = new bootstrap.Modal(modalElement);
+      modalInstance.show();
+    } else {
+      //console.log('No values in the form, modal not triggered.');
+    }
   }
 }

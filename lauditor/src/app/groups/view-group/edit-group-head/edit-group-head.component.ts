@@ -5,7 +5,7 @@ import { HttpService } from 'src/app/services/http.service';
 import { URLUtils } from 'src/app/urlUtils';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
- 
+declare var bootstrap: any; // Import Bootstrap for modal triggering
 
 @Component({
     selector: 'edit-group-head',
@@ -23,6 +23,7 @@ export class EditGroupHeadComponent {
     membersList: any = [];
     selectedMem: any = {};
     existingId: string = '';
+    isSaveEnable: boolean = false;
     
     constructor(private httpService: HttpService, private toast: ToastrService, 
                 private router: Router){ 
@@ -30,7 +31,7 @@ export class EditGroupHeadComponent {
      }
 
     ngOnInit(): void {
-        //console.log(this.groupData)
+        // console.log('gh',this.groupData)
         this.existingId = this.groupData['groupHead']['id']
         this.membersList = this.groupData.members
         this.membersList.forEach((i: any, ix: number) => {
@@ -44,11 +45,24 @@ export class EditGroupHeadComponent {
     }
     
     sel(member: any){
-        this.selectedMem = member
+        this.selectedMem = member;
+        this.isSaveEnable = true;
     }
 
     cancel(){
         this.event.emit("edit-group-head-close")
+    }
+
+    onCancel(): void {
+        if (this.isSaveEnable) {
+            const modal = document.getElementById('modalCancel');
+            if (modal) {
+                const bootstrapModal = new bootstrap.Modal(modal);
+                bootstrapModal.show();
+            }
+        } else {
+            this.cancel(); // Navigate back directly
+        }
     }
 
     save(){
@@ -62,10 +76,8 @@ export class EditGroupHeadComponent {
               const errorMessage = error.error.msg || 'Unauthorized';
               this.toast.error(errorMessage);
               console.log(error);
-            }
-      
-          }
-          )
+            }}
+    )
     }
 
     loadMembers(){

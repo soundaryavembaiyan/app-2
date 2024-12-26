@@ -5,7 +5,7 @@ import { URLUtils } from 'src/app/urlUtils';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { HttpErrorResponse } from '@angular/common/http';
-  
+declare var bootstrap: any; // Import Bootstrap for modal triggering
 
 @Component({
     selector: 'delete-group',
@@ -23,6 +23,7 @@ export class DeleteGroupComponent implements OnInit {
     grpName: string = "";
     counts: any = {documents: 0, matters: 0, relationships: 0, members: 0}
     selectedGrp: any = {}; 
+    isSaveEnable: boolean = false;
     
     constructor(private router: Router, private toast: ToastrService,
                 private httpService: HttpService){ }
@@ -34,11 +35,32 @@ export class DeleteGroupComponent implements OnInit {
     }
 
     cancel(){
-        this.event.emit('group-delete-close')
+        this.event.emit('group-delete-close');
+        this.scrollToTop();
+    }
+    
+    onCancel(): void {
+      if (this.isSaveEnable) {
+        const modal = document.getElementById('modalCancel');
+        if (modal) {
+          const bootstrapModal = new bootstrap.Modal(modal);
+          bootstrapModal.show();
+        }
+      } else {
+        this.cancel(); // Navigate back directly
+      }
+    }
+
+    scrollToTop() {
+      window.scrollTo({
+        top: 0, 
+        behavior: 'smooth' // Optional for smooth scrolling
+      });
     }
 
     select(grp: any){
-        this.selectedGrp = grp
+        this.selectedGrp = grp;
+        this.isSaveEnable = true;
     }
 
     loadResources(){
@@ -72,7 +94,6 @@ export class DeleteGroupComponent implements OnInit {
               this.toast.error(errorMessage);
               console.log(error);
             }
-      
           })
     }
 }

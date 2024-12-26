@@ -28,6 +28,7 @@ export class ViewMembersComponent implements OnInit {
   showEditMemForm: boolean = false;
   showGroupAccessForm: boolean = false;
   showSuccessModal: boolean = false;
+  getSuccessModal: boolean = false;
   searchText: any = '';
   isDesc: boolean = false;
   memberCount: any;
@@ -50,6 +51,13 @@ export class ViewMembersComponent implements OnInit {
 
   // convenience getter for easy access to form fields
   get f() { return this.createMemberForm.controls; }
+
+  scrollToTop() {
+    window.scrollTo({
+      top: 0, 
+      behavior: 'smooth' // Optional for smooth scrolling
+    });
+  } 
 
   sort(property: any) {
     this.isDesc = !this.isDesc; //change the direction    
@@ -103,12 +111,15 @@ export class ViewMembersComponent implements OnInit {
   }
 
   del(member: any){
-    this.memData = member
+    this.memData = member;
   }
   
   deleteMember(){
+    this.scrollToTop();
     this.httpService.sendDeleteRequest(URLUtils.deleteMember(this.memData)).subscribe((res: any) => {
-      this.getMembers()
+      this.getMembers();
+      this.getSuccessModal = true;
+      //this.toast.success('')
     },
     (error: HttpErrorResponse) => {
       if (error.status === 401 || error.status === 403) {
@@ -125,11 +136,13 @@ export class ViewMembersComponent implements OnInit {
   }
   
   groupAccess(member: any){
+    this.scrollToTop();
     this.memData = member
     this.showGroupAccessForm = true
   }
   
   editMem(member: any){
+    this.scrollToTop();
     this.memData = member
     this.showEditMemForm = true
   }
@@ -154,7 +167,8 @@ export class ViewMembersComponent implements OnInit {
   
   resetPwd(team:any){
     this.httpService.sendPostRequest(URLUtils.resetMemberPassword, {"memberId": this.memData.id}).subscribe((res: any) => {
-      this.getMembers()
+      this.getMembers();
+      this.toast.success('You have successfully initiated password reset')
     },
     (error: HttpErrorResponse) => {
       if (error.status === 401 || error.status === 403) {

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { HttpService } from '../services/http.service';
 import { URLUtils } from '../urlUtils';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-notifications',
@@ -17,7 +18,7 @@ export class NotificationsComponent implements OnInit {
   constructor(
     private httpService: HttpService,
     private router: Router,
-    public toastr: ToastrService
+    public toastr: ToastrService, private spinnerService: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -39,9 +40,11 @@ export class NotificationsComponent implements OnInit {
   }
 
   getNotificationList() {
+    this.spinnerService.show();
     this.httpService
       .sendGetRequest(URLUtils.getNotifications)
       .subscribe((res: any) => {
+        this.spinnerService.hide();
         this.notificationsList = res.data.notifications;
       });
     this.notificationsList?.forEach((item: any) => {

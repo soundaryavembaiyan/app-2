@@ -650,6 +650,7 @@ export class MatterClientsComponent implements OnInit {
                 !this.selectedClients.includes(item)
             );
             this.showTempForm = this.clientsList.length === 0; // if no clients match
+            this.showTempForm = true;
         }
 
         this.isSelectAllVisible = this.clientsList.length > 0; // Update "Select All" visibility

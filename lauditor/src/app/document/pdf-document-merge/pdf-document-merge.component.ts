@@ -307,15 +307,22 @@ export class PdfDocumentMergeComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     cancelMerge() {
+        let filter = localStorage.getItem('filter');
+        if (filter === 'login') {   // if filter is 'login', reset it to 'client' and update
+            filter = 'client';
+            localStorage.setItem('filter', filter);
+            this.filter = filter;
+        }
+
         let isMergeDoc: any = {
             isMerge: true
         };
         this.documentService.addToService(isMergeDoc);
         if(this.product == 'corporate'){
-        this.router.navigate(['documents/mergepdf/' + this.filter]);
+        this.router.navigate(['documents/mergepdf/'+this.filter]);
         }
         else{
-        this.router.navigate(['documents/mergepdf/' + this.filter]);
+        this.router.navigate(['documents/mergepdf/'+this.filter]);
         this.CollectedDocs.splice(0, this.CollectedDocs.length); 
         }
         localStorage.removeItem('clientDetail')

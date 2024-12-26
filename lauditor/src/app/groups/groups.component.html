@@ -4,22 +4,22 @@
             <div #btnClass class="btn-group">
                 <!--Create Group & Dept.-->
                 <div class="button-class create-group">
-                    <button type="button" class="btn btn-top" *ngIf="product == 'lauditor' && roleId != 'GH'" routerLink="/groups/create-group">Create Group</button>
+                    <button type="button" class="btn btn-top" *ngIf="product == 'lauditor' && roleId != 'GH'" routerLink="/groups/create-group">Create Groups</button>
                 </div>
                 <div class="button-class create-group">
-                    <button type="button" class="btn btn-top" *ngIf="product == 'content'" routerLink="/groups/create-group">Create Group</button>
+                    <button type="button" class="btn btn-top" *ngIf="product == 'content'" routerLink="/groups/create-group">Create Groups</button>
                 </div>
                 <div class="button-class create-group">
-                    <button type="button" class="btn btn-top" *ngIf="product == 'connect' && roleId == 'GH'" routerLink="/groups/create-group">Create Group</button>
+                    <button type="button" class="btn btn-top" *ngIf="product == 'connect' && roleId == 'GH'" routerLink="/groups/create-group">Create Groups</button>
                 </div>
                 <div class="button-class create-group">
-                    <button type="button" class="btn btn-top" *ngIf="product == 'corporate'" routerLink="/groups/create-group">Add Department</button>
+                    <button type="button" class="btn btn-top" *ngIf="product == 'corporate'" routerLink="/groups/create-group">Add Departments</button>
                 </div>
                 <!--Create Group & Dept. ends here!!-->
                 
                 <!--View Group & Dept.-->
                 <div class="button-class view-group">
-                    <button type="button" class="btn btn-top" *ngIf="product != 'corporate'" routerLink="/groups/view-group">View Group</button>
+                    <button type="button" class="btn btn-top" *ngIf="product != 'corporate'" routerLink="/groups/view-group">View Groups</button>
                 </div>
                 <div class="button-class view-group">
                     <button type="button" class="btn btn-top" *ngIf="product == 'corporate'" routerLink="/groups/view-group">View Departments</button>

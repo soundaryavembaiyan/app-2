@@ -417,11 +417,14 @@ tr.veiw-items {
         inset: 0px auto auto -119px !important;
         background: #F0F0F0;
         padding: unset;
+        cursor: pointer;
+        //text-align: end;
     }
 }
 .remBtn{
     margin-top: 10px;
-    margin-left: 460px;
+    //margin-left: 460px;
+    margin-left: 360px;
 }
 .alertbutton{
     padding-bottom: 10px;
@@ -472,4 +475,21 @@ tr.veiw-items:hover {
         color: #111;
         border: none;
     }
+}
+.savecls{
+    color: white;
+    background: #004D87;
+}
+.modal-content{
+    width: 80% !important;
+    margin-left: 80px !important;
+}
+.center{
+    padding-top: 10px;
+    padding-bottom: 12px;
+}
+.alertparatxt{
+    font-weight: 900;
+    font-size: 1.6rem;
+    padding-top: 0px !important;
 }

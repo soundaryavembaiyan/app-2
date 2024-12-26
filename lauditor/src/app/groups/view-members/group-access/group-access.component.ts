@@ -17,11 +17,14 @@ export class GroupAccessComponent implements OnInit {
 
 
   @Input() memData: any;
+  @Input() showGroupAccessForm = false;
   @Output() event = new EventEmitter<string>();
 
   product = environment.product;
   groupList: any[] = [];
   selectedIds: string[] = [];
+  isSaveEnable: boolean = false;
+  updateSuccessModal: boolean = false;
 
   constructor(private formBuilder: FormBuilder, private toast: ToastrService, private confirmationDialogService: ConfirmationDialogService,
               private httpService: HttpService) { }
@@ -31,7 +34,15 @@ export class GroupAccessComponent implements OnInit {
     this.selectedIds = this.memData.groups.map((x: any) => x.id)
   }
 
+  scrollToTop() {
+    window.scrollTo({
+      top: 0, 
+      behavior: 'smooth' // Optional for smooth scrolling
+    });
+  } 
+
   cancel(){
+    this.scrollToTop();
     this.event.emit('group-access-close')
   }
   
@@ -41,24 +52,32 @@ export class GroupAccessComponent implements OnInit {
     })
   }
 
-  save(){
-    var payload = {"groups": this.selectedIds}
+  getMember() {
+    this.httpService.sendGetRequest(URLUtils.getMembers).subscribe((res: any) => {
+      this.event.emit('group-access-done')
+    })
+    this.scrollToTop();
+  }
+
+  save() {
+    var payload = { "groups": this.selectedIds }
     this.httpService.sendPatchRequest(URLUtils.updateMember(this.memData),
-        payload).subscribe((res: any) => {
-          this.toast.success(res.msg);
-          this.event.emit('group-access-done')
-    },
-    (error: HttpErrorResponse) => {
-      if (error.status === 401 || error.status === 403) {
-        const errorMessage = error.error.msg || 'Unauthorized';
-        this.toast.error(errorMessage);
-        console.log(error);
-      }
-    }
-    )
+      payload).subscribe((res: any) => {
+        //this.event.emit('group-access-done')
+        this.updateSuccessModal = true;
+      },
+        (error: HttpErrorResponse) => {
+          if (error.status === 401 || error.status === 403) {
+            const errorMessage = error.error.msg || 'Unauthorized';
+            this.toast.error(errorMessage);
+            //console.log(error);
+          }
+        })
+    // this.scrollToTop();
   }
 
   selectGrp(grp: any, checked: boolean){
+    this.isSaveEnable = true;
     if(checked){
       this.selectedIds.push(grp.id)
     } else {

@@ -8,7 +8,7 @@ import { ModalService } from 'src/app/model/model.service';
 import { environment } from 'src/environments/environment';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
- 
+declare var bootstrap: any; // Import Bootstrap for modal triggering
 
 @Component({
   selector: 'app-view-group',
@@ -43,6 +43,7 @@ export class ViewGroupComponent implements OnInit {
   created: string = "";
   role: string = "GH";
   roleId: string = "GH";
+  error:string = '';
   
   constructor(private httpservice: HttpService,
               private formBuilder: FormBuilder,
@@ -76,7 +77,15 @@ export class ViewGroupComponent implements OnInit {
   
   get f() { return this.editGroupform.controls; }
 
+  scrollToTop() {
+    window.scrollTo({
+      top: 0, 
+      behavior: 'smooth' // Optional for smooth scrolling
+    });
+  } 
+  
   editGroup(item: any) {
+    this.scrollToTop();
     this.editGroupShow = true;
     this.editGroupView = JSON.parse(JSON.stringify(item));
     this.editGroupItem = item;
@@ -113,55 +122,85 @@ export class ViewGroupComponent implements OnInit {
     this.postGroup = this.editGroupform.value;
     this.httpservice.sendPatchRequest(URLUtils.updateGroup(this.editGroupItem), this.postGroup)
       .subscribe((res: any) => {
+        this.error = ''; // Clear any existing error messages
+        this.openModel('group-update-success');
         this.getData();
-        this.openModel('group-update-success')
       }, (error: HttpErrorResponse) => {
         if (error.status === 401 || error.status === 403) {
           const errorMessage = error.error.msg || 'Unauthorized';
           this.toast.error(errorMessage);
-          //console.log(error);
         }
-  
-      }
-     )
-    this.editGroupShow = false;
+        else if (error.error && error.error.msg) {
+          // Handle other errors and display the message in the form
+          this.error = error.error.msg;
+          return;
+        }
+        else {
+          //this.error = 'An unexpected error occurred.';
+          this.editGroupShow = false;
+        }
+      })
+    //this.editGroupShow = false;
   }
-
+  
   editGroupMembers(item: any) {
+    this.scrollToTop();
     this.editData = item;
     this.editMember = true;
     this.selectedGrpName = item['name']    
   }
   
   changePracticeHead(item: any) {
+    this.scrollToTop();
     this.editGroupHead = true;
     this.editData = item;
     this.selectedGrpName = item['name'];
   }
   
   deleteGroup(item: any) {
+    this.scrollToTop();
     this.DeleteGroup = true;
     this.editData = item;
     this.selectedGrpName = item['name'];
   }
   
   onReset() {
-    this.submitted = false;
-    this.editGroupform.reset();
-    this.editGroupShow = false;
+    if (this.editGroupform.dirty) {
+      const cancelModal = new bootstrap.Modal(document.getElementById('modalCancel'), {});
+      cancelModal.show(); // Trigger the confirmation dialog
+    }
+    else {
+      this.scrollToTop();
+      this.submitted = false;
+      this.editGroupform.reset();
+      this.editGroupShow = false;
+    }
   }
   
   activityLog(grp: any){
-    this.editData = grp
-    this.showActivityLog = true
+    this.scrollToTop();
+    this.editData = grp;
+    this.showActivityLog = true;
   }
 
+  // getData() {
+  //   this.httpservice.sendGetRequest(URLUtils.getGroups).subscribe((res: any) => {
+  //     this.viewItems = res?.data;
+  //     console.log('viewItems',this.viewItems)
+  //   })
+  // }
   getData() {
     this.httpservice.sendGetRequest(URLUtils.getGroups).subscribe((res: any) => {
-      this.viewItems = res?.data;
-      //console.log('viewItems',this.viewItems)
-    })
+      const allGroups = res?.data || [];
+      const fixedGroups = allGroups.filter((group: { name: any; }) => group.name === 'AAM' || group.name === 'SuperUser');
+      const otherGroups = allGroups.filter((group: { name: any; }) => group.name !== 'AAM' && group.name !== 'SuperUser');
+  
+      // Combine fixed groups on top and other groups below
+      this.viewItems = [...fixedGroups, ...otherGroups];
+    });
+    this.editGroupShow = false;
   }
+  
   isSelected() {
 
   }
@@ -199,5 +238,18 @@ export class ViewGroupComponent implements OnInit {
       this.getData()
     }
   }
-
+  onSearchChange() {  
+    this.error="";
+  }
+  
+  restricttextSpace(event: any) {
+    let inputValue: string = event.target.value;
+    inputValue = inputValue.replace(/^\s+/, '');
+    inputValue = inputValue.replace(/\s{2,}/g, ' ');
+    event.target.value = inputValue;
+    return;
+  }
+  closeDialog() {
+    this.editGroupShow = false;
+  }
 }

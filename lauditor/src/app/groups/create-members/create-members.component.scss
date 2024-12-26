@@ -285,7 +285,8 @@
 }
 .remBtn{
   margin-top: 10px;
-  margin-left: 460px;
+  //margin-left: 460px;
+  margin-left: 360px;
 }
 .invalid-feedback{
   color:#ff0019;
@@ -293,4 +294,81 @@
 }
 .ptext{
   font-weight: 900;
+}
+.conf{
+  font-weight: 900;
+  width: auto;
+}
+.alertbutton{
+  padding-bottom: 10px;
+}
+.btnbtn {
+  //background: #1476B0;
+  border-radius: 3px;
+  color: #fff;
+  font-weight: 900;
+  margin-left: 20px;
+}
+.alertparatxt{
+  font-weight: 900;
+  font-size: 1.6rem;
+  padding-top: 0px !important;
+}
+.modal-content{
+  width: 80% !important;
+  margin-left: 80px !important;
+}
+.cong{
+  width: 333px !important;
+}
+.btncs{
+  margin-left: -55px;
+}
+.drate{
+  width: 100% !important;
+}
+
+//disable the corner div style!!
+.input-group.court.assignGrp > .form-control.textbox,
+.input-group.court.assignGrp > .fa {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.btnsave:disabled {
+  opacity: 0.5;
+  color: white;
+  background: #004D87;
+  pointer-events: none;
+}
+.update{
+  color: #004d87;
+  font-weight: 900;
+  font-size: 1.3rem;
+}
+.btnback{
+  background: #ddddde 0% 0% no-repeat padding-box;
+  color: black;
+}
+.assg{
+  font-weight: 900;
+  padding-top: 10px;
+}
+.assdiv{
+  width: 41%;
+  height: 44px;
+  display: flex;
+  margin: auto;
+  color: #fff;
+  border-radius: 5px;
+  padding: 12px;
+  background: #00B3A7;
+}
+.subalert{
+  color: red;
+  font-weight: 900;
+  font-size: 1rem;
+  margin: auto;
+  text-align: center;
+  padding: 10px;
 }

@@ -100,14 +100,13 @@
       <tbody>
 
         <tr class="rone veiw-items" *ngFor="let member of members | filter:searchText">
-          <td>{{ member.first_name }}</td>
-          <td>{{ member.last_name }}</td>
-          <td>{{ member.email }}</td> <!--&nbsp;-->
-          <td>{{ member.phone }}</td>
-          <td>{{ member.designation }}</td>
-          <td>{{ member.practice }}</td>
-         
-          <td>
+          <td class="tabclass">{{ member.first_name }}</td>
+          <td class="tabclass">{{ member.last_name }}</td>
+          <td class="tabclass">{{ member.email }}</td> <!--&nbsp;-->
+          <td class="tabclass">{{ member.phone }}</td>
+          <td class="tabclass">{{ member.designation }}</td>
+          <td class="tabclass">{{ member.practice }}</td>
+          <td class="tabclass">
             <div class="actionIcon">
                 <i id="del" class="fa-regular fa-pen-to-square" aria-hidden="true" (click)="editMember(member)"></i> <!--[routerLink]="['/editpartner']"  ||  routerLink="/editpartner"-->  <!--(click)="editMember(member)"-->
                 <i id="del" class="fa-regular fa-trash-can" aria-hidden="true" (click)="deletePartner(member)"></i>

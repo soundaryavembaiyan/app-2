@@ -9,8 +9,8 @@
         <div class="row">
             <div class="col-6">
                 <div class="form-group nameSet">
-                    <label for="title" class="lable-size" *ngIf="product != 'corporate'">Group Name:</label>
-                    <label for="title" class="lable-size" *ngIf="product == 'corporate'">Department Name:</label>
+                    <label for="title" class="lable-size" *ngIf="product != 'corporate'">Group Name <span class="mandate">*</span></label>
+                    <label for="title" class="lable-size" *ngIf="product == 'corporate'">Department Name <span class="mandate">*</span></label>
                     <input type="text" 
                            class=" text-size form-control group-name-text"
                            [value]="data.name"
@@ -19,7 +19,7 @@
                            disabled>
                 </div>
                 <div class="form-group nameSet">
-                    <label for="comment" class="lable-size">Description:</label>
+                    <label for="comment" class="lable-size">Description <span class="mandate">*</span></label>
                     <textarea  class="form-control text-size text-area-height"
                                name="description"
                                style="height:100px;" 
@@ -28,44 +28,44 @@
             </div>
             <div class="col-6">
                 <div class="form-group nameSet">
-                    <label for="title" class="lable-size">{{grpName}} contains</label>
+                    <label for="title" class="lable-size">{{grpName}} contains:</label>
                 </div>
                 <div class="form-group nameSet">
                     <input type="text" 
                            class=" text-size form-control group-name-text"
                            name="name"
-                           placeholder="{{counts.documents}} Documents"
+                           placeholder="{{counts?.documents}} Documents"
                            disabled>
                 </div>
                 <div class="form-group nameSet">
                     <input type="text" 
                            class=" text-size form-control group-name-text"
-                           placeholder="{{counts.matters}} Matters"
+                           placeholder="{{counts?.matters}} Matters"
                            name="name" disabled>
                 </div>
                 <div class="form-group nameSet">
                     <input type="text" 
                            class=" text-size form-control group-name-text"
-                           placeholder="{{counts.relationships}} Relationships" 
+                           placeholder="{{counts?.relationships}} Relationships" 
                            name="name" disabled>
                 </div>
                 <div class="form-group nameSet">
                     <input type="text" 
                            class=" text-size form-control group-name-text"
-                           placeholder="{{counts.members}} Members" 
+                           placeholder="{{counts?.members}} Members" 
                            name="name" disabled>
                 </div>
             </div>
         </div>
         <h4>&nbsp;</h4>
         <div class="col-12  center">
-            <label for="select" class="lable-size update" *ngIf="product != 'corporate'">Assign to another active Group</label>
-            <label for="select" class="lable-size update" *ngIf="product == 'corporate'">Assign to another active Department</label>
+            <label for="select" class="lable-size assign2" *ngIf="product != 'corporate'">Assign to another active Group:</label>
+            <label for="select" class="lable-size assign2" *ngIf="product == 'corporate'">Assign to another active Department:</label>
             <div class="form-group ">
                 <div class="input-group group-custom-align court" id="search">
                     <input type="text"
                            class="form-control textbox"
-                           placeholder="Search"
+                           placeholder="Type to select"
                            [(ngModel)]="searchText" />
                     <img src="assets/img/search.svg"
                          class="calimg calitem input-group-append searchimg">
@@ -85,12 +85,14 @@
             </div>
         </div>
         <div class="btnbox">
-            <button type="reset" class="btn btn-default btncancel" (click)="cancel()">Cancel</button>
+            <button type="reset" class="btn btn-default btncancel" (click)="onCancel()">Cancel</button>
             <button type="submit"
                     class="btn btn-default btnsave"
                     [disabled]="selectedGrp.id == undefined"
                     data-bs-toggle="modal"
-                    data-bs-target="#confirmModal">Delete</button>
+                    data-bs-target="#confirmModal"
+                    [disabled]="!isSaveEnable" 
+                    [ngClass]="{'disabled': !isSaveEnable}">Delete</button>
         </div>
     </div>
 </div>
@@ -109,15 +111,15 @@
           </div>
           <div class="alertext">
             This action cannot be undone.
-            Are you sure you want to delete the <strong>{{grpName}}</strong></div>
+            Are you sure you want to delete the <strong>{{grpName}}</strong>?</div>
           <div class="alertbutton">
-              <button class="btn btn-default  alertbtn alertbtnno"
+              <button class="btn btn-default  alertbtn alertbtnyes"
                       data-bs-dismiss="modal"
                       aria-label="Close">No</button>
-              <button class="btn btn-default alertbtn alertbtnyes"
+              <button class="btn btn-default alertbtn alertbtnno"
                       data-bs-dismiss="modal"
                       aria-label="Close"
-                      (click)="deleteMemberGroup()">Yes</button>
+                      (click)="deleteMemberGroup();scrollToTop()">Yes</button>
           </div>
       </div>
   </div>
@@ -128,3 +130,20 @@
   <div class="container" *ngIf="product == 'corporate'"> Department deleted successfully </div>
 </div>
 </jw-modal>
+
+<!--Confirmation modal-->
+<div class="modal fade" id="modalCancel" tabindex="-1" aria-labelledby="modalCancelLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <button type="button" class="btn-close remBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-body">
+                <div class="alertpara"><p class="alertparatxt"> Confirmation</p></div>
+            </div>
+            <div class="alertext">Changes you made will not be saved. Do you want to continue?</div>
+            <div class="alertbutton">
+                <button class="btn btn-default  alertbtn alertbtnno" data-bs-dismiss="modal"  aria-label="Close">No</button>
+                <button class="btn btn-default alertbtn alertbtnyes" data-bs-dismiss="modal" aria-label="Close" (click)="cancel()">Yes</button>
+            </div>
+        </div>
+    </div>
+  </div>

@@ -99,5 +99,49 @@ tr.veiw-items {
         inset: 0px auto auto -119px !important;
         background: #F0F0F0;
         padding: unset;
+        cursor: pointer;
+        //text-align: end;
     }
+}
+.savecls{
+    color: white;
+    background: #004D87;
+}
+.btnsave:disabled {
+    opacity: 0.5;
+    color: white;
+    background: #004D87;
+    pointer-events: none;
+}
+.conf{
+    font-weight: 900;
+}
+.alertparatxt{
+    font-weight: 900;
+    font-size: 1.6rem;
+    padding-top: 0px !important;
+}
+.update {
+    color: #004d87;
+    font-weight: 800;
+    font-size: 1.3rem;
+}
+
+.invalid-feedback {
+    color: red;
+}
+
+.modal-content {
+    width: 80% !important;
+    margin-left: 80px !important;
+}
+
+.remBtn {
+    margin-top: 10px;
+    //margin-left: 460px;
+    margin-left: 360px;
+}
+
+.alertbutton {
+    padding-bottom: 10px;
 }

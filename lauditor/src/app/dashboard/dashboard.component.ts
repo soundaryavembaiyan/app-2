@@ -31,7 +31,7 @@ export class DashboardComponent implements OnInit, OnChanges {
     {
       name: 'Matters',
       roles: ['TM', 'GH', 'SU'],
-      id: 'matters', link: '/matter/legalmatter/view', image: 'assets/img/Matters.svg', class: ''
+      id: 'matters', link: '/matter/legalmatter/create', image: 'assets/img/Matters.svg', class: ''
     },
     {
       name: 'Documents',
@@ -47,7 +47,7 @@ export class DashboardComponent implements OnInit, OnChanges {
       name: 'Relationships',
       roles: ['TM', 'GH', 'SU'],
       id: 'relationships',
-      link: '/relationship/view/individuals', image: 'assets/img/relationship.svg', class: ''
+      link: '/relationship/add/entity', image: 'assets/img/relationship.svg', class: ''
     },
     {
       name: 'Timesheets',
@@ -57,7 +57,7 @@ export class DashboardComponent implements OnInit, OnChanges {
     {
       name: 'Meetings',
       roles: ['TM', 'GH', 'SU', 'AAM'],
-      id: 'meetings', link: '/meetings/view', image: 'assets/img/meeting.svg', class: ''
+      id: 'meetings', link: '/meetings/create', image: 'assets/img/meeting.svg', class: ''
     },
     {
       name: 'Emails',
@@ -92,7 +92,7 @@ export class DashboardComponent implements OnInit, OnChanges {
     {
       name: 'Invoices',
       roles: ['GH', 'SU', 'TM'],
-      id: 'invoices', link: '/invoice', image: 'assets/img/invoice.svg', class: ''
+      id: 'invoices', link: '/createinvoice', image: 'assets/img/invoice.svg', class: ''
     }
     // {
     //   name: 'Payments',
@@ -110,7 +110,7 @@ export class DashboardComponent implements OnInit, OnChanges {
     {
       name: 'Matters',
       roles: ['TM', 'GH', 'SU'],
-      id: 'matters', link: '/matter/legalmatter/view', image: 'assets/img/Matters.svg', class: ''
+      id: 'matters', link: '/matter/legalmatter/create', image: 'assets/img/Matters.svg', class: ''
     },
     {
       name: 'Documents',
@@ -126,7 +126,7 @@ export class DashboardComponent implements OnInit, OnChanges {
       name: 'Relationships',
       roles: ['TM', 'GH', 'SU'],
       id: 'relationships',
-      link: '/relationship/view/corporate', image: 'assets/img/relationship.svg', class: ''
+      link: '/relationship/add/corporate', image: 'assets/img/relationship.svg', class: ''
     },
     // {
     //   name: 'Timesheets',
@@ -136,7 +136,7 @@ export class DashboardComponent implements OnInit, OnChanges {
     {
       name: 'Meetings',
       roles: ['TM', 'GH', 'SU', 'AAM'],
-      id: 'meetings', link: '/meetings/view', image: 'assets/img/meeting.svg', class: ''
+      id: 'meetings', link: '/meetings/create', image: 'assets/img/meeting.svg', class: ''
     },
     {
       name: 'Emails',
@@ -185,12 +185,12 @@ export class DashboardComponent implements OnInit, OnChanges {
     {
       name: 'Relationships',
       roles: ['TM', 'GH', 'SU'],
-      id: 'relationships', link: '/relationship/view/individuals', image: 'assets/img/relationship.svg', class: ''
+      id: 'relationships', link: '/relationship/add/entity', image: 'assets/img/relationship.svg', class: ''
     },
     {
       name: 'Meetings',
       roles: ['TM', 'GH', 'SU', 'AAM'],
-      id: 'meetings', link: '/meetings/view', image: 'assets/img/meeting.svg', class: ''
+      id: 'meetings', link: '/meetings/create', image: 'assets/img/meeting.svg', class: ''
     },
     {
       name: 'Emails',
@@ -275,7 +275,7 @@ export class DashboardComponent implements OnInit, OnChanges {
     {
       name: 'Meetings',
       roles: ['TM', 'GH', 'SU', 'AAM'],
-      id: 'meetings', link: '/meetings/view', image: 'assets/img/meeting.svg', class: ''
+      id: 'meetings', link: '/meetings/create', image: 'assets/img/meeting.svg', class: ''
     },
     {
       name: 'Messages',
@@ -300,7 +300,7 @@ export class DashboardComponent implements OnInit, OnChanges {
     {
       name: 'Groups',
       roles: ['AAM', 'SU'],
-      id: 'groups', link: '/groups', image: 'assets/img/total.svg', class: ''
+      id: 'groups', link: '/groups/view-group', image: 'assets/img/total.svg', class: ''
     }
   ]
 

@@ -3,7 +3,8 @@ import { HttpService } from 'src/app/services/http.service';
 import { URLUtils } from 'src/app/urlUtils';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-
+import { Router } from '@angular/router';
+declare var bootstrap: any; // Import Bootstrap for modal triggering
 
 @Component({
   selector: 'app-member-edit',
@@ -30,7 +31,7 @@ export class MemberEditComponent implements OnInit {
   
 
   constructor(private formBuilder: FormBuilder, private toast: ToastrService,
-              private httpService: HttpService) {
+              private httpService: HttpService,  private router: Router) {
    this.createMemberForm = this.formBuilder.group({
             name: ['', Validators.required],
             designation: ['', Validators.required],
@@ -78,8 +79,21 @@ export class MemberEditComponent implements OnInit {
         
     })
   }
-  cancel(){
-    this.event.emit('edit-member-close')
-  }
+  // cancel(){
+  //   this.event.emit('edit-member-close')
+  // }
 
+  cancel() {
+    if (this.createMemberForm.dirty) {
+      const cancelModal = new bootstrap.Modal(document.getElementById('modalCancel'), {});
+      cancelModal.show(); // Trigger the confirmation dialog
+    } else {
+      this.event.emit('edit-member-close'); // Emit the event to navigate back without showing the dialog
+    }
+  }
+  
+  closeDialog() {
+    this.event.emit('edit-member-close');
+  }
+  
 }

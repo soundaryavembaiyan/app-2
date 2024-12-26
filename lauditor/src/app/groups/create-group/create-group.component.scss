@@ -51,7 +51,8 @@ label {
 }
 .remBtn{
     margin-top: 10px;
-    margin-left: 460px;
+    //margin-left: 460px;
+    margin-left: 360px;
 }
 .invalid-feedback {
     color: #ff0019;
@@ -64,4 +65,65 @@ label {
     font-size: 20px;
     font-weight: 900;
     padding-bottom: 5px;
+}
+.chn{
+    //font-weight: 900;
+    width: auto;
+}
+.alertbutton{
+    padding-bottom: 10px;
+}
+.btnbtn {
+    //background: #1476B0;
+    border-radius: 3px;
+    color: #fff;
+    font-weight: 900;
+    margin-left: 20px;
+}
+// .lefali{
+//     margin-left: 80px;
+//     padding: 0;
+//     text-align: left;
+// }
+.modal-content{
+    width: 80% !important;
+    margin-left: 80px !important;
+}
+.alertparatxt{
+    font-weight: 900;
+    font-size: 1.6rem;
+    padding-top: 0px !important;
+}
+.conf{
+    font-weight: 900;
+    width: auto;
+}
+.btncs{
+    margin-left: -85px;
+}
+
+//disable the corner div style!!
+.input-group.court.assignGrp > .form-control.textbox,
+.input-group.court.assignGrp > .fa {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.invalid-feedback{
+    color: red;
+}
+.update{
+    color: #004d87;
+    font-weight: 900;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    margin-top: 10px;
+}
+.compone{
+    font-weight: 900 !important;
+}
+.btnsave:disabled {
+    opacity: 0.5;
+    color: white;
+    background: #004D87;
+    pointer-events: none;
 }

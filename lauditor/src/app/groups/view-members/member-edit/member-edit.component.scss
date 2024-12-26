@@ -277,10 +277,37 @@ text-align: center;
 }
 .element {
   max-width: fit-content;
-  margin-left: auto;
-  margin-right: auto;
+  // margin-left: auto;
+  // margin-right: auto;
   font-size: 1.4rem;
   font-weight: 900;
   color: #004D87;
   padding-bottom: 16px;
+}
+.btnsave:disabled {
+  opacity: 0.5;
+  color: white;
+  background: #004D87;
+  pointer-events: none;
+}
+.modal-content{
+  width: 80% !important;
+  margin-left: 80px !important;
+}
+.alertparatxt{
+  font-weight: 900;
+  font-size: 1.6rem;
+  padding-top: 0px !important;
+}
+.conf{
+  font-weight: 900;
+  width: auto;
+}
+.remBtn{
+  margin-top: 10px;
+  //margin-left: 460px;
+  margin-left: 360px;
+}
+.alertbutton{
+  padding-bottom: 10px;
 }

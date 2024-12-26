@@ -116,21 +116,22 @@
   <!-- grid ends here -->
 
   <div *ngIf="editGroupShow" class="container main width-alignment">
-    <!-- <div *ngIf="successMsg">
-        {{successMsg}}
-    </div> -->
+    <!-- <div *ngIf="successMsg">{{successMsg}}</div> -->
     <div class="col-12 Individual createGroup">
+      <div class="update">Edit Group Info</div>
         <form [formGroup]="editGroupform" (ngSubmit)="onSubmit()">
             <div class="row"> <!--*ngIf="product != 'corporate'"-->
                 <div class="col-6" *ngIf="product != 'corporate'">
                     <div class="form-group nameSet">
-                        <label for="title" class="lable-size">Group Name:</label>
+                        <label for="title" class="lable-size">Group Name <span class="mandate">*</span></label>
                         <input type="text"
                                formControlName="name"
                                class="text-size form-control group-name-text"
                                [(ngModel)]="editGroupView.name"
                                [ngClass]="{ 'is-invalid': submitted && f.name.errors }" id="caseTitle"
-                               placeholder="Group Name" name="name">
+                               name="name"
+                               (input)="onSearchChange();restricttextSpace($event)">
+                        <div style="color: red;font-size: .875em;" *ngIf="error">{{error}}</div>
                         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
                             <div *ngIf="f.name.errors.required">Group Name is required</div>
                         </div>
@@ -139,13 +140,14 @@
 
                 <div class="col-6" *ngIf="product == 'corporate'">
                   <div class="form-group nameSet">
-                      <label for="title" class="lable-size">Department Name:</label>
+                      <label for="title" class="lable-size">Department Name <span class="mandate">*</span></label>
                       <input type="text"
                              formControlName="name"
                              class="text-size form-control group-name-text"
                              [(ngModel)]="editGroupView.name"
                              [ngClass]="{ 'is-invalid': submitted && f.name.errors }" id="caseTitle"
-                             placeholder="Department Name" name="name">
+                             (input)="onSearchChange();restricttextSpace($event)" name="name">
+                      <div style="color: red;font-size: .875em;" *ngIf="error">{{error}}</div>       
                       <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
                           <div *ngIf="f.name.errors.required">Department Name is required</div>
                       </div>
@@ -154,12 +156,12 @@
 
                 <div class="col-6">
                     <div class="form-group nameSet">
-                        <label for="comment" class="lable-size">Description:</label>
+                        <label for="comment" class="lable-size">Description <span class="mandate">*</span></label>
                         <textarea formControlName="description"
                                   class="form-control text-size text-area-height"
                                   [(ngModel)]="editGroupView.description"
                                   [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
-                                  placeholder="Description"
+                                  (input)="restricttextSpace($event)"
                                   name="description"></textarea>
                         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
                             <div *ngIf="f.description.errors.required">Description is required</div>
@@ -168,8 +170,9 @@
                 </div>
             </div>
             <div class="btnbox">
-                <button type="reset" class="btn btn-default btncancel" (click)="onReset()">Cancel</button>
-                <button type="submit" class="btn btn-default btnsave">Save</button>
+                <button type="button" class="btn btn-default btncancel" (click)="onReset()">Cancel</button>
+                <button type="submit" class="btn btn-default btnsave" 
+                [disabled]="editGroupform.pristine || editGroupform.invalid">Save</button>
             </div>
         </form>
     </div>
@@ -195,10 +198,10 @@
                     <div class="alertpara">
                         <p class="alertparatxt"> Success</p>
                     </div>
-                    <div class="alertext">Congratulations!! You have successfully deleted  {{selectedGrpName}}.
+                    <div class="alertext">Congratulations!! <br> You have successfully deleted <b>{{selectedGrpName}}</b>.
                     </div>   
                     <div class="center">
-                      <button class="btn btn-primary  " (click)="closeModal('group-del-success')">OK</button>
+                      <button class="btn savecls" (click)="closeModal('group-del-success')">OK</button>
                   </div>                
                 </div>
             </div>
@@ -214,10 +217,10 @@
                     <div class="alertpara">
                         <p class="alertparatxt"> Success</p>
                     </div>
-                    <div class="alertext" *ngIf="product != 'corporate'">Congratulations!! You have Successfully Updated the Group Head of  {{selectedGrpName}} Group.</div> 
-                    <div class="alertext" *ngIf="product == 'corporate'">Congratulations!! You have Successfully Updated the Department Head of  {{selectedGrpName}} Department.</div>   
+                    <div class="alertext" *ngIf="product != 'corporate'">Congratulations!! You have successfully updated the Group Head of <b>{{selectedGrpName}}</b> Group.</div> 
+                    <div class="alertext" *ngIf="product == 'corporate'">Congratulations!! You have successfully updated the Department Head of <b>{{selectedGrpName}}</b> Department.</div>   
                     <div class="center">
-                      <button class="btn btn-primary  " (click)="closeModal('group-gh-success')">OK</button>
+                      <button class="btn savecls" (click)="closeModal('group-gh-success')">OK</button>
                   </div>                  
                 </div>
             </div>
@@ -233,12 +236,10 @@
                     <div class="alertpara">
                         <p class="alertparatxt"> Success</p>
                     </div>
-
-                    <div class="alertext" *ngIf="product != 'corporate'">Congratulations!! You have successfully updated Group Members list of {{selectedGrpName}} Group.</div>
-                    <div class="alertext" *ngIf="product == 'corporate'">Congratulations!! You have successfully updated Department Members list of {{selectedGrpName}} Department.</div>   
-                    
+                    <div class="alertext" *ngIf="product != 'corporate'">Congratulations!! <br>You have successfully updated group members list of <b>{{selectedGrpName}}</b> group.</div>
+                    <div class="alertext" *ngIf="product == 'corporate'">Congratulations!! <br>You have successfully updated department members list of <b>{{selectedGrpName}}</b> department.</div>
                     <div class="center">
-                      <button class="btn btn-primary  " (click)="closeModal('group-upmem-success')">OK</button>
+                      <button class="btn savecls" (click)="closeModal('group-upmem-success')">OK</button>
                     </div>                 
                 </div>
             </div>
@@ -254,13 +255,30 @@
                     <div class="alertpara">
                         <p class="alertparatxt"> Success</p>
                     </div>
-                    <div class="alertext" *ngIf="product != 'corporate'">Congratulations!! You have successfully Updated Group information.</div> 
-                    <div class="alertext" *ngIf="product == 'corporate'">Congratulations!! You have successfully Updated Department information.</div>  
+                    <div class="alertext conf" *ngIf="product != 'corporate'">Congratulations!! You have successfully updated Group information.</div> 
+                    <div class="alertext conf" *ngIf="product == 'corporate'">Congratulations!! You have successfully updated Department information.</div>  
                     <div class="center">
-                      <button class="btn btn-primary  " (click)="closeModal('group-update-success')">OK</button>
+                      <button class="btn savecls" (click)="closeModal('group-update-success')">OK</button>
                   </div>                 
                 </div>
             </div>
         </div>
     </div>
 </jw-modal>
+
+<!-- Confirmation Modal -->
+<div class="modal fade" id="modalCancel" tabindex="-1" aria-labelledby="modalCancelLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<button type="button" class="btn-close remBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+			<div class="modal-body">
+				<div class="alertpara"><p class="alertparatxt">Alert</p></div>
+			</div>
+			<div class="alertext conf">Changes you made will not be saved. <br>Do you want to continue?</div>
+			<div class="alertbutton">
+				<button class="btn btn-default alertbtn alertbtnno" data-bs-dismiss="modal" aria-label="Close">No</button>
+				<button class="btn btn-default alertbtn alertbtnyes" data-bs-dismiss="modal" aria-label="Close" (click)="closeDialog()">Yes</button>
+			</div>
+		</div>
+	</div>
+</div>

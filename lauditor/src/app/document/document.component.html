@@ -9,9 +9,9 @@
             <a href="javascript:void(0);" class="docOption doc-option view create" routerLink="/documents/view/client" *ngIf="product != 'corporate'">View</a>
             <a href="javascript:void(0);" class="docOption doc-option view corpView" routerLink="/documents/view/firm" *ngIf="product == 'corporate'">View</a>
             <!-- CSS Styles based on Product for Upload Button-->
-            <a href="javascript:void(0);" class="docOption doc-option upload mergepdf" routerLink="/documents/upload/client" *ngIf="product == 'connect'">Upload</a>
-            <a href="javascript:void(0);" class="docOption doc-option upload" routerLink="/documents/upload/client" *ngIf="product == 'content' || product == 'lauditor'">Upload</a>
-            <a href="javascript:void(0);" class="docOption doc-option upload" routerLink="/documents/upload/firm" *ngIf="product == 'corporate'">Upload</a>
+            <a href="javascript:void(0);" class="docOption doc-option upload mergepdf" routerLink="/documents/upload/client" (click)="reupload()" *ngIf="product == 'connect'">Upload</a>
+            <a href="javascript:void(0);" class="docOption doc-option upload" routerLink="/documents/upload/client" (click)="reupload()" *ngIf="product == 'content' || product == 'lauditor'">Upload</a>
+            <a href="javascript:void(0);" class="docOption doc-option upload" routerLink="/documents/upload/firm" (click)="reupload()" *ngIf="product == 'corporate'">Upload</a>
             <!--//////////////-->
             <a href="javascript:void(0);" class="docOption doc-option mergepdf pdfmergedoc" routerLink="/documents/mergepdf/client" (click)="reload()" *ngIf="product != 'connect' && product != 'corporate'">Merge PDF</a>
             <a href="javascript:void(0);" class="docOption doc-option mergepdf pdfmergedoc" routerLink="/documents/mergepdf/firm" (click)="reload()" *ngIf="product == 'corporate'">Merge PDF</a>

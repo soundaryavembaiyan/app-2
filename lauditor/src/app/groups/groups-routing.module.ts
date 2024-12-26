@@ -12,7 +12,7 @@ const routes: Routes = [
         path: '',
         component: GroupsComponent,
         children: [
-            {path: '', redirectTo: 'view-group', pathMatch: 'full'},
+            {path: '', redirectTo: 'create-group', pathMatch: 'full'},
             { path: 'create-member', component: CreateMembersComponent },
             { path: 'create-group', component: CreateGroupComponent },
             { path: 'view-member', component:  ViewMembersComponent},

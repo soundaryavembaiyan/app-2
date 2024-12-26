@@ -120,5 +120,10 @@ export class DocumentComponent implements OnInit {
     const link = 'documents/mergepdf/' + filter;
     window.location.href = link;
   }
+  reupload(){
+    let filter = window.location.pathname.split("/").splice(-2)[1];
+    const link = 'documents/upload/' + filter;
+    window.location.href = link;
+  }
   
 }

@@ -3,7 +3,7 @@
         <label for="select" class="lable-size update" *ngIf="product != 'corporate'">Update Group Members</label>
         <label for="select" class="lable-size update" *ngIf="product == 'corporate'">Update Department Members</label>
         <div class="row">
-            <div class="col-6 ">
+            <div class="col-6" style="margin-top: 18px;">
                 <div class=" col-12 padding-unset">
                     <div class="form-group nameSet">
                     <div class="row">
@@ -11,18 +11,19 @@
                             <label for="select" class="sub-lable-size" *ngIf="product != 'corporate'">Group members</label>
                             <label for="select" class="sub-lable-size" *ngIf="product == 'corporate'">Department members</label>
                         </div>
-                        <div class="col-6 ">
+                        <!-- <div class="col-6 ">
                             <button for="title"
                                     class="removebtn float-right"
                                     data-bs-toggle="modal"
                                     data-bs-target="#modalCancel">Remove All</button>
-                        </div>
+                        </div> -->
                     </div>
                     </div>
                 </div>
                 <div class="form-group nameSet">
-                    <div class="input-group court" id="selectedgroup">
-                        <i class="fa fa-users" aria-hidden="true"></i>
+                    <div class="input-group court" id="selectedgroup" *ngIf="ghname">
+                        <!-- <i class="fa fa-users" aria-hidden="true"></i> -->
+                      <img class="ghico fa-users" src="assets/img/ghicon.svg">
                       <input type="text" class="form-control textbox"
                             *ngIf="product != 'corporate'" placeholder="{{ghname}} - Group Head" disabled />
                       <input type="text" class="form-control textbox"
@@ -63,8 +64,9 @@
             </div>
         </div>
         <div class="btnbox">
-            <button type="button" class="btn btn-default btncancel" (click)= "closeClickMembers()">Cancel</button>
-            <button type="button" class="btn btn-default btnsave" (click)="saveMembers()">Save</button>
+            <button type="button" class="btn btn-default btncancel" (click)= "onCancel()">Cancel</button>
+            <button type="button" class="btn btn-default btnsave" (click)="saveMembers()"
+            [disabled]="!(members.length > 0 && isSaveEnable)" [ngClass]="{'disabled': !(members.length > 0 && isSaveEnable)}">Save</button>
         </div>
 </div>
 <div class="modal fade"
@@ -74,14 +76,14 @@
      aria-hidden="true">
   <div class="modal-dialog">
       <div class="modal-content">
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" class="btn-close remBtn" data-bs-dismiss="modal" aria-label="Close"></button>
           <div class="modal-body">
               <div class="alertpara">
                   <p class="alertparatxt">Alert</p>
                 </div>
           </div>
-          <div class="alertext" *ngIf="product != 'corporate'">Are you sure you want to remove?. All the members from {{gname}} Group?</div>
-          <div class="alertext" *ngIf="product == 'corporate'">Are you sure you want to remove?. All the members from {{gname}} Department?</div>
+          <div class="alertext" *ngIf="product != 'corporate'">Are you sure you want to remove all the members from <b>{{gname}}</b> Group?</div>
+          <div class="alertext" *ngIf="product == 'corporate'">Are you sure you want to remove all the members from <b>{{gname}}</b> Department?</div>
           <div class="alertbutton">
               <button class="btn btn-default  alertbtn alertbtnno"
                       data-bs-dismiss="modal"
@@ -93,4 +95,21 @@
           </div>
       </div>
   </div>
+</div>
+
+<!--Confirmation modal-->
+<div class="modal fade" id="modalConfirm" tabindex="-1" aria-labelledby="modalCancelLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <button type="button" class="btn-close remBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-body">
+                <div class="alertpara"><p class="alertparatxt"> Confirmation</p></div>
+            </div>
+            <div class="alertext">Changes you made will not be saved. Do you want to continue?</div>
+            <div class="alertbutton">
+                <button class="btn btn-default  alertbtn alertbtnno" data-bs-dismiss="modal"  aria-label="Close">No</button>
+                <button class="btn btn-default alertbtn alertbtnyes" data-bs-dismiss="modal" aria-label="Close" (click)="closeClickMembers()">Yes</button>
+            </div>
+        </div>
+    </div>
 </div>

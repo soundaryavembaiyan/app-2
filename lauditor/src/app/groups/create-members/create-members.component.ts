@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { HttpErrorResponse } from '@angular/common/http';
+declare var bootstrap: any; // Import Bootstrap for modal triggering
 
 @Component({
   selector: 'app-create-members',
@@ -42,6 +43,8 @@ export class CreateMembersComponent implements OnInit {
                   "BahrainiDinar(BHD)", 
                   "IndianRupee(INR)" ]
   msg: string | undefined;
+  isSaveDisabled:boolean = true;
+  error:string = '';
   
   constructor(private formBuilder: FormBuilder,
               private httpService: HttpService, 
@@ -92,10 +95,10 @@ export class CreateMembersComponent implements OnInit {
       }
       if (error.status === 401 || error.status === 403) {
         const errorMessage = error.error.msg || 'Unauthorized';
-        this.toast.error(errorMessage);
-        console.log(error);
+        this.error = errorMessage;
+        // this.toast.error(errorMessage);
+        // console.log(error);
       }
-
     })
   }
   
@@ -140,6 +143,7 @@ export class CreateMembersComponent implements OnInit {
     } else {
       this.selectedGroups.splice(index, 1)
     }
+    this.isSaveDisabled = this.selectedGroups.length === 0;
   }
   successResp(action: string){
     if(action == 'view'){
@@ -162,6 +166,29 @@ export class CreateMembersComponent implements OnInit {
     event.target.value = inputValue;
     return;
   }
+  closeModal(): void {
+    this.successModel = false;
+  }
+
+  cancel() {
+    const formValues = this.createMemberForm.value;
+    const fieldsToCheck = ['name', 'designation', 'email', 'emailConfirm', 'defaultRate'];
+  
+    // Check if any of the specified fields have a non-empty value
+    const hasValues = fieldsToCheck.some(field => {
+      const value = formValues[field];
+      return typeof value === 'string' ? value.trim() !== '' : value !== null && value !== undefined;
+    });
+  
+    if (hasValues) {
+      const modalElement = document.getElementById('modalCancel');
+      const modalInstance = new bootstrap.Modal(modalElement);
+      modalInstance.show();
+    } else {
+      //console.log('fields are empty');
+    }
+  }
+  
 }
 
 

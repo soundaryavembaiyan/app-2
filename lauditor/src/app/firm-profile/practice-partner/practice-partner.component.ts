@@ -144,7 +144,7 @@ export class PracticePartnerComponent {
     this.selectedMember = member;
     console.log('this.selectedMember',this.selectedMember)
     this.confirmationDialogService.confirm('Confirmation', 
-    ' Are you sure! Do you want to delete this '+this.selectedMember?.practice+' Partner?', 
+    ' Are you sure, Do you want to delete this ' + this.selectedMember?.practice + ' Partner?', 
 
     true, 'Yes', 'No')
       .then((confirmed) => {
