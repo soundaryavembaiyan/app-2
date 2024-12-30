@@ -140,6 +140,8 @@ export class LegalMatterCalenderComponent implements OnInit {
       this.addNotification();
       // this.getTms();
       // this.getEntities();
+      this.getTmslist();
+      this.getEntitylist();
     }
   }
   CalenderForm = this.fb.group({
@@ -995,5 +997,48 @@ export class LegalMatterCalenderComponent implements OnInit {
     inputValue = inputValue.replace(/^\s+/, '');
     inputValue = inputValue.replace(/\s{2,}/g, ' ');
     event.target.value = inputValue;
+  }
+  
+  getTmslist() {
+    this.httpservice.sendGetRequest(URLUtils.getCalenderTms).subscribe((res: any) => {
+      this.tmsList = [];
+      this.tmsList = res?.users;
+      if (this.selectedTeammembers.length > 0) {
+        this.tmsList = this.tmsList.filter((el: any) => {
+          return !this.selectedTeammembers.find((element: any) => {
+            return element.id === el.id;
+          });
+        });
+      }
+    })
+  }
+  getEntitylist() {
+    if(this.product!='corporate'){
+      this.httpservice.getFeaturesdata(URLUtils.getRelationship).subscribe((res: any) => {
+        this.entityList = [];
+        this.entityList = res?.data?.relationships.filter((rel:any) => rel.type === 'entity');
+        this.conlist = res?.data?.relationships.filter((rel:any) => rel.type === 'consumer');
+        if (this.selectedconsumer.length > 0) {
+          this.conlist = this.conlist.filter((el: any) => {
+            return !this.selectedconsumer.find((element: any) => {
+              return element.id === el.id;
+            });
+          });
+        }
+      })
+    }
+    if(this.product == 'lauditor'){
+      this.httpservice.getFeaturesdata(URLUtils.getCalenderExternal).subscribe((res: any) => {
+        this.corpList = [];
+        this.corpList = res?.relationships;
+    })
+    } 
+    if(this.product == 'corporate'){
+      this.httpservice.getFeaturesdata(URLUtils.getCalenderExternal).subscribe((res: any) => {
+        this.entityList = []; 
+        this.entityList = res?.relationships?.filter((rel:any) => rel.type === 'entity');
+        console.log(this.entityList)
+      })
+    }
   }
 }

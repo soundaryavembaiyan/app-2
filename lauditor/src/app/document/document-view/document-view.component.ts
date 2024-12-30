@@ -437,9 +437,25 @@ export class DocumentViewComponent implements OnInit {
         // console.log('in',index)
         // console.log('this.tagsFormArray',this.tagsFormArray.length)
         if(this.tagsFormArray.length === 0 && index === 0){
-            this.addTag();
+            this.addTags();
             return;
         }
+    }
+
+    addTags(key: string = '', value: string = '') {
+        const tagGroup = this.formBuilder.group({
+            key: [key, Validators.required],
+            value: [value, Validators.required]
+        });
+        this.tagsFormArray.push(tagGroup);
+        setTimeout(() => {
+            const inputs = document.querySelectorAll('.addtagField');
+            const lastInput = inputs[inputs.length - 1] as HTMLInputElement; // Get the last input element
+            if (lastInput) {
+              lastInput.focus(); // Focus on the last input
+            }
+          }, 100);
+       // this.reset();
     }
 
     onSubmit() {
@@ -451,6 +467,9 @@ export class DocumentViewComponent implements OnInit {
 
         this.editDocform.value.expiration_date = this.bsValue ? this.pipe.transform(this.bsValue, 'dd-MM-yyyy') : '';
         let item = this.editDocform.value;
+
+        // console.log("editDoc",this.editDoc)
+        // console.log("item",item)
 
         //console.log("date  " + JSON.stringify(item));
         this.httpservice.sendPutRequest(URLUtils.editDocuments(this.editDoc), item).subscribe((res: any) => {

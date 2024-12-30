@@ -68,7 +68,7 @@ export class CreateMembersComponent implements OnInit {
 
 
   resetEmailConf(){
-    this.createMemberForm.controls['emailConfirm'].setErrors(null)
+    //this.createMemberForm.controls['emailConfirm'].setErrors(null)
   }
 
   onSubmit() {
@@ -85,8 +85,8 @@ export class CreateMembersComponent implements OnInit {
     payload["groups"] = this.selectedGroups?.map((obj: any) => obj.id);
     this.httpService.sendPostRequest(URLUtils.addMember, payload).subscribe((res: any) => {
           this.successModel = true;
-          this.successMemName = payload['name']
-          this.successGrpCount = payload['groups'].length
+          this.successMemName = payload['name'];
+          this.successGrpCount = payload['groups'].length;
 
     }, (error: HttpErrorResponse) => {
       if (error.status == 400) {
@@ -187,6 +187,10 @@ export class CreateMembersComponent implements OnInit {
     } else {
       //console.log('fields are empty');
     }
+  }
+  restrictToNumbers(event: Event) {
+    const target = event.target as HTMLInputElement;
+    target.value = target.value.replace(/[^0-9]/g, ''); // Remove any non-numeric characters
   }
   
 }

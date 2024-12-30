@@ -310,14 +310,34 @@
                 </div>
               </div>
               <div class="alertbutton">
-                <button class="btn btn-default  alertbtn alertbtnno" (click)="closeModal('custom-modal-2');">No</button>
-                <button class="btn btn-default alertbtn alertbtnyes"
+                <button class="btn btn-default alertbtn alertbtnyes" (click)="closeModal('custom-modal-2');">No</button>
+                <button class="btn btn-default alertbtn alertbtnno"
                   (click)="closeModal('custom-modal-2');deleteDoc()">Yes</button>
               </div>
             </div>
           </div>
         </div>
     </jw-modal>
+
+    <!-- Success Modal -->
+    <jw-modal id="modal-success" class="grp-update-success alert-box">
+      <div class="doc-iframe-scs-body ">
+          <div class="container">
+              <div class="row">
+                  <div class="alertbox">
+                      <div class="close-x float-right" (click)="closeModal('modal-success');reok();">X</div>
+                      <div class="alertpara">
+                          <p class="alertparatxt"> Success</p>
+                      </div>
+                      <div class="alertext conf">Congratulations!!<br> You have successfully deleted the document.</div> 
+                      <div class="center">
+                        <button class="btn savecls" (click)="closeModal('modal-success');reok()">OK</button>
+                    </div>                 
+                  </div>
+              </div>
+          </div>
+      </div>
+   </jw-modal>
 
     <ngx-spinner size="medium" type="ball-clip-rotate"></ngx-spinner>
 </div> 

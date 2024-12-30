@@ -249,6 +249,11 @@ export class ViewGroupComponent implements OnInit {
     event.target.value = inputValue;
     return;
   }
+  preventSpaceKey(event: KeyboardEvent) {
+    if (event.key === ' ' || event.code === 'Space') {
+      event.preventDefault(); // Prevent space key action
+    }
+  }
   closeDialog() {
     this.editGroupShow = false;
   }

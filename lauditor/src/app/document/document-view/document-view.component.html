@@ -593,7 +593,7 @@
               <button type="button" class="btn btn-default  test btncancel" data-bs-dismiss="modal" aria-label="Close"
                 (click)="reset()">Cancel</button>
               <button type="submit" class="btn btn-default btnsave" data-bs-dismiss="modal" aria-label="Close"
-              [disabled]="editDocform.invalid">Save</button>
+              [disabled]="editDocform.pristine || editDocform.invalid">Save</button>
             </div>
           </form>
         </div>
@@ -648,7 +648,7 @@
             <div class="btnbox">
               <button type="button" class="btn btn-default test btncancel" data-bs-dismiss="modal" aria-label="Close" (click)="reset()">Cancel</button>
               <button type="submit" class="btn btn-default btnsave" data-bs-dismiss="modal" aria-label="Close" 
-              >Save</button><!--[ngClass]="{ 'is-invalid': tagDocform.invalid }"-->
+              [disabled]="tagDocform.pristine || tagDocform.invalid">Save</button><!--[ngClass]="{ 'is-invalid': tagDocform.invalid }"-->
             </div>
           </form>
         </div>

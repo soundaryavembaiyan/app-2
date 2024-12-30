@@ -51,10 +51,10 @@ textarea {
     font-size: 1.4rem;
 }
 
-.remBtn {
-    margin-top: 10px;
-    margin-left: 460px;
-}
+// .remBtn {
+//     margin-top: 10px;
+//     margin-left: 460px;
+// }
 .btnsave:disabled {
     opacity: 0.5;
     color: white;
@@ -73,4 +73,18 @@ textarea {
 }
 .btnbox{
     margin-left: 80px;
+}
+.modal-content {
+    width: 80% !important;
+    margin-left: 80px !important;
+}
+.remBtn {
+    margin-top: 10px;
+    //margin-left: 460px;
+    margin-left: 360px;
+}
+.alertparatxt{
+    font-weight: 900;
+    font-size: 1.6rem;
+    padding-top: 0px !important;
 }

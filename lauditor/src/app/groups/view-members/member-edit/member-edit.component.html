@@ -6,11 +6,9 @@
     				<div class="col-6">
     					<div class="form-group errorMsg nameSet ">
     						<label for="title" class="lable-size">Name <span class="mandate">*</span></label>
-    						<input type="text"
-    						formControlName="name"
+    						<input type="text" formControlName="name" (input)="restricttextSpace($event)"
     						class=" text-size form-control member-name-text"
-    						[ngClass]="{ 'is-invalid': submitted && f.name.errors }" id="caseTitle"
-    						name="name">
+    						[ngClass]="{ 'is-invalid': submitted && f.name.errors }" id="caseTitle" name="name">
     						<div *ngIf="submitted && f.name.errors" class="invalid-feedback ">
     							<div *ngIf="f.name.errors.required">
     								Name is required
@@ -19,7 +17,7 @@
     					</div>
     					<div class="form-group errorMsg nameSet">
     						<label for="comment" class="lable-size">Designation <span class="mandate">*</span></label>
-    						<input type="text" formControlName="designation"
+    						<input type="text" formControlName="designation" (input)="restricttextSpace($event)"
     						class=" text-size form-control member-name-text"
     						[ngClass]="{ 'is-invalid': submitted && f.designation.errors }" id="caseTitle"
     						name="designation">
@@ -45,9 +43,9 @@
                                 </div>
     						</div>
     						<div class="col-6 ">
-    							<label for="title" class="lable-size">Default Rate <span class="mandate">*</span></label>
+    							<label for="title" class="lable-size">Default Rate</label>
     							<input type="text"
-            						   formControlName="defaultRate"
+            						   formControlName="defaultRate" (input)="restricttextSpace($event);restrictToNumbers($event)"
             						class="nameSet text-size form-control member-name-text"
             							[ngClass]="{ 'is-invalid': submitted && f.defaultRate.errors }"
             							id="caseTitle"
@@ -64,7 +62,7 @@
     			<div class="col-6">
     				<div class=" form-group errorMsg  nameSet">
     					<label for="exampleInputEmail1" class="form-label lable-size">Email <span class="mandate">*</span></label>
-    					<input type="email"
+    					<input type="email" (input)="restricttextSpace($event)"
                                formControlName="email"
                                class="form-control member-name-text"
     					       id="exampleInputEmail1"
@@ -82,7 +80,7 @@
     					<label for="exampleInputEmail2" class="form-label lable-size"> Confirm Email <span class="mandate">*</span></label>
     					<input type="email"
                                formControlName="emailConfirm"
-                               placeholder=""
+                               placeholder="" (input)="restricttextSpace($event)"
     					       class="form-control member-name-text"
                                id="exampleInputEmail2"
                                aria-describedby="emailHelp"

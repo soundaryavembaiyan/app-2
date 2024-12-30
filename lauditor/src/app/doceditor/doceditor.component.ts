@@ -2121,12 +2121,13 @@ export class DoceditorComponent {
     if (this.documentId) {
       this.httpservice.sendDeleteLatexRequest(URLUtils.deleteDocid(this.documentId)).subscribe((res: any) => {
         if (!res.error) {
-          this.toast.success('Document deleted successfully.');
+          //this.toast.success('Document deleted successfully.');
+          this.modalService.open('modal-success');
           // setTimeout(() => {
           //   window.location.reload();
           // }, 500);
-          const link =  `/doceditor`;
-          window.location.href = link;
+          // const link =  `/doceditor`;
+          // window.location.href = link;
         }
       },
         (error: HttpErrorResponse) => {
@@ -2136,6 +2137,10 @@ export class DoceditorComponent {
           }
         });
     }
+  }
+  reok() {
+    const link =  `/doceditor`;
+    window.location.href = link;
   }
   closeModal(id: string) {
     this.modalService.close(id);
@@ -2453,7 +2458,8 @@ export class ViewDocComponent {
       this.httpservice.sendDeleteLatexRequest(URLUtils.deleteDocid(item.docid)).subscribe((res: any) => {
         if (!res.error) {
           this.getDocumentCall();
-          this.toast.success('Document deleted successfully.');
+          //this.toast.success('Document deleted successfully.');
+          this.modalService.open('modal-success');
         }
       },
         (error: HttpErrorResponse) => {

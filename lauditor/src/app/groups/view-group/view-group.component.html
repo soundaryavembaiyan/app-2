@@ -9,7 +9,7 @@
                   <div class="input-group group-custom-align court" id="search">
                     <input type="text" *ngIf="product != 'corporate'"
                             class="form-control textbox"
-                            placeholder="Search Group" [(ngModel)]="searchText" 
+                            placeholder="Search Groups" [(ngModel)]="searchText" 
                             oninput="this.value = this.value.replace(/[^A-Za-z0-9 _+&@.,]|^ /g,'')"/>
 
                     <input type="text" *ngIf="product == 'corporate'"
@@ -129,7 +129,7 @@
                                class="text-size form-control group-name-text"
                                [(ngModel)]="editGroupView.name"
                                [ngClass]="{ 'is-invalid': submitted && f.name.errors }" id="caseTitle"
-                               name="name"
+                               name="name" (keydown)="preventSpaceKey($event)" 
                                (input)="onSearchChange();restricttextSpace($event)">
                         <div style="color: red;font-size: .875em;" *ngIf="error">{{error}}</div>
                         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
@@ -144,7 +144,7 @@
                       <input type="text"
                              formControlName="name"
                              class="text-size form-control group-name-text"
-                             [(ngModel)]="editGroupView.name"
+                             [(ngModel)]="editGroupView.name" (keydown)="preventSpaceKey($event)" 
                              [ngClass]="{ 'is-invalid': submitted && f.name.errors }" id="caseTitle"
                              (input)="onSearchChange();restricttextSpace($event)" name="name">
                       <div style="color: red;font-size: .875em;" *ngIf="error">{{error}}</div>       
@@ -161,7 +161,7 @@
                                   class="form-control text-size text-area-height"
                                   [(ngModel)]="editGroupView.description"
                                   [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
-                                  (input)="restricttextSpace($event)"
+                                  (input)="restricttextSpace($event)" (keydown)="preventSpaceKey($event)" 
                                   name="description"></textarea>
                         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
                             <div *ngIf="f.description.errors.required">Description is required</div>

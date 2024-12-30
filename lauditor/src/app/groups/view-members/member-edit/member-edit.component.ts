@@ -95,5 +95,17 @@ export class MemberEditComponent implements OnInit {
   closeDialog() {
     this.event.emit('edit-member-close');
   }
+
+  restricttextSpace(event: any) {
+    let inputValue: string = event.target.value;
+    inputValue = inputValue.replace(/^\s+/, '');
+    inputValue = inputValue.replace(/\s{2,}/g, ' ');
+    event.target.value = inputValue;
+    return;
+  }
   
+  restrictToNumbers(event: Event) {
+    const target = event.target as HTMLInputElement;
+    target.value = target.value.replace(/[^0-9]/g, ''); // Remove any non-numeric characters
+  }
 }

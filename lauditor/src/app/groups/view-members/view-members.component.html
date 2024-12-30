@@ -8,7 +8,7 @@
                   <div class="input-group group-custom-align court" id="search">
                     <input type="text"
                             class="form-control textbox"
-                            placeholder="Search Member" [(ngModel)]="searchText" 
+                            placeholder="Search Members" [(ngModel)]="searchText" 
                             oninput="this.value = this.value.replace(/[^A-Za-z0-9 _+&@.,]|^ /g,'')
                             "/>
                     <img src="assets/img/search.svg"
@@ -46,6 +46,10 @@
               <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('lastLogin')">
             </th>
             <th>
+              <p class="thheadname"> Default Currency</p>
+              <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('surrency')">
+            </th>
+            <th>
               <p class="thheadname"> Default Rate</p>
               <img src="assets/img/SORT.PNG" class="sortico" (click)="sort('defaultRate')">
             </th>
@@ -60,7 +64,10 @@
                 <span *ngFor="let g of team.groups">&nbsp;{{g.name}}<br/></span>
             </td>
             <td class="tabclass">&nbsp;{{team.lastLogin}}</td>
-            <td class="tabclass" style="font-size: 1.8rem">&nbsp;{{team.defaultRate}}</td>
+            <td class="tabclass">{{team.currency}}</td>
+            <td class="tabclass" style="font-size: 1.8rem">
+              &nbsp;{{ currencySymbols[team.currencyCode] }} {{ team.defaultRate }}
+            </td>
             <td class="tabclass">
               <div class="dropdown">
                 <button type="button"
@@ -173,7 +180,7 @@
 </div>
 
 <!-- after removing member success dialog-->
-<div class="modal" id="modalSuccess" tabindex="-1" style="display:block;" *ngIf="getSuccessModal">
+<!-- <div class="modal" id="modalSuccess" tabindex="-1" style="display:block;" *ngIf="getSuccessModal">
   <div class="modal-dialog">
       <div class="modal-content">
           <button type="button" class="btn-close pull-right remBtn" data-bs-dismiss="modal" aria-label="Close" (click)='getSuccessModal = false'></button>
@@ -186,4 +193,4 @@
           </div>     
       </div>
   </div>
-</div>
+</div> -->

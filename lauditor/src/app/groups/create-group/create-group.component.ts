@@ -208,6 +208,16 @@ export class CreateGroupComponent implements OnInit {
     event.target.value = inputValue;
     return;
   }
+  // restricttextSpace(event: Event) {
+  //   const target = event.target as HTMLTextAreaElement;
+  //   target.value = target.value.replace(/\s+/g, '');
+  // }
+  preventSpaceKey(event: KeyboardEvent) {
+    if (event.key === ' ' || event.code === 'Space') {
+      event.preventDefault(); // Prevent space key action
+    }
+  }
+  
   closeModal(): void {
     this.successModel = false;
   }

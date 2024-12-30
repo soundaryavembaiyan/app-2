@@ -4,7 +4,10 @@
     <!-- </div> -->
     <div class="col-12 Individual createGroup">
         <div class="row">
-            <div class="col-sm-4 col-xs-1"></div>
+            <div class="col-sm-4 col-xs-1">
+                <label for="select" class="lable-size update" style="margin:10px" *ngIf="product != 'corporate' && showMemlist">Assign to groups</label>
+                <label for="select" class="lable-size update" style="margin:10px" *ngIf="product == 'corporate' && showMemlist">Assign to departments</label>
+            </div>
             <div class="col-sm-2 col-xs-3 round-icon">
               <div class="steprow">
                 <a href="javascript: void(0)"
@@ -78,8 +81,8 @@
                                 </div>
                             </div>
                             <div class="col-6 ">
-                                <label for="title" class="lable-size">Default Rate <span class="mandate">*</span></label>
-                                <input type="text" (input)="restricttextSpace($event)"
+                                <label for="title" class="lable-size">Default Rate</label>
+                                <input type="text" (input)="restricttextSpace($event);restrictToNumbers($event)"
                                        formControlName="defaultRate"
                                        class="nameSet text-size form-control member-name-text drate"
                                        [ngClass]="{ 'is-invalid': submitted && f.defaultRate.errors }"
@@ -109,8 +112,7 @@
                             <div *ngIf="f.email.errors.pattern">Email must be a valid email address.</div>
                             <div *ngIf="f.email.errors.duplicate"> Email already in use within the firm.</div>
                         </div>
-                        <div *ngIf="mismatch" class="invalid-feedback" style="display:block;">
-                            Email already in use within the firm.</div>
+                        <div *ngIf="mismatch" class="invalid-feedback" style="display:block;">Email already in use within the firm.</div>
                     </div>
 
                     <div class=" form-group errorMsg nameSet">
@@ -155,10 +157,10 @@
                   </div>
                 </div>
 
-                <div class="assdiv">
+                <!-- <div class="assdiv">
                     <p class="ptext" *ngIf="product != 'corporate'">Assign to Groups</p>&nbsp;<p style="margin-left: auto;" *ngIf="product != 'corporate'"><i class="fa fa-minus" aria-hidden="true"></i></p> 
                     <p class="ptext" *ngIf="product == 'corporate'">Assign to Departments</p>&nbsp;<p style="margin-left: auto;" *ngIf="product == 'corporate'"><i class="fa fa-minus" aria-hidden="true"></i></p> 
-                </div>
+                </div> -->
 
                 <div class="form-group " id="selectbx">
                   <div class="input-group group-custom-align court"

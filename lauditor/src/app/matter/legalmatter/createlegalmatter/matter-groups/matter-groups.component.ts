@@ -73,6 +73,7 @@ export class MatterGroupsComponent implements OnInit {
   canDelete:any;
   isSelectAllChecked: boolean = false;
   originalClientsList:any[]=[];
+  isChecked = false;
 
   constructor(private httpservice: HttpService,
     private matterService: MatterService,
@@ -449,6 +450,10 @@ export class MatterGroupsComponent implements OnInit {
     });
   }
   
+  closeClickMembers() {
+    this.router.navigate(['/matter/' + this.pathName + '/view']);
+  }
+  
   selectAll(event: any) {
     this.isSaveEnable = true;
 
@@ -496,7 +501,10 @@ export class MatterGroupsComponent implements OnInit {
   //   //this.searchText = '';
   // }
   selectGroup(client: any, isChecked?: any) {
+    // console.log('client',client)
+    // console.log('isChecked',isChecked)
     this.isSaveEnable = true;
+    this.isChecked = isChecked;
 
     if (isChecked) {
       this.selectedGroups.push(client);
@@ -538,7 +546,7 @@ export class MatterGroupsComponent implements OnInit {
 
   removeGroup(group: any) {
     this.memData = group;
-    // console.log('group', group);
+    console.log('group', group);
     // console.log('isCretae', this.isCreate);
     this.delId = group.id;
     this.canDelete = group?.canDelete;
@@ -733,14 +741,20 @@ export class MatterGroupsComponent implements OnInit {
 
   OnCancel() {
     if (this.isEdit) {
-      //console.log('ifDelId',this.deletedId) //If deletedId
       // if (this.deletedId) {
       //   //this.toast.error('Please save the selected groups to proceed.')
       //   let index = this.selectedGroups.findIndex((d: any) => d.id === this.memData.id); // find index in your array
       //   this.selectedGroups.splice(index, 1);
       //   this.selectedGroups.push(this.memData);
       // }
-      this.router.navigate(['/matter/' + this.pathName + '/view']);
+      if(this.isChecked === true){
+        const modalElement = document.getElementById('modalCancel');
+        const modalInstance = new bootstrap.Modal(modalElement);
+        modalInstance.show();
+      }
+      else{
+        this.router.navigate(['/matter/' + this.pathName + '/view']);
+      }
     }
     else {
       // this.groupsList = this.groupsList.concat(this.selectedGroups);

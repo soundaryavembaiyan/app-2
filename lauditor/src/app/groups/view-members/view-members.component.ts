@@ -31,7 +31,19 @@ export class ViewMembersComponent implements OnInit {
   getSuccessModal: boolean = false;
   searchText: any = '';
   isDesc: boolean = false;
-  memberCount: any;
+  memberCount: any; 
+  currencySymbols: { [key: string]: string } = {
+    USD: '$',
+    EUR: '€',
+    JPY: '¥',
+    GBP: '£',
+    AUD: 'A$',
+    CAD: 'C$',
+    CHF: 'CHF',
+    KWD: 'KD',
+    BHD: 'BD',
+    INR: '₹'
+  };
 
   constructor(private formBuilder: FormBuilder,
               private httpService: HttpService,
@@ -99,10 +111,19 @@ export class ViewMembersComponent implements OnInit {
   getMembers(){
     this.httpService.sendGetRequest(URLUtils.getMembers).subscribe((res:any)=>{
         this.viewMembers = res.data.users;
-        this.memberCount = res.data
+        this.viewMembers = res.data.users.map((user: any) => ({
+          ...user,
+          currencyCode: this.extractCurrencyCode(user.currency)
+        }));
+        this.memberCount = res.data;
         // console.log('count',this.memberCount?.count)
         // console.log('total',this.memberCount?.total)
     })
+  }
+
+  extractCurrencyCode(currency: string): string {
+    const match = currency.match(/\((.*?)\)/);
+    return match ? match[1] : ''; // Extract the code inside parentheses
   }
 
   onReset() {
@@ -118,8 +139,8 @@ export class ViewMembersComponent implements OnInit {
     this.scrollToTop();
     this.httpService.sendDeleteRequest(URLUtils.deleteMember(this.memData)).subscribe((res: any) => {
       this.getMembers();
-      this.getSuccessModal = true;
-      //this.toast.success('')
+      //this.getSuccessModal = true;
+      this.toast.success('You have successfully deleted Team Member')
     },
     (error: HttpErrorResponse) => {
       if (error.status === 401 || error.status === 403) {
