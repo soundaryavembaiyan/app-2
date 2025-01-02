@@ -58,7 +58,7 @@ export class CreateMembersComponent implements OnInit {
       email:['', [Validators.required, Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)]],
       emailConfirm:['', [Validators.required, Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)]],
       currency:['USDollar(USD)',Validators.required],
-      defaultRate:['',Validators.required],
+      defaultRate:[''],
     });
     this.loadGroups()
   }

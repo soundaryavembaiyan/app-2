@@ -270,7 +270,7 @@
                       <img src="assets/img/billable.svg" alt="Meeting" class="icongroup icoright">
                     </div>
                     <div class="col-sm-8">
-                      <p class="mname toalhours approx approxbillhour">Total <br> Non Billable Hours </p>
+                      <p class="mname toalhours approx approxbillhour">Total <br> Non-Billable Hours </p>
                       <p class="mtime mmessage yeartxt yearrightbox ">Year to Date</p>
                     </div>
                   </div>
@@ -330,7 +330,7 @@
                 <div class="col-sm-7">
                   <div class="row">
                     <div class="col-sm-4">
-                      <img src="assets/img/bill.svg" alt="Meeting" class="icongroup">
+                      <img src="assets/img/billrate.svg" alt="Meeting" class="icongroup">
                     </div>
                     <div class="col-sm-6">
                       <p class="mname toalhours approx">Average <br> Billing Rate </p>
@@ -342,7 +342,7 @@
                 </div>
                 <div class="col-sm-5">
                   <p class="rightbox rightboxtxt rightrate itemprice" *ngIf="hoursModel && hoursModel.averageBillingRate" [innerHtml]="hoursModel.averageBillingRate |currency:'USD'"></p>
-                  <p class="mtime mmessage yeartxt yearrightbox ">Per hour</p>
+                  <p class="mtime mmessage yeartxt yearrightbox ">Per Hour</p>
                 </div>
               </div>
             </div>
@@ -359,9 +359,9 @@
                       <img src="assets/img/matter.svg" alt="Meeting" class="icongroup">
                     </div>
                     <div class="col-sm-8">
-                      <p class="mname toalhours approx rightmatter" *ngIf="product != 'corporate'">Closed</p>
-                      <p class="mname toalhours approx rightmatter" *ngIf="product == 'corporate'">External</p>
-                      <span class="mattertxt">Matters</span>
+                      <p class="mname toalhours approx rightmatter" *ngIf="product != 'corporate'">Closed&nbsp;&nbsp;<span class="mattertxt">Matters</span></p> 
+                      <p class="mname toalhours approx rightmatter" *ngIf="product == 'corporate'">External&nbsp;<span class="mattertxt">Matters</span></p>
+                     
                       <span class="mattercount" [innerHtml]="matterModel?.closed?.total"></span><!--*ngIf="matterModel.closed && matterModel.closed.total"-->
                       <span class="mattertxt" *ngIf="matterModel.closed && matterModel.closed.countsByType[0]">{{matterModel.closed.countsByType[0].count}} {{matterModel.closed.countsByType[0].type}}</span>
                       &nbsp;
@@ -373,8 +373,8 @@
                     <span class="vertical verticaltotal closedvertical"></span>
                 </div>
                 <div class="col-sm-4">
-                  <p class="rightbox rightboxtxt rightmatter">Active</p>
-                  <span class="mattertxt">Matters</span>
+                  <p class="rightbox rightboxtxt rightmatter">Active&nbsp;&nbsp;<span class="mattertxt">Matters</span></p>
+                  <!-- <span class="mattertxt">Matters</span> -->
                   <span class="mattercount" [innerHtml]="matterModel?.active?.total"></span><!--*ngIf="matterModel.active && matterModel.active.total"-->
                   <span class="mattertxt" *ngIf="matterModel.active && matterModel.active.countsByType[0]">{{matterModel.active.countsByType[0].count}} {{matterModel.active.countsByType[0].type}}</span>
                   &nbsp;
@@ -563,6 +563,7 @@
                       -->
                       <span class="mattercount closedm point" (click)="categoryRoute('/matter/generalmatter/view')" *ngIf="matterModel.active && matterModel.active.countsByType[1]"[innerHtml]="matterModel.active.countsByType[1].count"></span>&nbsp;
                       <span class="mattertxtdata point" (click)="categoryRoute('/matter/generalmatter/view')" *ngIf="matterModel.active && matterModel.active.countsByType[1]"[innerHtml]="matterModel.active.countsByType[1].type"></span>
+                      <span class="vertical verticaltotal vertlg"></span>
                     </div>
                   </div>
                 </div>
@@ -661,10 +662,10 @@
                 <div class="col-sm-7">
                   <div class="row">
                     <div class="col-sm-4">
-                      <img src="assets/img/timesheet.svg" alt="Meeting" class="icongroup">
+                      <img src="assets/img/timesheet_pending.svg" alt="Meeting" class="icongroup">
                     </div>
                     <div class="col-sm-6">
-                      <p class="mname toalhours approx">Submitted <br> Timesheet </p>
+                      <p class="mname toalhours approx">Submitted <br> Timesheets </p>
                     </div>
                     <div class="col-sm-1">
                       <span class="vertical verticaltotal"></span>
@@ -687,10 +688,10 @@
                 <div class="col-sm-7">
                   <div class="row">
                     <div class="col-sm-4">
-                      <img src="assets/img/timesheet_pending.svg" alt="Meeting" class="icongroup">
+                      <img src="assets/img/notification.svg" alt="Meeting" class="icongroup">
                     </div>
                     <div class="col-sm-6">
-                      <p class="mname toalhours approx">Pending <br> Timesheet </p>
+                      <p class="mname toalhours approx">Pending <br> Timesheets </p>
                     </div>
                     <div class="col-sm-1">
                       <span class="vertical verticaltotal"></span>

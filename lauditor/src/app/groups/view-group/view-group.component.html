@@ -63,8 +63,7 @@
             <td class="tabclass" style="font-size: 1.8rem">&nbsp;{{team.memberCount}}</td>
             <td class="tabclass">
               <div class="dropdown" *ngIf="product != 'connect' || roleId == 'GH'">
-                <button type="button"
-                        class="btn btn-primary  dropdown-toggle actionbtn"
+                <button type="button" class="btn btn-primary  dropdown-toggle actionbtn"
                         data-bs-toggle="dropdown" [ngClass]="{'disabled': team.isdisabled}"> Action </button>
                 <ul class="dropdown-menu custom-dropdown">
                     <li *ngIf="team.name != 'AAM' && team.name != 'SuperUser'">
@@ -74,22 +73,21 @@
                     <li>
                         <a class="dropdown-item" (click)="editGroupMembers(team)" *ngIf="product != 'corporate'">Update Group Members List</a>
                         <a class="dropdown-item" (click)="editGroupMembers(team)" *ngIf="product == 'corporate'">Update Team Members List</a>
-                      </li>
-                      <li>
+                    </li>
+                    <li *ngIf="team.name != 'AAM' && team.name != 'SuperUser'">
                         <a class="dropdown-item" (click)="changePracticeHead(team)" *ngIf="product != 'corporate'">Update Group Head</a>
                         <a class="dropdown-item" (click)="changePracticeHead(team)" *ngIf="product == 'corporate'">Update Department Head</a>
-                      </li>
-                  <li *ngIf="team.name != 'AAM' && team.name != 'SuperUser'">
-                    <a class="dropdown-item" (click)="deleteGroup(team)" *ngIf="product != 'corporate'">Delete Group</a>
-                    <a class="dropdown-item" (click)="deleteGroup(team)" *ngIf="product == 'corporate'">Delete Department</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" (click)="activityLog(team)" *ngIf="product != 'corporate'">Group Activity Log</a>
-                    <a class="dropdown-item" (click)="activityLog(team)" *ngIf="product == 'corporate'">Department Activity Log</a>
-                  </li>
+                    </li>
+                    <li *ngIf="team.name != 'AAM' && team.name != 'SuperUser'">
+                        <a class="dropdown-item" (click)="deleteGroup(team)" *ngIf="product != 'corporate'">Delete Group</a>
+                        <a class="dropdown-item" (click)="deleteGroup(team)" *ngIf="product == 'corporate'">Delete Department</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" (click)="activityLog(team)" *ngIf="product != 'corporate'">Group Activity Log</a>
+                        <a class="dropdown-item" (click)="activityLog(team)" *ngIf="product == 'corporate'">Department Activity Log</a>
+                    </li>
                 </ul>
               </div>
-
 
               <div class="dropdown" *ngIf="product == 'connect'">
                 <button type="button" *ngIf="roleId != 'GH'" class="btn btn-primary  dropdown-toggle actionbtn"
@@ -129,7 +127,7 @@
                                class="text-size form-control group-name-text"
                                [(ngModel)]="editGroupView.name"
                                [ngClass]="{ 'is-invalid': submitted && f.name.errors }" id="caseTitle"
-                               name="name" (keydown)="preventSpaceKey($event)" 
+                               name="name" 
                                (input)="onSearchChange();restricttextSpace($event)">
                         <div style="color: red;font-size: .875em;" *ngIf="error">{{error}}</div>
                         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
@@ -161,7 +159,7 @@
                                   class="form-control text-size text-area-height"
                                   [(ngModel)]="editGroupView.description"
                                   [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
-                                  (input)="restricttextSpace($event)" (keydown)="preventSpaceKey($event)" 
+                                  (input)="restricttextSpace($event)" 
                                   name="description"></textarea>
                         <div *ngIf="submitted && f.description.errors" class="invalid-feedback">
                             <div *ngIf="f.description.errors.required">Description is required</div>

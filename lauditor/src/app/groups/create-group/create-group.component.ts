@@ -199,7 +199,7 @@ export class CreateGroupComponent implements OnInit {
     this.selectedGroupHead.push(data);
   }
   onSearchChange() {  
-    this.error="";
+   // this.error="";
   }
   restricttextSpace(event: any) {
     let inputValue: string = event.target.value;

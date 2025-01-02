@@ -475,6 +475,9 @@ tr.veiw-items:hover {
         color: #111;
         border: none;
     }
+    .lockgroup {
+        filter: brightness(0) invert(1); /* Makes the SVG white */
+    }
 }
 .savecls{
     color: white;
@@ -492,4 +495,10 @@ tr.veiw-items:hover {
     font-weight: 900;
     font-size: 1.6rem;
     padding-top: 0px !important;
+}
+.lockgroup{
+    margin-bottom: 10px;
+    margin-left: 30px;
+    width: 25px;
+    cursor: pointer;
 }

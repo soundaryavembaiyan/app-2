@@ -83,15 +83,12 @@
                             <div class="col-6 ">
                                 <label for="title" class="lable-size">Default Rate</label>
                                 <input type="text" (input)="restricttextSpace($event);restrictToNumbers($event)"
-                                       formControlName="defaultRate"
-                                       class="nameSet text-size form-control member-name-text drate"
-                                       [ngClass]="{ 'is-invalid': submitted && f.defaultRate.errors }"
-                                       id="caseTitle" name="defaultRate">
-                                <div *ngIf="submitted && f.defaultRate.errors" class="invalid-feedback ">
+                                       formControlName="defaultRate" class="nameSet text-size form-control member-name-text drate" id="caseTitle" name="defaultRate">
+                                <!-- <div *ngIf="submitted && f.defaultRate.errors" class="invalid-feedback ">
                                     <div *ngIf="f.defaultRate.errors.required">
-                                        Hourly rate is required
+                                        Hourly rate is required      [ngClass]="{ 'is-invalid': submitted && f.defaultRate.errors }" //for input
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>

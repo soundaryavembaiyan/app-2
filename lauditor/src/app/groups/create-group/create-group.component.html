@@ -55,7 +55,7 @@
                    formControlName="name"
                    class=" text-size form-control group-name-text"
                    [ngClass]="{ 'is-invalid': submitted && f.name.errors }" id="caseTitle"
-                   name="name" (input)="onSearchChange();restricttextSpace($event)" (keydown)="preventSpaceKey($event)" >
+                   name="name" (input)="onSearchChange();restricttextSpace($event)">
               <div style="color: red;font-size: .875em;" *ngIf="error">{{error}}</div>
             <div *ngIf="submitted && f.name.errors"
                  class="invalid-feedback">
@@ -75,7 +75,7 @@
         <div class="col-6">
           <div class="form-group nameSet">
             <label for="comment" class="lable-size gname">Description <span class="mandate">*</span></label>
-            <textarea formControlName="description" (input)="onSearchChange();restricttextSpace($event)" (keydown)="preventSpaceKey($event)" 
+            <textarea formControlName="description" (input)="onSearchChange();restricttextSpace($event)"
                       class="form-control text-size text-area-height"
                       [ngClass]="{ 'is-invalid': submitted && f.description.errors }"
                       name="description"></textarea>

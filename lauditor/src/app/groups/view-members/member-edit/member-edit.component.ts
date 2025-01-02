@@ -38,7 +38,7 @@ export class MemberEditComponent implements OnInit {
             email:['',[Validators.required, Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)]],
             emailConfirm:['',[Validators.required, Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)]],
             currency:['',Validators.required],
-            defaultRate:['',Validators.required]
+            defaultRate:['']
     });
   }
 
@@ -53,7 +53,7 @@ export class MemberEditComponent implements OnInit {
   get f() { return this.createMemberForm.controls; }
   
   resetEmailConf(){
-    this.createMemberForm.controls['emailConfirm'].setErrors(null)
+    //this.createMemberForm.controls['emailConfirm'].setErrors(null)
   }
   
   onSubmit() {
@@ -74,7 +74,7 @@ export class MemberEditComponent implements OnInit {
       if (error.status === 401 || error.status === 403) {
         const errorMessage = error.error.msg || 'Unauthorized';
         this.toast.error(errorMessage);
-        console.log(error);
+        //console.log(error);
       }
         
     })

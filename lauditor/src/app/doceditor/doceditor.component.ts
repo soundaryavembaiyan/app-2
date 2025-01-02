@@ -885,6 +885,17 @@ export class DoceditorComponent {
     // }
     contentListItems.removeAt(i);
   }  
+
+  removeImgItem(i: number) {
+    this.confirmationDialogService.confirm('Confirmation', 'Are you sure you want to remove the Image?', true, 'Yes', 'No')
+    .then((confirmed) => {
+      if (confirmed) {
+        const contentListItems = this.myForm.get('contentListItems') as FormArray;
+        contentListItems.removeAt(i);
+      }
+    });
+  }  
+
   removeTableItem(i: number) {
     this.confirmationDialogService.confirm('Confirmation', 'Are you sure you want to remove the Table?', true, 'Yes', 'No')
     .then((confirmed) => {
@@ -893,7 +904,6 @@ export class DoceditorComponent {
         contentListItems.removeAt(i);
       }
     });
-
   }  
   
   //OpenDialog boxes for all sections!!!

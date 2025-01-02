@@ -381,6 +381,7 @@ export class DashboardComponent implements OnInit, OnChanges {
   }
 
   getCategory(category: string): void {
+    window.scrollTo(0, 0); 
     this.categoryName = category;
     //console.log("categoryName", this.categoryName);
     this.selectedItem = category; // Set the selected item

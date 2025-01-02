@@ -53,6 +53,23 @@ export class EditMembersComponent implements OnInit {
     }
     
     removeMember(mdata: any, index: number) {
+        console.log('mdata',mdata)
+            const restrictedGroups = ['AAM', 'SuperUser'];
+        
+            // Check if the member belongs to any restricted group
+            const isRestricted = mdata.groups.some((group: any) =>
+                restrictedGroups.includes(group.name)
+            );
+        
+            if (isRestricted) {
+                // Show a toast message or an alert
+                this.toast.error('Members of AAM or SuperUser groups cannot be removed.');
+                return; // Prevent further execution
+            }
+        
+            // Allow removal if not restricted
+            console.log('aamdata', mdata)
+        
         this.isSaveEnable = true;
         this.members.splice(index, 1);
         this.membersList.push(mdata);

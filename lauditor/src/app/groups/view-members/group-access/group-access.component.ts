@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ConfirmationDialogService } from 'src/app/confirmation-dialog/confirmation-dialog.service';
- 
+declare var bootstrap: any; // Import Bootstrap for modal triggering
 
 @Component({
   selector: 'app-group-access',
@@ -41,7 +41,22 @@ export class GroupAccessComponent implements OnInit {
     });
   } 
 
-  cancel(){
+  // cancel(){
+  //   this.scrollToTop();
+  //   this.event.emit('group-access-close')
+  // }
+
+  cancel() {
+    if (this.selectedIds) {
+      const cancelModal = new bootstrap.Modal(document.getElementById('modalCancel'), {});
+      cancelModal.show(); // Trigger the confirmation dialog
+    } else {
+      this.scrollToTop();
+      this.event.emit('group-access-close')
+    }
+  }
+  
+  closeDialog() {
     this.scrollToTop();
     this.event.emit('group-access-close')
   }

@@ -113,7 +113,13 @@ export class ViewMembersComponent implements OnInit {
         this.viewMembers = res.data.users;
         this.viewMembers = res.data.users.map((user: any) => ({
           ...user,
-          currencyCode: this.extractCurrencyCode(user.currency)
+          currencyCode: this.extractCurrencyCode(user.currency),
+          canDelete: !user.groups.some(
+            (group: any) => group.name === 'AAM' || group.name === 'SuperUser'
+          ),
+          canLock: !user.groups.some(
+            (group: any) => group.name === 'AAM' || group.name === 'SuperUser'
+          ),
         }));
         this.memberCount = res.data;
         // console.log('count',this.memberCount?.count)
