@@ -122,7 +122,8 @@ export class DocumentComponent implements OnInit {
   }
   reupload(){
     let filter = window.location.pathname.split("/").splice(-2)[1];
-    const link = 'documents/upload/' + filter;
+    //const link = 'documents/upload/' + filter;
+    const link = 'documents/upload/client';
     window.location.href = link;
   }
   

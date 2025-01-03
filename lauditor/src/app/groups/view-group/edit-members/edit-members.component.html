@@ -32,11 +32,9 @@
                   </div>
                   <div class="form-group nameSet" *ngFor="let member of members; index as i">
                     <div class="input-group court" id="selectedgroup">
-                    <div class="form-control textbox"
-                         [innerHtml]="member.name" ></div>
-                    <i class="fa fa-regular fa-circle-xmark calimg calitem input-group-append sgroup"
-                       aria-hidden="true"
-                       (click)="removeMember(member, i)"></i>
+                    <div class="form-control textbox" [innerHtml]="member.name" ></div>
+                    <i *ngIf="!(member.isadmin && gname === 'AAM')"  class="fa fa-regular fa-circle-xmark calimg calitem input-group-append sgroup"
+                       aria-hidden="true" (click)="removeMember(member, i)"></i>
                     </div>
                   </div>
             </div>
@@ -66,7 +64,7 @@
         <div class="btnbox">
             <button type="button" class="btn btn-default btncancel" (click)= "onCancel()">Cancel</button>
             <button type="button" class="btn btn-default btnsave" (click)="saveMembers()"
-            [disabled]="!(members.length > 0 && isSaveEnable)" [ngClass]="{'disabled': !(members.length > 0 && isSaveEnable)}">Save</button>
+            [disabled]="!isSaveEnable" [ngClass]="{'disabled': !isSaveEnable}">Save</button>
         </div>
 </div>
 <div class="modal fade"

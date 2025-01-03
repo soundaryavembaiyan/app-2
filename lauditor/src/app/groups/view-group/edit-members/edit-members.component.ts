@@ -30,11 +30,21 @@ export class EditMembersComponent implements OnInit {
     ngOnInit(): void {
         this.ghname = this.editMember['groupHead']['name']
         this.gname = this.editMember["name"]
+        // console.log('gname',this.gname)
+        // console.log('editMember',this.editMember)
+
         this.httpservice.sendGetRequest(URLUtils.getMembers).subscribe((res:any)=>{
             let existingMems = this.editMember.members.map((obj: any) => obj.id);
+             
+             let isAdminMap: { [key: string]: boolean } = {}; // Map `isadmin` for each member
+             this.editMember.members.forEach((obj: any) => {
+                 isAdminMap[obj.id] = obj.isadmin; // Create a lookup map
+             });
+
             res.data.users.forEach((item: any, index: number) => {
                 if(existingMems.includes(item.id)){
                     if(this.editMember['groupHead']['id'] != item.id){
+                        item.isadmin = isAdminMap[item.id] || false;
                         this.members.push(item)
                     }
                 } else {
@@ -43,8 +53,6 @@ export class EditMembersComponent implements OnInit {
 
             })
         })
-        // console.log('gh',this.ghname)
-        // console.log('gh',this.gname)
     }
     addMember(mData: any, index: number) {
         this.isSaveEnable = true;
@@ -52,24 +60,7 @@ export class EditMembersComponent implements OnInit {
         this.members.push(mData);
     }
     
-    removeMember(mdata: any, index: number) {
-        console.log('mdata',mdata)
-            const restrictedGroups = ['AAM', 'SuperUser'];
-        
-            // Check if the member belongs to any restricted group
-            const isRestricted = mdata.groups.some((group: any) =>
-                restrictedGroups.includes(group.name)
-            );
-        
-            if (isRestricted) {
-                // Show a toast message or an alert
-                this.toast.error('Members of AAM or SuperUser groups cannot be removed.');
-                return; // Prevent further execution
-            }
-        
-            // Allow removal if not restricted
-            console.log('aamdata', mdata)
-        
+    removeMember(mdata: any, index: number) {        
         this.isSaveEnable = true;
         this.members.splice(index, 1);
         this.membersList.push(mdata);

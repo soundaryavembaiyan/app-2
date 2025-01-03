@@ -58,7 +58,7 @@ export class CreateMembersComponent implements OnInit {
       email:['', [Validators.required, Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)]],
       emailConfirm:['', [Validators.required, Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)]],
       currency:['USDollar(USD)',Validators.required],
-      defaultRate:[''],
+      defaultRate:['',Validators.required]
     });
     this.loadGroups()
   }
@@ -76,13 +76,31 @@ export class CreateMembersComponent implements OnInit {
     this.mismatch = false;
 
     //console.log('form', this.createMemberForm)
-    let form = this.createMemberForm
-    if(form.value['email'] != form.value['emailConfirm']){
-      form.controls['emailConfirm'].setErrors({'mismatch': true})
+    // let form = this.createMemberForm
+    // if(form.value['email'] != form.value['emailConfirm']){
+    //   form.controls['emailConfirm'].setErrors({'mismatch': true})
+    // }
+    // if (this.createMemberForm.invalid) { return; }
+
+    const form = this.createMemberForm;
+    const email = form.value['email']?.trim().toLowerCase();
+    const emailConfirm = form.value['emailConfirm']?.trim().toLowerCase();
+  
+    if (email !== emailConfirm) {
+      form.controls['emailConfirm'].setErrors({ 'mismatch': true });
     }
-    if (this.createMemberForm.invalid) { return; }
-    var payload = this.createMemberForm.value;
+    if (this.createMemberForm.invalid) {
+      return;
+    }
+  
+    const payload = {
+      ...this.createMemberForm.value,
+      email, // Normalize email to lowercase
+      emailConfirm, // Normalize emailConfirm to lowercase
+      groups: this.selectedGroups?.map((obj: any) => obj.id),
+    };
     payload["groups"] = this.selectedGroups?.map((obj: any) => obj.id);
+
     this.httpService.sendPostRequest(URLUtils.addMember, payload).subscribe((res: any) => {
           this.successModel = true;
           this.successMemName = payload['name'];

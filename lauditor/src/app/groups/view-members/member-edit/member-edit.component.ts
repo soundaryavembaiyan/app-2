@@ -38,7 +38,7 @@ export class MemberEditComponent implements OnInit {
             email:['',[Validators.required, Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)]],
             emailConfirm:['',[Validators.required, Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)]],
             currency:['',Validators.required],
-            defaultRate:['']
+            defaultRate:['',Validators.required]
     });
   }
 
@@ -58,12 +58,30 @@ export class MemberEditComponent implements OnInit {
   
   onSubmit() {
     this.submitted = true;
-    let form = this.createMemberForm;
-    if(form.value['email'] != form.value['emailConfirm']){
-      form.controls['emailConfirm'].setErrors({'mismatch': true})
+    // let form = this.createMemberForm;
+    // if(form.value['email'] != form.value['emailConfirm']){
+    //   form.controls['emailConfirm'].setErrors({'mismatch': true})
+    // }
+    // if (this.createMemberForm.invalid) { return; }
+     
+
+    const form = this.createMemberForm;
+    const email = form.value['email']?.trim().toLowerCase();
+    const emailConfirm = form.value['emailConfirm']?.trim().toLowerCase();
+  
+    if (email !== emailConfirm) {
+      form.controls['emailConfirm'].setErrors({ 'mismatch': true });
     }
-    if (this.createMemberForm.invalid) { return; }
-    var payload = this.createMemberForm.value;
+    if (this.createMemberForm.invalid) {
+      return;
+    }
+    //var payload = this.createMemberForm.value;
+    const payload = {
+      ...this.createMemberForm.value,
+      email, // Normalize email to lowercase
+      emailConfirm, // Normalize emailConfirm to lowercase
+    };
+
     this.httpService.sendPatchRequest(URLUtils.updateMember(this.memData),
         payload).subscribe((res: any) => {
           this.event.emit("edit-member-done")
