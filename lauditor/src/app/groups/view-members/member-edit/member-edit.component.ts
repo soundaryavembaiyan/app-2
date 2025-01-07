@@ -17,6 +17,7 @@ export class MemberEditComponent implements OnInit {
   @Input() memData: any;
 
   submitted: boolean = false;
+  confmismatch = false;
   createMemberForm: any = FormGroup;
   currencyList = ["USDollar(USD)",
                   "Euro(EUR)",
@@ -52,10 +53,24 @@ export class MemberEditComponent implements OnInit {
   
   get f() { return this.createMemberForm.controls; }
   
-  resetEmailConf(){
-    //this.createMemberForm.controls['emailConfirm'].setErrors(null)
-  }
+  // resetEmailConf(){
+  //   //this.createMemberForm.controls['emailConfirm'].setErrors(null)
+  // }
   
+  resetEmailConf() {
+    const email = this.createMemberForm.get('email')?.value?.trim().toLowerCase();
+    const emailConfirm = this.createMemberForm.get('emailConfirm')?.value?.trim().toLowerCase();
+  
+    if (email && emailConfirm && email !== emailConfirm) {
+      this.createMemberForm.get('emailConfirm')?.setErrors({ mismatch: true });
+      this.confmismatch = true;
+    } else {
+      this.createMemberForm.get('emailConfirm')?.setErrors(null);
+      this.confmismatch = false;
+    }
+    this.createMemberForm.markAsDirty(); // Mark the form as dirty if there are changes
+  }
+
   onSubmit() {
     this.submitted = true;
     // let form = this.createMemberForm;
@@ -88,6 +103,10 @@ export class MemberEditComponent implements OnInit {
       },(error) => {
       if(error.status == 400){
         form.controls['email'].setErrors({'duplicate': true})
+      }
+      if (error.status === 400) {
+        this.toast.error('Email already in use with this firm');
+        //console.log(error);
       }
       if (error.status === 401 || error.status === 403) {
         const errorMessage = error.error.msg || 'Unauthorized';

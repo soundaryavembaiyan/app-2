@@ -165,7 +165,7 @@ export class MatterDocumentsComponent {
         this.myInputVariable.nativeElement.value = '';
         }
     }
-    selectAll(event: any) {
+    selectAllxx(event: any) {
         if (event?.target?.checked) {
             if (this.documentsList?.length > 0) {
                 if(this.filteredData?.length>0){
@@ -186,6 +186,61 @@ export class MatterDocumentsComponent {
         }
         this.searchText = '';
     }
+
+    selectAll(event: any) {
+        if (event?.target?.checked) {
+            if (this.documentsList?.length > 0) {
+                const filteredClients = this.documentsList.filter((client: any) =>
+                    client.name.toLowerCase().includes(this.searchText.toLowerCase())
+                );
+                if (filteredClients?.length > 0) {
+                    this.selectedDocuments = this.selectedDocuments.concat(filteredClients);
+                    this.documentsList = this.documentsList.filter((el: any) => {
+                        return !this.selectedDocuments.find((element: any) => {
+                            return element.id === el.id;
+                        });
+                    });
+                }
+                else {
+                    this.documentsList = this.selectedDocuments.concat(this.documentsList);
+                    this.selectedDocuments = [];
+                }
+            }
+         } 
+         else {
+            this.documentsList = this.selectedDocuments.concat(this.documentsList);
+            this.selectedDocuments = [];
+        }
+
+        this.searchText = '';
+        this.handlefocus();
+    }
+
+    handlefocus(){
+        setTimeout(() => {
+            const textareas = document.querySelectorAll('.form-control.textbox.searchtextcr');
+            const lastTextarea = textareas[textareas.length - 1] as HTMLTextAreaElement;
+            if (lastTextarea) {
+                lastTextarea.focus();
+        
+                // Simulate keydown and keyup events for Enter
+                const keydownEvent = new KeyboardEvent('keydown', {
+                    key: 'Enter',
+                    code: 'Enter',
+                    bubbles: true,
+                });
+                const keyupEvent = new KeyboardEvent('keyup', {
+                    key: 'Enter',
+                    code: 'Enter',
+                    bubbles: true,
+                });
+        
+                lastTextarea.dispatchEvent(keydownEvent);
+                lastTextarea.dispatchEvent(keyupEvent);
+            }
+        }, 100);
+    }
+
     saveDocuments() {
         if (this.currentTab == 'existingdoc' || this.uploadDocs.length==0) {
             this.selectedDocumentsEvent.emit(this.selectedDocuments);

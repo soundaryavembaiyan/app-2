@@ -427,10 +427,10 @@
                 <p class="thheadname">Name</p>
                 <img src="assets/img/SORT.PNG" (click)="sortDocumentsDA('name')" class="sortico">
               </th>
-              <th style="width:200px !important">
+              <!-- <th style="width:200px !important">
                 <p class="thheadname">Description</p>
                 <img src="assets/img/SORT.PNG" class="sortico" (click)="sortDocumentsDA('description')">
-              </th>
+              </th> -->
               <th>
                 <p class="thheadname">Created on</p>
                 <img src="assets/img/SORT.PNG" class="sortico" (click)="sortDocumentsDA('created')">
@@ -454,7 +454,8 @@
             <tr class="rone veiw-items" [ngClass]="{'active': document.isChecked}"
               *ngFor="let document of delApproval | filter:term | paginate: { itemsPerPage: 10, currentPage: p } ">
               <td class="tabclass" style="text-decoration: underline;">{{document.name}}</td>
-              <td class="tabclass">{{document.description}}</td>
+              <!-- <td class="tabclass" *ngIf="document?.category!=='merged'">{{document.description}}</td>
+              <td class="tabclass" *ngIf="document?.category==='merged'">{{document.name}}</td> -->
               <td class="tabclass">{{document.created | date:'MMM d, y'}}</td>
               <td class="tabclass">{{document.deletedBy}}</td>
               <td class="tabclass">{{document.deletedOn | date:'MMM d, y'}}</td>
@@ -592,7 +593,7 @@
             <div class="btnbox">
               <button type="button" class="btn btn-default  test btncancel" data-bs-dismiss="modal" aria-label="Close"
                 (click)="reset()">Cancel</button>
-              <button type="submit" class="btn btn-default btnsave" data-bs-dismiss="modal" aria-label="Close"
+              <button type="submit" class="btn btn-default btnsave"
               [disabled]="editDocform.pristine || editDocform.invalid">Save</button>
             </div>
           </form>

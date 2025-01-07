@@ -66,7 +66,7 @@
             <td class="tabclass">&nbsp;{{team.lastLogin}}</td>
             <td class="tabclass">{{team.currency}}</td>
             <td class="tabclass" style="font-size: 1.8rem">
-              &nbsp;{{ currencySymbols[team.currencyCode] }} {{ team.defaultRate }}
+              &nbsp;{{ currencySymbols[team.currencyCode] }}{{ team.defaultRate }}
             </td>
             <td class="tabclass">
               <img *ngIf="!team.canLock" src="assets/img/lockgroup.svg" class="lockgroup">

@@ -213,7 +213,8 @@ export class CreateGroupComponent implements OnInit {
   //   target.value = target.value.replace(/\s+/g, '');
   // }
   preventSpaceKey(event: KeyboardEvent) {
-    if (event.key === ' ' || event.code === 'Space') {
+    const target = event.target as HTMLInputElement | HTMLTextAreaElement;
+    if ((event.key === ' ' || event.code === 'Space') && target.selectionStart === 0) {
       event.preventDefault(); // Prevent space key action
     }
   }

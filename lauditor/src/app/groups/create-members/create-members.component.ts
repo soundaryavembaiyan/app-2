@@ -45,6 +45,10 @@ export class CreateMembersComponent implements OnInit {
   msg: string | undefined;
   isSaveDisabled:boolean = true;
   error:string = '';
+  memberCount:any;
+  viewMembers:any;
+  disablePage: boolean = false;
+  confmismatch = false;
   
   constructor(private formBuilder: FormBuilder,
               private httpService: HttpService, 
@@ -60,17 +64,42 @@ export class CreateMembersComponent implements OnInit {
       currency:['USDollar(USD)',Validators.required],
       defaultRate:['',Validators.required]
     });
-    this.loadGroups()
+    this.loadGroups();
+    this.getMembers();
   }
 
   // convenience getter for easy access to form fields
   get f() { return this.createMemberForm.controls; }
 
-
-  resetEmailConf(){
-    //this.createMemberForm.controls['emailConfirm'].setErrors(null)
+  getMembers(){
+    this.httpService.sendGetRequest(URLUtils.getMembers).subscribe((res:any)=>{
+        this.viewMembers = res.data.users;
+        this.memberCount = res.data;
+        console.log('viewMembers', this.viewMembers);
+        console.log('memcount', this.memberCount);
+        console.log('count',this.memberCount?.count)
+        console.log('total',this.memberCount?.total)
+    })
   }
 
+  // resetEmailConf(){
+  //   //this.createMemberForm.controls['emailConfirm'].setErrors(null)
+  // }
+
+  resetEmailConf() {
+    const email = this.createMemberForm.get('email')?.value?.trim().toLowerCase();
+    const emailConfirm = this.createMemberForm.get('emailConfirm')?.value?.trim().toLowerCase();
+  
+    if (email && emailConfirm && email !== emailConfirm) {
+      this.createMemberForm.get('emailConfirm')?.setErrors({ mismatch: true });
+      this.confmismatch = true;
+    } else {
+      this.createMemberForm.get('emailConfirm')?.setErrors(null);
+      this.confmismatch = false;
+    }
+    this.createMemberForm.markAsDirty(); // Mark the form as dirty if there are changes
+  }
+  
   onSubmit() {
     this.submitted = true;
     this.mismatch = false;
@@ -105,7 +134,6 @@ export class CreateMembersComponent implements OnInit {
           this.successModel = true;
           this.successMemName = payload['name'];
           this.successGrpCount = payload['groups'].length;
-
     }, (error: HttpErrorResponse) => {
       if (error.status == 400) {
         this.backToInfo()
@@ -114,6 +142,8 @@ export class CreateMembersComponent implements OnInit {
       if (error.status === 401 || error.status === 403) {
         const errorMessage = error.error.msg || 'Unauthorized';
         this.error = errorMessage;
+        this.disablePage = this.memberCount?.count === this.memberCount?.total;
+
         // this.toast.error(errorMessage);
         // console.log(error);
       }
@@ -144,10 +174,19 @@ export class CreateMembersComponent implements OnInit {
   }
 
   selMembers(){
-    let form = this.createMemberForm
-    if(form.value['email'] != form.value['emailConfirm']){
-      form.controls['emailConfirm'].setErrors({'mismatch': true})
+
+    const form = this.createMemberForm;
+    const email = form.value['email']?.trim().toLowerCase();
+    const emailConfirm = form.value['emailConfirm']?.trim().toLowerCase();
+  
+    if (email !== emailConfirm) {
+      form.controls['emailConfirm'].setErrors({ 'mismatch': true });
     }
+
+    // let form = this.createMemberForm
+    // if(form.value['email'] != form.value['emailConfirm']){
+    //   form.controls['emailConfirm'].setErrors({'mismatch': true})
+    // }
     this.submitted = true;
     if (this.createMemberForm.invalid) {return; }
     this.showForm = false

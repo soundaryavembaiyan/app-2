@@ -459,8 +459,23 @@ export class MatterGroupsComponent implements OnInit {
 
     if (event?.target?.checked) {
       if (this.groupsList?.length > 0) {
-        if (this.filteredData?.length > 0) {
-          this.selectedGroups = this.selectedGroups.concat(this.groupsList);
+        // if (this.filteredData?.length > 0) {
+        //   this.selectedGroups = this.selectedGroups.concat(this.groupsList);
+        //   this.groupsList = this.groupsList.filter((el: any) => {
+        //     return !this.selectedGroups.find((element: any) => {
+        //       return element.id === el.id;
+        //     });
+        //   });
+        // }
+        // else {
+        //   this.selectedGroups = this.selectedGroups.concat(this.groupsList);
+        //   this.groupsList = [];
+        // }
+        const filteredClients = this.groupsList.filter((client: any) =>
+          client.name.toLowerCase().includes(this.searchText.toLowerCase())
+        );
+        if (filteredClients?.length > 0) {
+          this.selectedGroups = this.selectedGroups.concat(filteredClients);
           this.groupsList = this.groupsList.filter((el: any) => {
             return !this.selectedGroups.find((element: any) => {
               return element.id === el.id;
@@ -468,11 +483,12 @@ export class MatterGroupsComponent implements OnInit {
           });
         }
         else {
-          this.selectedGroups = this.selectedGroups.concat(this.groupsList);
-          this.groupsList = [];
+          this.groupsList = this.selectedGroups.concat(this.groupsList);
+          this.selectedGroups = [];
         }
       }
-    } else {
+    } 
+     else {
       if (this.isEdit) {
         let cantDeleteItems = this.selectedGroups.filter((item: any) => this.cantDeleteItems.indexOf(item.id) > -1)
         let canDeleteItems = this.selectedGroups.filter((item: any) => this.cantDeleteItems.indexOf(item.id) <= -1)

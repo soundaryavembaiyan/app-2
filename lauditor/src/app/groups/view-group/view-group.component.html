@@ -127,7 +127,7 @@
                                class="text-size form-control group-name-text"
                                [(ngModel)]="editGroupView.name"
                                [ngClass]="{ 'is-invalid': submitted && f.name.errors }" id="caseTitle"
-                               name="name" 
+                               name="name" (keydown)="preventSpaceKey($event)"
                                (input)="onSearchChange();restricttextSpace($event)">
                         <div style="color: red;font-size: .875em;" *ngIf="error">{{error}}</div>
                         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">

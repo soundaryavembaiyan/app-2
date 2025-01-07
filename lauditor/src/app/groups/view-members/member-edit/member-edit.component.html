@@ -59,7 +59,7 @@
     			<div class="col-6">
     				<div class=" form-group errorMsg  nameSet">
     					<label for="exampleInputEmail1" class="form-label lable-size">Email <span class="mandate">*</span></label>
-    					<input type="email" (input)="restricttextSpace($event)"
+    					<input type="email" (input)="restricttextSpace($event);resetEmailConf()"
                                formControlName="email"
                                class="form-control member-name-text"
     					       id="exampleInputEmail1"
@@ -77,7 +77,7 @@
     					<label for="exampleInputEmail2" class="form-label lable-size"> Confirm Email <span class="mandate">*</span></label>
     					<input type="email"
                                formControlName="emailConfirm"
-                               placeholder="" (input)="restricttextSpace($event)"
+                               placeholder="" (input)="restricttextSpace($event);resetEmailConf()"
     					       class="form-control member-name-text"
                                id="exampleInputEmail2"
                                aria-describedby="emailHelp"
@@ -88,6 +88,7 @@
                             <div *ngIf="f.emailConfirm.errors.pattern">Email must be a valid email address.</div>
                             <div *ngIf="f.emailConfirm.errors.mismatch">Confirm email does not match</div>
     					</div>
+						<div *ngIf="confmismatch" class="invalid-feedback">Confirm email does not match.</div>
     				</div>
     			</div>
     		</div>

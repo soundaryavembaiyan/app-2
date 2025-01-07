@@ -17,6 +17,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { HostListener } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+declare var bootstrap: any; // Import Bootstrap for modal triggering
 
 function futureDateValidator(control: AbstractControl): ValidationErrors | null {
     const selectedDate = new Date(control.value);
@@ -468,8 +469,8 @@ export class DocumentViewComponent implements OnInit {
         this.editDocform.value.expiration_date = this.bsValue ? this.pipe.transform(this.bsValue, 'dd-MM-yyyy') : '';
         let item = this.editDocform.value;
 
-        // console.log("editDoc",this.editDoc)
-        // console.log("item",item)
+        //console.log("editDoc",this.editDoc)
+        //console.log("item",item)
 
         //console.log("date  " + JSON.stringify(item));
         this.httpservice.sendPutRequest(URLUtils.editDocuments(this.editDoc), item).subscribe((res: any) => {
@@ -483,6 +484,7 @@ export class DocumentViewComponent implements OnInit {
                 this.isDecrypted = false;
                 this.isEncypted = false;
                 this.editmetadata = true;
+                this.closedModal('editInfoModal1');
                 this.modalService.open('custom-modal-1');
                 this.getAllDocuments();
             }
@@ -775,6 +777,15 @@ export class DocumentViewComponent implements OnInit {
     closeModal(id: string) {
         this.modalService.close(id);
     }
+
+    closedModal(modalId: string) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            const modalInstance = bootstrap.Modal.getInstance(modal); // Bootstrap 5 instance
+            modalInstance?.hide();
+        }
+    }
+
     //<-----------------------------clent matters--------------->
     onChangeMatters(val: any) {
         //console.log("value " + JSON.stringify(val.value));
@@ -1081,12 +1092,13 @@ export class DocumentViewComponent implements OnInit {
     //     this.pdfSrc = item.filename;
     // }
     viewApprovalDocument(item: any) {
-        console.log('item', item)
+        //console.log('item', item)
         this.pdfSrc = ''
         let documentId: any = {
             docid: item.id,
             doctype: item.doctype
         };
+        
         if (item.added_encryption == true) {
             var body = new FormData();
             body.append('docid', item.id)

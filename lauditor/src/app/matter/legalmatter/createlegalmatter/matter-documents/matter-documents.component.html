@@ -77,7 +77,6 @@
             </div>
           </div> -->
           <div class="form-group ">
-  
             <div class="input-group group-custom-align court" id="search">
               <input type="text" class="form-control textbox searchtextcr" placeholder="Search Document" [(ngModel)]="searchText" (keyup)="keyup()" />
               <img src="assets/img/search.svg" class="calimg calitem input-group-append searchimg">
@@ -85,11 +84,10 @@
           </div>
           <div class="form-group " id="selectbx ">
             <div class="input-group group-custom-align court matterpadding" id="search"
-              *ngFor="let document of documentsList |filter:searchText">
+              *ngFor="let document of documentsList | filter:searchText">
               <div class="multicheck form-control textbox">
                 <div class="callselect textAl" [innerHtml]="document.name"></div>
-                <input class="form-check-inpu calimg calitem input-group-app
-                                          end checkboxitem" type="checkbox" id="flexCheckDefault"
+                <input class="form-check-inpu calimg calitem input-group-app end checkboxitem" type="checkbox" id="flexCheckDefault"
                   (change)="selectDocument(document)">
               </div>
             </div>

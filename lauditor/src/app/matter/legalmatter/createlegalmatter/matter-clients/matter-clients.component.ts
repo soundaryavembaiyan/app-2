@@ -463,6 +463,7 @@ export class MatterClientsComponent implements OnInit {
         // let index = this.selectedClients.findIndex((d: any) => d.id === group.id); //find index in your array
         // this.selectedClients.splice(index, 1);
         // this.clientsList.push(group);
+        this.selectedOption = ""; // Reset the dropdown selection
         this.isSaveEnable = true;
         //console.log('grp',group)
         let index = this.selectedClients.findIndex((d: any) => d.id === group.id);
@@ -649,8 +650,8 @@ export class MatterClientsComponent implements OnInit {
                 item.name.toLocaleLowerCase().includes(this.searchText.toLocaleLowerCase()) &&
                 !this.selectedClients.includes(item)
             );
-            this.showTempForm = this.clientsList.length === 0; // if no clients match
-            this.showTempForm = true;
+            this.showTempForm = this.filteredData.length === 0; // if no clients match
+            //this.showTempForm = true;
         }
 
         this.isSelectAllVisible = this.clientsList.length > 0; // Update "Select All" visibility
@@ -986,6 +987,7 @@ export class MatterClientsComponent implements OnInit {
 
     getCorp() {
         this.corporateData = true;
+        this.selectedOption = "";
     }
 
     getClient() {

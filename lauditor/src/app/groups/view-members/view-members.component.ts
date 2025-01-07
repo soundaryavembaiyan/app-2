@@ -111,6 +111,10 @@ export class ViewMembersComponent implements OnInit {
   getMembers(){
     this.httpService.sendGetRequest(URLUtils.getMembers).subscribe((res:any)=>{
         this.viewMembers = res.data.users;
+        this.memberCount = res.data;
+        // console.log('count',this.memberCount?.count)
+        // console.log('total',this.memberCount?.total)
+
         this.viewMembers = res.data.users.map((user: any) => ({
           ...user,
           currencyCode: this.extractCurrencyCode(user.currency),
@@ -121,9 +125,6 @@ export class ViewMembersComponent implements OnInit {
             (group: any) => group.name === 'AAM' || group.name === 'SuperUser'
           ),
         }));
-        this.memberCount = res.data;
-        // console.log('count',this.memberCount?.count)
-        // console.log('total',this.memberCount?.total)
     })
   }
 

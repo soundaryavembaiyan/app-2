@@ -25,6 +25,7 @@ export class GroupAccessComponent implements OnInit {
   selectedIds: string[] = [];
   isSaveEnable: boolean = false;
   updateSuccessModal: boolean = false;
+  selId:any;
 
   constructor(private formBuilder: FormBuilder, private toast: ToastrService, private confirmationDialogService: ConfirmationDialogService,
               private httpService: HttpService) { }
@@ -47,7 +48,8 @@ export class GroupAccessComponent implements OnInit {
   // }
 
   cancel() {
-    if (this.selectedIds) {
+    //console.log('selectedIds',this.selId)
+    if (this.selId){
       const cancelModal = new bootstrap.Modal(document.getElementById('modalCancel'), {});
       cancelModal.show(); // Trigger the confirmation dialog
     } else {
@@ -93,6 +95,7 @@ export class GroupAccessComponent implements OnInit {
 
   selectGrp(grp: any, checked: boolean){
     this.isSaveEnable = true;
+    this.selId = grp.id;
     if(checked){
       this.selectedIds.push(grp.id)
     } else {

@@ -128,18 +128,33 @@ export class MatterTeamMembersComponent {
     selectAll(event: any) {
         if (event?.target?.checked) {
             if (this.teammembersList?.length > 0) {
-                if(this.filteredData?.length>0){
-                    this.selectedTeammembers = this.selectedTeammembers.concat(this.teammembersList);
-                    this.teammembersList = this.teammembersList.filter((el: any) => {
-                      return !this.selectedTeammembers.find((element: any) => {
-                        return element.id === el.id;
-                      });
-                    });
-                  }
-                  else{
-                this.selectedTeammembers = this.selectedTeammembers.concat(this.teammembersList);
-                this.teammembersList = [];
-                  }
+                // if(this.filteredData?.length>0){
+                //     this.selectedTeammembers = this.selectedTeammembers.concat(this.teammembersList);
+                //     this.teammembersList = this.teammembersList.filter((el: any) => {
+                //       return !this.selectedTeammembers.find((element: any) => {
+                //         return element.id === el.id;
+                //       });
+                //     });
+                //   }
+                //   else{
+                // this.selectedTeammembers = this.selectedTeammembers.concat(this.teammembersList);
+                // this.teammembersList = [];
+                //   }
+                const filteredClients = this.teammembersList.filter((client: any) =>
+                client.name.toLowerCase().includes(this.searchText.toLowerCase())
+              );
+              if (filteredClients?.length > 0) {
+                this.selectedTeammembers = this.selectedTeammembers.concat(filteredClients);
+                this.teammembersList = this.teammembersList.filter((el: any) => {
+                  return !this.selectedTeammembers.find((element: any) => {
+                    return element.id === el.id;
+                  });
+                });
+              }
+              else {
+                this.teammembersList = this.selectedTeammembers.concat(this.teammembersList);
+                this.selectedTeammembers = [];
+              }
             }
         } else {
             this.teammembersList = this.selectedTeammembers.concat(this.teammembersList);

@@ -33,6 +33,7 @@
         </div>
         <!-- <h5>&nbsp;</h5> -->
         <div class="subalert" *ngIf="error">{{error}}</div>
+        <div class="blur-overlay" [ngClass]="{'blurred': disablePage}">
         <form [formGroup]="createMemberForm" (ngSubmit)="onSubmit()">
             <div class="row" *ngIf='showForm'>
                 <div class="col-6">
@@ -96,7 +97,7 @@
                 <div class="col-6">
                     <div class=" form-group errorMsg  nameSet">
                         <label for="exampleInputEmail1" class="form-label lable-size">Email <span class="mandate">*</span></label>
-                        <input type="email" (input)="restricttextSpace($event)"
+                        <input type="email" (input)="restricttextSpace($event);resetEmailConf()"
                                formControlName="email"
                                class="form-control member-name-text"
                                id="exampleInputEmail1"
@@ -114,7 +115,7 @@
 
                     <div class=" form-group errorMsg nameSet">
                         <label for="exampleInputEmail2" class="form-label lable-size">Confirm Email <span class="mandate">*</span></label>
-                        <input type="email" (input)="restricttextSpace($event)"
+                        <input type="email" (input)="restricttextSpace($event);resetEmailConf()"
                                formControlName="emailConfirm"
                                placeholder=""
                                class="form-control member-name-text"
@@ -129,6 +130,7 @@
                             <div *ngIf="f.emailConfirm.errors.pattern">Email must be a valid email address.</div>
                             <div *ngIf="f.emailConfirm.errors.mismatch">Confirm email does not match</div>
                         </div>
+                        <div *ngIf="confmismatch" class="invalid-feedback">Confirm email does not match.</div>
                     </div>
                     <div class="form-group nameSet">
                         <div class="input-group court assignGrp" (click)="selMembers()">
@@ -193,10 +195,11 @@
                </div>
               <div class="col-1" *ngIf='!showMemlist'>
                 <button type="submit" class="btn btn-default btnsave" 
-                [disabled]="createMemberForm.pristine || createMemberForm.invalid">Save</button>
+                [disabled]="createMemberForm.invalid || createMemberForm.pristine">Save</button>
                </div>
             </div>
         </form>
+        </div>
     </div>
 </div>
 
