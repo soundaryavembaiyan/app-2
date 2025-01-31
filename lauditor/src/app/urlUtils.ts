@@ -578,7 +578,7 @@ export class URLUtils {
     static GetLogo = '/invoice/logoget'
     //Legal Matter
     //  static legalMatterPost = `/matter/legal/create`
-    static getLegalMatter = `/matter/legal`
+    static getLegalMatter = `/matter/legalnew`
     static getLegalMatterEventList = '/v3/matter/legal'
     static createLegalMatter = '/matter/legal/create'
     static checkMatterUnique = '/matter/check/unique'
@@ -663,7 +663,7 @@ export class URLUtils {
         return `/v3/relationship/groups/${relid}/${id}`
     }
 
-    static getGeneralMatter = `/matter/general`
+    static getGeneralMatter = `/matter/generalnew`
     static getGenMatterEventList = '/v3/matter/general'
     static createGeneralMatter = '/matter/general/create'
     static updateGeneralMatter(Id: any) {

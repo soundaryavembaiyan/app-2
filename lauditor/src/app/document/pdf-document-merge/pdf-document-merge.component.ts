@@ -74,8 +74,18 @@ export class PdfDocumentMergeComponent implements OnInit, AfterViewInit, OnDestr
             bookmark: ['']
         })
         this.remergeData = this.documentService.getItems();
-        this.docModelData = this.documentService.getDocModel()
-        this.CollectedDocs = this.remergeData?.convretRes ? this.remergeData.convretRes : this.docModelData?.doclist;
+        this.docModelData = this.documentService.getDocModel();
+
+       // this.CollectedDocs = this.remergeData?.convretRes ? this.remergeData.convretRes : this.docModelData?.doclist;
+       // Combine and filter duplicates
+        const combinedDocs = [
+            ...(this.remergeData?.convretRes || []),
+            ...(this.docModelData?.doclist || [])
+        ];
+        this.CollectedDocs = combinedDocs.filter((doc, index, self) => 
+            index === self.findIndex((d) => d.id === doc.id)
+        );
+
         this.clientDetails = this.remergeData?.data ? this.remergeData.data.clients : this.docModelData?.clients;
         if (this.CollectedDocs && this.CollectedDocs.length > 0) {
             let result = Object.assign({}, this.CollectedDocs.map((a: any) => a.id)); // filter id's from array
@@ -84,9 +94,9 @@ export class PdfDocumentMergeComponent implements OnInit, AfterViewInit, OnDestr
         }
         let groupsList:any= localStorage.getItem("groupIds");
         this.groups =JSON.parse(groupsList);
-
         // console.log('CollectedDocs',this.CollectedDocs)
         // console.log('remergeData',this.remergeData)
+        // console.log('docModelData',this.docModelData)
     }
     get f() {
         return this.mergeDetail.controls;
@@ -128,24 +138,22 @@ export class PdfDocumentMergeComponent implements OnInit, AfterViewInit, OnDestr
         //--------------- end  page format---------------------
 
         //-----------------start document list details----------------
+
         this.CollectedDocs.forEach((item: any) => {
             if (this.isShowBookMark) {
-                item.bookmark = item.bookmark;
+                item.bookmark = item.bookmark || item.name; // Use item.name if item.bookmark is empty
             }
             let doclist_details = {
-
                 "header": item?.header ? item?.header : '',
-                "bookmark": item?.bookmark ? item?.bookmark : '',
+                "bookmark": item?.bookmark ? item?.bookmark : item.name, // Fallback to item.name
                 "body": item?.body ? item?.body : ""
-            }
-
-            var output = JSON.parse(JSON.stringify(doclist_details)); // to remove undefine values in object
-            // let obj = {
-            //     [item.id]: doclist_details
-            // }
+            };
+        
+            var output = JSON.parse(JSON.stringify(doclist_details)); // To remove undefined values in the object
             newObj[item.id] = doclist_details;
+        });
 
-        })
+        
         // let doclistDetails = Object.assign(newObj);
         //-----------------end document list details----------------
 
@@ -193,6 +201,7 @@ export class PdfDocumentMergeComponent implements OnInit, AfterViewInit, OnDestr
             this.groups.forEach((item:any)=>{
                 groupList.push(item.id)
             })
+            this.docModelData.clients = []
             this.docModelData.group_acls = groupList;
         }
         // let requestedPath = this.filter === 'client' ? URLUtils.MergePdfDocumentsClient : URLUtils.postDocumentsFirm;

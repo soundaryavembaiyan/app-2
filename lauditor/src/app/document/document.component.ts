@@ -106,7 +106,7 @@ export class DocumentComponent implements OnInit {
   }
   reload(){
     let filter = window.location.pathname.split("/").splice(-2)[1];
-    //console.log('fil',filter)
+    console.log('fil',filter)
     // this.filter = localStorage.getItem('filter');
     // if(this.filter ==='login' || this.filter === undefined){
     //   this.filter = 'client';
@@ -126,5 +126,13 @@ export class DocumentComponent implements OnInit {
     const link = 'documents/upload/client';
     window.location.href = link;
   }
-  
+  reuploadcorp(){
+    const link = 'documents/upload/firm';
+    window.location.href = link;
+  }
+  redelete(){
+      const delink = 'documents/view/delete';
+      window.location.href = delink;
+      return 
+  }
 }

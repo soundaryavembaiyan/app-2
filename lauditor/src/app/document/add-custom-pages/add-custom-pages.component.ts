@@ -45,8 +45,8 @@ export class AddCustomPagesComponent implements OnInit {
 
     constructor(private formBuilder: FormBuilder, private router: Router, private toast: ToastrService, private httpservice: HttpService, private sanitizer: DomSanitizer, private documentService: DocumentService, private modalService: ModalService) {
         this.customPage = this.formBuilder.group({
-            pagenumalign: ['', Validators.required],
-            pagenumfontsize: ['', Validators.required],
+            pagenumalign: [''],
+            pagenumfontsize: [''],
             // startPage: ['', Validators.required],
             // textposition: ['', Validators.required],
             // endingPage: ['', Validators.required],
@@ -56,7 +56,9 @@ export class AddCustomPagesComponent implements OnInit {
     myForm = this.formBuilder.group({
         pagenumtemplate: ['select', Validators.required],
         standardPage: [],
-        customPage: []
+        customPage: [],
+        pagenumalign: [''],
+        pagenumfontsize: [''],
     })
     ngOnInit(): void {
         this.addTemplate();
@@ -272,7 +274,7 @@ export class AddCustomPagesComponent implements OnInit {
             var starting_page_num = item.page_starts_from
             list_item['pagenumtemplate'] = page_template
             list_item['pages'] = page_range_start + "-" + page_range_ends
-            list_item['pagenumrangestart'] = starting_page_num
+            list_item['pagenumrangestart'] = starting_page_num || '1';
             this.doclist[index] = list_item;
             index++
         }
@@ -281,11 +283,17 @@ export class AddCustomPagesComponent implements OnInit {
     postAddPages(){
         let obj = {
             "docid": this.data.id,
-            "pagenumalign": this.customPage.value.pagenumalign.substring(3),
-            "pagenumfontsize": this.customPage.value.pagenumfontsize,
-            "pagenumtemplate": "Page (#PAGENUM# of #TOTALPAGES#)",
+            "pagenumalign": 
+            this.customPage.value?.pagenumalign || 
+            this.myForm.value?.pagenumalign || '',
+            "pagenumfontsize": 
+            this.customPage.value?.pagenumfontsize || 
+            this.myForm.value?.pagenumfontsize || '',
+            "pagenumtemplate": "custom",
             "pagenumtemplate_info": this.doclist
         }
+        
+        console.log('obj',obj)
         this.httpservice.sendPostRequest(URLUtils.addPagination, obj).subscribe((res: any) => {
             //console.log("res" + res);
             if (res.error == false) {

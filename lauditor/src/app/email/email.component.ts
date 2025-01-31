@@ -23,7 +23,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class EmailComponent implements OnInit, AfterViewInit {
   metaData: any;
-
+  matterid:any;
   constructor(private httpservice: HttpService, private confirmationDialogService: ConfirmationDialogService,
     private spinnerService: NgxSpinnerService, private modalService: ModalService,
     private formBuilder: FormBuilder, private emailService: EmailService, private toast: ToastrService,
@@ -701,6 +701,7 @@ handleNextPageClick() {
     //console.log('matt',this.matters)
     this.categories = ''
     //this.getAllDocuments();
+    this.update_grp_list()
   }
 
   get_all_matters(type: any, event?: any) {
@@ -789,23 +790,24 @@ handleNextPageClick() {
         clientInfo.push(clientData);
       });
 
-      this.httpservice.sendPutRequest(URLUtils.getGrouplist, { "clients": clientInfo }).subscribe((res: any) => {
-        if (res.error == false) {
-          this.grouplist = res?.data;
-          //console.log('selectedGrps', this.grouplist);
+      // this.httpservice.sendPutRequest(URLUtils.getGrouplist, { "clients": clientInfo }).subscribe((res: any) => {
+      //   if (res.error == false) {
+      //     this.grouplist = res?.data;
+      //     //console.log('selectedGrps', this.grouplist);
 
-          //Filter and check groups based on the API res.
-          this.selectedGroupItems = this.grouplist.filter((groupItem: any) => {
-            groupItem.isChecked = this.grouplist.some((selectedGroup: any) => selectedGroup.id === groupItem.id);
-            return groupItem.isChecked;
-          });
+      //     //Filter and check groups based on the API res.
+      //     this.selectedGroupItems = this.grouplist.filter((groupItem: any) => {
+      //       groupItem.isChecked = this.grouplist.some((selectedGroup: any) => selectedGroup.id === groupItem.id);
+      //       return groupItem.isChecked;
+      //     });
 
-          //Update the checkboxes in groupViewItems
-          // this.groupViewItems.forEach((groupItem: any) => {
-          //     groupItem.isChecked = this.selectedGroupItems.some((selectedGroup: any) => selectedGroup.id === groupItem.id);
-          // });
-        }
-      });
+      //     //Update the checkboxes in groupViewItems
+      //     // this.groupViewItems.forEach((groupItem: any) => {
+      //     //     groupItem.isChecked = this.selectedGroupItems.some((selectedGroup: any) => selectedGroup.id === groupItem.id);
+      //     // });
+      //   }
+      // });
+      this.update_grp_list();
     }
     else {
       this.groupId.push(item?.id);
@@ -826,6 +828,39 @@ handleNextPageClick() {
 
   onFocused(e: any) {
   }
+
+  update_grp_list(){
+    let clientInfo = new Array();
+        this.clientId?.forEach((item: any) => {
+            let clientData = {
+                "id": item.id,
+                "type": item.type
+            };
+            clientInfo.push(clientData);
+        });
+        let payload =  { "clients": clientInfo , "matterid":''}
+        if(this.matters){
+           payload =  { "clients": clientInfo , "matterid":this.matters }
+        }
+
+        this.httpservice.sendPutRequest(URLUtils.getGrouplist,payload).subscribe((res: any) => {
+            if (res.error == false) {
+                this.grouplist = res?.data;
+                //console.log('selectedGrps', this.grouplist);
+
+                //Filter and check groups based on the API res.
+                this.selectedGroupItems = this.grouplist.filter((groupItem: any) => {
+                    groupItem.isChecked = this.grouplist.some((selectedGroup: any) => selectedGroup.id === groupItem.id);
+                    return groupItem.isChecked;
+                });
+
+                //Update the checkboxes in groupViewItems
+                // this.groupViewItems.forEach((groupItem: any) => {
+                //     groupItem.isChecked = this.selectedGroupItems.some((selectedGroup: any) => selectedGroup.id === groupItem.id);
+                // });
+            }
+        });
+}
 }
 
 
@@ -881,7 +916,6 @@ export class ConfirmationDialogComponent {
   closeDialog() {
     this.dialogRef.close()
   }
-
 }
 
 

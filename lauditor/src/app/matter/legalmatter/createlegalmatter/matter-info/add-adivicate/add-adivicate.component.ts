@@ -191,5 +191,10 @@ export class AddAdivicateComponent implements OnInit {
         const inputValue = input.value;
         input.value = inputValue.replace(/[^0-9]/g, '');
     }
-
+    ngOnChanges(changes: any) {
+        if (changes.editAdvocatesList && changes.editAdvocatesList.currentValue) {
+          this.advicate = changes.editAdvocatesList.currentValue;
+        }
+    }
+      
 }

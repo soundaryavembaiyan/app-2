@@ -301,7 +301,7 @@ export class OverheadCalenderComponent implements OnInit {
           });
         });
       }
-      console.log(this.clientcorpList)
+      //console.log(this.clientcorpList)
     })
   }
   

@@ -69,7 +69,7 @@
               &nbsp;{{ currencySymbols[team.currencyCode] }}{{ team.defaultRate }}
             </td>
             <td class="tabclass">
-              <img *ngIf="!team.canLock" src="assets/img/lockgroup.svg" class="lockgroup">
+              <!-- <img *ngIf="!team.canLock" src="assets/img/lockgroup.svg" class="lockgroup"> -->
               <div class="dropdown">                
 
                 <button type="button"
@@ -92,7 +92,13 @@
                             data-bs-target="#exampleModalreset"
                             (click)="del(team)"
                             href="javascript:void(0);">Reset Password</a> </li>
-                    <li *ngIf="team.canDelete"> <a href="javascript:void(0);"
+                            <!-- <li *ngIf="team.canDelete"> <a href="javascript:void(0);"
+                              (click)="del(team)"
+                              data-bs-toggle="modal"
+                              data-bs-target="#exampleModaldelete"
+                              class="dropdown-item">Delete Member</a>
+                    </li> -->
+                    <li> <a href="javascript:void(0);"
                             (click)="del(team)"
                             data-bs-toggle="modal"
                             data-bs-target="#exampleModaldelete"

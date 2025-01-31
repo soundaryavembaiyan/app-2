@@ -629,34 +629,66 @@ export class MatterClientsComponent implements OnInit {
     //     }
     // }
 
+    // keyup2() {
+    //     if (this.searchText.trim() === '') {
+    //         this.searchText = this.searchText.trim();
+    //     }
+    //     this.showTempForm = false;
+    //     this.onReset();
+    //     this.onResetentity();
+
+    //     if (this.searchText === '') {
+    //         this.filteredData = this.clientsList.filter((item: any) => item.name.toLocaleLowerCase().includes(this.searchText));
+    //         this.filteredData = this.originalClientsList.filter((client: any) =>
+    //             !this.selectedClients.includes(client)
+    //         );
+    //         this.showTempForm = false; // Hide the temporary form
+    //     } else {
+    //         // Filter the clients list based on the search text, excluding selected clients
+    //         this.filteredData = this.clientsList.filter((item: any) => item.name.toLocaleLowerCase().includes(this.searchText));
+    //         this.filteredData = this.originalClientsList.filter((item: any) =>
+    //             item.name.toLocaleLowerCase().includes(this.searchText.toLocaleLowerCase()) &&
+    //             !this.selectedClients.includes(item)
+    //         );
+    //         this.showTempForm = this.filteredData.length === 0; // if no clients match
+    //         //this.showTempForm = true;
+    //     }
+
+    //     this.isSelectAllVisible = this.clientsList.length > 0; // Update "Select All" visibility
+
+    //     let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
+    //     if (checkbox) {
+    //         checkbox.checked = false;
+    //     }
+    // }
+
     keyup() {
         if (this.searchText.trim() === '') {
             this.searchText = this.searchText.trim();
         }
-        this.showTempForm = false;
-        this.onReset();
-        this.onResetentity();
-
         if (this.searchText === '') {
             this.filteredData = this.clientsList.filter((item: any) => item.name.toLocaleLowerCase().includes(this.searchText));
             this.filteredData = this.originalClientsList.filter((client: any) =>
                 !this.selectedClients.includes(client)
             );
-            this.showTempForm = false; // Hide the temporary form
-        } else {
-            // Filter the clients list based on the search text, excluding selected clients
-            this.filteredData = this.clientsList.filter((item: any) => item.name.toLocaleLowerCase().includes(this.searchText));
-            this.filteredData = this.originalClientsList.filter((item: any) =>
-                item.name.toLocaleLowerCase().includes(this.searchText.toLocaleLowerCase()) &&
-                !this.selectedClients.includes(item)
-            );
-            this.showTempForm = this.filteredData.length === 0; // if no clients match
-            //this.showTempForm = true;
         }
 
-        this.isSelectAllVisible = this.clientsList.length > 0; // Update "Select All" visibility
+        this.showTempForm = false;
+        this.onReset();
+        this.onResetentity();
+        // Convert search text to lowercase for case-insensitive search
+        const searchLower = this.searchText.toLowerCase();
+        this.filteredData = this.clientsList.filter((item: any) => item.name.toLowerCase().includes(searchLower));
 
-        let checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
+        // Update visibility based on the filtered data
+        if (this.filteredData.length === 0) {
+            this.showTempForm = true;
+        }
+
+        //this.isSelectAllVisible = this.filteredData.length > 0;
+        this.isSelectAllVisible = this.clientsList.length > 0;
+
+        const checkbox = document.getElementById('selectAll') as HTMLInputElement | null;
         if (checkbox) {
             checkbox.checked = false;
         }

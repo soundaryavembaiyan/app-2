@@ -157,7 +157,7 @@ export class CreategeneralmatterComponent implements OnInit {
               if (this.docsData.length > 0) {
                 this.add_documents_from_matter(res.matter_id)
               }
-              this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully created the matter.', true, 'View Matter List', 'Add Matter', true)
+              this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully created the matter.', true, 'View Matter List', 'Add New Matter', true)
                 .then((confirmed) => {
                   if (confirmed) {
                     this.router.navigate(['/matter/generalmatter/view']);

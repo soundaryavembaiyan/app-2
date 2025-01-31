@@ -37,6 +37,7 @@ export class MatterInfoComponent implements OnInit {
   Documents: any;
   isAddDisable: boolean = false;
   matterid:any;
+  legalMatters: any = [];
   readonly NoWhitespaceRegExp: RegExp = new RegExp("\\S");
   //minDate:any=new Date();
   constructor(private fb: FormBuilder, private oa: FormBuilder, private matterService: MatterService, private toast: ToastrService,
@@ -97,7 +98,12 @@ export class MatterInfoComponent implements OnInit {
           this.caseRegister.controls["case_number"].setValue(this.editeMatterInfo.caseNumber);
           this.caseRegister.controls["case_type"].setValue(this.editeMatterInfo.caseType);
           this.caseRegister.controls["court_name"].setValue(this.editeMatterInfo.courtName);
+
+          if (this.editeMatterInfo?.opponentAdvocates) {
+            this.advicates = [...this.editeMatterInfo.opponentAdvocates]; // Ensure deep copy
+          }
           this.getDocuments();
+          this.getLegalMatters();
         }
         else if(result.error)
         this.toast.error(result.msg)
@@ -159,9 +165,12 @@ export class MatterInfoComponent implements OnInit {
     if (this.caseRegister.invalid) {
       return;
     }
-    this.caseRegister.value.opponent_advocates = this.advicates;
-    let matter = this.caseRegister.value
+    //this.caseRegister.value.opponent_advocates = this.advicates;
+    if(this.caseRegister.value.opponent_advocates){
+      this.caseRegister.value.opponent_advocates = [...this.advicates];
+    }
 
+    let matter = this.caseRegister.value
     let body = {"title":matter.title, "case_number": matter.case_number, "type": "legal"} 
     let editbody = {"title":matter.title, "case_number": matter.case_number, "matter_id": this.matterid, "type": "legal"}
 
@@ -171,6 +180,7 @@ export class MatterInfoComponent implements OnInit {
     //this.caseRegister.value.priority = this.caseRegister?.priority? this.caseRegister.priority:"High";
     //console.log(JSON.stringify(this.caseRegister.value));
     if (this.isEdit) {
+      //console.log('this.editeMatterInfo?.members',this.editeMatterInfo?.members)
       // this.caseRegister.value.date_of_filling = this.pipe.transform(this.caseRegister.value.date_of_filling, 'dd-MM-yyyy');
       let data = {
         "title": this.caseRegister.value.title,
@@ -185,7 +195,7 @@ export class MatterInfoComponent implements OnInit {
         "status": this.caseRegister.value.status,
         "affidavit_isfiled": "na",
         "affidavit_filing_date": "",
-        "opponent_advocates": this.advicates?.length > 0 ? this.advicates : this.editeMatterInfo.opponentAdvocates,
+        "opponent_advocates": this.advicates?.length > 0 ? this.advicates : [],
         "clients": this.editeMatterInfo?.clients.map((obj: any) => ({ "id": obj.id, "type": obj.type })),
         "group_acls": this.editeMatterInfo.groupAcls,
         //"members": this.editeMatterInfo?.members.map((obj: any) => ({ "id": obj.id })),
@@ -196,7 +206,7 @@ export class MatterInfoComponent implements OnInit {
           "user_id": obj.user_id
         }))
       }
-     // console.log('data',data) 
+      //console.log('data',data) 
 
       this.httpService.sendPostRequest(URLUtils.checkMatterUnique, editbody).subscribe((res: any) => {
         if (res.error) {
@@ -300,4 +310,24 @@ export class MatterInfoComponent implements OnInit {
     event.target.value = inputValue;
     return;
   }
+  getLegalMatters() {
+    this.httpService.sendGetRequest(URLUtils.getLegalMatter).subscribe((res: any) => {
+      if (res && res["matters"]) {
+        this.legalMatters = res["matters"].map((matter: any) => {
+          const uniqueMembers = new Map(); // Remove duplicate members
+          matter.members.forEach((member: any) => {
+            if (!uniqueMembers.has(member.id)) {
+              uniqueMembers.set(member.id, member);
+            }
+          });
+          matter.members = Array.from(uniqueMembers.values());
+          matter.groups = matter.groups.filter((group: any) => 
+            group.name !== 'AAM' && group.name !== 'SuperUser'
+          );
+          return matter;
+        });
+      }
+    })
+  }
+
 }

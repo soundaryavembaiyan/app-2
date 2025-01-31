@@ -117,6 +117,9 @@ export class DocumentViewComponent implements OnInit {
     isCheck = false;
     selectedDocIds:any;
     isAttachButtonEnabled: boolean = false;
+    selectedDoc: any = null;
+    mergedDoc: any = null;
+
 
     constructor(private httpservice: HttpService, private cdr: ChangeDetectorRef, private toast: ToastrService,private datePipe: DatePipe,
         private router: Router, private formBuilder: FormBuilder, private modalService: ModalService, public sanitizer: DomSanitizer,
@@ -469,8 +472,8 @@ export class DocumentViewComponent implements OnInit {
         this.editDocform.value.expiration_date = this.bsValue ? this.pipe.transform(this.bsValue, 'dd-MM-yyyy') : '';
         let item = this.editDocform.value;
 
-        //console.log("editDoc",this.editDoc)
-        //console.log("item",item)
+        console.log("editDoc",this.editDoc)
+        console.log("item",item)
 
         //console.log("date  " + JSON.stringify(item));
         this.httpservice.sendPutRequest(URLUtils.editDocuments(this.editDoc), item).subscribe((res: any) => {
@@ -586,6 +589,9 @@ export class DocumentViewComponent implements OnInit {
         if (this.clientDetails) {
             clientId = this.clientDetails?.id;
         }
+        
+       
+
         let obj = {
             "category": this.filterKey,
             "clients": clientId,
@@ -594,6 +600,7 @@ export class DocumentViewComponent implements OnInit {
             "groups": selectedGroups,
             "showPdfDocs": false
         }
+  
         let url = this.viewMode == 1 ? URLUtils.getFilteredDocuments : URLUtils.filterMergeDoc;
         //console.log('url',url)
         if (clientId || selectedGroups.length > 0 )
@@ -610,13 +617,22 @@ export class DocumentViewComponent implements OnInit {
                     this.selectedDocIds = selectedDocs ? JSON.parse(selectedDocs) : [];
                     item.isCheck = this.selectedDocIds.includes(item.id);
 
+                    // item.tags = Object.entries(item.tags)
+                    // .filter(([key, value]) => key && value)  // Filter out empty keys or values
+                    // .map(([key, value]) => {
+                    //     // Sanitize the value (only if it's a string)
+                    //     const sanitizedValue = typeof value === 'string' ? value.replace(/[^a-zA-Z0-9\s]/g, '').trim() : '';
+                    //     return [key, sanitizedValue];
+                    // }); //removing ui ,issue  
+                   
                     item.tags = Object.entries(item.tags)
                     .filter(([key, value]) => key && value)  // Filter out empty keys or values
                     .map(([key, value]) => {
-                        // Sanitize the value (only if it's a string)
-                        const sanitizedValue = typeof value === 'string' ? value.replace(/[^a-zA-Z0-9\s]/g, '').trim() : '';
+                        // No sanitization, just trimming
+                        const sanitizedValue = typeof value === 'string' ? value.trim() : value;
                         return [key, sanitizedValue];
-                    }); //removing ui ,issue                   
+                    });
+                                  
                     item.isChecked = false;
                     if (this.viewItemsList && this.viewItemsList.length > 0) {
                         this.viewItemsList?.forEach((val: any) => {
@@ -654,10 +670,13 @@ export class DocumentViewComponent implements OnInit {
 
     selectEvent(item: any) {
         this.clientDetails = item;
-        //console.log("clientDetails",this.clientDetails)
+        // console.log("clientDetails",this.clientDetails)
         //To get a clientlists length
         this.getClient = new Array();
-        //console.log('cl',this.getClient)
+        // console.log('getCli',this.getClient)
+        // console.log('matterList',this.matterList)
+        this.matters = '';
+
          this.getClient.push(this.clientDetails)
          localStorage.setItem("clientDetail", JSON.stringify(this.getClient));
          localStorage.setItem("clientData", JSON.stringify(this.getClient));
@@ -907,6 +926,24 @@ export class DocumentViewComponent implements OnInit {
     dataToService(doc: any) {
         this.documentService.addToService(doc);
     }
+    download(doc:any) {
+        this.selectedDoc = doc;
+        this.mergedDoc = doc;
+    }
+
+    confirmDownload() {
+        if (this.selectedDoc) {
+            this.downloadDoc(this.selectedDoc); // Download the stored document
+            this.selectedDoc = null; // Reset after downloading
+        }
+    }
+    confirmMergeDownload() {
+        if (this.mergedDoc) {
+            this.downloadMergePDF(this.mergedDoc); // Download the stored document
+            this.mergedDoc = null; // Reset after downloading
+        }
+    }
+
     downloadDoc(doc: any) {
         if(doc.added_encryption){
         this.spinnerService.show()
@@ -926,7 +963,8 @@ export class DocumentViewComponent implements OnInit {
             // window.open(url, "_blank");
           })
           this.spinnerService.hide()
-        } else{
+        } 
+        else{
             this.httpservice.sendGetRequest(URLUtils.downloadGeneralDocument(doc)).subscribe((res: any) => {
                 if (res.error == false) {
                     this.spinnerService.show();
@@ -1098,7 +1136,7 @@ export class DocumentViewComponent implements OnInit {
             docid: item.id,
             doctype: item.doctype
         };
-        
+
         if (item.added_encryption == true) {
             var body = new FormData();
             body.append('docid', item.id)
@@ -1125,7 +1163,10 @@ export class DocumentViewComponent implements OnInit {
             })
             this.spinnerService.hide()
         }
-        if (item.added_encryption == false) {
+        else if (item.category == 'merged') {
+            this.viewMergedDocument(item)
+        }
+        else {
             this.httpservice.sendPostRequest(URLUtils.deleteApprovalView, documentId).subscribe((res: any) => {
                 if (this.allowedFileTypes.includes(item.content_type)) {
                     this.spinnerService.show()
@@ -1144,6 +1185,7 @@ export class DocumentViewComponent implements OnInit {
             this.pdfSrc = item.filename;
         }
     }
+
     deleteApprovalDocument(val: any) {
         // let selectedId: any = [];
         // selectedId.push(val.id)
@@ -1175,7 +1217,7 @@ export class DocumentViewComponent implements OnInit {
             this.getDeleteApprovalList();
         });
     }
-    updateDocuments(): void {
+    updateDocuments(){
         if (!this.documents) {
             this.documents = [];
             this.paginatedDocuments = [];
@@ -1207,5 +1249,8 @@ export class DocumentViewComponent implements OnInit {
     onSearch(): void {
         this.p = 1; // Reset to the first page
         this.updateDocuments();
+    }
+    getdocs(){
+        this.getAllDocuments();
     }
 }

@@ -1,16 +1,17 @@
-import { Component, OnChanges, OnInit } from '@angular/core';
+import { Component, OnChanges, AfterViewInit, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { HttpService } from '../services/http.service';
 import { HttpClient } from '@angular/common/http';
-
+import { DatePipe } from '@angular/common';
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit, OnChanges {
+export class DashboardComponent implements OnInit, OnChanges, AfterViewInit {
 
   categoryName:  string = "Dashboard";
   name: string = "";
@@ -21,6 +22,16 @@ export class DashboardComponent implements OnInit, OnChanges {
   activeItemId: string | null = null;
   selectedItem: string | null = null;
 
+  dateSet: any = new Date();
+  day: any = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+  dateTime: any = this.dateSet.getHours();
+  date: any = this.day[this.dateSet.getDate()];
+  time = new Date();
+  minute: any = this.dateSet.getMinutes();
+  ampm: string = this.time.getHours() >= 12 ? 'PM' : 'AM';
+  timer: any;
+  showCard = false;
+  
   navItem = [
     {
       name: 'Firm Profile',
@@ -305,7 +316,7 @@ export class DashboardComponent implements OnInit, OnChanges {
   ]
 
   constructor(private router: Router, private httpService: HttpService,private route: ActivatedRoute,
-    private httpClient: HttpClient) {
+    private httpClient: HttpClient,private cdr: ChangeDetectorRef) {
     
     this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
@@ -366,6 +377,17 @@ export class DashboardComponent implements OnInit, OnChanges {
     this.activeItemId = null;
     localStorage.removeItem('activeNavItem');
     //window.location.pathname == '/grid'
+
+    this.updateTime();
+  }
+
+  ngAfterViewInit(): void {
+  //   const popoverTrigger = document.querySelector('.username') as HTMLElement;
+  //   new bootstrap.Popover(popoverTrigger, {
+  //     container: 'body',
+  //     trigger: 'hover',
+  //     html: true, // Allows HTML content in the popover
+  //   });
   }
 
   initalize_roles(){
@@ -439,6 +461,19 @@ export class DashboardComponent implements OnInit, OnChanges {
         localStorage.setItem('firm_name', resp['data']['firm_name'])
 
   }
+  ngOnDestroy(){
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+  }
+
+  updateTime(){
+    this.timer = setInterval(() => {
+      this.time = new Date();
+      this.ampm = this.time.getHours() >= 12 ? 'PM' : 'AM';
+    }, 1000); // Update every second
+  }
+
   //   getButtonActive(buttonName:any){
   //     const categoryList=document.getElementsByClassName("left-menu-icon");
   //     //console.log("className  "+ JSON.stringify(categoryList));

@@ -193,7 +193,7 @@
                     <div *ngIf="selectedPageOption === 'standard'">
                     <form [formGroup]="customPage" (ngSubmit)="onSubmit()">
                         <div class="row name-set">
-                            <div class="col-6">
+                            <div class="col-5">
                                 <div class="form-group name-set">
                                     <label>Text Position <span class="mandate">*</span></label>
                                     <select class="form-control textbox" (change)="changePagenumalign($event)" formControlName="pagenumalign">
@@ -203,7 +203,7 @@
                                 </div>
                                 <div class="text-danger" *ngIf="isSubmitted && pagenumalign?.invalid">Position is required</div>
                             </div>
-                            <div class="col-4">
+                            <div class="col-5">
                                 <div class="form-group name-set">
                                     <label>Font Size <span class="mandate">*</span></label>
                                     <select class="form-control textbox" (change)="changeFontSize($event)" formControlName="pagenumfontsize">
@@ -213,6 +213,55 @@
                                 </div>
                                 <div class="text-danger" *ngIf="isSubmitted && pagenumfontsize?.invalid">Font is required</div>
                             </div>
+
+                            <div class="add-pages" *ngFor="let item of paginationData let i = index">
+                                <div class="row">
+                                        <div class="col-5" style="padding-top: 10px;">
+                                            <div class="form-group">
+                                                <div>
+                                                    <label> Numbering Format<span class="mandate">*</span></label>
+                                                    <select class="form-control page_template textbox"
+                                                        (change)="onChangeTemplate($event, i)">
+                                                        <option value="select">Choose</option>
+                                                        <option value="#PAGENUM#">1, 2, 3</option>
+                                                        <option value="Page (#PAGENUM#)">Page (1)</option>
+                                                        <option value="A #PAGENUM#">A 1</option>
+                                                        <option value="B #PAGENUM#">B 1</option>
+                                                        <option value="C #PAGENUM#">C 1</option>
+                                                        <option value="D #PAGENUM#">D 1</option>
+                                                        <option value="E #PAGENUM#">E 1</option>
+                                                        <option value="F #PAGENUM#">F 1</option>
+                                                        <option value="G #PAGENUM#">G 1</option>
+                                                        <option value="H #PAGENUM#">H 1</option>
+                                                        <option value="I #PAGENUM#">I 1</option>
+                                                        <option value="J #PAGENUM#">J 1</option>
+                                                        <option value="K #PAGENUM#">K 1</option>
+                                                        <option value="L #PAGENUM#">L 1</option>
+                                                        <option value="M #PAGENUM#">M 1</option>
+                                                        <option value="N #PAGENUM#">N 1</option>
+                                                        <option value="O #PAGENUM#">O 1</option>
+                                                        <option value="P #PAGENUM#">P 1</option>
+                                                        <option value="Q #PAGENUM#">Q 1</option>
+                                                        <option value="R #PAGENUM#">R 1</option>
+                                                        <option value="S #PAGENUM#">S 1</option>
+                                                        <option value="T #PAGENUM#">T 1</option>
+                                                        <option value="U #PAGENUM#">U 1</option>
+                                                        <option value="V #PAGENUM#">V 1</option>
+                                                        <option value="W #PAGENUM#">W 1</option>
+                                                        <option value="X #PAGENUM#">X 1</option>
+                                                        <option value="Y #PAGENUM#">Y 1</option>
+                                                        <option value="Z #PAGENUM#">Z 1</option>
+                                                    </select>
+                                                    <p class="text-danger" [id]="i+'_page_template'"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btnbox">
+                            <button type="reset" class="btn btn-default btncancel" (click)="cancel()">Cancel</button>
+                            <button type="submit" class="btn test btn-default btnsave" (click)="onPagesSubmit()">Save</button>
                         </div>
                     </form>
                     </div>
@@ -220,6 +269,29 @@
 
                     <!-- Custom Page Numbers -->
                     <div *ngIf="selectedPageOption === 'custom'">
+                    <form [formGroup]="myForm" (ngSubmit)="onPagesSubmit()">
+                     <div class="row name-set">
+                        <div class="col-5">
+                            <div class="form-group name-set">
+                                <label>Text Position <span class="mandate">*</span></label>
+                                <select class="form-control textbox" (change)="changePagenumalign($event)" formControlName="pagenumalign">
+                                    <option value="">Choose Position</option>
+                                    <option *ngFor="let position of positions" [ngValue]="position.value">{{ position.name }}</option>
+                                </select>
+                            </div>
+                            <div class="text-danger" *ngIf="isSubmitted && pagenumalign?.invalid">Position is required</div>
+                        </div>
+                        <div class="col-5">
+                            <div class="form-group name-set">
+                                <label>Font Size <span class="mandate">*</span></label>
+                                <select class="form-control textbox" (change)="changeFontSize($event)" formControlName="pagenumfontsize">
+                                    <option value="">Choose Font</option>
+                                    <option *ngFor="let font of fonts" [ngValue]="font.value">{{ font.name }}</option>
+                                </select>
+                            </div>
+                            <div class="text-danger" *ngIf="isSubmitted && pagenumfontsize?.invalid">Font is required</div>
+                        </div>
+                     </div>
 
                         <div class="tags tab-margin">
                             <div class="tags-width">
@@ -230,7 +302,7 @@
                             </div>
                         </div>
 
-                        <form [formGroup]="myForm" (ngSubmit)="onPagesSubmit()">
+                        
                             <div>
                                 <div>
                                     <div class="">

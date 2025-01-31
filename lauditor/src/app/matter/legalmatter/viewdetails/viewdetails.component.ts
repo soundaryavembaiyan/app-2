@@ -103,6 +103,8 @@ export class ViewDetailsComponent implements OnInit {
   showAllClients: boolean = false;
   sortAscending = true; 
   description:any;
+  selectAllClientsChecked:any;
+  selectAllMembersChecked:any;
 
   //Initializing docUpload Variables
   // reactiveForm: any;
@@ -493,7 +495,11 @@ export class ViewDetailsComponent implements OnInit {
     //console.log("tagsArray  " + JSON.stringify(resultObj));
   }
   matterInfoEdit() {
-    this.matterService.editLegalMatter(this.data);
+    //this.matterService.editLegalMatter(this.data);
+    this.httpservice.sendGetRequest(URLUtils.getLegalMatterInfoDetails(this.data.id)).subscribe((res: any) => {
+      const legal = { ...res.matter, type: this.data?.type, groups:this.data?.groups, id:this.data?.id };
+      this.matterService.editLegalMatter(legal);
+    })
     this.router.navigate(['/matter/legalmatter/matterEdit'])
   }
   onFeatureClick(val: string) {
@@ -503,20 +509,25 @@ export class ViewDetailsComponent implements OnInit {
       this.httpservice.sendGetRequest(URLUtils.getLegalHistoryMembers(this.data.id)).subscribe(
         (res: any) => {
           if (res) {
-            this.selectedMembers = res.members;
-            //this.selectedMembers.unshift(this.data.owner)
-            const ownerIndex = this.selectedMembers.findIndex((member: { id: any; }) => member.id === this.data.owner.id); //removed the ownerName from selectedMembers
-            if (ownerIndex === -1) {
-              this.selectedMembers.unshift(this.data.owner);
-            }
+            // this.selectedMembers = res.members;
+            // //this.selectedMembers.unshift(this.data.owner)
+            // const ownerIndex = this.selectedMembers.findIndex((member: { id: any; }) => member.id === this.data.owner.id); //removed the ownerName from selectedMembers
+            // if (ownerIndex === -1) {
+            //   this.selectedMembers.unshift(this.data.owner);
+            // }
+            this.selectedMembers = res.members.filter(
+              (member: { id: any }) => member.id !== this.data.owner.id
+            );
+            this.selectedMembers.unshift(this.data.owner);
+
             this.membersLength = res.members.length;
             this.selectedClients = res.clients;
             this.selectedCorp = res.corporate;
             this.clientsLength = res.clients.length;
             this.selectedVal == 'TM' ? this.getTmData() : this.getClientsData();
             //console.log('seleClientsView', this.selectedClients)          
-            // console.log('seleCopView', this.selectedCorp)
-            // console.log('selectedMembers', this.selectedMembers)
+            //console.log('seleCopView', this.selectedCorp)
+            //console.log('selectedMembers', this.selectedMembers)
           }
         });
     }
@@ -766,17 +777,19 @@ export class ViewDetailsComponent implements OnInit {
         this.onFeatureClick('T&C');
         if(val === 'members'){
           this.confirmationDialogService.confirm('Success', 'Team Members list updated successfully.', false, '', '', false, 'sm', false);
-          let checkbox = document.getElementById('selectAllMembers') as HTMLInputElement | null;
-            if (checkbox != null){
-              checkbox.checked = false;
-            }
+          this.selectAllMembersChecked = this.selectedMembers.length === this.selectedMembers.length;
+          // let checkbox = document.getElementById('selectAllMembers') as HTMLInputElement | null;
+          //   if (checkbox != null){
+          //     checkbox.checked = false;
+          //   }
         }
         else if(val === 'clients'){
           this.confirmationDialogService.confirm('Success', 'Clients list updated successfully.', false, '', '', false, 'sm', false);
-          let checkbox = document.getElementById('selectAllClients') as HTMLInputElement | null;
-          if (checkbox != null){
-            checkbox.checked = false;
-          }
+          this.selectAllClientsChecked = this.selectedClients.length === this.selectedClients.length;
+          // let checkbox = document.getElementById('selectAllClients') as HTMLInputElement | null;
+          // if (checkbox != null){
+          //   checkbox.checked = false;
+          // }
         }
         else{}
       },
@@ -1040,13 +1053,35 @@ export class ViewDetailsComponent implements OnInit {
     }
   }
 
+  // public handleFileInput(event: Event) {
+  //   const input = event.target as HTMLInputElement;
+  //   if (input.files) {
+  //     for (let i = 0; i < input.files.length; i++) {
+  //       const file = input.files[i];
+  //       this.files.push(file);
+  //       this.uploadedDocs.push(file);
+  //     }
+  //   }
+  // }
+
   public handleFileInput(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files) {
       for (let i = 0; i < input.files.length; i++) {
         const file = input.files[i];
-        this.files.push(file);
-        this.uploadedDocs.push(file);
+
+        let allowedTypes = ['image/png', 'image/heif', 'image/webp', 'image/ico', 'image/jpg', 'image/jpeg', 'image/arw', 'image/bmp', 'image/svg', 'image/tiff', 
+        'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-powerpoint', 
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.ms-excel', 
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/rtf', 'text/csv', 'text/rtf', 'text/plain'];
+
+        // Check if the file type is allowed
+        if (allowedTypes.includes(file.type)) {
+          this.files.push(file);
+          this.uploadedDocs.push(file);
+        } else {
+          this.toast.error('Invalid file format!');
+        }
       }
     }
   }

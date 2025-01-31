@@ -28,8 +28,9 @@
               <div class="col-5">
                 <div class="rowItem form-group name-set">
                   <label>Text <span class="mandate">*</span></label>
-                  <input formControlName="smalltext_content" class="form-control smalltext_content textbox" type="text" maxlength="30"
+                  <input [formControlName]="'smalltext_content' + i" class="form-control smalltext_content textbox" type="text" maxlength="30"
                     (input)="onKey($event, i, 'smalltext_content')" value="{{item.smalltext_content}}" min="0" />
+
                   <!-- <p class="text-danger" [id]="i+'_smalltext_content_length'" style="margin-bottom: 0px;">Max
                     characters: 30</p> -->
                   <p class="text-danger" [id]="i+'_smalltext_content'"></p>
@@ -37,7 +38,7 @@
                 <div class="form-group name-set">
                 <label>Text Position <span class="mandate">*</span></label>
                 <div class="rowItem">
-                  <select formControlName="smalltext_align" class="form-control smalltext_align textbox" (change)="onChangeSmallTextAllign($event, i)">
+                  <select [formControlName]="'smalltext_align' + i" class="form-control smalltext_align textbox" (change)="onChangeSmallTextAllign($event, i)">
                     <option value="select">Choose</option>
                     <option value="left">Bottom Left</option>
                     <option value="right">Bottom Right</option>
@@ -54,13 +55,13 @@
               <div class="col-5">
                 <div class="rowItem orm-group name-set">
                   <label>Page Number <span class="mandate">*</span></label>
-                  <input formControlName="smalltext_page" class="form-control smalltext_page textbox" type="number" value="{{item.smalltext_page}}" min="0"
+                  <input [formControlName]="'smalltext_page' + i" class="form-control smalltext_page textbox" type="number" value="{{item.smalltext_page}}" min="0"
                     (input)="onKey($event, i, 'smalltext_page')" />
                   <p class="text-danger" [id]="i+'_smalltext_page'"></p>
                 </div>
                 <div class="orm-group name-set">
                   <label>Font Size <span class="mandate">*</span></label>
-                  <select formControlName="smalltext_fontsize" class="form-control smalltext_fontsize textbox" (change)="onChangeSmallTextFontSize($event, i)">
+                  <select [formControlName]="'smalltext_fontsize' + i" class="form-control smalltext_fontsize textbox" (change)="onChangeSmallTextFontSize($event, i)">
                     <option value="select">Choose</option>
                     <option value="small">Small</option>
                     <option value="medium">Medium</option>
@@ -77,7 +78,6 @@
                  <i class="fa fa-times" aria-hidden="true"></i>
                 </a> -->
                 <i class="fa fa-regular fa-circle-xmark markX" (click)="removeRow(i)" aria-hidden="true"></i>
-                
               </div>
             </div>
             <hr>

@@ -69,11 +69,31 @@ export class AddShortTextComponent implements OnInit {
     this.shortTextData.splice(index, 1)
   }
 
-  addTemplate(isClose: boolean) {
-    let data: any = { smalltext_content: "", smalltext_page: "", smalltext_align: "select", smalltext_fontsize: "select", isCloseIcon: isClose }
-    this.shortTextData.push(data)
-  }
+  // addTemplate(isClose: boolean) {
+  //   let data: any = { smalltext_content: "", smalltext_page: "", smalltext_align: "select", smalltext_fontsize: "select", isCloseIcon: isClose }
+  //   this.shortTextData.push(data)
+  // }
 
+  addTemplate(isClose: boolean) {
+    let newIndex = this.shortTextData.length; // Get current index
+    let data: any = { 
+      smalltext_content: "", 
+      smalltext_page: "", 
+      smalltext_align: "select", 
+      smalltext_fontsize: "select", 
+      isCloseIcon: isClose 
+    };
+  
+    // Add data to shortTextData
+    this.shortTextData.push(data);
+  
+    // Dynamically add new controls to form
+    this.myForm.addControl(`smalltext_content${newIndex}`, new FormControl(''));
+    this.myForm.addControl(`smalltext_page${newIndex}`, new FormControl(''));
+    this.myForm.addControl(`smalltext_align${newIndex}`, new FormControl('select'));
+    this.myForm.addControl(`smalltext_fontsize${newIndex}`, new FormControl('select'));
+  }
+  
   onKey(event: any, index: any, type: any) {
     //console.log(event.target.value + " ---- " + index + " ---- " + type)
     let value = event.target.value

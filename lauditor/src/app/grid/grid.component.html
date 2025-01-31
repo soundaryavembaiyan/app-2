@@ -18,9 +18,7 @@
                   <p class="year dDay" [innerHtml]='dateFullYear'></p>
                 </div>
                 <div class="col-sm-5 timecontainer">
-                  <!--<p class="time">{{Time}}:{{minute}} | {{ampm}} </p>-->
                   <p class="time">{{ time | date: 'hh:mm' }} | {{ampm}}</p>
-                  
                 </div>
               </div>
             </div>
@@ -65,7 +63,7 @@
                 </div>
 
                 <div class="rightmname righmnamecontext"><!--jumbotron text-center-->
-                  <p class="rightbox righboxshared text-align-center">{{meetingModel?.subject}} {{meetingMessage}}</p>
+                  <p class="rightbox righboxshared text-align-center meetlog">{{meetingModel?.subject}} {{meetingMessage}}</p>
                 </div>
 
               </div>
@@ -196,15 +194,12 @@
                     </div>
                   </div>
                   <div class="col-sm-1 softvertical">
-                    <span class="vertical verticaltotal"></span>
+                    <span class="vertical verticaltotalnot"></span>
                   </div>
                   <div class="col-sm-4">
                     <!-- <div class="rightbox rightboxtxt rightrate notifyhour" *ngIf="product == 'corporate'">Internal Lawyers</div> -->
-                    <div class="rightmname righmnamecontext rytcentNotify righboxshared">
-                      <!--Notification messages!-->
+                    <div class="rightmname righmnamecontext rytcentNotify righboxshared notiflog">
                       {{notifyModel?.message}} {{notifyMessage}} 
-                      <!--<p class="rightbox righboxshared"> {{notifyModel?.message}}  {{notifyMessage}} </p>-->
-                      <!--<p class="rightbox123"> {{notifyMessage}} </p>-->
                     </div>
 
                     <!--<div class="rightmname righmnamecontext">
@@ -427,8 +422,7 @@
                     <!-- Clients total - laud.-->
                     <div class="col-sm-8" >
                       <p class="mname toalhours approx rightmatter cmatter">New Clients</p>
-                      <span class="mattertxt">{{clientModel[0]['type']}}</span>
-                      <span class="mattercount" [innerHtml]="clientModel[0]['count']"></span>
+                      <span class="newclients" [innerHtml]="clientModel[0]['count']"></span>&nbsp;&nbsp;<span class="mattertxt">{{clientModel[0]['type']}}</span>
                     </div>
 
                     <!-- Extrenal Counsels total - corp.-->
@@ -436,13 +430,12 @@
                 </div>
                 
                 <div class="col-sm-1 verticalwidth" >
-                    <span class="vertical verticaltotal closedvertical"></span>
+                    <span class="vertical verticaltotal closedverticalo"></span>
                 </div>
 
                 <div class="col-sm-4">
                   <p class="rightbox rightboxtxt rightmatter dotcontent">.</p>
-                  <span class="mattertxt newmat">{{clientModel[1]['type']}}</span>
-                  <span class="mattercount" [innerHtml]="clientModel[1]['count']"></span>
+                  <span class="newclients" [innerHtml]="clientModel[1]['count']"></span>&nbsp;&nbsp;<span class="mattertxt newmat">{{clientModel[1]['type']}}</span>
                 </div>
 
               </div>
@@ -461,17 +454,18 @@
                     <!-- Extrenal Counsels total - corp.-->
                     <div class="col-sm-8" >
                       <p class="mname toalhours approx rightmatter cmatter">New External Counsels</p>
-                      <span class="mattertxt">{{externalModel[0]['type']}}</span>
-                      <span class="mattercount" [innerHtml]="externalModel[0]['count']"></span>
+                      <span class="newclients" [innerHtml]="externalModel[0]['count']"></span>&nbsp;&nbsp;<span class="mattertxtall">{{externalModel[0]['type']}}</span>
                     </div>
                   </div>
                 </div>
                 
+                <div class="col-sm-1 verticalwidth" >
+                  <span class="vertical verticaltotal closedverticalcorp"></span>
+                </div>
 
-                <div class="col-sm-4">
+                <div class="col-sm-4" style="margin-top: 6px;">
                   <p class="rightbox rightboxtxt rightmatter dotcontent">.</p>
-                  <span class="mattertxt newmat">All External Counsels</span>
-                  <span class="mattercount" [innerHtml]="externalModel[0]['total_count']"></span>
+                  <span class="newclients" [innerHtml]="externalModel[0]['total_count']"></span>&nbsp;&nbsp;<span class="mattertxtall newmat">All External Counsels</span>
                 </div>
 
               </div>
@@ -490,20 +484,16 @@
                     </div>
                     <div class="col-sm-8">
                       <p class="mname toalhours approx rightmatter cmatter">New Hires</p>
-                      <span class="mattertxt">{{hiringModel[0]['type']}}</span>
-                      <span class="mattercount"
-                            [innerHtml]="hiringModel[0]['count']"></span>
+                      <span class="newhires" [innerHtml]="hiringModel[0]['count']"></span>&nbsp;&nbsp;<span class="mattertxt">{{hiringModel[0]['type']}}</span>
                     </div>
                   </div>
                 </div>
                 <div class="col-sm-1 verticalwidth">
-                    <span class="vertical verticaltotal closedvertical"></span>
+                    <span class="vertical verticaltotal closedverticalo"></span>
                 </div>
                 <div class="col-sm-4">
                   <p class="rightbox rightboxtxt rightmatter dotcontent">.</p>
-                  <span class="mattertxt">{{hiringModel[1]['type']}}</span>
-                  <span class="mattercount"
-                        [innerHtml]="hiringModel[1]['count']"></span>
+                  <span class="newhires" [innerHtml]="hiringModel[1]['count']"></span>&nbsp;&nbsp;<span class="mattertxt">{{hiringModel[1]['type']}}</span>
                 </div>
               </div>
             </div>

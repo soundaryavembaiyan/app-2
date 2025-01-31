@@ -218,6 +218,7 @@ export class DocumentUploadComponent implements OnInit {
         } else {
             this.matters = val.value;
             this.categories = ''
+            this.update_grp_list()
         }
     }
     
@@ -432,17 +433,22 @@ export class DocumentUploadComponent implements OnInit {
         this.spinnerService.show()
         this.httpservice.sendPostRequest(URLUtils.postDocumentsClient, file).subscribe(
             (res: any) => {
-                if (res.error == true) {
-                    this.errorRes = false;
-                    this.message = res.msg || res.msg.errors.clients || res.msg.errors.matters;
-                    this.spinnerService.hide()
-                    this.toastr.error(this.message)
-                } else {
+                if (res.error === false) {
                     this.successRes.push(res);
-                    this.spinnerService.hide()
-                    this.modalService.open('custom-modal-2');
                     this.errorRes = true;
-                    this.toastr.success('upload success');
+                    this.spinnerService.hide();
+                    this.toastr.success('File uploaded successfully');
+                    this.modalService.open('custom-modal-2');
+                } 
+                else if (res.error === true) {
+                    //this.errorRes = false;
+                    this.spinnerService.hide();
+                    this.message = res.msg || res.msg.errors.clients || res.msg.errors.matters;
+                    this.toastr.error(this.message);
+                    return;
+                }
+                else{
+
                 }
                 // for displaying success msg in UI
             },(error: HttpErrorResponse) => {
@@ -632,7 +638,15 @@ export class DocumentUploadComponent implements OnInit {
                 this.matterList = this.filterUniqueMatters(res?.matterList);
             });
 
-            let clientInfo = new Array();
+           this.update_grp_list();
+        } else {
+            this.groupId.push(item?.id);
+        }
+    }
+
+
+    update_grp_list(){
+        let clientInfo = new Array();
             this.clientId?.forEach((item: any) => {
                 let clientData = {
                     "id": item.id,
@@ -640,8 +654,12 @@ export class DocumentUploadComponent implements OnInit {
                 };
                 clientInfo.push(clientData);
             });
+            let payload =  { "clients": clientInfo , "matterid":''}
+            if(this.matters){
+               payload =  { "clients": clientInfo , "matterid":this.matters }
+            }
 
-            this.httpservice.sendPutRequest(URLUtils.getGrouplist, { "clients": clientInfo }).subscribe((res: any) => {
+            this.httpservice.sendPutRequest(URLUtils.getGrouplist,payload).subscribe((res: any) => {
                 if (res.error == false) {
                     this.grouplist = res?.data;
                     //console.log('selectedGrps', this.grouplist);
@@ -658,10 +676,10 @@ export class DocumentUploadComponent implements OnInit {
                     // });
                 }
             });
-        } else {
-            this.groupId.push(item?.id);
-        }
     }
+
+
+
     
     // filter out duplicate matters based on 'id' or 'type'
     filterUniqueMatters(matterList: any[]): any[] {

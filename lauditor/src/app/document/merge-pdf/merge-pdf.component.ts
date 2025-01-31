@@ -315,16 +315,28 @@ export class MergePdfComponent implements OnInit {
     onFocused(e: any) {
         // do something when input is focused
     }
+    // mergeDoc() {
+    //     this.documentModel.doclist = this.selectedDoc;
+    //     localStorage.setItem("selectedDocs", JSON.stringify(this.selectedDoc));
+    //     //this.docService.addToService(this.documentModel);
+    //     this.docService.addDocModel(this.documentModel);
+    //     // console.log("postModel " + JSON.stringify(this.documentModel));
+    //     // console.log("clients " + JSON.stringify(this.documentModel.clients));
+    //     // console.log('docModel',this.documentModel)
+    //     this.router.navigate(['documents/pdfmergedoc/' + this.filter]);
+    // }
     mergeDoc() {
-        this.documentModel.doclist = this.selectedDoc;
-        localStorage.setItem("selectedDocs", JSON.stringify(this.selectedDoc));
-        // this.docService.addToService(this.documentModel);
+        const uniqueDocs = this.selectedDoc.filter((doc: any, index: any, self: any) => 
+            index === self.findIndex((d: any) => d.id === doc.id)
+        ); // remove duplicates
+        this.documentModel.doclist = uniqueDocs;
+        console.log('documentModel', this.documentModel.doclist);
+    
+        localStorage.setItem("selectedDocs", JSON.stringify(uniqueDocs));
         this.docService.addDocModel(this.documentModel);
-        // //console.log("postModel " + JSON.stringify(this.documentModel));
-        // //console.log("clients " + JSON.stringify(this.documentModel.clients));
-        //console.log('docModel',this.documentModel)
         this.router.navigate(['documents/pdfmergedoc/' + this.filter]);
     }
+    
     // mergeCancel(doc?:any){
     //     //this.isChecked = false;
     // }

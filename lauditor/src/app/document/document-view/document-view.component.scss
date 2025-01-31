@@ -372,7 +372,15 @@ button.btnsave:disabled {
     opacity: 10;
     cursor: not-allowed;
     pointer-events: none;
-  }
+}
+
+.disabled {
+    color: rgb(244, 244, 246);
+    background: #7b9bb5;
+    opacity: 10;
+    cursor: not-allowed;
+    pointer-events: none;
+}
   
 .tagModal{
     margin-top: 12px;
@@ -444,4 +452,28 @@ tr.veiw-items:hover {
         color: #111;
         border: none;
     }
+}
+.remBtn{
+    margin-top: 10px;
+    margin-left: 360px;
+}
+.modal-content{
+    width: 80% !important;
+    margin-left: 80px !important;
+    margin-top: 80px !important;
+}
+.alertparatxt{
+    font-weight: 900;
+    font-size: 1.6rem;
+    padding-top: 0px !important;
+}
+.conf{
+    font-weight: 900;
+    width: auto;
+}
+.alertext{
+    font-size: 17px;
+}
+.alertbutton {
+    padding: 10px;
 }

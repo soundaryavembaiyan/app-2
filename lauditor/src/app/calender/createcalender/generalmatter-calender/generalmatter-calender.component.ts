@@ -126,6 +126,8 @@ export class GeneralMatterCalenderComponent implements OnInit {
           this.selectedCorp = this.selectedCorp.map((item: any) => ({ "id": item.tmId, "name": item.tmName, "entityid": item.entityId }));
            this.selectedconsumer = this.editInfo.invitees_consumer_external.map((item: any) => ({ "id": item.entityId, "name": item.tmName, "type": "consumer" }))
           this.getTimeZones();
+          this.getTmslist();
+          this.getEntitylist();
           //// this.addNotification();
           if (this.editInfo.allday) {
             this.allDay({target: {checked: true}});
@@ -344,7 +346,7 @@ export class GeneralMatterCalenderComponent implements OnInit {
     return false; // Otherwise, do not hide
   }
   onChangeMatter(event: any) {
-    const selectedMatterId = event.target.value;
+    const selectedMatterId = event?.target?.value;
     const selectedMatter = this.matterList.find((matter:any) => matter.id === selectedMatterId);
     if (selectedMatter) {
         if (selectedMatter.status === 'Closed') {

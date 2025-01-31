@@ -117,9 +117,7 @@
       <div class="col-6" >
         <div class="form-group float-right">
           <div class="input-group court" id="search">
-            <input type="text" class="form-control textbox" placeholder="Search" [(ngModel)]="term" (input)="restricttextSpace($event);onSearch()" oninput="this.value = this.value.replace(/[^A-Za-z0-9 ]|^ /g,'')"/>
-
-
+            <input type="text" class="form-control textbox" placeholder="Search" [(ngModel)]="term" (input)="restricttextSpace($event);onSearch();getdocs()" oninput="this.value = this.value.replace(/[^A-Za-z0-9 ]|^ /g,'')"/>
             <img src="assets/img/search.svg" class="calimg calitem input-group-append searchimg">
           </div>
         </div>
@@ -218,8 +216,8 @@
             <td class="tabclass">{{document.description}}</td>
             <td class="tabclass">{{document.created| date:'MMM d, y'}}</td>
             <td class="tabclass">{{document.uploaded_by}}</td>
-            <td class="tabclass" *ngIf="document && document.tags">
-              <div *ngFor="let tag of document.tags">{{tag}}</div>
+            <td class="tabclass" *ngIf="document && document?.tags">
+              <div *ngFor="let tag of document?.tags">{{tag}}</div>
             </td>
             <!-- <i class="fa-light fa-arrow-down-to-line"></i> -->
             <td class="tabclass" *ngIf="document.added_encryption" >
@@ -253,7 +251,8 @@
                 </li> -->
                   <li *ngIf="document.is_disabled">
                     <a class="dropdown-item" [class.disable]="!document.is_disabled"
-                      (click)="downloadDoc(document)">Download</a>
+                    data-bs-toggle="modal" data-bs-target="#modalCancel" 
+                    (click)="download(document)">Download</a>
                   </li>
                   <li>
                     <a class="dropdown-item" (click)="editDocInfo(document);openModal('custom-modal-2')">Delete</a>
@@ -271,7 +270,7 @@
 
             <td class="tabclass" *ngIf="isFromEmail">
               <input type="checkbox" style="cursor: pointer" #inputE2 (change)="selectDoc(document,inputE2.checked)" 
-              [checked]="document.isCheck" [disabled]="document.isCheck" >
+              [checked]="document.isCheck">
             </td>
           </tr>
         </tbody>
@@ -360,10 +359,10 @@
             <td class="tabclass">
               <div class="dropdown"><!--class="dropdown"-->
                 <button type="button" class="btn btn-primary  dropdown-toggle actionbtn" 
-                [ngClass]="{'disabled': document.isdisabled}" data-bs-toggle="dropdown">
+                [ngClass]="{'disabled': document.isdisabled || document?.status === 'Processing..'}" data-bs-toggle="dropdown">
                   Action
                 </button>
-                <ul class="dropdown-menu dropdown-menu-start custom-dropdown">
+                <ul class="dropdown-menu dropdown-menu-start custom-dropdown" *ngIf="document?.status === 'finished'">
                   <li>
                     <a class="dropdown-item" (click)="reMergeDocument(document)">Re-Merge</a>
                   </li>
@@ -374,7 +373,9 @@
                     <a class="dropdown-item" (click)="viewMergedDocument(document)">View</a>
                   </li>
                   <li>
-                    <a class="dropdown-item" (click)="downloadMergePDF(document)">Download</a>
+                    <a class="dropdown-item" 
+                    data-bs-toggle="modal" data-bs-target="#modalMerge" 
+                    (click)="download(document)">Download</a>
                   </li>
                   <li>
                     <a class="dropdown-item" (click)="editDocInfo(document);openModal('custom-modal-merge-pdf')">Delete PDF</a>
@@ -394,6 +395,15 @@
                   <!-- <li>
                     <a class="dropdown-item">Update Client</a>
                   </li> -->
+                </ul>
+
+                <ul class="dropdown-menu dropdown-menu-start custom-dropdown" *ngIf="document?.status === 'failed'">
+                  <li>
+                    <a class="dropdown-item" (click)="reMergeDocument(document)">Re-Merge</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" (click)="editDocInfo(document);openModal('custom-modal-merge-pdf')">Delete PDF</a>
+                  </li>
                 </ul>
               </div>
             </td>
@@ -625,7 +635,7 @@
                   <div class="form-group nameSet">
                     <label for="tagKey-{{ i }}" class="lable-size">Tag Type</label>
                     <input #tagTypeInput type="text" formControlName="key" class="text-size form-control group-name-text addtagField"
-                      id="tagKey-{{ i }}" (input)="restrictSpaces($event)" oninput="this.value = this.value.replace(/[^A-Za-z0-9-()._ ]|^ /g,'')"
+                      id="tagKey-{{ i }}" (input)="restrictSpaces($event)"
                       maxlength="30" autocomplete="off">
                   </div>
                   <div class="count-text">{{tag.get('key')?.value.length}}/30</div>
@@ -634,7 +644,7 @@
                   <div class="form-group nameSet">
                     <label for="tagValue-{{ i }}" class="lable-size">Tags</label>
                     <input type="text" formControlName="value" class="text-size form-control group-name-text"
-                      id="tagValue-{{ i }}" (input)="restrictSpaces($event)" oninput="this.value = this.value.replace(/[^A-Za-z0-9-()._ ]|^ /g,'')"
+                      id="tagValue-{{ i }}" (input)="restrictSpaces($event)"
                       maxlength="100" autocomplete="off">
                   </div>
                   <div class="count-text">{{tag.get('value')?.value.length}}/100</div>
@@ -685,8 +695,9 @@
         </div>
         <div *ngIf="isDelete" class="alertext">
           <!-- <p *ngIf="role === 'SU'">Congratulations!! <br> You have successfully deleted the document.</p> -->
-          <p>Document deletion awaiting for Super User approval.</p>
           <!--<b> {{ editDoc.name.length > 50 ? editDoc.name.substring(0, 50) + '... ' : editDoc.name }}</b> -->
+          <p *ngIf="product === 'lauditor'">Document deletion awaiting for Super User approval.</p>
+          <p *ngIf="product !== 'lauditor'">Document deleted successfully.</p>
         </div>
         <div *ngIf="isEncypted" class="alertext">Congratulations!! <br> You have successfully encrypted the document.
           <!-- <b>{{editDoc.name}}</b> -->
@@ -785,9 +796,43 @@
       <iframe height="100%" width="100%" [src]="urlSafe"></iframe>
     </div>
   </div>
-
 </jw-modal>
 
+<!-- Confirmation Modal for downloading doc-->
+<div class="modal fade" id="modalCancel" tabindex="-1" aria-labelledby="modalCancelLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <button type="button" class="btn-close remBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-body">
+              <div class="alertpara"><p class="alertparatxt">Confirmation</p></div>
+          </div>
+          <div class="alertext conf"> Downloading this document will remove it from the secure system. <br> Do you wish to proceed with the download?</div>
+          <div class="alertbutton">
+              <button class="btn btn-default alertbtn alertbtnno" data-bs-dismiss="modal" aria-label="Close">No</button>
+              <button class="btn btn-default alertbtn alertbtnyes" data-bs-dismiss="modal" aria-label="Close" (click)="confirmDownload()" >Yes</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Confirmation Modal for downloading Merge doc-->
+<div class="modal fade" id="modalMerge" tabindex="-1" aria-labelledby="modalCancelLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <button type="button" class="btn-close remBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-body">
+              <div class="alertpara"><p class="alertparatxt">Confirmation</p></div>
+          </div>
+          <div class="alertext conf"> Downloading this document will remove it from the secure system. <br> Do you wish to proceed with the download?</div>
+          <div class="alertbutton">
+              <button class="btn btn-default alertbtn alertbtnno" data-bs-dismiss="modal" aria-label="Close">No</button>
+              <button class="btn btn-default alertbtn alertbtnyes" data-bs-dismiss="modal" aria-label="Close" (click)="confirmMergeDownload()" >Yes</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Success Modal for downloading doc-->
 <jw-modal id="doc-download-success" class="doc-del-success  alert-box">
   <div class="doc-iframe-scs-body">
     <div class="container">

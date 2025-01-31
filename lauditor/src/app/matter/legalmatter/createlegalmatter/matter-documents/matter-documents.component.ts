@@ -165,27 +165,27 @@ export class MatterDocumentsComponent {
         this.myInputVariable.nativeElement.value = '';
         }
     }
-    selectAllxx(event: any) {
-        if (event?.target?.checked) {
-            if (this.documentsList?.length > 0) {
-                if(this.filteredData?.length>0){
-                    this.selectedDocuments = this.selectedDocuments.concat(this.documentsList);
-                    this.documentsList = this.documentsList.filter((el: any) => {
-                      return !this.selectedDocuments.find((element: any) => {
-                        return element.docid === el.docid;
-                      });
-                    });
-                  }else{
-                this.selectedDocuments = this.selectedDocuments.concat(this.documentsList);
-                this.documentsList = [];
-                  }
-            }
-        } else {
-            this.documentsList = this.selectedDocuments.concat(this.documentsList);
-            this.selectedDocuments = [];
-        }
-        this.searchText = '';
-    }
+    // selectAllxx(event: any) {
+    //     if (event?.target?.checked) {
+    //         if (this.documentsList?.length > 0) {
+    //             if(this.filteredData?.length>0){
+    //                 this.selectedDocuments = this.selectedDocuments.concat(this.documentsList);
+    //                 this.documentsList = this.documentsList.filter((el: any) => {
+    //                   return !this.selectedDocuments.find((element: any) => {
+    //                     return element.docid === el.docid;
+    //                   });
+    //                 });
+    //               }else{
+    //             this.selectedDocuments = this.selectedDocuments.concat(this.documentsList);
+    //             this.documentsList = [];
+    //               }
+    //         }
+    //     } else {
+    //         this.documentsList = this.selectedDocuments.concat(this.documentsList);
+    //         this.selectedDocuments = [];
+    //     }
+    //     this.searchText = '';
+    // }
 
     selectAll(event: any) {
         if (event?.target?.checked) {
