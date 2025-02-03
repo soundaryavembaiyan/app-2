@@ -104,6 +104,7 @@ export class LoginComponent implements OnInit {
 			(resp:any) => {
 				if(!resp['error']){
 					if (resp['data']['plan'].toLowerCase() == Utils.productName){
+						localStorage.setItem('user_groups', JSON.stringify(resp['data']['groups'])); //Storing groups in localStorage
 						this.initSession(resp)
 					} else {
 						this.msg = "Account not found"

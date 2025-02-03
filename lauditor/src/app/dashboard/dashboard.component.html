@@ -33,10 +33,39 @@
 					(click)="getCategory('Dashboard')">
 					<img src="/assets/img/dashboard_ico.svg">
 				</div>
-				<div class="userprofile">
-					<p class="username cap" data-bs-container="body" data-bs-toggle="popover" title="title"
+				<!-- <div class="userprofile">
+					<p class="username cap" data-bs-container="body" data-bs-toggle="popover"
 						data-bs-placement="bottom" data-bs-content="Right popover" (click)="logout()">{{name[0]}} </p>
+				</div> -->
+
+				<div class="userprofile" (mouseenter)="isCardVisible = true" (mouseleave)="isCardVisible = false">
+					<p class="username cap" data-bs-container="body" data-bs-toggle="popover"
+						data-bs-placement="bottom" data-bs-content="Right popover">
+						{{ name[0] }}
+					</p>
+				
+					<!-- Hover Card -->
+					<div *ngIf="isCardVisible" class="hover-card hopad">
+						<div class="arrow"></div>
+						<div class="userprofile" style="pointer-events: none;">
+							<p class="username cap" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="Right popover">{{name[0]}} </p>
+						</div> 
+
+						<p class="usernamehr">{{ name }}</p>
+						<p class="custusertype">{{ role }}</p>
+
+						<p class="custusertypo">{{groups}} </p>
+						<hr class="dashedhr">
+						
+						<p class="custusertypo">Email: {{profile.email}}</p>
+						<p class="custusertypo">Phone: {{profile.contact_phone}}</p>
+
+						<hr class="dashedhr">
+						<button type="submit" class="btn btn-default btnsave" (click)="logout()"><i class="fa fa-sign-out" aria-hidden="true"></i>&nbsp;&nbsp;Logout</button>
+					</div>
+					<!-- Hover Card -->
 				</div>
+				
 				<ul class="menu webmenu">
 					<li>
 						<p class="custusername">{{name}}</p>

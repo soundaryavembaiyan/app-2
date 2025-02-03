@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { HttpService } from '../services/http.service';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
+import { URLUtils } from '../urlUtils';
 declare var bootstrap: any;
 
 @Component({
@@ -30,7 +31,9 @@ export class DashboardComponent implements OnInit, OnChanges, AfterViewInit {
   minute: any = this.dateSet.getMinutes();
   ampm: string = this.time.getHours() >= 12 ? 'PM' : 'AM';
   timer: any;
-  showCard = false;
+  isCardVisible = false;
+  groups:any;
+  profile:any;
   
   navItem = [
     {
@@ -379,6 +382,16 @@ export class DashboardComponent implements OnInit, OnChanges, AfterViewInit {
     //window.location.pathname == '/grid'
 
     this.updateTime();
+    this.groups = JSON.parse(localStorage.getItem('user_groups') || '[]').join(' | ');
+    //console.log('groups', this.groups);
+
+    this.httpService.sendGetRequest(URLUtils.profile).subscribe(
+      (res: any) => {
+        console.log('res', res);
+          this.profile = res.data?.details;
+      }
+    )
+
   }
 
   ngAfterViewInit(): void {
