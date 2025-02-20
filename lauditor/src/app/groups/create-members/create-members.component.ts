@@ -49,6 +49,7 @@ export class CreateMembersComponent implements OnInit {
   viewMembers:any;
   disablePage: boolean = false;
   confmismatch = false;
+  isPaidSub:any;
   
   constructor(private formBuilder: FormBuilder,
               private httpService: HttpService, 
@@ -75,10 +76,17 @@ export class CreateMembersComponent implements OnInit {
     this.httpService.sendGetRequest(URLUtils.getMembers).subscribe((res:any)=>{
         this.viewMembers = res.data.users;
         this.memberCount = res.data;
-        console.log('viewMembers', this.viewMembers);
-        console.log('memcount', this.memberCount);
-        console.log('count',this.memberCount?.count)
-        console.log('total',this.memberCount?.total)
+        //this.isPaidSub = JSON.parse(localStorage.getItem('isPaidSub') || 'true');
+        // console.log('isPaidSub',this.isPaidSub); 
+        // console.log('viewMembers', this.viewMembers);
+        // console.log('memcount', this.memberCount);
+        // console.log('count',this.memberCount?.count)
+        // console.log('total',this.memberCount?.total)
+      
+        if(this.memberCount?.count === this.memberCount?.total){
+          this.disablePage = true;
+        }
+        //console.log('disablePage',this.disablePage)
     })
   }
 
@@ -242,6 +250,7 @@ export class CreateMembersComponent implements OnInit {
       const modalInstance = new bootstrap.Modal(modalElement);
       modalInstance.show();
     } else {
+      this.router.navigate(['/view-member'])
       //console.log('fields are empty');
     }
   }

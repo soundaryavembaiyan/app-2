@@ -100,7 +100,17 @@ export class LoginComponent implements OnInit {
 	}
 
 	callLoginWebService(data:any) {
-		this.httpservice.sendPostRequest(URLUtils.login, data).subscribe(
+		//console.log('data',data)
+		const email = this.myForm.value['email']?.trim().toLowerCase();
+		// console.log('email',email)
+
+		let payload = {
+			...this.myForm.value,
+			email
+		}
+		localStorage.setItem('user_email', JSON.stringify(email)); //Storing user email in localStorage
+
+		this.httpservice.sendPostRequest(URLUtils.login, payload).subscribe(
 			(resp:any) => {
 				if(!resp['error']){
 					if (resp['data']['plan'].toLowerCase() == Utils.productName){

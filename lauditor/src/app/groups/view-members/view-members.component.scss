@@ -453,7 +453,7 @@ tr.veiw-items {
     ); /* Dashed effect */
 }
   
-tr.veiw-items:hover .tabclass {
+.tabclass {
     border: none !important;
 }
 tr.veiw-items:hover .tabclass:not(:last-child)::after {
@@ -501,4 +501,8 @@ tr.veiw-items:hover {
     margin-left: 30px;
     width: 25px;
     cursor: pointer;
+}
+.disabled {
+    background: #004D87;
+    color: #fff;
 }

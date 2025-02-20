@@ -57,7 +57,7 @@
     				</div>
     			</div>
     			<div class="col-6">
-    				<div class=" form-group errorMsg  nameSet">
+    				<div class="form-group errorMsg  nameSet">
     					<label for="exampleInputEmail1" class="form-label lable-size">Email <span class="mandate">*</span></label>
     					<input type="email" (input)="restricttextSpace($event);resetEmailConf()"
                                formControlName="email"
@@ -65,15 +65,15 @@
     					       id="exampleInputEmail1"
                                aria-describedby="emailHelp"
                                (keyup)="resetEmailConf()"
-    					       [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+    					       [ngClass]="{ 'is-invalid': f.email.errors }"
                                name="email">
-    					<div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+    					<div *ngIf="f.email.errors" class="invalid-feedback">
     						<div *ngIf="f.email.errors.required">Email is required</div>
                             <div *ngIf="f.email.errors.pattern">Email must be a valid email address.</div>
     					</div>
     				</div>
 
-    				<div class=" form-group errorMsg nameSet">
+    				<div class="form-group errorMsg nameSet">
     					<label for="exampleInputEmail2" class="form-label lable-size"> Confirm Email <span class="mandate">*</span></label>
     					<input type="email"
                                formControlName="emailConfirm"
@@ -86,7 +86,7 @@
     					<div *ngIf="submitted && f.emailConfirm.errors" class="invalid-feedback">
     						<div *ngIf="f.emailConfirm.errors.required">Confirm Email is required</div>
                             <div *ngIf="f.emailConfirm.errors.pattern">Email must be a valid email address.</div>
-                            <div *ngIf="f.emailConfirm.errors.mismatch">Confirm email does not match</div>
+                            <div *ngIf="f.emailConfirm.errors.mismatch && !confmismatch">Confirm email does not match</div>
     					</div>
 						<div *ngIf="confmismatch" class="invalid-feedback">Confirm email does not match.</div>
     				</div>

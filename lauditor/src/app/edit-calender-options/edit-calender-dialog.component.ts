@@ -10,6 +10,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 export class EditCalenderDialogComponent implements OnInit {
   public form:FormGroup;
   @Output() emitService = new EventEmitter();
+  deleteEvent: any;
+  recurrentEvent:any;
 
   
   constructor(private activeModal: NgbActiveModal,
@@ -20,10 +22,15 @@ export class EditCalenderDialogComponent implements OnInit {
     }
 
   ngOnInit() {
+    this.deleteEvent = localStorage.getItem('delevent');
+    this.recurrentEvent = localStorage.getItem('repeat_interval');
+    //console.log('dialog recurrentEvent', this.recurrentEvent)
   }
 
   public cancel() {
     this.activeModal.close('');
+    localStorage.removeItem('delevent')
+    localStorage.removeItem('repeat_interval')
   }
 
   public submit() {
@@ -32,5 +39,7 @@ export class EditCalenderDialogComponent implements OnInit {
     // }
     this.emitService.next(this.form.value);
     this.activeModal.close('');
+    localStorage.removeItem('delevent')
+    localStorage.removeItem('repeat_interval')
   }
 }

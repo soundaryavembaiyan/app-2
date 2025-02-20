@@ -63,6 +63,9 @@ export class RemindersCalenderComponent implements OnInit {
   selectedCorp:any =[];
   clientcorpList:any = [];
   isEditPage = false;
+  recurrentchoice:any;
+  repeatDialogOpened = false;
+  selectedValue:any;
 
   constructor(
     private router: Router,
@@ -132,7 +135,7 @@ export class RemindersCalenderComponent implements OnInit {
     invitees_internal: [''],
     notifications: [''],
     title: ['reminders'],
-    recurrent_edit_choice: null
+    recurrent_edit_choice: ''
   })
   get f() {
     return this.CalenderForm.controls;
@@ -618,6 +621,7 @@ export class RemindersCalenderComponent implements OnInit {
    }
    this.isEditPage = false;
  }
+
   onSubmit() {
     this.isSubmitted = true;
     // if(this.isValidNotification){
@@ -626,6 +630,18 @@ export class RemindersCalenderComponent implements OnInit {
     if (!this.CalenderForm.valid) {
       //console.log('error');
     } else {
+      this.diff(this.CalenderForm?.value?.from_ts, this.CalenderForm?.value?.to_ts);
+      let given_date = new Date();
+      let new_date = given_date.setDate(given_date.getDate() + 1);
+
+      if (this.CalenderForm.value.allday) {
+        this.CalenderForm.value.from_ts = this.pipe.transform(this.CalenderForm.value.date, 'yyyy-MM-dd') + "T00:00:00";
+        this.CalenderForm.value.to_ts = this.pipe.transform(this.CalenderForm.value.date, 'yyyy-MM-dd') + "T23:59:59";
+      } else {
+        this.CalenderForm.value.from_ts = this.pipe.transform(this.CalenderForm?.value?.date, 'yyyy-MM-dd') + 'T' + this.CalenderForm?.value?.from_ts + ':00';
+        this.CalenderForm.value.to_ts = this.increaseTodate ? this.pipe.transform(new_date, 'yyyy-MM-dd') + 'T' + this.CalenderForm?.value?.to_ts + ':00' : this.pipe.transform(this.CalenderForm?.value?.date, 'yyyy-MM-dd') + 'T' + this.CalenderForm?.value?.to_ts + ':00';
+      }
+
       // Ensure all notifications have default values if empty
       this.notificationItems = this.notificationItems.map((item: { time: any; type: any; }) => {
         // Handle empty time values
@@ -659,18 +675,6 @@ export class RemindersCalenderComponent implements OnInit {
       });
       // Update notifications field in the form
       this.CalenderForm.value.notifications = this.notificationItems.map((item: { time: any; type: any; }) => `${item.time}-${item.type}`);
-     
-      this.diff(this.CalenderForm?.value?.from_ts, this.CalenderForm?.value?.to_ts);
-      let given_date = new Date();
-      let new_date = given_date.setDate(given_date.getDate() + 1);
-  
-      if(this.CalenderForm.value.allday){
-        this.CalenderForm.value.from_ts = this.pipe.transform(this.CalenderForm.value.date, 'yyyy-MM-dd') + "T00:00:00";
-        this.CalenderForm.value.to_ts = this.pipe.transform(this.CalenderForm.value.date, 'yyyy-MM-dd') + "T23:59:59";       
-      } else {
-        this.CalenderForm.value.from_ts = this.pipe.transform(this.CalenderForm?.value?.date, 'yyyy-MM-dd') + 'T' + this.CalenderForm?.value?.from_ts + ':00';
-        this.CalenderForm.value.to_ts = this.increaseTodate ? this.pipe.transform(new_date, 'yyyy-MM-dd') + 'T' + this.CalenderForm?.value?.to_ts + ':00' : this.pipe.transform(this.CalenderForm?.value?.date, 'yyyy-MM-dd') + 'T' + this.CalenderForm?.value?.to_ts + ':00';
-      }
 
       this.CalenderForm.value.timezone_offset = 0 - Number(this.CalenderForm?.value?.timezone_location?.split(',')[0]);
       this.CalenderForm.value.timezone_location = this.CalenderForm?.value?.timezone_location?.split(',')[1];
@@ -679,113 +683,184 @@ export class RemindersCalenderComponent implements OnInit {
       this.CalenderForm.value.invitees_external = this.selectedClients.map((obj: any) => (obj.entityid + '_' + obj.id));
       this.CalenderForm.value.invitees_corporate = this.selectedCorp.map((obj: any) => (obj.entityid + '_' + obj.id));
       this.CalenderForm.value.invitees_consumer_external = this.selectedconsumer.map((obj: any) => (obj.id));
-      if(this.editInfo){    
-        if (!this.CalenderForm.valid) {    
-          return;    
-        }    
-        // this.editCalenderDialogService.open(); 
-        // //console.log('editCalenderDialogService',this.editCalenderDialogService)   
-        // this.editCalenderDialogService.editCalObservable.subscribe((data:any)=>{    
-        //   if(data){    
-        //   this.CalenderForm.value.recurrent_edit_choice = data;    
-        //   this.httpservice.sendPutRequest(URLUtils.updateEvent({'eventId':this.editInfo?.id,'offset':this.editInfo?.timezone_offset}), this.CalenderForm.value).subscribe((res: any) => {    
-        //     if (!res.error) {    
-        //       this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully modified the event', false, 'View Changes', 'Cancel', true).then((confirmed) => {    
-        //         this.editCalenderDialogService.editCalSubmitted.next(null);
-        //         //console.log('editCalenderDialogService',this.editCalenderDialogService) 
-        //         if (confirmed)    
-        //           this.router.navigate(['/meetings/view']);    
-        //         else    
-        //           window.location.reload();    
-        //       })    
-        //     } else {    
-        //       this.confirmationDialogService.confirm('Alert', res.msg, false, '', '', false, 'sm', false)    
-        //     }    
-        //   },
-        //   (error: HttpErrorResponse) => {
-        //     if (error.status === 401 || error.status === 403) {
-        //       const errorMessage = error.error.msg || 'Unauthorized';
-        //       this.toast.error(errorMessage);
-        //       console.log(error);
-        //     } 
-        //   });    
-        //   return;    
-        // }    
-        // });  
-                
+
+      if (this.editInfo) {
+        if (!this.CalenderForm.valid) {
+          return;
+        }
+
+        // const validIntervals = ['weekly', 'daily', 'biweekly', 'monthly', 'yearly'];
+        // //Event reccurring dialog
+        // if (this.editInfo?.repeat_interval && !this.repeatDialogOpened && (this.selectedValue && this.selectedValue !== '')) {
+        //   this.repeatDialogOpened = true;
+        //   this.editCalenderDialogService.open();
+        //   this.editCalenderDialogService.editCalObservable.subscribe((data: any) => {
+        //     if (data) {
+        //       this.CalenderForm.value.recurrent_edit_choice = data;
+        //       this.recurrentchoice = data;
+        //     }
+        //   });
+        //   return;
+        // }
+        // this.CalenderForm.controls["recurrent_edit_choice"].setValue(this.recurrentchoice);
+
         const validIntervals = ['weekly', 'daily', 'biweekly', 'monthly', 'yearly'];
         //Event reccurring dialog
-        if (this.editInfo?.repeat_interval && validIntervals.includes(this.editInfo.repeat_interval.toLowerCase())) {
-          this.editCalenderDialogService.open();
-          this.editCalenderDialogService.editCalObservable.subscribe((data: any) => {
-            if (data) {
-              this.CalenderForm.value.recurrent_edit_choice = data;
-              this.sendUpdateRequest(); // Proceed with update request
-            }
-          });
-        } else {
-          this.sendUpdateRequest(); // If repeat_interval is empty directly proceed with the update request
-        }          
-      }    
-      else{
-      this.httpservice.sendPostRequest(URLUtils.createEvent, this.CalenderForm.value).subscribe((res: any) => {
-        if (!res.error) {
-          this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully the created event',false, 'View Changes', 'Cancel', true).then((confirmed) => {
-            if (confirmed)
-              this.router.navigate(['/meetings/view']);
-            else
-              window.location.reload();
-          })
-        } else {
-          this.confirmationDialogService.confirm('Alert', res.msg,false, '', '', false, 'sm', false)
-        }
-      },
-      (error: HttpErrorResponse) => {
-        if (error.status === 400 || error.status === 401 || error.status === 403) {
-            let errorMessage = 'Unauthorized'; // Default message
-            if (error.error.errors && error.error.errors.length > 0) {
-              const firstError = error.error.errors[0];
-              if (firstError.field === "to_ts") {
-                errorMessage = "End time must be greater than Start time";
-              } else {
-                errorMessage = firstError.msg || errorMessage;
-              }
-            }
-          this.toast.error(errorMessage);
-        } 
-      })
-    }
-  }
-  }
-
-  sendUpdateRequest() {
-    this.httpservice.sendPutRequest(
-      URLUtils.updateEvent({ 'eventId': this.editInfo?.id, 'offset': this.editInfo?.timezone_offset }),
-      this.CalenderForm.value
-    ).subscribe(
-      (res: any) => {
-        if (!res.error) {
-          this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully modified the event', false, 'View Changes', 'Cancel', true)
-            .then((confirmed) => {
-              this.editCalenderDialogService.editCalSubmitted.next(null);
-              if (confirmed) {
-                this.router.navigate(['/meetings/view']);
-              } else {
-                window.location.reload();
+        if (this.selectedValue !== '' && validIntervals.includes(this.selectedValue)) {
+          if (this.editInfo?.repeat_interval && !this.repeatDialogOpened) {
+            this.repeatDialogOpened = true;
+            this.editCalenderDialogService.open();
+            this.editCalenderDialogService.editCalObservable.subscribe((data: any) => {
+              if (data) {
+                this.CalenderForm.value.recurrent_edit_choice = data;
+                this.recurrentchoice = data;
               }
             });
+            return;
+          }
+        }
+        else if (this.selectedValue === '' && !validIntervals.includes(this.selectedValue)) {
+          this.CalenderForm.controls["recurrent_edit_choice"].setValue('all');
+        }
+        else {
+          if (this.editInfo?.repeat_interval && !this.repeatDialogOpened) {
+            this.repeatDialogOpened = true;
+            this.editCalenderDialogService.open();
+            this.editCalenderDialogService.editCalObservable.subscribe((data: any) => {
+              if (data) {
+                this.CalenderForm.value.recurrent_edit_choice = data;
+                this.recurrentchoice = data;
+              }
+            });
+            return;
+          }
+        }
+
+        if(this.recurrentchoice){
+          this.CalenderForm.controls["recurrent_edit_choice"].setValue(this.recurrentchoice);
+        }
+        else{
+          this.CalenderForm.controls["recurrent_edit_choice"].setValue('all');
+        }
+
+        this.diff(this.CalenderForm?.value?.from_ts, this.CalenderForm?.value?.to_ts);
+        let given_date = new Date();
+        let new_date = given_date.setDate(given_date.getDate() + 1);
+
+        if (this.CalenderForm.value.allday) {
+          this.CalenderForm.value.from_ts = this.pipe.transform(this.CalenderForm.value.date, 'yyyy-MM-dd') + "T00:00:00";
+          this.CalenderForm.value.to_ts = this.pipe.transform(this.CalenderForm.value.date, 'yyyy-MM-dd') + "T23:59:59";
         } else {
-          this.confirmationDialogService.confirm('Alert', res.msg, false, '', '', false, 'sm', false);
+          this.CalenderForm.value.from_ts = this.pipe.transform(this.CalenderForm?.value?.date, 'yyyy-MM-dd') + 'T' + this.CalenderForm?.value?.from_ts + ':00';
+          this.CalenderForm.value.to_ts = this.increaseTodate ? this.pipe.transform(new_date, 'yyyy-MM-dd') + 'T' + this.CalenderForm?.value?.to_ts + ':00' : this.pipe.transform(this.CalenderForm?.value?.date, 'yyyy-MM-dd') + 'T' + this.CalenderForm?.value?.to_ts + ':00';
         }
-      },
-      (error: HttpErrorResponse) => {
-        if (error.status === 401 || error.status === 403) {
-          const errorMessage = error.error.msg || 'Unauthorized';
-          this.toast.error(errorMessage);
-          console.log(error);
-        }
+
+        // Ensure all notifications have default values if empty
+        this.notificationItems = this.notificationItems.map((item: { time: any; type: any; }) => {
+          // Handle empty time values
+          if (!item.time || item.time.trim() === "") {
+            // If the time is empty, keep the existing type but set default time
+            if (item.type === "minutes") {
+              return { time: "10", type: "minutes" };
+            } else if (item.type === "hours") {
+              return { time: "1", type: "hours" };
+            } else if (item.type === "weeks") {
+              return { time: "1", type: "weeks" };
+            } else if (item.type === "days") {
+              return { time: "1", type: "days" };
+            }
+          }
+          // Handle specific cases for "-minutes", "-hours", "-weeks", and "-months"
+          if (item.time.trim() === "-minutes") {
+            return { time: "10", type: "minutes" };  // Default to 10-minutes
+          }
+          if (item.time.trim() === "-hours") {
+            return { time: "1", type: "hours" };  // Default to 1-hour
+          }
+          if (item.time.trim() === "-weeks") {
+            return { time: "1", type: "weeks" };  // Default to 1-week
+          }
+          if (item.time.trim() === "-days") {
+            return { time: "1", type: "days" };  // Default to 1-month
+          }
+
+          return item;  // Return the item if no changes are needed
+        });
+        // Update call
+        this.CalenderForm.value.notifications = this.notificationItems.map((item: { time: any; type: any; }) => `${item.time}-${item.type}`);
+        this.CalenderForm.value.timezone_offset = 0 - Number(this.CalenderForm?.value?.timezone_location?.split(',')[0]);
+        this.CalenderForm.value.timezone_location = this.CalenderForm?.value?.timezone_location?.split(',')[1];
+        this.CalenderForm.value.notifications = this.notificationItems.map((obj: any) => (obj.time + '-' + obj.type));
+        this.CalenderForm.value.invitees_internal = this.selectedTeammembers.map((obj: any) => (obj.id));
+        this.CalenderForm.value.invitees_external = this.selectedClients.map((obj: any) => (obj.entityid + '_' + obj.id));
+        this.CalenderForm.value.invitees_corporate = this.selectedCorp.map((obj: any) => (obj.entityid + '_' + obj.id));
+        this.CalenderForm.value.invitees_consumer_external = this.selectedconsumer.map((obj: any) => (obj.id));
+
+        //console.log('updateCalenderForm',this.CalenderForm.value)
+        this.httpservice.sendPutRequest(
+          URLUtils.updateEvent({ 'eventId': this.editInfo?.id, 'offset': this.editInfo?.timezone_offset }),
+          this.CalenderForm.value
+        ).subscribe(
+          (res: any) => {
+            if (!res.error) {
+              this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully modified the event', false, 'View Changes', 'Cancel', true)
+                .then((confirmed) => {
+                  this.editCalenderDialogService.editCalSubmitted.next(null);
+                  if (confirmed) {
+                    this.router.navigate(['/meetings/view']);
+                  } else {
+                    window.location.reload();
+                  }
+                  localStorage.removeItem('repeat_interval')
+                });
+            } else {
+              this.confirmationDialogService.confirm('Alert', res.msg, false, '', '', false, 'sm', false);
+            }
+          },
+          (error: HttpErrorResponse) => {
+            if (error.status === 401 || error.status === 403) {
+              const errorMessage = error.error.msg || 'Unauthorized';
+              this.toast.error(errorMessage);
+              console.log(error);
+            }
+          }
+        );
+
       }
-    );
+      else {
+        this.httpservice.sendPostRequest(URLUtils.createEvent, this.CalenderForm.value).subscribe((res: any) => {
+          if (!res.error) {
+            this.confirmationDialogService.confirm('Success', 'Congratulations! You have successfully the created event', false, 'View Changes', 'Cancel', true).then((confirmed) => {
+              if (confirmed)
+                this.router.navigate(['/meetings/view']);
+              else
+                window.location.reload();
+            })
+          } else {
+            this.confirmationDialogService.confirm('Alert', res.msg, false, '', '', false, 'sm', false)
+          }
+        },
+          (error: HttpErrorResponse) => {
+            if (error.status === 400 || error.status === 403) {
+              let errorMessage = 'Unauthorized'; // Default message
+              if (error.error.errors && error.error.errors.length > 0) {
+                const firstError = error.error.errors[0];
+                if (firstError.field === "to_ts") {
+                  errorMessage = "End time must be greater than Start time";
+                } else {
+                  errorMessage = firstError.msg || errorMessage;
+                }
+              }
+              this.toast.error(errorMessage);
+            }
+            if (error.status === 401) {
+              const errorMessage = error.error.msg || 'Unauthorized';
+              console.log('errorMessage', errorMessage)
+              this.toast.error(errorMessage);
+            }
+          })
+      }
+    }
   }
 
   onReset(){
@@ -797,6 +872,11 @@ export class RemindersCalenderComponent implements OnInit {
     inputValue = inputValue.replace(/^\s+/, '');
     inputValue = inputValue.replace(/\s{2,}/g, ' ');
     event.target.value = inputValue;
+  }
+  onRepetitionChange(event: any): void {
+    this.isEditPage = false;
+    this.selectedValue = event.target.value;
+    localStorage.setItem('repeat_interval', this.selectedValue);
   }
 }
 

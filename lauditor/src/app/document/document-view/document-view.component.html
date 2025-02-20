@@ -5,7 +5,8 @@
       <!-- Client code -->
       <div class="col-6" *ngIf="filterKey==='client'">
         <div class="form-group" *ngIf="product != 'corporate'">
-          <label for="title" class="fontbold">Client Name <span class="mandate">*</span></label>
+          <label for="title" class="fontbold" *ngIf="product !== 'content'">Client Name <span class="mandate">*</span></label>
+          <label for="title" class="fontbold" *ngIf="product === 'content'">Customer Name <span class="mandate">*</span></label>
           <div class="ng-autocomplete textbox">
             <ng-autocomplete class="ngauto" [data]="data" [searchKeyword]="keyword" placeholder="Type to select"
               (selected)='selectEvent($event)' (inputCleared)='onChangeSearch($event)' [initialValue]="selectedValue"
@@ -116,10 +117,16 @@
 
       <div class="col-6" >
         <div class="form-group float-right">
-          <div class="input-group court" id="search">
-            <input type="text" class="form-control textbox" placeholder="Search" [(ngModel)]="term" (input)="restricttextSpace($event);onSearch();getdocs()" oninput="this.value = this.value.replace(/[^A-Za-z0-9 ]|^ /g,'')"/>
+          <div class="input-group court" id="search" *ngIf="filterKey!=='firm'">
+            <input type="text" class="form-control textbox" placeholder="Search" [(ngModel)]="term" (input)="restricttextSpace($event);onSearch();getdocs()" oninput="this.value = this.value.replace(/[^A-Za-z0-9-_ ]|^ /g,'')"/>
             <img src="assets/img/search.svg" class="calimg calitem input-group-append searchimg">
           </div>
+
+          <div class="input-group court" id="search" *ngIf="filterKey=='firm'">
+            <input type="text" class="form-control textbox" placeholder="Search" required="" [(ngModel)]="term" oninput="this.value = this.value.replace(/[^A-Za-z0-9-_ ]|^ /g,'')">
+            <img src="assets/img/search.svg" class="calimg calitem input-group-append searchimg">
+          </div>
+
         </div>
         <!-- <div class="form-group float-right">
           <div class="input-group court" id="search">
@@ -157,7 +164,9 @@
   </div>
 </div>
 <div *ngIf="!errorMsg" class="margin-top">
-  <div *ngIf="filterKey=='client' && documents && documents?.length==0" class="custom-alert">Please Select Client name </div>
+  <div *ngIf="filterKey=='client' && documents && documents?.length== 0 && !errorClient && product === 'content'" class="custom-alert">Please Select Customer name </div>
+  <div *ngIf="filterKey=='client' && documents && documents?.length== 0 && !errorClient && product !== 'content'" class="custom-alert">Please Select Client name </div>
+
   <div *ngIf="filterKey=='firm' && selectedGroupItems && selectedGroupItems.length==0 && product != 'corporate'" class="custom-alert">Please Select Group name </div>
   <div *ngIf="filterKey=='firm' && selectedGroupItems && selectedGroupItems.length==0 && product == 'corporate'" class="custom-alert">Please Select Department name </div>
 </div>
@@ -349,7 +358,11 @@
 
             <td class="tabclass" style="text-decoration: underline">{{document.name}}</td>
             <!-- <td>{{document.status}}</td>-->
-            <td class="tabclass">{{document.status === 'finished' ? 'Completed' : document.status === 'failed' ? 'Failed' : document.status}}</td>
+            <td class="tabclass">
+              {{ document.status === 'finished' ? 'Completed' : 
+              document.status === 'failed' ? 'Failed' : 
+              document.status === 'processing' ? 'Processing..' : document.status }}
+            </td>
             <td class="tabclass">{{document.created | date:'MMM d, y'}}</td>
             <td class="tabclass">{{document.createdby}}</td>
             <td class="tabclass">
@@ -359,7 +372,7 @@
             <td class="tabclass">
               <div class="dropdown"><!--class="dropdown"-->
                 <button type="button" class="btn btn-primary  dropdown-toggle actionbtn" 
-                [ngClass]="{'disabled': document.isdisabled || document?.status === 'Processing..'}" data-bs-toggle="dropdown">
+                [ngClass]="{'disabled': document.isdisabled || document?.status === 'Processing..' || document?.status === 'processing'}" data-bs-toggle="dropdown">
                   Action
                 </button>
                 <ul class="dropdown-menu dropdown-menu-start custom-dropdown" *ngIf="document?.status === 'finished'">
@@ -638,7 +651,7 @@
                       id="tagKey-{{ i }}" (input)="restrictSpaces($event)"
                       maxlength="30" autocomplete="off">
                   </div>
-                  <div class="count-text">{{tag.get('key')?.value.length}}/30</div>
+                  <div class="count-text">{{tag?.get('key')?.value?.length}}/30</div>
                 </div>
                 <div class="col-6">
                   <div class="form-group nameSet">
@@ -647,7 +660,7 @@
                       id="tagValue-{{ i }}" (input)="restrictSpaces($event)"
                       maxlength="100" autocomplete="off">
                   </div>
-                  <div class="count-text">{{tag.get('value')?.value.length}}/100</div>
+                  <div class="count-text">{{tag?.get('value')?.value?.length}}/100</div>
                 </div>
 
                 <div class="col-12 text-end">
@@ -659,7 +672,7 @@
             <div class="btnbox">
               <button type="button" class="btn btn-default test btncancel" data-bs-dismiss="modal" aria-label="Close" (click)="reset()">Cancel</button>
               <button type="submit" class="btn btn-default btnsave" data-bs-dismiss="modal" aria-label="Close" 
-              [disabled]="tagDocform.pristine || tagDocform.invalid">Save</button><!--[ngClass]="{ 'is-invalid': tagDocform.invalid }"-->
+              [disabled]="tagDocform.pristine" [ngClass]="{ 'is-invalid': tagDocform.length === 0 }">Save</button><!--[ngClass]="{ 'is-invalid': tagDocform.invalid }"-->
             </div>
           </form>
         </div>

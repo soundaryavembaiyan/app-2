@@ -138,7 +138,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="rone veiw-items"
+          <tr class="rone veiw-items" style="border: none;"
               *ngFor="let rel of relationshipList | filter:searchText"
               [class.active]="highlight == rel.id">
             <td class="tabclass">{{rel.name}}</td>

@@ -1,9 +1,10 @@
 <div class="modal-header">
-  <h4 class="modal-title">Edit Recurring Event</h4>
+  <h4 class="modal-title" *ngIf="!deleteEvent">Edit recurring event</h4>
+  <h4 class="modal-title" *ngIf="deleteEvent">Delete recurring event</h4>
 </div>
 <div class="modal-body">
   <form [formGroup]="form" (ngSubmit)="submit()">
-    <div style="margin-left:40px">
+    <div style="margin-left:40px" *ngIf="!recurrentEvent">
       <input type="radio" value="this" formControlName="editcalenderevent">
         <span>This Event</span>
     </div>

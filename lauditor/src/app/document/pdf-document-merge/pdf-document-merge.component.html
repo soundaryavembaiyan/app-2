@@ -35,14 +35,14 @@
                     <textarea rows="4" formControlName="content" cols="50" class="form-control textbox" name="content" (input)="restricttextSpace($event)"
                     [(ngModel)]="docModelData.content"></textarea>
                 </div>
-                <div class=" form-check mx-md-n5 mt-n1  form-group name-set">
+                <div class=" form-check mx-md-n5 mt-n1  form-group name-set" (click)="$event.stopPropagation()">
                     <input class="form-check-input titleChecks" type="checkbox" value="" #inputE1 id="flexCheckDefault"
                         (change)="showBookmark(inputE1.checked)" >
                     <label class="form-check-label label-name" for="flexCheckDefault">
                         Show Bookmark
                     </label>
                 </div>
-                <div class="form-check mt-n1 form-group name-set">
+                <div class="form-check mt-n1 form-group name-set" (click)="$event.stopPropagation()">
                     <input class="form-check-input titleChecks" type="checkbox" value="" #inputE5 id="flexCheckChecked"
                         (change)="customPage(inputE5.checked)" >
                     <label class="form-check-label label-name" for="flexCheckChecked">Custom Page Numbers
@@ -52,7 +52,7 @@
                 <div *ngIf="iscustomPage">
                     You can add custom page numbers after the merge process is completed
                 </div>
-                <div *ngIf="!iscustomPage">
+                <div *ngIf="!iscustomPage" (click)="$event.stopPropagation()">
                     <div class="mt-n1 form-check form-group name-set">
                         <input class="form-check-input titleChecks" #inputEl type="checkbox" value=""
                             id="flexCheckChecked" (change)="addPageNumber(inputEl.checked)" >
@@ -61,10 +61,9 @@
                         </label>
                     </div>
 
-                    <div class=" page-container form-group name-set" *ngIf="isAddpageNumber ">
+                    <div class=" page-container form-group name-set" *ngIf="isAddpageNumber">
                         <div>
-                            <label class="form-check-label " for="flexCheckChecked">
-                                Page Number Size </label>
+                            <label class="form-check-label labelcheck" for="flexCheckChecked">Page Number Size </label>
                             <div>
                                 <ul class="nav nav-pills mb-3 btnaction" id="pills-tab" role="tablist">
                                     <li class="nav-item" (click)="selectFont('small')">
@@ -74,22 +73,22 @@
                                             data-bs-target="#pills-home" type="button" role="tab"
                                             aria-controls="pills-home" aria-selected="true">S <br>12 PX</button>
                                     </li>
-                                    <li class="nav-item" (click)="selectFont('Medium')">
-                                        <button id="Medium" [ngClass]="{'active': selectFontName === 'Medium'}"
+                                    <li class="nav-item" (click)="selectFont('medium')">
+                                        <button id="Medium" [ngClass]="{'active': selectFontName === 'medium'}"
                                             name="priority" class="selectprior optionaling" id="pills-profile-tab"
                                             data-bs-toggle="pill" data-bs-target="#pills-profile" type="button"
                                             role="tab" aria-controls="pills-profile"
                                             aria-selected="false">M<br>18 PX</button>
                                     </li>
-                                    <li class="nav-item" (click)="selectFont('Large')">
-                                        <button id="Large" [ngClass]="{'active': selectFontName === 'Large'}"
+                                    <li class="nav-item" (click)="selectFont('large')">
+                                        <button id="Large" [ngClass]="{'active': selectFontName === 'large'}"
                                             name="priority" class=" selectprior optionlow" id="pills-contact-tab"
                                             data-bs-toggle="pill" data-bs-target="#pills-contact" type="button"
                                             role="tab" aria-controls="pills-contact" aria-selected="false">L <br>
                                             24 PX</button>
                                     </li>
-                                    <li class="nav-item" (click)="selectFont('XLarge')">
-                                        <button id="XLarge" [ngClass]="{'active': selectFontName === 'XLarge'}"
+                                    <li class="nav-item" (click)="selectFont('xlarge')">
+                                        <button id="XLarge" [ngClass]="{'active': selectFontName === 'xlarge'}"
                                             name="priority" class=" selectprior optionlow" id="pills-contact-tab"
                                             data-bs-toggle="pill" data-bs-target="#pills-contact" type="button"
                                             role="tab" aria-controls="pills-contact" aria-selected="false">XL <br>
@@ -99,8 +98,7 @@
                             </div>
                         </div>
                         <div>
-                            <label class="form-check-label " for="flexCheckChecked">
-                                Page Number Format
+                            <label class="form-check-label labelcheck" for="flexCheckChecked">Page Number Format
                             </label>
                             <div class="page-number">
                                 <div class="form-check form-check-inline custom-checkbox">
@@ -129,9 +127,7 @@
                             </div>
                         </div>
 
-                        <label class="form-check-label " for="flexCheckChecked">
-                            Page Number Position
-                        </label>
+                        <label class="form-check-label labelcheck" for="flexCheckChecked">Page Number Position</label>
                         <div class="blank_page">
                             <div class="check-box-position page-position">
                                 <div class="top-align">

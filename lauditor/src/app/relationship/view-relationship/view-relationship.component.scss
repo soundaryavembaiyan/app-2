@@ -70,7 +70,7 @@ tr.veiw-items {
     border: 2px solid #eeeeee;
 }
 
-tr.veiw-items:hover .tabclass {
+.tabclass {
     border: none !important;
 }
 
@@ -83,4 +83,8 @@ tr.veiw-items:hover {
         color: #111;
         border: none;
     }
+}
+.disabled {
+    background: #004D87;
+    color: #fff;
 }

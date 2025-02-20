@@ -185,13 +185,13 @@
                 <div class="watermark-left name-set ">
                     <div class="row tab-margin">
                         <div class="btnaction tab-margin">
-                            <a href="javascript:void(0)" class="selectpriorstand optionhigh" [class.active]="selectedPageOption === 'standard'" (click)="selectedPageOption = 'standard'">Standard Page Numbers</a>
-                            <a href="javascript:void(0)" class="selectprior optionaling optionlow" [class.active]="selectedPageOption === 'custom'" (click)="selectedPageOption = 'custom'">Custom Page Numbers</a>
+                            <a href="javascript:void(0)" class="selectpriorstand optionhigh" [class.active]="selectedPageOption === 'standard'" (click)="selectedPageOption = 'standard';onOptionChange('standard');standardForm()">Standard Page Numbers</a>
+                            <a href="javascript:void(0)" class="selectprior optionaling optionlow" [class.active]="selectedPageOption === 'custom'" (click)="selectedPageOption = 'custom';onOptionChange('custom');customForm()">Custom Page Numbers</a>
                         </div>
                     </div>
                     <!-- Standard Page Numbers -->
                     <div *ngIf="selectedPageOption === 'standard'">
-                    <form [formGroup]="customPage" (ngSubmit)="onSubmit()">
+                    <form [formGroup]="customPage">
                         <div class="row name-set">
                             <div class="col-5">
                                 <div class="form-group name-set">
@@ -214,15 +214,14 @@
                                 <div class="text-danger" *ngIf="isSubmitted && pagenumfontsize?.invalid">Font is required</div>
                             </div>
 
-                            <div class="add-pages" *ngFor="let item of paginationData let i = index">
+                            <div class="add-pages">
                                 <div class="row">
                                         <div class="col-5" style="padding-top: 10px;">
                                             <div class="form-group">
                                                 <div>
                                                     <label> Numbering Format<span class="mandate">*</span></label>
-                                                    <select class="form-control page_template textbox"
-                                                        (change)="onChangeTemplate($event, i)">
-                                                        <option value="select">Choose</option>
+                                                    <select class="form-control textbox" formControlName="_page_template" (change)="changetextposition($event)">
+                                                        <option value="">Choose</option>
                                                         <option value="#PAGENUM#">1, 2, 3</option>
                                                         <option value="Page (#PAGENUM#)">Page (1)</option>
                                                         <option value="A #PAGENUM#">A 1</option>
@@ -252,7 +251,7 @@
                                                         <option value="Y #PAGENUM#">Y 1</option>
                                                         <option value="Z #PAGENUM#">Z 1</option>
                                                     </select>
-                                                    <p class="text-danger" [id]="i+'_page_template'"></p>
+                                                    <p class="text-danger" *ngIf="isSubmitted && _page_template?.invalid">Numbering format is required</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -261,7 +260,9 @@
                         </div>
                         <div class="btnbox">
                             <button type="reset" class="btn btn-default btncancel" (click)="cancel()">Cancel</button>
-                            <button type="submit" class="btn test btn-default btnsave" (click)="onPagesSubmit()">Save</button>
+                            <button class="btn test btn-default btnsave" (click)="onPageStandartSubmit()"
+                            [ngClass]="{'disabled': customPage.invalid }"
+                            [disabled]="customPage.invalid">Save</button>
                         </div>
                     </form>
                     </div>
@@ -269,7 +270,7 @@
 
                     <!-- Custom Page Numbers -->
                     <div *ngIf="selectedPageOption === 'custom'">
-                    <form [formGroup]="myForm" (ngSubmit)="onPagesSubmit()">
+                    <form [formGroup]="myForm">
                      <div class="row name-set">
                         <div class="col-5">
                             <div class="form-group name-set">
@@ -307,16 +308,17 @@
                                 <div>
                                     <div class="">
                                         <div class="">
-                                            <div class="add-pages" *ngFor="let item of paginationData let i = index">
+                                            <div class="add-pages" *ngFor="let item of paginationData; let i = index">
                                                 <hr>
                                                 <div class="row">
                                                     <div class="col-5">
                                                         <div class="form-group">
                                                             <div>
                                                                 <label>Starting Page <span class="mandate">*</span></label>
-                                                                <input type='tel' (input)="onKey($event, i, 'page_range_starts')"
-                                                                 value="{{item.page_range_starts}}" min="1" class="form-control textbox"/>
-                                                                <p class="text-danger" [id]="i+'_page_range_starts'"></p>
+                                                                <input type='tel' (input)="onKey($event, i, 'startPage')" formControlName="startPage"
+                                                                 value="{{item.startPage}}" min="1" class="form-control textbox"/>
+                                                                <!-- <p class="text-danger" [id]="i+'_page_range_start'"></p> -->
+                                                                <div class="text-danger" *ngIf="isSubmitted && startPage?.invalid">This field is required</div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -324,9 +326,10 @@
                                                         <div class="form-group">
                                                             <div>
                                                                 <label>Ending Page <span class="mandate">*</span></label>
-                                                                <input type='tel' (keyup)="onKey($event, i, 'page_range_ends')"
-                                                                    value="{{item.page_range_ends}}" class="form-control textbox" min="1" />
-                                                                <p class="text-danger" [id]="i+'_page_range_ends'"></p>
+                                                                <input type='tel' (keyup)="onKey($event, i, 'endingPage')" formControlName="endingPage"
+                                                                    value="{{item.endingPage}}" class="form-control textbox" min="1" />
+                                                                <!-- <p class="text-danger" [id]="i+'_page_range_ends'"></p> -->
+                                                                <div class="text-danger" *ngIf="isSubmitted && endingPage?.invalid">This field is required</div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -338,9 +341,8 @@
                                                             <div class="form-group">
                                                                 <div>
                                                                     <label> Numbering Format<span class="mandate">*</span></label>
-                                                                    <select class="form-control page_template textbox"
-                                                                        (change)="onChangeTemplate($event, i)">
-                                                                        <option value="select">Choose</option>
+                                                                    <select class="form-control textbox" formControlName="_page_template" (change)="changetextposition($event);onChangeTemplate($event, i)">
+                                                                        <option value="">Choose</option>
                                                                         <option value="#PAGENUM#">1, 2, 3</option>
                                                                         <option value="Page (#PAGENUM#)">Page (1)</option>
                                                                         <option value="A #PAGENUM#">A 1</option>
@@ -370,7 +372,7 @@
                                                                         <option value="Y #PAGENUM#">Y 1</option>
                                                                         <option value="Z #PAGENUM#">Z 1</option>
                                                                     </select>
-                                                                    <p class="text-danger" [id]="i+'_page_template'"></p>
+                                                                    <p class="text-danger" *ngIf="isSubmitted && _page_template?.invalid">Numbering format is required</p>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -383,12 +385,13 @@
                                                                         <span class="input-group-addon"
                                                                             [id]="i+'_format_name'"
                                                                             style="float: none;padding-top: 10px;"></span>
-                                                                        <input type="number" min="0"
-                                                                            (input)="onKey($event, i, 'page_starts_from')"
-                                                                            value="{{item.page_starts_from}}"
+                                                                        <input type="number" min="0" formControlName="startingnumber"
+                                                                            (input)="onKey($event, i, 'startingnumber')"
+                                                                            value="{{item.startingnumber}}"
                                                                             class="form-control textbox" />
                                                                     </div>
-                                                                    <p class="text-danger" [id]="i+'_page_starts_from'"></p>
+                                                                    <!-- <p class="text-danger" [id]="i+'_page_starts_from'"></p> -->
+                                                                    <div class="text-danger" *ngIf="isSubmitted && startingnumber?.invalid">This field is required</div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -407,9 +410,11 @@
                             </div>
                             <div class="btnbox">
                                 <button type="reset" class="btn btn-default btncancel" (click)="cancel()">Cancel</button>
-                                <button type="submit" class="btn test btn-default btnsave">Save</button>
+                                <button class="btn test btn-default btnsave" (click)="onPagesSubmit()"
+                                [ngClass]="{'disabled': myForm.invalid }"
+                                [disabled]="myForm.invalid">Save</button>
                             </div>
-                        </form>
+                    </form>
                     </div>
                     <!-- Custom Page Numbers -->
                 </div>
@@ -426,9 +431,9 @@
                         <div class="alertpara">
                             <p class="alertparatxt alertpad">Confirmation</p>
                         </div>
-                        <div class="alertext">Are you sure you want to add Custom Page Numbers to Approved 
-                            <!-- {{data.name}}  -->
-                            document?</div>
+                        <div class="alertext">Are you sure you want to add Page Numbers to approved the
+                            <!-- {{data.name}}  --> 
+                         document?</div>
                         <div class="alertbutton">
                             <button class="btn btn-default  alertbtn alertbtnno"
                                 (click)="closeModal('doc-del-pages');">No</button>
@@ -451,7 +456,7 @@
                         <div class="alertpara">
                             <p class="alertparatxt alertpad">Success</p>
                         </div>
-                        <div class="alertext">Congratulations!! <br> You have successfully added Custom Page Numbers to 
+                        <div class="alertext">Congratulations!! <br> You have successfully added Page Numbers to 
                             <!-- {{data.name}}  -->
                             the document.</div>
                         <div class="center">

@@ -104,3 +104,21 @@
     margin-top: 25px;
     height: 45px;
 }
+.relgh{
+    width: 75px;
+    margin-top: -3px;
+    margin-left: -10px;
+}
+.relmove{
+    margin-top: -15px;
+}
+.vrg{
+    margin-top: -10px; 
+}
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+    .relgh{
+        width: 50px;
+        margin-top: -5px;
+        margin-left: -5px;
+    }
+}

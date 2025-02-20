@@ -117,4 +117,13 @@
 #addedGrp:hover {
     color: #fff;
     background-color: #00b3a7;
-  }
+}
+.form-select{
+    background-color: #EEEEEE;
+}
+.is-invalidbtn{
+    color: rgb(244, 244, 246);
+    background: #7b9bb5;
+    opacity: 10;
+    pointer-events: none;
+}

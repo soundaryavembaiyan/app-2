@@ -82,6 +82,9 @@ export class DeletePagesComponent implements OnInit {
                     }
                   });
             }
+            else{
+                this.toast.error(res.msg)
+            }
         },
         (error: HttpErrorResponse) => {
             if (error.status === 401 || error.status === 403) {

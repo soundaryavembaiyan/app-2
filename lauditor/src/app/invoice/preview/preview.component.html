@@ -157,8 +157,8 @@
                     <tbody>
                       <tr class="rone veiw-items" *ngFor="let item of inItems; let i = index" style="height: 30px;">
                         <td class="tableView">{{ i + 1 }}</td>
-                        <td>
-                          <div class="trSpc texted">{{item.name}}</div>
+                        <td style="width: 60%;">
+                          <div class="trSpc texted align">{{item.name}}</div>
                         </td>
                         <td>
                           <div class="trSpc">{{item.unit_price}}</div>
@@ -210,7 +210,7 @@
               </tr>
 
               <tr *ngIf="inDis">
-                <th>
+                <th style="text-align: left;">
                   <div class="form-group input-group form-controle ">{{inDis?.discount_type || defaultDis}}</div>
                 </th>
                 <th>
@@ -219,7 +219,7 @@
               </tr>
 
               <tr *ngIf="inTax">
-                <th>
+                <th style="text-align: left;">
                   <div class="form-group input-group form-controlf">{{inTax?.tax_type || defaultTax}}</div>
                 </th>
                 <th>
@@ -233,17 +233,13 @@
               </tr>
 
             </table>
-
-
           </div>
         </div>
         <!-- Total details ends here-->
 
-
-
         <div class="btnbox">
           <button [routerLink]="['/invoice']" class="btn btn-default btncancel btnrightitem">Cancel</button>
-           <button type="submit" (click)="downloadDoc(invoice?.docid)" class="btn btn-primary btnsave savecls">Download</button>
+          <button type="submit" (click)="downloadDoc(invoice?.docid)" class="btn btn-primary btnsave savecls">Download</button>
           <!--<button type="submit" class="btn btn-primary btnsave savecls" (click)="onSub()">Save & Share</button>  -->
         </div>
 

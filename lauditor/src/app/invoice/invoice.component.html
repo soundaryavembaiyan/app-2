@@ -91,7 +91,7 @@
           <td class="tabclass">
             <div class="dropdown">
               <button class="btn btn-primary dropdown-toggle actionbtn" data-bs-toggle="dropdown" aria-expanded="false"
-              [ngClass]="{'disabled': i.isdisabled}"> Action </button>
+              [ngClass]="{'disabled': i.isdisabled || i.document_status === 'inital'}"> Action </button>
               <ul class="dropdown-menu custom-dropdown">
                 <li>
                   <a class="dropdown-item" (click)="viewdetails(i)" >View Details</a>

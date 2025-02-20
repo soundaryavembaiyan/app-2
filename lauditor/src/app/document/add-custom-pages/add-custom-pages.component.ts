@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl, FormArray } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { ModalService } from 'src/app/model/model.service';
@@ -24,7 +24,7 @@ export class AddCustomPagesComponent implements OnInit {
     DocumentNumbers: any;
     urlSafe: any;
     values: any = [];
-    customPage: any = FormGroup;
+    //customPage: any = FormGroup;
     shortNote = { 'startingPage': '', 'textposition': '', 'endingPage': '', 'startingnumber': '' };
     submitted: boolean = false;
     isShowPagination: boolean = true;
@@ -44,22 +44,43 @@ export class AddCustomPagesComponent implements OnInit {
     fonts: any = [{ 'name': 'Small', 'value': 'small' }, { 'name': 'Medium', 'value': 'medium' }, { 'name': 'Large', 'value': 'large' }, { 'name': 'XLarge', 'value': 'xlarge' }]
 
     constructor(private formBuilder: FormBuilder, private router: Router, private toast: ToastrService, private httpservice: HttpService, private sanitizer: DomSanitizer, private documentService: DocumentService, private modalService: ModalService) {
-        this.customPage = this.formBuilder.group({
-            pagenumalign: [''],
-            pagenumfontsize: [''],
-            // startPage: ['', Validators.required],
-            // textposition: ['', Validators.required],
-            // endingPage: ['', Validators.required],
-            // startingnumber: ['', Validators.required],
-        });
+        // this.customPage = this.formBuilder.group({
+        //     pagenumalign: ['',Validators.required],
+        //     pagenumfontsize: ['',Validators.required],
+        //     _page_template: ['', Validators.required]
+        //     // startPage: ['', Validators.required],
+        //     // textposition: ['', Validators.required],
+        //     // endingPage: ['', Validators.required],
+        //     // startingnumber: ['', Validators.required],
+        // });
     }
+    // myForm = this.formBuilder.group({
+    //     pagenumtemplate: ['', Validators.required],
+    //     standardPage: [],
+    //     customPage: [],
+    //     pagenumalign: ['',Validators.required],
+    //     pagenumfontsize: ['',Validators.required],
+    //     startPage: ['', Validators.required],
+    //     _page_template: ['', Validators.required],
+    //     endingPage: ['', Validators.required],
+    //     startingnumber: ['', Validators.required],
+    // })
+
     myForm = this.formBuilder.group({
-        pagenumtemplate: ['select', Validators.required],
-        standardPage: [],
-        customPage: [],
-        pagenumalign: [''],
-        pagenumfontsize: [''],
-    })
+        pagenumalign: ['', Validators.required],
+        pagenumfontsize: ['', Validators.required],
+        startPage: ['', Validators.required],
+        endingPage: ['', Validators.required],
+        _page_template: ['', Validators.required],
+        startingnumber: ['', Validators.required]
+      });  
+
+    customPage = this.formBuilder.group({
+        pagenumalign: ['',Validators.required],
+        pagenumfontsize: ['',Validators.required],
+        _page_template: ['', Validators.required]
+    });
+
     ngOnInit(): void {
         this.addTemplate();
         // this.values.push(this.shortNote);
@@ -72,6 +93,15 @@ export class AddCustomPagesComponent implements OnInit {
             this.urlSafe = this.sanitizer.bypassSecurityTrustResourceUrl(res.url);;
             //console.log(JSON.stringify(this.urlSafe));
         });
+    }
+    addTemplate() {
+        // var data = { startPage: "", endingPage: "", _page_template: "", startingnumber: "" }
+        var data = { startPage: this.myForm.value.startPage, 
+                     endingPage: this.myForm.value.endingPage, 
+                     _page_template: this.myForm.value._page_template, 
+                     startingnumber: this.myForm.value.startingnumber }
+        this.paginationData.push(data)
+        //console.log('paginationData',this.paginationData)
     }
 
     delPages() {
@@ -89,20 +119,52 @@ export class AddCustomPagesComponent implements OnInit {
         this.pagenumalign?.setValue(e.target.value, {
             onlySelf: true,
         });
-        //console.log( this.pagenumalign);
-    }
-    // Access formcontrols getter
-    get pagenumalign() {
-        return this.customPage.get('pagenumalign');
     }
     changeFontSize(e: any) {
         this.pagenumfontsize?.setValue(e.target.value, {
             onlySelf: true,
         });
     }
+    changetextposition(e: any) {
+        this._page_template?.setValue(e.target.value, {
+            onlySelf: true,
+        });
+    }
+    changestartPage(e: any) {
+        this.startPage?.setValue(e.target.value, {
+            onlySelf: true,
+        });
+    }
+    changeendingPage(e: any) {
+        this.endingPage?.setValue(e.target.value, {
+            onlySelf: true,
+        });
+    }
+    changestartingnumber(e: any) {
+        this.startingnumber?.setValue(e.target.value, {
+            onlySelf: true,
+        });
+    }
+
+    
     // Access formcontrols getter
+    get pagenumalign() {
+        return this.customPage.get('pagenumalign');
+    }
     get pagenumfontsize() {
         return this.customPage.get('pagenumfontsize');
+    }
+    get _page_template() {
+        return this.customPage.get('_page_template') || this.myForm.get('_page_template');
+    }
+    get startPage() {
+        return this.myForm.get('startPage')
+    }
+    get endingPage() {
+        return this.myForm.get('endingPage');
+    }
+    get startingnumber() {
+        return this.myForm.get('startingnumber');
     }
 
     onSubmit(): void {
@@ -158,10 +220,15 @@ export class AddCustomPagesComponent implements OnInit {
           this.router.navigate(['documents/view/client']);
           }
     }
-    addTemplate() {
-        var data = { page_range_starts: "", page_range_ends: "", page_template: "select", page_starts_from: "" }
-        this.paginationData.push(data)
-    }
+    // addTemplate() {
+    //     // var data = { startPage: "", endingPage: "", _page_template: "", startingnumber: "" }
+    //     var data = { startPage: this.myForm.value.startPage, 
+    //                  endingPage: this.myForm.value.endingPage, 
+    //                  _page_template: this.myForm.value._page_template, 
+    //                  startingnumber: this.myForm.value.startingnumber }
+    //     this.paginationData.push(data)
+    //     //console.log('paginationData',this.paginationData)
+    // }
 
     onKey(event: any, index: any, type: any) {
         // //console.log(event.target.value + " ---- " + index + " ---- " + type)
@@ -177,13 +244,13 @@ export class AddCustomPagesComponent implements OnInit {
 
     onChangeTemplate(event: any, index: any) {
         var value = event.target.value
-        this.paginationData[index]['page_template'] = value
+        this.paginationData[index]['_page_template'] = value
         if (value == "select") {
-            $('#' + index + "_" + 'page_template').text("This field is required")
+            $('#' + index + "_" + '_page_template').text("This field is required")
             $('#' + index + "_format_name").text("")
         }
         else {
-            $('#' + index + "_" + 'page_template').text("")
+            $('#' + index + "_" + '_page_template').text("")
             $('#' + index + "_format_name").text(value.replace("#PAGENUM#", ""))
         }
 
@@ -192,6 +259,7 @@ export class AddCustomPagesComponent implements OnInit {
         else if (value == "Page (#PAGENUM#)")
             $('#' + index + "_format_name").text("Page")
     }
+    
 
     removeRow(index: any) {
         this.paginationData.splice(index, 1)
@@ -265,35 +333,90 @@ export class AddCustomPagesComponent implements OnInit {
     // }
 
     onPagesSubmit() {
-        var index = 0
-        for (var item of this.paginationData) {
-            let list_item: any = {}
-            var page_template = item.page_template
-            var page_range_start = item.page_range_starts
-            var page_range_ends = item.page_range_ends
-            var starting_page_num = item.page_starts_from
-            list_item['pagenumtemplate'] = page_template
-            list_item['pages'] = page_range_start + "-" + page_range_ends
-            list_item['pagenumrangestart'] = starting_page_num || '1';
-            this.doclist[index] = list_item;
-            index++
-        }
-        this.modalService.open("doc-del-pages");
-    }
-    postAddPages(){
-        let obj = {
-            "docid": this.data.id,
-            "pagenumalign": 
-            this.customPage.value?.pagenumalign || 
-            this.myForm.value?.pagenumalign || '',
-            "pagenumfontsize": 
-            this.customPage.value?.pagenumfontsize || 
-            this.myForm.value?.pagenumfontsize || '',
-            "pagenumtemplate": "custom",
-            "pagenumtemplate_info": this.doclist
+        this.isSubmitted = true;        
+        // if (this.customPage.invalid || this.myForm.invalid) {
+        //     return;
+        // }
+
+        if (this.myForm?.touched == true) {
+            var index = 0
+            for (var item of this.paginationData) {
+                //console.log('item',item)
+                let list_item: any = {}
+                // var page_template = item.page_template
+                // var page_range_start = item.page_range_starts
+                // var page_range_ends = item.page_range_ends
+                // var starting_page_num = item.page_starts_from
+                //list_item['pages'] = page_range_start + "-" + page_range_ends
+                var page_template = item._page_template
+                var page_range_start = item.startPage
+                var page_range_ends = item.endingPage
+                var starting_page_num = item.startingnumber
+                list_item['pagenumtemplate'] = page_template
+                list_item['pages'] = (page_range_start ? page_range_start : '1') + "-" + (page_range_ends || '');
+                list_item['pagenumrangestart'] = starting_page_num || '1';
+                this.doclist[index] = list_item;
+                index++
+            }
+            this.modalService.open("doc-del-pages");
         }
         
-        console.log('obj',obj)
+    }
+    onPageStandartSubmit() {
+        this.isSubmitted = true;        
+        // if (this.customPage.invalid || this.myForm.invalid) {
+        //     return;
+        // }
+
+        if (this.customPage?.touched == true ) {
+            var index = 0
+            for (var item of this.paginationData) {
+                //console.log('item',item)
+                let list_item: any = {}
+                // var page_template = item.page_template
+                // var page_range_start = item.page_range_starts
+                // var page_range_ends = item.page_range_ends
+                // var starting_page_num = item.page_starts_from
+                //list_item['pages'] = page_range_start + "-" + page_range_ends
+                var page_template = item._page_template
+                var page_range_start = item.startPage
+                var page_range_ends = item.endingPage
+                var starting_page_num = item.startingnumber
+                list_item['pagenumtemplate'] = page_template
+                list_item['pages'] = (page_range_start ? page_range_start : '1') + "-" + (page_range_ends || '');
+                list_item['pagenumrangestart'] = starting_page_num || '1';
+                this.doclist[index] = list_item;
+                index++
+            }
+            this.modalService.open("doc-del-pages");
+        }
+    }
+    
+    postAddPages(){
+        // let obj = {
+        //     "docid": this.data.id,
+        //     "pagenumalign": 
+        //     this.customPage.value?.pagenumalign || 
+        //     this.myForm.value?.pagenumalign || '',
+        //     "pagenumfontsize": 
+        //     this.customPage.value?.pagenumfontsize || 
+        //     this.myForm.value?.pagenumfontsize || '',
+        //     "pagenumtemplate": "custom",
+        //     "pagenumtemplate_info": this.doclist
+        // }
+        //console.log('obj',obj)
+
+        let cleanAlign = (this.customPage.value?.pagenumalign || this.myForm.value?.pagenumalign || '').replace(/^\d+:\s*/, '');
+        let cleanFontSize = (this.customPage.value?.pagenumfontsize || this.myForm.value?.pagenumfontsize || '').replace(/^\d+:\s*/, '');
+        let obj = {
+            "docid": this.data.id,
+            "pagenumalign": cleanAlign,
+            "pagenumfontsize": cleanFontSize,
+            "pagenumtemplate": "custom",
+            "pagenumtemplate_info": this.doclist
+        };
+        //console.log('obj',obj)
+
         this.httpservice.sendPostRequest(URLUtils.addPagination, obj).subscribe((res: any) => {
             //console.log("res" + res);
             if (res.error == false) {
@@ -305,7 +428,7 @@ export class AddCustomPagesComponent implements OnInit {
                     if (error.status === 401 || error.status === 403) {
                       const errorMessage = error.error.msg || 'Unauthorized';
                       this.toast.error(errorMessage);
-                      console.log(error);
+                      //console.log(error);
                     }
                   });
             }
@@ -319,5 +442,26 @@ export class AddCustomPagesComponent implements OnInit {
           });
     }
 
+    onOptionChange(option: any) {
+        this.selectedPageOption = option;
+        this.isSubmitted = false;
+    }
+    standardForm(){
+        this.customPage.reset({
+            pagenumalign: '',
+            pagenumfontsize: '',
+            _page_template: '',
+        });
+    }
+    customForm(){
+        this.myForm.reset({
+            pagenumalign: '',
+            pagenumfontsize: '',
+            startPage: '',
+            endingPage: '',
+            _page_template: '',
+            startingnumber: ''
+        });    
+    }
 }
 

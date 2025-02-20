@@ -12,6 +12,8 @@ import { environment } from 'src/environments/environment';
 import { ModalService } from 'src/app/model/model.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { CalendarEvent, CalendarView, CalendarWeekViewBeforeRenderEvent } from 'angular-calendar';
+import { EditCalenderDialogService } from 'src/app/edit-calender-options/edit-calender-dialog.service';
 
 @Component({
   selector: 'app-viewevent',
@@ -41,11 +43,16 @@ export class ViewEventComponent implements OnInit {
   urlSafe: any;
   allowedFileTypes = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/rtf','text/csv','text/rtf'];
 
+  view: CalendarView = CalendarView.Day;
+  CalendarView = CalendarView;
+  viewDate: Date = new Date();
+  deleteEvent:string = 'delete';
+
   toggleContent(): void {
     this.expanded = !this.expanded;
   }
 
-  constructor(private httpservice: HttpService, private router: Router, private toaster: ToastrService,private spinnerService: NgxSpinnerService,
+  constructor(private httpservice: HttpService, private router: Router, private toaster: ToastrService,private spinnerService: NgxSpinnerService, private editCalenderDialogService: EditCalenderDialogService,
     private calenderService: CalenderService, public sanitizer: DomSanitizer, private modalService: ModalService, private confirmationDialogService: ConfirmationDialogService) {
     this.data = this.router.getCurrentNavigation()?.extras.state;
   }
@@ -192,6 +199,34 @@ export class ViewEventComponent implements OnInit {
       });
   }
 
+  getCalenderData(currentDate: any) {
+    this.httpservice.sendGetRequest(URLUtils.getCalendarList({
+      offset: (new Date().getTimezoneOffset()),
+      currentPage: currentDate
+    })).subscribe((res: any) => {
+    })
+  }
+  getCurrentView() {
+    var currentDate;
+    console.log('this.view',this.view)
+    if (this.view == CalendarView.Month) {
+      currentDate = 'M' + this.pipe.transform(this.viewDate, 'MMyyyy')
+    }
+    else if (this.view == CalendarView.Week) {
+      let curr = this.viewDate; // get current date
+      const firstday = new Date(curr.getFullYear(), curr.getMonth(), curr.getDate() - curr.getDay());
+      const lastday = new Date(curr.getFullYear(), curr.getMonth(), curr.getDate() + (6 - curr.getDay()));
+      const startDateStr = this.pipe.transform(firstday, 'ddMMyyyy');
+      const endDateStr = this.pipe.transform(lastday, 'ddMMyyyy');
+      currentDate = `W${startDateStr}-${endDateStr}`;
+
+    }
+    else if (this.view == CalendarView.Day) {
+      currentDate = 'D' + this.pipe.transform(this.viewDate, "ddMMyyyy");
+    }
+    this.getCalenderData(currentDate);
+  }
+
   onEdit() {
     this.calenderService.editEvent(this.eventInfo); //get the edit datas
     //console.log('EvInfo',this.eventInfo)
@@ -202,21 +237,46 @@ export class ViewEventComponent implements OnInit {
     // console.log('eveInfo', this.eventInfo)
     // let name=localStorage.getItem('name');
     //if(this.eventInfo.owner_name === name){
-    this.confirmationDialogService.confirm('Confirmation', 'Are you sure do you want to delete ' + this.eventInfo.title, true, 'Yes')
+
+    this.confirmationDialogService.confirm('Confirmation', 'Are you sure do you want to delete ' + this.eventInfo.title + "?", true, 'Yes')
       .then((confirmed) => {
         if (confirmed) {
-          this.httpservice.sendDeleteRequestwithObj(URLUtils.deleteEvent({ eventId: this.eventInfo.id }), { choice: "this" }).subscribe((res: any) => {
-            //console.log("res" + res);
-            this.router.navigate(['/meetings/view'])
-          },
-            (error: HttpErrorResponse) => {
-              if (error.status === 401 || error.status === 403) {
-                const errorMessage = error.error.msg || 'Unauthorized';
-                this.toaster.error(errorMessage);
-                //console.log(error);
+          localStorage.setItem('delevent', this.deleteEvent);
+          if (this.repeat_interval) {
+            this.editCalenderDialogService.open();
+            this.editCalenderDialogService.editCalObservable.subscribe((data: any) => {
+              // console.log('data',data)
+              // console.log("eventInfoId",this.eventInfo.id);
+              if (data) {
+                this.httpservice.sendDeleteRequestwithObj(URLUtils.deleteEvent({ eventId: this.eventInfo.id }), { choice: data }).subscribe((res: any) => {
+                  //console.log("res", res);
+                  if (this.eventInfo.id && res?.msg) {
+                    //this.router.navigate(['/meetings/view'])
+                    const link = 'meetings/view';
+                    window.location.href = link;
+                  }
+                  this.getCurrentView();
+                },
+                  (error: HttpErrorResponse) => {
+                    if (error.status === 401 || error.status === 403) {
+                      const errorMessage = error.error.msg || 'Unauthorized';
+                      this.toaster.error(errorMessage);
+                    }
+                  });
               }
-            }
-          );
+            });
+          }
+          else {
+            this.httpservice.sendDeleteRequestwithObj(URLUtils.deleteEvent({ eventId: this.eventInfo.id }), { choice: "this" }).subscribe((res: any) => {
+              this.router.navigate(['/meetings/view'])
+            },
+              (error: HttpErrorResponse) => {
+                if (error.status === 401 || error.status === 403) {
+                  const errorMessage = error.error.msg || 'Unauthorized';
+                  this.toaster.error(errorMessage);
+                }
+              });
+          }
         }
       })
     //}
@@ -224,6 +284,7 @@ export class ViewEventComponent implements OnInit {
     //   this.toaster.error('You are not authorized to delete this event.')
     //   return;
     // }
+    //this.router.navigate(['/meetings/view'])
   }
 
   onClickAttending(val: string) {

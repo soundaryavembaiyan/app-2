@@ -7,7 +7,8 @@
       <!-- <div class="col-6"> -->
       <div class="col-6" *ngIf="filter==='client' && product != 'corporate'">
         <div class="form-group" >
-          <label for="title" class="fontbold">Client Name <span class="mandate">*</span></label>
+          <label for="title" class="fontbold" *ngIf="product !== 'content'">Client Name <span class="mandate">*</span></label>
+          <label for="title" class="fontbold" *ngIf="product === 'content'">Customer Name <span class="mandate">*</span></label>
           <div class="ng-autocomplete textbox">
             <ng-autocomplete class="ngauto" [data]="data" [searchKeyword]="keyword"  placeholder="Type to select"
               (selected)='selectEvent($event)' 

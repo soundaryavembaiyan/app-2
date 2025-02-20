@@ -521,6 +521,15 @@ export class CreateinvoiceComponent {
   }
 
   addItem() {
+        // Set focus on the last added textarea
+        setTimeout(() => {
+          const textareas = document.querySelectorAll('.form-control.textbox.txtS.addDesc');
+          const lastTextarea = textareas[textareas.length - 1] as HTMLTextAreaElement;
+          if (lastTextarea) {
+            lastTextarea.focus();
+          }
+        });
+
     const invoiceItems = this.createinvoiceForm.get('invoice_items') as FormArray;
     invoiceItems.push(this.createInvoiceItem());
   }

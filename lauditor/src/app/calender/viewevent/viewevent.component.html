@@ -130,16 +130,15 @@
                     <div *ngFor="let client of clients">
                         <div class="timsheetsubitem" *ngIf="client.entName">
                             <label class="namecircle namecirclesubtwo">{{client.firstCharEntity}}</label>&nbsp;
-                            <label class="usernamelist" style="font-weight:
-                                bold;">{{client.entName}}
+                            <label class="usernamelist" style="font-weight:bold;">{{client.entName}}
                                 <img *ngIf="client.rsvp==='Yes'" src="assets/img/timeryes.svg" class="tickico">
                                 <img *ngIf="client.rsvp==='No'" src="assets/img/timerno.svg" class="tickico">
                                 <img *ngIf="client.rsvp==='Maybe'" src="assets/img/timermaybe.svg" class="tickico">
                             </label>
                         </div>
-                        <div class="timsheetsubitem"  *ngIf="client.tmId!='consumer'">
+                        <div class="timsheetsubitem" *ngIf="client.tmId!='consumer'">
                             <label class="namecircle namecirclesubtwo">{{client.firstChar}}</label>&nbsp;
-                            <label class="usernamelist" >{{client.name}}
+                            <label class="usernamelist" style="font-weight:bold;">{{client.name}}
                                 <img *ngIf="client.rsvp==='Yes'" src="assets/img/timeryes.svg" class="tickico">
                                 <img *ngIf="client.rsvp==='No'" src="assets/img/timerno.svg" class="tickico">
                                 <img *ngIf="client.rsvp==='Maybe'" src="assets/img/timermaybe.svg" class="tickico">
@@ -147,8 +146,7 @@
                         </div>
                         <div class="timsheetsubitem" *ngIf="client.tmId=='consumer'">
                             <label class="namecircle namecirclesubtwo">{{client.firstChar}}</label>&nbsp;
-                            <label class="usernamelist" style="font-weight:
-                                bold;">{{client.name}}  
+                            <label class="usernamelist" style="font-weight:bold;">{{client.name}}  
                                 <img *ngIf="client.rsvp==='Yes'" src="assets/img/timeryes.svg" class="tickico">
                                 <img *ngIf="client.rsvp==='No'" src="assets/img/timerno.svg" class="tickico">
                                 <img *ngIf="client.rsvp==='Maybe'" src="assets/img/timermaybe.svg" class="tickico">

@@ -22,6 +22,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import {MatSelectModule} from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({
     imports: [
@@ -36,7 +37,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
         NgxSpinnerModule,
         MatSelectModule,
         MatTooltipModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        BsDatepickerModule.forRoot()
         ],
     declarations: [
         RelationshipComponent,

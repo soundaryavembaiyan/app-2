@@ -218,7 +218,7 @@ button:focus {
 }
 
 tr.rone.veiw-items.processing {
-    background: #FFFBDD;
+    //background: #FFFBDD;
 }
 // tr.rone.veiw-items.finished {
 //     background-color: #004d87;
@@ -366,7 +366,7 @@ i.fa.fa-arrow-down.fa-lg.disable {
     opacity: 10;
     pointer-events: none;
 }
-button.btnsave:disabled {
+.btnsave:disabled {
     color: rgb(244, 244, 246);
     background: #7b9bb5;
     opacity: 10;
@@ -413,10 +413,10 @@ button.btnsave:disabled {
     margin-bottom: -30px;
 }
 
-.tabclass {
-    //white-space: nowrap;
-    border: 2px solid #eeeeee;
-}
+// .tabclass {
+//     //white-space: nowrap;
+//     border: 2px solid #eeeeee;
+// }
 
 // .custom-dropdown {
 //     padding: 0;
@@ -438,6 +438,10 @@ button.btnsave:disabled {
 //view table style
 .tabclass {
     border: 2px solid #eeeeee;
+}
+
+.tabclass-processing {
+    border: 2px solid #f7f0b103;
 }
 
 tr.veiw-items:hover .tabclass {

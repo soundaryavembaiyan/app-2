@@ -97,7 +97,7 @@
                         <div class="form-group">
                             <label for="title" class="fontbold">Repetition
                             </label>
-                            <select class="form-select calendorselect" formControlName="repeat_interval">
+                            <select class="form-select calendorselect" formControlName="repeat_interval" (change)="onRepetitionChange($event)">
                                 <option value="">None</option>
                                 <option class="textbox" *ngFor="let i of repetition" value="{{i.value}}">{{i.name}}
                                 </option>

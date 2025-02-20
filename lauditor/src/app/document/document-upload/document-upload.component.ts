@@ -342,13 +342,18 @@ export class DocumentUploadComponent implements OnInit {
         }
         //console.log('this.matters',this.matters)
     
+        let fileName = file.name.split('.')[0]; // Extract filename without extension
+        let truncatedName = fileName.length > 50 ? fileName.substring(0, 50) : fileName; // Limit to 50 characters
+
         //If the file type is allowed, proceed with handling the file
         this.files.push(file);
         //this.matters = '';
         
         let object = {
-          name: event.files[i].name.split('.')[0],
-          description: event.files[i].name.split('.')[0],
+        //   name: event.files[i].name.split('.')[0],
+        //   description: event.files[i].name.split('.')[0],
+          name: truncatedName,
+          description: truncatedName,
           type: event.files[i].type,
           file: file,
           expiration_date: this.documentDetail.value.expiration_date,
@@ -367,7 +372,7 @@ export class DocumentUploadComponent implements OnInit {
       });
       this.downloadDisabled = false;
     }
-    
+          
     saveFiles() {
         let clientInfo = new Array();
         this.clientId?.forEach((item: any) => {

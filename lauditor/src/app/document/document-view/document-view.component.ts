@@ -119,7 +119,7 @@ export class DocumentViewComponent implements OnInit {
     isAttachButtonEnabled: boolean = false;
     selectedDoc: any = null;
     mergedDoc: any = null;
-
+    errorClient: boolean = false;
 
     constructor(private httpservice: HttpService, private cdr: ChangeDetectorRef, private toast: ToastrService,private datePipe: DatePipe,
         private router: Router, private formBuilder: FormBuilder, private modalService: ModalService, public sanitizer: DomSanitizer,
@@ -420,8 +420,8 @@ export class DocumentViewComponent implements OnInit {
 
     addTag(key: string = '', value: string = '') {
         const tagGroup = this.formBuilder.group({
-            key: [key, Validators.required],
-            value: [value, Validators.required]
+            key: [key],
+            value: [value]
         });
         this.tagsFormArray.push(tagGroup);
          
@@ -444,13 +444,24 @@ export class DocumentViewComponent implements OnInit {
             this.addTags();
             return;
         }
+
+        this.tagDocform.markAsDirty();
     }
 
     addTags(key: string = '', value: string = '') {
         const tagGroup = this.formBuilder.group({
-            key: [key, Validators.required],
-            value: [value, Validators.required]
+            key: [key],
+            value: [value]
         });
+        // console.log('tagslen',this.tagsFormArray.length)
+        // console.log('tagGroup',tagGroup)
+
+        if (this.tagsFormArray.length === 0) {
+            this.tagDocform.markAsPristine(); // Mark form as pristine when no tags exist
+        } else {
+            this.tagDocform.markAsDirty(); // Mark form as dirty when tags exist
+        }
+
         this.tagsFormArray.push(tagGroup);
         setTimeout(() => {
             const inputs = document.querySelectorAll('.addtagField');
@@ -471,10 +482,8 @@ export class DocumentViewComponent implements OnInit {
 
         this.editDocform.value.expiration_date = this.bsValue ? this.pipe.transform(this.bsValue, 'dd-MM-yyyy') : '';
         let item = this.editDocform.value;
-
-        console.log("editDoc",this.editDoc)
-        console.log("item",item)
-
+        // console.log("editDoc",this.editDoc)
+        // console.log("item",item)
         //console.log("date  " + JSON.stringify(item));
         this.httpservice.sendPutRequest(URLUtils.editDocuments(this.editDoc), item).subscribe((res: any) => {
             //console.log("res---edir" + JSON.stringify(res));
@@ -525,6 +534,9 @@ export class DocumentViewComponent implements OnInit {
             (res: any) => {
                 if (res) {
                     this.toast.success(res.msg);
+                     // Reset form after successful submission
+                    this.tagDocform.reset();  
+                    this.tagDocform.markAsPristine();
                     this.getAllDocuments();
                 } else {
                     this.toast.error(res.msg);
@@ -590,8 +602,6 @@ export class DocumentViewComponent implements OnInit {
             clientId = this.clientDetails?.id;
         }
         
-       
-
         let obj = {
             "category": this.filterKey,
             "clients": clientId,
@@ -603,8 +613,9 @@ export class DocumentViewComponent implements OnInit {
   
         let url = this.viewMode == 1 ? URLUtils.getFilteredDocuments : URLUtils.filterMergeDoc;
         //console.log('url',url)
-        if (clientId || selectedGroups.length > 0 )
-            this.httpservice.sendPutRequest(url, obj).subscribe((res: any) => {
+        if (clientId || selectedGroups.length > 0 ){
+           //this.spinnerService.show();
+           this.httpservice.sendPutRequest(url, obj).subscribe((res: any) => {
                 if (this.viewMode == 1)
                     this.documents = res?.data?.reverse();
                 else
@@ -643,6 +654,7 @@ export class DocumentViewComponent implements OnInit {
                     }
                 })
                 this.errorMsg = this.documents.length == 0 ? true : false;
+                //this.spinnerService.hide();
                 // console.log('documents',this.documents)
             },
             (error: HttpErrorResponse) => {
@@ -652,6 +664,7 @@ export class DocumentViewComponent implements OnInit {
                   //console.log(error);
                 }
               });
+            }
 
     }
     // selectEvent(item: any) {
@@ -671,6 +684,8 @@ export class DocumentViewComponent implements OnInit {
     selectEvent(item: any) {
         this.clientDetails = item;
         // console.log("clientDetails",this.clientDetails)
+        // console.log('getclie',this.getClient)
+
         //To get a clientlists length
         this.getClient = new Array();
         // console.log('getCli',this.getClient)
@@ -1056,23 +1071,24 @@ export class DocumentViewComponent implements OnInit {
     // }
 
     selectDoc(doc: any, val: any) {
+        let d = doc;
         doc.isCheck = val; // isCheck be true if doc
         if (val === true) {
-                let obj = {
-                    "filename": doc.filename,
-                    "name": doc.name,
-                    "id": doc.id
-                };
-                this.selectedAttachments.push(obj);
+            let obj = {
+                "filename": doc.filename,
+                "name": doc.name,
+                "id": doc.id
+            };
+            this.selectedAttachments.push(obj);
         } else {
             // Remove the document from the selectedAttachments list
             this.selectedAttachments = this.selectedAttachments.filter((item: any) => item.id !== doc.id);
         }
-    
+
         // Update localStorage
         let selectedDocs = localStorage.getItem('docs');
         let selectedDocIds = selectedDocs ? JSON.parse(selectedDocs) : [];
-    
+
         if (val) {
             // Add the document ID to the selected list if not already present
             if (!selectedDocIds.includes(doc.id)) {
@@ -1080,15 +1096,23 @@ export class DocumentViewComponent implements OnInit {
             }
         } else {
             // Remove the document ID from the selected list
-            selectedDocIds = selectedDocIds.filter((id: any) => id !== doc.id);
+            //selectedDocIds = selectedDocIds.filter((id: any) => id !== doc.id);
+            selectedDocIds = selectedDocIds.filter((doc: any) => {
+                if (typeof doc === 'string') {
+                    return doc !== d.id
+                } else if (typeof doc === 'object') {
+                    return doc.id !== d.id;
+                }
+                return true;
+            });
+            this.selectedAttachments.push(selectedDocIds)
         }
         localStorage.setItem('docs', JSON.stringify(selectedDocIds)); // Save updated list
-        //console.log('..selectedAttachments',this.selectedAttachments)
         this.enableAttachButton();
     }
     
     saveAttachments() {
-         console.log('..selectedAttachments',this.selectedAttachments)
+        //console.log('..selectedAttachments',this.selectedAttachments)
         this.selectedAttachments.forEach((item: any, index: number) => {
             this.viewDocumentAttachment(item, index);
         });
@@ -1111,6 +1135,7 @@ export class DocumentViewComponent implements OnInit {
         event.target.value = inputValue;
     }
     restricttextSpace(event: any) {
+        this.errorClient = true;
         let inputValue: string = event.target.value;
         inputValue = inputValue.replace(/^\s+/, '');
         inputValue = inputValue.replace(/\s{2,}/g, ' ');
@@ -1163,9 +1188,9 @@ export class DocumentViewComponent implements OnInit {
             })
             this.spinnerService.hide()
         }
-        else if (item.category == 'merged') {
-            this.viewMergedDocument(item)
-        }
+        // else if (item.category == 'merged') {
+        //     this.viewMergedDocument(item)
+        // }
         else {
             this.httpservice.sendPostRequest(URLUtils.deleteApprovalView, documentId).subscribe((res: any) => {
                 if (this.allowedFileTypes.includes(item.content_type)) {

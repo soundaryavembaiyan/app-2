@@ -194,3 +194,9 @@ tr.veiw-items:hover {
         border: none;
     }
 }
+.disabled{
+    background: #28618c;
+    color: #fff;
+    pointer-events: none;
+    opacity: 0.5;
+}

@@ -34,6 +34,7 @@ export class DashboardComponent implements OnInit, OnChanges, AfterViewInit {
   isCardVisible = false;
   groups:any;
   profile:any;
+  useremail:any;
   
   navItem = [
     {
@@ -383,11 +384,11 @@ export class DashboardComponent implements OnInit, OnChanges, AfterViewInit {
 
     this.updateTime();
     this.groups = JSON.parse(localStorage.getItem('user_groups') || '[]').join(' | ');
+    this.useremail = JSON.parse(localStorage.getItem('user_email') || '[]');
     //console.log('groups', this.groups);
 
     this.httpService.sendGetRequest(URLUtils.profile).subscribe(
       (res: any) => {
-        console.log('res', res);
           this.profile = res.data?.details;
       }
     )

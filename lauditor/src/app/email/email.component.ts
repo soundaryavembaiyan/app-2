@@ -87,9 +87,9 @@ export class EmailComponent implements OnInit, AfterViewInit {
     this.autoRefresh()
     this.composeForm = this.formBuilder.group({
       toEmail: ['', [Validators.required, Validators.pattern(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/)]],
-      subject: ['', Validators.required],
+      subject: ['',Validators.required],
       body: [''],
-      documents: [Validators.required]
+      documents: ['',Validators.required]
     });
     let controls: any = localStorage.getItem('inputs');
     this.controls = JSON.parse(controls);
@@ -643,6 +643,12 @@ handleNextPageClick() {
   
     //console.log('Updated docsArray', docsArray);
     localStorage.setItem('docs', JSON.stringify(docsArray)); // Update the 'docs' in localStorage
+    // console.log('selectedAttachments',this.selectedAttachments)
+    // console.log('documents',this.documents)
+
+    if (this.selectedAttachments.length === 0 || this.documents.length === 0) {
+      this.composeForm.controls['documents'].setValue('');
+    }
   }
   
 
@@ -779,6 +785,7 @@ handleNextPageClick() {
       this.clientId.push(item);
       this.httpservice.sendGetRequest(URLUtils.getMattersByClient(item)).subscribe((res: any) => {
         this.matterList = res?.matterList;
+        //console.log('matterList',this.matterList)
       });
 
       let clientInfo = new Array();
@@ -789,24 +796,7 @@ handleNextPageClick() {
         };
         clientInfo.push(clientData);
       });
-
-      // this.httpservice.sendPutRequest(URLUtils.getGrouplist, { "clients": clientInfo }).subscribe((res: any) => {
-      //   if (res.error == false) {
-      //     this.grouplist = res?.data;
-      //     //console.log('selectedGrps', this.grouplist);
-
-      //     //Filter and check groups based on the API res.
-      //     this.selectedGroupItems = this.grouplist.filter((groupItem: any) => {
-      //       groupItem.isChecked = this.grouplist.some((selectedGroup: any) => selectedGroup.id === groupItem.id);
-      //       return groupItem.isChecked;
-      //     });
-
-      //     //Update the checkboxes in groupViewItems
-      //     // this.groupViewItems.forEach((groupItem: any) => {
-      //     //     groupItem.isChecked = this.selectedGroupItems.some((selectedGroup: any) => selectedGroup.id === groupItem.id);
-      //     // });
-      //   }
-      // });
+      this.matters = '';
       this.update_grp_list();
     }
     else {
@@ -838,9 +828,13 @@ handleNextPageClick() {
             };
             clientInfo.push(clientData);
         });
-        let payload =  { "clients": clientInfo , "matterid":''}
+
+        let payload
         if(this.matters){
            payload =  { "clients": clientInfo , "matterid":this.matters }
+        }
+        else{
+          payload =  { "clients": clientInfo , "matterid":''}
         }
 
         this.httpservice.sendPutRequest(URLUtils.getGrouplist,payload).subscribe((res: any) => {

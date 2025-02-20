@@ -57,7 +57,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr class="rone veiw-items" *ngFor="let team of viewMembers | filter:searchText">
+          <tr class="rone veiw-items" style="border: none;" *ngFor="let team of viewMembers | filter:searchText">
             <td class="tabclass">{{team.name}}<br>{{team.email}}</td>
             <td class="tabclass">&nbsp;{{team.designation}}</td>
             <td class="tabclass">

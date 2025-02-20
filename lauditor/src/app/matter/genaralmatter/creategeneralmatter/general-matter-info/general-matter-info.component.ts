@@ -152,7 +152,13 @@ export class GeneralMatterInfoComponent implements OnInit {
         "status": this.generalForm.value.status,
         "affidavit_isfiled": "na",
         "affidavit_filing_date": "",
-        "clients": this.editeMatterInfo?.clients.map((obj: any) => ({ "id": obj.id, "type": obj.type })),
+        //"clients": this.editeMatterInfo?.clients.map((obj: any) => ({ "id": obj.id, "type": obj.type })),
+        "clients": [
+          ...(this.editeMatterInfo?.clients?.map((obj: any) => ({ "id": obj.id, "type": obj.type })) || []),
+          ...(Array.isArray(this.editeMatterInfo?.corporate) ? 
+              this.editeMatterInfo.corporate.map((obj: any) => ({ "id": obj.id, "type": obj.type })) 
+              : [])
+        ],
         "group_acls": this.editeMatterInfo.groupAcls,
         //"members": this.editeMatterInfo?.members.map((obj: any) => ({ "id": obj.id })),
         "members": this.editeMatterInfo?.members.map((obj: any) => ({ "id": obj.id })).filter((member: any, index: any, self: any[]) => index === self.findIndex((m) => m.id === member.id)),

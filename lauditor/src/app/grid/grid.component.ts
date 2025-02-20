@@ -158,14 +158,12 @@ export class GridComponent implements OnInit {
 
   getMeetingdata() {
     this.httpservice.getFeaturesdata(URLUtils.getMeeting).subscribe((res: any) => {
-
       if (res.error = "false") {
         this.meetingModel = res?.data;
-        if (res.error = "true") {
-          this.meetingMessage = res?.message;
-        }
       }
-
+      if (res.error = "true") {
+        this.meetingMessage = res?.message;
+      }
     });
   }
 
@@ -206,9 +204,7 @@ export class GridComponent implements OnInit {
           this.notifyMessage = res?.message;
         }
       }
-
-
-    })
+    })    
   }
   getHiring() {
     this.httpservice.getFeaturesdata(URLUtils.getHiring).subscribe((res: any) => {
@@ -257,6 +253,7 @@ export class GridComponent implements OnInit {
   getSubscription() {
     this.httpservice.getFeaturesdata(URLUtils.getSubscription).subscribe((res: any) => {
       this.subscriptionModel = res?.data;
+      localStorage.setItem('isPaidSub', JSON.stringify(res?.data?.active_pay_btn));
       //console.log('subscrip',this.subscriptionModel)
       // this.subscriptionModel.month = this.pipe.transform(new Date(+res?.data.month), 'MMM y');
     })

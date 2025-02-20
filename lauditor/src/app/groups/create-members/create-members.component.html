@@ -32,10 +32,11 @@
             <div class="col-sm-3 col-xs-3"> </div>
         </div>
         <!-- <h5>&nbsp;</h5> -->
-        <div class="subalert" *ngIf="error">{{error}}</div>
-        <div class="blur-overlay" [ngClass]="{'blurred': disablePage}">
+        <!-- <div class="subalert" *ngIf="error">{{error}}</div> -->
+        <div class="subalert" *ngIf="disablePage">Your present subscription does not allow creation of more users</div>
+        <div class="blur-overlay">
         <form [formGroup]="createMemberForm" (ngSubmit)="onSubmit()">
-            <div class="row" *ngIf='showForm'>
+            <div class="row" *ngIf='showForm' [ngClass]="{'blurred': disablePage}">
                 <div class="col-6">
                     <div class="form-group errorMsg nameSet ">
                         <label for="title" class="lable-size">Name <span class="mandate">*</span></label>
@@ -107,9 +108,13 @@
                                name="email">
                         <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
                             <div *ngIf="f.email.errors.required">Email is required</div>
-                            <div *ngIf="f.email.errors.pattern">Email must be a valid email address.</div>
+                            <!-- <div *ngIf="f.email.errors.pattern">Email must be a valid email address.</div> -->
                             <div *ngIf="f.email.errors.duplicate"> Email already in use within the firm.</div>
                         </div>
+                        <div *ngIf="f.email.errors" class="invalid-feedback">
+                            <div *ngIf="f.email.errors.pattern">Email must be a valid email address.</div>
+                        </div>
+
                         <div *ngIf="mismatch" class="invalid-feedback" style="display:block;">Email already in use within the firm.</div>
                     </div>
 
@@ -128,15 +133,16 @@
                         <div *ngIf="submitted && f.emailConfirm.errors" class="invalid-feedback">
                             <div *ngIf="f.emailConfirm.errors.required">Confirm email is required</div>
                             <div *ngIf="f.emailConfirm.errors.pattern">Email must be a valid email address.</div>
-                            <div *ngIf="f.emailConfirm.errors.mismatch">Confirm email does not match</div>
+                            <div *ngIf="f.emailConfirm.errors.mismatch && !confmismatch">Confirm email does not match</div>
                         </div>
                         <div *ngIf="confmismatch" class="invalid-feedback">Confirm email does not match.</div>
                     </div>
                     <div class="form-group nameSet">
-                        <div class="input-group court assignGrp" (click)="selMembers()">
+                        <div class="input-group court assignGrp">
                             <div class="form-control textbox assg" *ngIf="product != 'corporate'">Assign to Groups</div>
                             <div class="form-control textbox assg" *ngIf="product == 'corporate'">Assign to Departments</div>
-                            <i class="fa fa-solid fa-plus calimg calitem input-group-append sgroup" aria-hidden="true"></i>
+                            <i class="fa fa-solid fa-plus calimg calitem input-group-append sgroup"  
+                            (click)="selMembers()" aria-hidden="true"></i>
                         </div>
                     </div>
                 </div>

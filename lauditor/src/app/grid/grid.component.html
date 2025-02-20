@@ -63,7 +63,9 @@
                 </div>
 
                 <div class="rightmname righmnamecontext"><!--jumbotron text-center-->
-                  <p class="rightbox righboxshared text-align-center meetlog">{{meetingModel?.subject}} {{meetingMessage}}</p>
+                  <p class="rightbox righboxshared text-align-center meetlog">
+                    {{ meetingModel?.subject || meetingMessage }}
+                  </p>
                 </div>
 
               </div>
@@ -265,7 +267,7 @@
                       <img src="assets/img/billable.svg" alt="Meeting" class="icongroup icoright">
                     </div>
                     <div class="col-sm-8">
-                      <p class="mname toalhours approx approxbillhour">Total <br> Non-Billable Hours </p>
+                      <p class="mname toalhours approx approxbillhour">Total <br> Non Billable Hours </p>
                       <p class="mtime mmessage yeartxt yearrightbox ">Year to Date</p>
                     </div>
                   </div>
@@ -738,23 +740,23 @@
                 <div class="col-sm-7">
                   <div class="row">
                     <div class="col-sm-4">
-                      <img src="assets/img/law.svg" alt="Meeting" class="icongroup">
+                      <img src="assets/img/relgh.png" alt="Meeting" class="icongroup relgh">
                     </div>
                     <div class="col-sm-8">
-                      <p class="mname toalhours approx rightmatter ">Relationship</p>
+                      <p class="mname toalhours approx rightmatter ">Relationships</p>
                     </div>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-sm-3 getMove"></div>
-                  <div class="col-sm-4">
+                  <div class="col-sm-4 relmove">
                     <span class="mattertxt rtxt">Accepted</span>
                     <span class="mattercount">{{relationshipModel.accepted}}</span>
                   </div>
                   <div class="col-sm-1 verticalwidth">
-                    <span class="vertical verticaltotal "></span>
+                    <span class="vertical verticaltotal vrg"></span>
                  </div>
-                  <div class="col-sm-4">
+                  <div class="col-sm-4 relmove">
                     <span class="mattertxt rtxt">Pending</span>
                     <span class="mattercount">{{relationshipModel.pending}}</span>
                   </div>

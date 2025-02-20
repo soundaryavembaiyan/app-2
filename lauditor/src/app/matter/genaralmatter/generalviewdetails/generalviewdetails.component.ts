@@ -487,6 +487,20 @@ export class GeneralViewDetailsComponent implements OnInit {
     })
     this.router.navigate(['/matter/generalmatter/matterEdit'])
   }
+  checkSelectAllTM() {
+    // Check if all teammembersList members exist in selectedMembers
+    this.selectAllMembersChecked = this.teammembersList.length > 0 &&
+      this.teammembersList.every((tm: any) =>
+        this.selectedMembers.some((sm: any) => sm.id === tm.id)
+      );
+  }
+  checkSelectAllClient() {
+    // Check if all clientsList members exist in selectedClients
+    this.selectAllClientsChecked = this.clientsList.length > 0 &&
+      this.clientsList.every((tm: any) =>
+        this.selectedClients.some((sm: any) => sm.id === tm.id)
+      );
+  }
   onFeatureClick(val: string) {
     this.featureName = val;
     //this.isAddItem = this.featureName == 'Timeline' ? false : this.isAddItem;
@@ -536,6 +550,7 @@ export class GeneralViewDetailsComponent implements OnInit {
       { 'group_acls': grps, 'attachment_type': 'members' }).subscribe(
         (res: any) => {
           this.teammembersList = res['members'];
+          this.checkSelectAllTM(); //update selectAll
           let index = this.teammembersList.findIndex((d: any) => d.name === this.ownerName); //find index in your array
           //this.teammembersList.splice(index, 1);
           this.teammembersList = this.teammembersList.filter((el: any) => {
@@ -563,6 +578,7 @@ export class GeneralViewDetailsComponent implements OnInit {
           else{
             this.clientsList = res['clients'];
           }
+          this.checkSelectAllClient(); //update selectAll
           //console.log('cl',this.clientsList)
           if(this.selectedClients && this.selectedClients.length > 0){
             this.clientsList = this.clientsList.filter((el: any) => {
@@ -736,17 +752,40 @@ export class GeneralViewDetailsComponent implements OnInit {
     let index = this.selectedMembers.findIndex((d: any) => d.id === this.data?.owner?.id); //find index in your array
     this.selectedMembers.splice(index, 1);
 
+    // selectedClients array
+    this.selectedClients = this.selectedClients || [];
+    // if (this.selectedCorp) {
+    //   this.selectedClients.push(Array.isArray(this.selectedCorp) ? this.selectedCorp[0] : this.selectedCorp);
+    // }
+    
+    // Only push selectedCorp if it is not null or undefined
+    if (this.selectedCorp && this.selectedCorp !== null) {
+      const corpToAdd = Array.isArray(this.selectedCorp) ? this.selectedCorp[0] : this.selectedCorp;
+      if (corpToAdd) {
+        this.selectedClients.push(corpToAdd);
+      }
+    }
+    // Remove any null values from selectedClients
+    this.selectedClients = this.selectedClients.filter((client: any) => client !== null && client !== undefined);
+
+
     let data = {
       'clients': this.selectedClients,
       'members': this.selectedMembers
     }
     this.httpservice.sendPutRequest(URLUtils.updateGeneralHistoryMembers({ id: this.data.id }), data).subscribe(
       (res: any) => {
+        if(res.error===true){
+          this.toast.error('Request fialed')
+          return;
+        }
+        else{
         this.onFeatureClick('T&C');
         //this.confirmationDialogService.confirm('Success', res.msg,false, '', '', false,'sm', false);
         if(val === 'members'){
           this.confirmationDialogService.confirm('Success', 'Team Members list updated successfully.', false, '', '', false, 'sm', false);
           this.selectAllMembersChecked = this.selectedMembers.length === this.selectedMembers.length;
+          this.selectAllClientsChecked = this.selectedClients.length !== this.selectedClients.length;
           // let checkbox = document.getElementById('selectAllMembers') as HTMLInputElement | null;
           // if (checkbox != null){
           //   checkbox.checked = false;
@@ -755,12 +794,13 @@ export class GeneralViewDetailsComponent implements OnInit {
         else if(val === 'clients'){
           this.confirmationDialogService.confirm('Success', 'Clients list updated successfully.', false, '', '', false, 'sm', false);
           this.selectAllClientsChecked = this.selectedClients.length === this.selectedClients.length;
+          this.selectAllMembersChecked = this.selectedMembers.length !== this.selectedMembers.length;
           // let checkbox = document.getElementById('selectAllClients') as HTMLInputElement | null;
           // if (checkbox != null){
           //   checkbox.checked = false;
           // }
         }
-        else{}
+        else{}}
       },
       (error: HttpErrorResponse) => {
         if (error.status === 401 || error.status === 403) {
@@ -1316,17 +1356,19 @@ export class GeneralViewDetailsComponent implements OnInit {
       if(this.searchTextClient == ' ')
       this.searchTextClient=this.searchTextClient.replace(/\s/g, "");
       this.filteredDataClnts = this.clientsList.filter((item:any) =>item.name.toLocaleLowerCase().includes(this.searchText));
-      let checkbox = document.getElementById('selectAllClients') as HTMLInputElement | null;
-      if (checkbox != null)
-        checkbox.checked = false;
+      // let checkbox = document.getElementById('selectAllClients') as HTMLInputElement | null;
+      // if (checkbox != null)
+      //   checkbox.checked = false;
+      this.checkSelectAllClient();
     }
     else if(cat=='tm'){
     if(this.searchTextMembers == ' ')
     this.searchTextMembers=this.searchTextMembers.replace(/\s/g, "");
     this.filteredDataTms = this.teammembersList.filter((item:any) =>item.name.toLocaleLowerCase().includes(this.searchText));
-    let checkbox = document.getElementById('selectAllMembers') as HTMLInputElement | null;
-    if (checkbox != null)
-      checkbox.checked = false;
+    // let checkbox = document.getElementById('selectAllMembers') as HTMLInputElement | null;
+    // if (checkbox != null)
+    //   checkbox.checked = false;
+    this.checkSelectAllTM();
     }
   }
   onMessageClick() {

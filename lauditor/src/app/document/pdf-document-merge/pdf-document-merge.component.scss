@@ -4,8 +4,11 @@
     font-size: 18px;
     font-weight: 900;
     padding-top: 5px;
+    pointer-events: none;    
 }
-
+.labelcheck{
+    pointer-events: none;   
+}
 .align-top {
     padding-top: 22px;
 }

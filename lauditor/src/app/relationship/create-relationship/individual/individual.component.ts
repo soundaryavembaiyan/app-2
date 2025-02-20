@@ -123,15 +123,23 @@ export class IndividualComponent {
     }
 
     getConfirmation(){
+        // if (this.createRelationform.invalid) { 
+        //     this.submitted = true;
+        //     return; 
+        // }
+
         let vals = this.createRelationform.value
         //console.log('val',vals)
-        if (vals.grpsearch !== null) { 
-            if (vals.firstName === '' || vals.lastName === '' || vals.confirmEmail === null || vals.country === null) {
+        //if (vals.grpsearch !== null) { 
+            if ((vals.firstName === '' || vals.firstName === null) || 
+                (vals.lastName === '' || vals.lastName === null) || 
+                (vals.confirmEmail === '' || vals.confirmEmail === null) || 
+                (vals.country === '' || vals.country === null)) {
                 this.submitted = true;
                 this.toast.error('Please verify all your information before sending the invite.');
                 return;
             }
-        }
+        //}
         
         if(this.formMode == 'invite'){
             this.selname = `${vals['firstName']} ${vals['lastName']}`
@@ -141,9 +149,15 @@ export class IndividualComponent {
         if(form.controls['confirmEmail'].value != semail){
             form.controls['confirmEmail'].setErrors({'mismatch': true})
         }
-        this.submitted = true;
-        if (this.createRelationform.invalid) { return; }
         this.showConfirm = true
+
+        // if (this.createRelationform.invalid || this.selectedGroups.length === 0) { 
+        //     this.submitted = true;
+        //     return; 
+        // }
+        // else{
+        //     this.showConfirm = true
+        // }
     }
     
     onReset() {
@@ -264,5 +278,10 @@ export class IndividualComponent {
         inputValue = inputValue.replace(/\s{2,}/g, ' ');
         event.target.value = inputValue;
         return;
-      }
+    }
+    shouldDisableSubmit(): boolean {
+        return this.createRelationform.invalid ||
+            this.selectedGroups.length === 0 ||
+            this.searchForm.invalid
+    }
 }
