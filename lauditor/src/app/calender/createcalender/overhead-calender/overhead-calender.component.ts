@@ -804,18 +804,20 @@ export class OverheadCalenderComponent implements OnInit {
         this.CalenderForm.controls["recurrent_edit_choice"].setValue('all');
       }
       else {
-        if (this.editInfo?.repeat_interval && !this.repeatDialogOpened) {
-          this.repeatDialogOpened = true;
-          this.editCalenderDialogService.open();
-          this.editCalenderDialogService.editCalObservable.subscribe((data: any) => {
-            if (data) {
-              this.CalenderForm.value.recurrent_edit_choice = data;
-              this.recurrentchoice = data;
-            }
-          });
+        let c = localStorage.getItem('recurrOk') // get the Dialog Okay value
+        if (this.editInfo?.repeat_interval && !this.repeatDialogOpened && !c) {
+         // this.repeatDialogOpened = true;
+        this.editCalenderDialogService.open();
+        this.editCalenderDialogService.editCalObservable.subscribe((data: any) => {
+          if (data) {
+            this.CalenderForm.value.recurrent_edit_choice = data;
+            this.recurrentchoice = data;
+          }
+        });
           return;
         }
       }
+
      // console.log('recurrentchoice',this.recurrentchoice)
       if(this.recurrentchoice){
         this.CalenderForm.controls["recurrent_edit_choice"].setValue(this.recurrentchoice);
@@ -878,7 +880,7 @@ export class OverheadCalenderComponent implements OnInit {
       this.CalenderForm.value.invitees_corporate = this.selectedCorp.map((obj: any) => (obj.entityid + '_' + obj.id));
       this.CalenderForm.value.invitees_consumer_external = this.selectedconsumer.map((obj: any) => (obj.id));
 
-      console.log('updateCalenderForm',this.CalenderForm.value)
+      //console.log('updateCalenderForm',this.CalenderForm.value)
       this.httpservice.sendPutRequest(
         URLUtils.updateEvent({ 'eventId': this.editInfo?.id, 'offset': this.editInfo?.timezone_offset }),
         this.CalenderForm.value

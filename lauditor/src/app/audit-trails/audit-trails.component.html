@@ -214,7 +214,7 @@
                     <td *ngIf="log.name === 'GROUPS' && product !== 'corporate'">GROUPS</td>
                     <td *ngIf="log.name !== 'AUTH' && log.name !== 'DEPARTMENTS' && log.name !== 'GROUPS'">{{log.name}}</td>
                     <!-- <td *ngIf="log.name!='AUTH'">{{log.name}}</td> -->
-                    <td>{{log.timestamp}}</td>
+                    <td>{{log.timestamp | date: 'MMM d, y | h:mm a'}}</td>
                     <td>{{log.message}}</td>
                 </tr>
             </tbody>

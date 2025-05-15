@@ -344,6 +344,10 @@ export class URLUtils {
         return `/v2/relationship/${filter}`
     }
 
+    static updateRelationshipMember(filter: string) {
+        return `/v2/relationship/${filter}/members`
+    }
+
     static shareRelationshipDocuments(args: any) {
         return `/v2/relationship/${args.id}/docs/share`
     }

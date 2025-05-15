@@ -63,7 +63,7 @@
             <td class="tabclass">
                 <span *ngFor="let g of team.groups">&nbsp;{{g.name}}<br/></span>
             </td>
-            <td class="tabclass">&nbsp;{{team.lastLogin}}</td>
+            <td class="tabclass">&nbsp;{{team.lastLogin | date: 'MMM d, y | h:mm a'}}</td>
             <td class="tabclass">{{team.currency}}</td>
             <td class="tabclass" style="font-size: 1.8rem">
               &nbsp;{{ currencySymbols[team.currencyCode] }}{{ team.defaultRate }}

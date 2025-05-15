@@ -90,4 +90,12 @@ export class EditGroupHeadComponent {
             })
       })
     }
+    restrictSpaces(event: any) {
+        let inputValue: string = event.target.value;
+        inputValue = inputValue.replace(/^\s+/, '');
+        inputValue = inputValue.replace(/\s{2,}/g, ' ');
+        event.target.value = inputValue;
+        this.searchText = inputValue;
+    }
+      
 }

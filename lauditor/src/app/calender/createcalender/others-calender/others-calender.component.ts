@@ -811,8 +811,9 @@ export class OthersCalenderComponent implements OnInit {
           this.CalenderForm.controls["recurrent_edit_choice"].setValue('all');
         }
         else {
-          if (this.editInfo?.repeat_interval && !this.repeatDialogOpened) {
-            this.repeatDialogOpened = true;
+          let c = localStorage.getItem('recurrOk') // get the Dialog Okay value
+          if (this.editInfo?.repeat_interval && !this.repeatDialogOpened && !c) {
+           // this.repeatDialogOpened = true;
             this.editCalenderDialogService.open();
             this.editCalenderDialogService.editCalObservable.subscribe((data: any) => {
               if (data) {

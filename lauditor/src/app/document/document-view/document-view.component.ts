@@ -212,6 +212,11 @@ export class DocumentViewComponent implements OnInit {
         // this.term = '';
         this.getDeleteApprovalList();
         this.updateDocuments();
+       
+        const intervalId = setInterval(() => {
+            this.getAllDocuments();
+            clearInterval(intervalId); // Stops the interval after one execution
+        }, 10000);        
     }
 
     getDeleteApprovalList(){
@@ -611,6 +616,8 @@ export class DocumentViewComponent implements OnInit {
             "showPdfDocs": false
         }
   
+        localStorage.setItem("groupId", JSON.stringify(selectedGroups));
+
         let url = this.viewMode == 1 ? URLUtils.getFilteredDocuments : URLUtils.filterMergeDoc;
         //console.log('url',url)
         if (clientId || selectedGroups.length > 0 ){

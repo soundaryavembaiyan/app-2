@@ -3,11 +3,19 @@
     <div class="col-12 Individual createGroup">
         <label for="select" class="lable-size update" *ngIf="product != 'corporate'">Update Group Head</label>
         <label for="select" class="lable-size update" *ngIf="product == 'corporate'">Update Department Head</label>
-         <div class="form-group ">
-            <div class="input-group group-custom-align court" id="search">
-                <input type="text"
+         <div class="form-group">
+            <div class="input-group group-custom-align court" id="search" *ngIf="product !== 'corporate'">
+                <input type="text" (input)="restrictSpaces($event)"
                        class="form-control textbox"
                        placeholder="Search Group Member"
+                       [(ngModel)]="searchText" />
+                <img src="assets/img/search.svg"
+                     class="calimg calitem input-group-append searchimg">
+            </div>
+            <div class="input-group group-custom-align court" id="search" *ngIf="product === 'corporate'">
+                <input type="text" (input)="restrictSpaces($event)"
+                       class="form-control textbox"
+                       placeholder="Search Department Member"
                        [(ngModel)]="searchText" />
                 <img src="assets/img/search.svg"
                      class="calimg calitem input-group-append searchimg">
@@ -17,7 +25,9 @@
         <div class="form-group" id="selectbx">
             <div class="ghicondiv" *ngIf="groupData?.groupHead?.name">
                 <div></div>
-                <img class="ghico" src="assets/img/ghicon.svg"><b class="bb">{{groupData.groupHead?.name}} - Group Head</b>
+                <img class="ghico" src="assets/img/ghicon.svg">
+                <b *ngIf="product !== 'corporate'" class="bb">{{groupData.groupHead?.name}} - Group Head</b>
+                <b *ngIf="product === 'corporate'" class="bb">{{groupData.groupHead?.name}} - Department Head</b>
                 <div></div>
             </div>
 

@@ -92,8 +92,9 @@ export class PdfDocumentMergeComponent implements OnInit, AfterViewInit, OnDestr
             //console.log('result',result)
            
         }
-        let groupsList:any= localStorage.getItem("groupIds");
-        this.groups =JSON.parse(groupsList);
+        let groupsList:any= localStorage.getItem("groupId");
+        this.groups =JSON.parse(groupsList);  
+        // console.log('groups',this.groups)
         // console.log('CollectedDocs',this.CollectedDocs)
         // console.log('remergeData',this.remergeData)
         // console.log('docModelData',this.docModelData)
@@ -121,9 +122,9 @@ export class PdfDocumentMergeComponent implements OnInit, AfterViewInit, OnDestr
     }
     onSubmit() {
         this.submitted = true;
-        if (this.mergeDetail.invalid) {
-            return;
-        }
+        // if (this.mergeDetail.invalid) {
+        //     return;
+        // }
         this.docModelData.show_bookmark = this.isShowBookMark;
         let newObj: any = {};
         //------------ start page format --------------------
@@ -197,10 +198,11 @@ export class PdfDocumentMergeComponent implements OnInit, AfterViewInit, OnDestr
             this.docModelData.clients = clientInfo ? clientInfo : this.remergeData.clients;
             this.docModelData.matters = this.docModelData.matters;
         } else {
-            let groupList:any=[];
+            let groupList:any[]=[];
             this.groups.forEach((item:any)=>{
-                groupList.push(item.id)
+                groupList.push(item)
             })
+
             this.docModelData.clients = []
             this.docModelData.group_acls = groupList;
         }

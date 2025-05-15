@@ -25,12 +25,14 @@ export class EditCalenderDialogComponent implements OnInit {
     this.deleteEvent = localStorage.getItem('delevent');
     this.recurrentEvent = localStorage.getItem('repeat_interval');
     //console.log('dialog recurrentEvent', this.recurrentEvent)
+    // console.log('dialog deleteEvent', this.deleteEvent)
   }
 
   public cancel() {
     this.activeModal.close('');
     localStorage.removeItem('delevent')
-    localStorage.removeItem('repeat_interval')
+    localStorage.removeItem('delevent')
+    // localStorage.removeItem('recurrOk')
   }
 
   public submit() {
@@ -39,6 +41,8 @@ export class EditCalenderDialogComponent implements OnInit {
     // }
     this.emitService.next(this.form.value);
     this.activeModal.close('');
+    let okay = 'okay';
+    localStorage.setItem('recurrOk', okay);
     localStorage.removeItem('delevent')
     localStorage.removeItem('repeat_interval')
   }

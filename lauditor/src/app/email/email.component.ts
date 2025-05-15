@@ -218,6 +218,7 @@ export class EmailComponent implements OnInit, AfterViewInit {
       // Open the authentication window
       if(result){
         this.type=result
+        localStorage.setItem('emailType',result)
         this.emailAuthentication(result)
       }           
       
@@ -260,11 +261,13 @@ export class EmailComponent implements OnInit, AfterViewInit {
 
 
   handleMessageCountClick() {
-    if (this.type === 'outlook') {
-        this.getOutlookMessageCount();
-    } else if(this.type === 'gmail') {
-        this.getMessageCount();
-    }
+
+    this.type = localStorage.getItem('emailType') || 'gmail';
+      if (this.type === 'outlook') {
+          this.getOutlookMessageCount();
+      } else if (this.type === 'gmail') {
+          this.getMessageCount();
+      }
 }
 
 handleNextPageClick() {
@@ -516,7 +519,7 @@ handleNextPageClick() {
       "category": this.filter,
       "clientids": this.clientId.map((obj: any) => ({ "id": obj.id, "type": obj.type })),
       "matters": matterList,
-      "groupids": this.selectedGroupItems.map((obj: any) => obj.id),
+      "groupIds": this.selectedGroupItems.map((obj: any) => obj.id),
       "enableDownload": true
     }
     var req;

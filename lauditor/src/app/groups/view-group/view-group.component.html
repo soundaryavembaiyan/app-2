@@ -59,7 +59,7 @@
             <td class="tabclass">{{team.name}}</td>
             <td class="tabclass">&nbsp;{{team.description}}</td>
             <td class="tabclass">&nbsp;{{team.groupHead.name}}</td>
-            <td class="tabclass">&nbsp;{{team.created}}</td>
+            <td class="tabclass">&nbsp;{{team.created | date: 'MMM d, y | h:mm a'}}</td>
             <td class="tabclass" style="font-size: 1.8rem">&nbsp;{{team.memberCount}}</td>
             <td class="tabclass">
               <div class="dropdown" *ngIf="product != 'connect' || roleId == 'GH'">

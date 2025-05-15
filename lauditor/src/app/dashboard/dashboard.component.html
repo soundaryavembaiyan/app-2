@@ -29,9 +29,8 @@
 			</nav>
 			<!-- Web Menu -->
 			<div class="nav webnav">
-				<div class="dashboard_notification" routerLink="/grid" id='dashboard-icon'
-					(click)="getCategory('Dashboard')">
-					<img src="/assets/img/dashboard_ico.svg">
+				<div class="dashboard_notification" id='dashboard-icon'>
+					<img src="/assets/img/dashboard_ico.svg" routerLink="/grid" (click)="getCategory('Dashboard')">
 				</div>
 				<!-- <div class="userprofile">
 					<p class="username cap" data-bs-container="body" data-bs-toggle="popover"

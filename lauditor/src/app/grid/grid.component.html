@@ -189,7 +189,7 @@
                         </p>
 
                         <p class="mtime mmessage yeartxt yearrightbox monthname cmsgtxtone">
-                          {{notifyModel?.timestamp}}
+                          {{notifyModel?.timestamp | date: 'MMM d, y | h:mm a' }}
                         </p>
                        
                       </div>

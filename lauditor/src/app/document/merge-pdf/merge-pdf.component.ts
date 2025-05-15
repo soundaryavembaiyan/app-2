@@ -165,6 +165,7 @@ export class MergePdfComponent implements OnInit {
         this.selectedGroupItems.forEach((item: any) => {
             this.selectedGroups.push(item.id)
         })
+
         //console.log("this.clientId " + this.clientId);
         let obj = {
             "category": this.filter,
@@ -174,6 +175,8 @@ export class MergePdfComponent implements OnInit {
             "showPdfDocs": true
         }
         //console.log("obj " + JSON.stringify(obj));
+        localStorage.setItem("groupId", JSON.stringify(this.selectedGroups));
+
         if (this.clientId || this.selectedGroups.length > 0) {
             this.errorMsg = true;
             this.httpservice.sendPutRequest(URLUtils.getFilteredDocuments, obj).subscribe((res: any) => {

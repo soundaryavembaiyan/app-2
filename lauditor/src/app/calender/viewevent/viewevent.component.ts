@@ -228,6 +228,11 @@ export class ViewEventComponent implements OnInit {
   }
 
   onEdit() {
+
+    localStorage.removeItem('delevent')
+    localStorage.removeItem('repeat_interval')
+    localStorage.removeItem('recurrOk')
+
     this.calenderService.editEvent(this.eventInfo); //get the edit datas
     //console.log('EvInfo',this.eventInfo)
     this.router.navigate(['/meetings/edit'])
@@ -237,6 +242,10 @@ export class ViewEventComponent implements OnInit {
     // console.log('eveInfo', this.eventInfo)
     // let name=localStorage.getItem('name');
     //if(this.eventInfo.owner_name === name){
+
+    localStorage.removeItem('delevent')
+    localStorage.removeItem('repeat_interval')
+    localStorage.removeItem('recurrOk')
 
     this.confirmationDialogService.confirm('Confirmation', 'Are you sure do you want to delete ' + this.eventInfo.title + "?", true, 'Yes')
       .then((confirmed) => {
@@ -249,7 +258,6 @@ export class ViewEventComponent implements OnInit {
               // console.log("eventInfoId",this.eventInfo.id);
               if (data) {
                 this.httpservice.sendDeleteRequestwithObj(URLUtils.deleteEvent({ eventId: this.eventInfo.id }), { choice: data }).subscribe((res: any) => {
-                  //console.log("res", res);
                   if (this.eventInfo.id && res?.msg) {
                     //this.router.navigate(['/meetings/view'])
                     const link = 'meetings/view';
@@ -268,6 +276,7 @@ export class ViewEventComponent implements OnInit {
           }
           else {
             this.httpservice.sendDeleteRequestwithObj(URLUtils.deleteEvent({ eventId: this.eventInfo.id }), { choice: "this" }).subscribe((res: any) => {
+              this.toaster.success(res.msg)
               this.router.navigate(['/meetings/view'])
             },
               (error: HttpErrorResponse) => {

@@ -83,7 +83,7 @@ export class CreateMembersComponent implements OnInit {
         // console.log('count',this.memberCount?.count)
         // console.log('total',this.memberCount?.total)
       
-        if(this.memberCount?.count === this.memberCount?.total){
+        if(this.memberCount?.count === this.memberCount?.total && this.product === 'lauditor'){
           this.disablePage = true;
         }
         //console.log('disablePage',this.disablePage)

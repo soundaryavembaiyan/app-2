@@ -64,7 +64,7 @@
 
 <router-outlet></router-outlet>
 
- <div class="row main" *ngIf="!showModifyForm && !showExchange">
+ <div class="row main" *ngIf="!showModifyForm && !showMemberForm && !showExchange">
     <div class="col-sm-12 gridtable width-alignment" >
 
     <!--Search box div..-->
@@ -197,6 +197,9 @@
                     <a class="dropdown-item" (click)="modifyGroups(rel)" *ngIf="product == 'corporate'"
                         href="javascript:void(0);">Update Department Access</a>
                   </li>
+                  <li *ngIf="(role === 'SU' && product == 'lauditor' && activeTab !== 'temporary')">
+                    <a class="dropdown-item" (click)="modifyMembers(rel)">Add Team Member</a>
+                  </li>
                   <li *ngIf="activeTab == 'temporary'">
                     <a class="dropdown-item" (click)="openConfirmBox(rel)" 
                         href="javascript:void(0);">Send Invite</a>
@@ -219,6 +222,9 @@
   <app-relationship-group-access *ngIf='showModifyForm' [activeTab]="activeTab"
                                  [reldata]='relationshipData' [showModifyForm]="showModifyForm"
                                  (event)='onChildEvent($event);onCloseEvent()'></app-relationship-group-access>
+  <app-relationship-member-access *ngIf='showMemberForm' [activeTab]="activeTab"
+                                 [reldata]='relationshipData' [showMemberForm]="showMemberForm"
+                                 (event)='onChildEvent($event);onCloseEvent()'></app-relationship-member-access>
   <app-relationship-exchange *ngIf='showExchange' [activeTab]="activeTab"
                              [reldata]='relationshipData'
                              (event)='onChildEvent($event)'></app-relationship-exchange>

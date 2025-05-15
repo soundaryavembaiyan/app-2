@@ -23,6 +23,7 @@ import {MatSelectModule} from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { RelationshipMemberAccessComponent } from './view-relationship/relationship-member-access/relationship-member-access.component';
 
 @NgModule({
     imports: [
@@ -48,7 +49,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
         ExternalPartnerComponent,
         IndividualComponent,
         RelationshipGroupAccessComponent,
-        RelationshipExchangeComponent
+        RelationshipExchangeComponent,
+        RelationshipMemberAccessComponent
     ],
     exports: [
         

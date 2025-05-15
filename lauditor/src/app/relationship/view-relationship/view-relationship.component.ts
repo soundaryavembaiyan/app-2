@@ -26,6 +26,7 @@ export class ViewRelationshipComponent implements OnInit, OnDestroy {
     relationshipSubscribe: Subscription = new Subscription;
     activeTab: string = 'individuals';
     showModifyForm: boolean = false;
+    showMemberForm: boolean = false;
     showExchange: boolean = false;
     showDelConfirm: boolean = false;
     selectedRel: any = {};
@@ -65,6 +66,7 @@ export class ViewRelationshipComponent implements OnInit, OnDestroy {
     tabReset(name: string){
         this.activeTab = name;
         this.showModifyForm = false;
+        this.showMemberForm = false;
         this.showExchange = false;
         this.showDelConfirm = false;
         this.relationshipData = {};
@@ -218,6 +220,11 @@ export class ViewRelationshipComponent implements OnInit, OnDestroy {
         this.showModifyForm = true;
     }
 
+    modifyMembers(rel: any){
+        this.relationshipData = rel;
+        this.showMemberForm = true;
+    }
+
     exchangeInfo(rel: any){
         this.relationshipData = rel;
         this.showExchange = true
@@ -271,6 +278,9 @@ export class ViewRelationshipComponent implements OnInit, OnDestroy {
         if(msg == 'group-access-close'){
             this.showModifyForm = false
         }
+        if(msg == 'member-access-done'){
+            this.showMemberForm = false
+        }
         if(msg == 'group-access-done'){
            this.showModifyForm = false
            this.modal.open('group-update-success')
@@ -282,6 +292,7 @@ export class ViewRelationshipComponent implements OnInit, OnDestroy {
     }
     onCloseEvent(){
             this.showModifyForm = false;
+            this.showMemberForm = false;
             this.loadData();
     }
     sortingFile(val: any) {

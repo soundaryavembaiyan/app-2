@@ -17,7 +17,7 @@
             notificationsList">
             <div class="col-11">
                 <div class="note" [ngClass]="{'bold':note.status=='unread'}">{{note.message}}</div>
-                <div class=""><i class="fa-regular fa-calendar-days"></i><span>{{note.timestamp}}</span></div>
+                <div class=""><i class="fa-regular fa-calendar-days"></i><span>{{note.timestamp | date: 'MMM d, y | h:mm a'}}</span></div>
             </div>
             <div class="col-1 check">
                 <input type="checkbox" #inputEl class="larger" name="checkBox2"
